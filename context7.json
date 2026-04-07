@@ -1,0 +1,35 @@
+{
+  "name": "Kaltura API Guides",
+  "description": "Live-tested API guides for the Kaltura video platform — authentication, upload, search, player embed, REACH AI, virtual events, multi-stream, and more. Written for AI agents building integrations.",
+  "focus": [
+    "KALTURA_SESSION_GUIDE.md",
+    "KALTURA_APPTOKENS_API.md",
+    "KALTURA_ESEARCH_API.md",
+    "KALTURA_UPLOAD_AND_DELIVERY_API.md",
+    "KALTURA_PLAYER_EMBED_GUIDE.md",
+    "KALTURA_REACH_API.md",
+    "KALTURA_AGENTS_MANAGER_API.md",
+    "KALTURA_AI_GENIE_API.md",
+    "KALTURA_EVENTS_PLATFORM_API.md",
+    "KALTURA_MULTI_STREAM_API.md",
+    "AGENTS.md",
+    ".agents/skills/kaltura-api/SKILL.md"
+  ],
+  "exclude": [
+    "tests/**",
+    ".claude/**",
+    ".cursor/**",
+    "PLAN.md",
+    "CONTRIBUTING.md",
+    "CODE_OF_CONDUCT.md"
+  ],
+  "rules": [
+    "All API examples use curl with shell variables ($SERVICE_URL, $KS, $PARTNER_ID). Adapt to the developer's target language.",
+    "Kaltura API v3 uses form-encoded POST with format=1 for JSON responses. Modern APIs (Events, Agents, Genie) use JSON with Bearer or KS auth headers.",
+    "Always include format=1 in API v3 requests to get JSON responses.",
+    "Entry statuses: -2 (NO_CONTENT), 0 (IMPORT), 1 (PRECONVERT), 2 (READY), 4 (CONVERTING), 7 (DELETED).",
+    "Upload lifecycle: uploadToken.add → uploadToken.upload → media.add → media.addContent.",
+    "Auth differs by API: v3 uses -d 'ks=$KS' form param, Events/Agents use Bearer $KS header, Genie uses KS $KS header.",
+    "Use AppTokens (appToken.startSession with HMAC) for production integrations instead of raw admin secrets."
+  ]
+}

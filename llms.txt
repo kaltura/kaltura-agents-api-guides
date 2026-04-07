@@ -1,0 +1,35 @@
+# Kaltura API Guides
+
+> Live-tested API guides for the Kaltura video platform. Covers authentication, upload, search, player embed, AI services, virtual events, and multi-stream — all with curl examples for AI agents and developers.
+
+Kaltura is a Video Platform as a Service (VPaaS) with 80+ REST API services. These guides document the most commonly needed APIs with real, tested curl examples using shell variables. Every guide has companion test scripts validated against the live Kaltura API.
+
+## Authentication
+
+- [Session (KS) Guide](KALTURA_SESSION_GUIDE.md): Generate, use, and rotate Kaltura Sessions — signed tokens that authenticate every API call and player embed
+- [AppTokens API](KALTURA_APPTOKENS_API.md): Secure server-to-server auth with scoped tokens, HMAC exchange, and instant revocation — no admin secrets exposed
+
+## Content Management
+
+- [Upload & Delivery API](KALTURA_UPLOAD_AND_DELIVERY_API.md): Chunked/resumable uploads, import-from-URL, playback URLs (HLS/DASH), thumbnail API, flavor assets
+- [eSearch API](KALTURA_ESEARCH_API.md): Full-text search across entries, captions, metadata, categories, and users with AND/OR/NOT operators
+
+## Playback
+
+- [Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md): Embed Player v7 via iframe or JavaScript SDK with autoplay, clipping, KS auth, and programmatic control
+- [Multi-Stream API](KALTURA_MULTI_STREAM_API.md): Dual/multi-screen entries for Picture-in-Picture and Side-by-Side with parent-child entry relationships
+
+## AI Services
+
+- [REACH API](KALTURA_REACH_API.md): AI and human captions, translation (40+ languages), audio descriptions, chapters, summaries, and AI clips
+- [Agents Manager API](KALTURA_AGENTS_MANAGER_API.md): Automated content-processing agents with triggers and actions for hands-free processing at scale
+- [AI Genie API](KALTURA_AI_GENIE_API.md): Conversational AI search over video content using RAG with streaming structured answers
+
+## Events
+
+- [Events Platform API](KALTURA_EVENTS_PLATFORM_API.md): Virtual events (town halls, webinars, conferences) with sessions, speakers, templates, and multi-region support
+
+## Optional
+
+- [Project Roadmap](PLAN.md): Full Kaltura API landscape (80+ services) and prioritized guide roadmap
+- [Agent Instructions](AGENTS.md): Project conventions for AI agents contributing to this repo

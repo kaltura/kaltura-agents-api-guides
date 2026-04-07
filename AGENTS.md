@@ -6,7 +6,7 @@ This project produces Kaltura API documentation for **AI agents building applica
 
 ```
 Kaltura API Guides/
-├── CLAUDE.md                              # This file
+├── AGENTS.md                              # This file
 ├── PLAN.md                                # Master roadmap and API landscape
 ├── KALTURA_SESSION_GUIDE.md               # KS generation and management
 ├── KALTURA_APPTOKENS_API.md               # Secure auth with AppTokens

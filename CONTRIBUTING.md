@@ -12,7 +12,7 @@ Thank you for your interest in improving these guides! Contributions of all kind
 
 ## Guide Standards
 
-All guides follow the conventions in [CLAUDE.md](CLAUDE.md). Key points:
+All guides follow the conventions in [AGENTS.md](AGENTS.md). Key points:
 
 1. **curl examples only** — No language-specific code. Use shell variables (`$SERVICE_URL`, `$KS`, `$PARTNER_ID`)
 2. **Positive framing** — Document what works, not what to avoid
