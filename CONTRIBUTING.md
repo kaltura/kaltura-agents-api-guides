@@ -22,7 +22,7 @@ All guides follow the conventions in [AGENTS.md](AGENTS.md). Key points:
 ## Adding a New Guide
 
 1. Research the API surface and test calls against the live API
-2. Create `KALTURA_{SERVICE_NAME}_API.md` following the template in CLAUDE.md
+2. Create `KALTURA_{SERVICE_NAME}_API.md` following the template in AGENTS.md
 3. Create `tests/test_{service_name}_api.py` covering every documented endpoint
 4. Run tests: `python3 tests/test_{service_name}_api.py`
 5. Add cross-references to Related Guides sections of existing guides
