@@ -1,0 +1,552 @@
+# Kaltura Virtual Events Platform API
+
+The Virtual Events Platform has a dedicated modern REST API (OAS 3.0) for creating and managing virtual events — town halls, webinars, conferences, and training sessions. This is separate from the main Kaltura API v3 and uses a different base URL with JSON request bodies.
+
+**Base URL:** `https://events-api.nvp1.ovp.kaltura.com/api/v1` (production NVP region)
+**Auth:** `Authorization: Bearer <KS>` header (standard Kaltura Session)
+**Format:** JSON request/response bodies, all endpoints use POST
+**Regions:** NVP (default), EU (`irp2`), DE (`frp2`)
+
+> **MCP Server:** An official MCP server is available at [kaltura/mcp-events](https://github.com/kaltura/mcp-events) for AI agent integration.
+
+
+# 1. Authentication
+
+All requests require a valid KS in the `Authorization` header:
+
+```
+Authorization: Bearer <your_kaltura_session>
+```
+
+**The KS must have a `userId` set.** Generate a KS with `userId` via `session.start` (see [Session Guide](KALTURA_SESSION_GUIDE.md)) or `appToken.startSession` (see [AppTokens Guide](KALTURA_APPTOKENS_API.md)).
+
+For production, use `appToken.startSession` with a `userId` privilege.
+
+See [Session Guide](KALTURA_SESSION_GUIDE.md) for full details on KS generation.
+
+
+# 2. Regional Endpoints
+
+| Region | Base URL |
+|--------|----------|
+| NVP (default) | `https://events-api.nvp1.ovp.kaltura.com/api/v1` |
+| EU | `https://events-api.irp2.ovp.kaltura.com/api/v1` |
+| DE | `https://events-api.frp2.ovp.kaltura.com/api/v1` |
+
+Use the region that matches your Kaltura account deployment.
+
+
+# 3. Events API
+
+## 3.1 Create an Event
+
+```
+POST /api/v1/events/create
+Content-Type: application/json
+Authorization: Bearer <KS>
+```
+
+```json
+{
+  "name": "Q4 All-Hands Town Hall",
+  "templateId": "tm2000",
+  "startDate": "2024-12-15T14:00:00.000Z",
+  "endDate": "2024-12-15T16:00:00.000Z",
+  "timezone": "America/New_York",
+  "description": "Quarterly company update and Q&A"
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `name` | string | Yes | Event display name |
+| `templateId` | string | Yes | Template to use (see section 6) |
+| `startDate` | string | Yes | ISO 8601 start date |
+| `endDate` | string | Yes | ISO 8601 end date |
+| `timezone` | string | Yes | IANA timezone (e.g., `America/New_York`, `Europe/London`) |
+| `description` | string | No | Event description |
+
+Set `doorsOpenDate` via `events/update` after the event is created.
+
+**Resilience:** If `events/create` returns HTTP 500, the event may still have been created server-side. Verify by calling `events/list` with a `searchTerm` matching your event name.
+
+**Response:** Event object with `id`, `name`, `status`, dates, and nested session/team data.
+
+```bash
+curl -X POST "$EVENTS_API_URL/events/create" \
+  -H "Authorization: Bearer $KS" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "API Demo Webinar",
+    "templateId": "tm2000",
+    "startDate": "2024-12-20T15:00:00.000Z",
+    "endDate": "2024-12-20T16:00:00.000Z",
+    "timezone": "America/New_York",
+    "description": "Created via Events Platform API"
+  }'
+```
+
+Save the `id` from the response as `EVENT_ID`.
+
+## 3.2 List Events
+
+```
+POST /api/v1/events/list
+```
+
+```json
+{
+  "filter": {
+    "searchTerm": "town hall",
+    "labels": ["quarterly"],
+    "idIn": [12345, 67890]
+  },
+  "pager": {
+    "offset": 0,
+    "limit": 15
+  },
+  "orderBy": "-startDate"
+}
+```
+
+| Filter Field | Type | Description |
+|-------------|------|-------------|
+| `searchTerm` | string | Free-text search across name and description |
+| `labels` | array | Filter by label tags |
+| `idIn` | array | Filter by specific event IDs |
+
+| Pager Field | Type | Description |
+|-------------|------|-------------|
+| `offset` | int | Number of results to skip |
+| `limit` | int | Max results to return (max 15) |
+
+| `orderBy` | Description |
+|-----------|-------------|
+| `+startDate` | Ascending by start date |
+| `-startDate` | Descending by start date (newest first) |
+| `+createdAt` | Ascending by creation date |
+| `-createdAt` | Descending by creation date |
+| `+name` | Alphabetical |
+| `-name` | Reverse alphabetical |
+
+**Response keys:** Event lists use the `events` key. Total count is in `totalCount`.
+
+```bash
+curl -X POST "$EVENTS_API_URL/events/list" \
+  -H "Authorization: Bearer $KS" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "filter": {},
+    "pager": {"offset": 0, "limit": 10},
+    "orderBy": "-startDate"
+  }'
+```
+
+The response contains an `events` array and `totalCount`.
+
+## 3.3 Update an Event
+
+```
+POST /api/v1/events/update
+```
+
+```json
+{
+  "id": 12345,
+  "name": "Updated Event Name",
+  "description": "Updated description",
+  "startDate": "2024-12-15T15:00:00.000Z",
+  "endDate": "2024-12-15T17:00:00.000Z",
+  "doorsOpenDate": "2024-12-15T14:45:00.000Z",
+  "timezone": "America/New_York",
+  "labels": ["updated", "quarterly"],
+  "logoEntryId": "0_abc123",
+  "bannerEntryId": "0_def456"
+}
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | integer | **Required.** Event ID to update |
+| `name` | string | Updated name |
+| `description` | string | Updated description |
+| `startDate` | string | Updated start date |
+| `endDate` | string | Updated end date |
+| `doorsOpenDate` | string | Updated doors-open time |
+| `timezone` | string | Updated timezone |
+| `labels` | array | Updated labels/tags |
+| `logoEntryId` | string | Kaltura entry ID for event logo image |
+| `bannerEntryId` | string | Kaltura entry ID for event banner image |
+
+## 3.4 Delete an Event
+
+```
+POST /api/v1/events/delete
+```
+
+```json
+{
+  "id": 12345
+}
+```
+
+Permanently deletes the event and all its sessions.
+
+## 3.5 Duplicate an Event
+
+```
+POST /api/v1/events/duplicate
+```
+
+```json
+{
+  "sourceEventId": 12345
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `sourceEventId` | integer | Yes | The numeric ID of the event to duplicate |
+
+Creates a copy of the event with all its configuration. Returns a job object with a `jobId`.
+
+**Response:**
+```json
+{
+  "jobId": "job_xyz789"
+}
+```
+
+## 3.6 Check Duplication Status
+
+```
+POST /api/v1/events/duplicateStatus
+```
+
+```json
+{
+  "jobId": "job_xyz789"
+}
+```
+
+| Status | Description |
+|--------|-------------|
+| `completed` | Duplication finished successfully |
+| `failed` | Duplication failed |
+| `paused` | Job paused |
+| `repeat` | Job being retried |
+| `wait` | Job queued, waiting to start |
+| `unknown` | Status cannot be determined |
+
+```bash
+# Start duplication
+curl -X POST "$EVENTS_API_URL/events/duplicate" \
+  -H "Authorization: Bearer $KS" \
+  -H "Content-Type: application/json" \
+  -d '{"sourceEventId": 12345}'
+# Save the "jobId" from the response as JOB_ID
+
+# Poll for completion
+curl -X POST "$EVENTS_API_URL/events/duplicateStatus" \
+  -H "Authorization: Bearer $KS" \
+  -H "Content-Type: application/json" \
+  -d "{\"jobId\": \"$JOB_ID\"}"
+# Repeat until "status" is "completed" or "failed"
+```
+
+
+# 4. Sessions API
+
+Sessions are the individual rooms/streams within an event. Each event can have multiple sessions of different types.
+
+## 4.1 Session Types
+
+| Type | Description |
+|------|-------------|
+| `MeetingEntry` | Interactive room — bidirectional audio/video for all participants |
+| `LiveWebcast` | Live webcast — presenter streams to viewers, chat/Q&A for interaction |
+| `SimuLive` | Simulive — pre-recorded VOD played as a live stream on schedule |
+| `LiveKME` | DIY live — bring your own encoder (RTMP/SRT ingest) |
+| `VirtualLearningRoom` | Virtual classroom with interactive learning tools |
+
+## 4.2 Create a Session
+
+```
+POST /api/v1/sessions/create
+```
+
+**Important:** Session fields must be nested inside a `session` object. The `eventId` is at the top level.
+
+```json
+{
+  "eventId": 12345,
+  "session": {
+    "name": "Keynote Presentation",
+    "type": "LiveWebcast",
+    "startDate": "2024-12-15T14:00:00.000Z",
+    "endDate": "2024-12-15T15:00:00.000Z",
+    "description": "Opening keynote by CEO",
+    "visibility": "published"
+  }
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `eventId` | integer | Yes | Parent event ID (top level) |
+| `session.name` | string | Yes | Session name |
+| `session.type` | string | Yes | Session type (see table above) |
+| `session.startDate` | string | Yes | ISO 8601 start date |
+| `session.endDate` | string | Yes | ISO 8601 end date |
+| `session.description` | string | No | Session description |
+| `session.visibility` | string | No | `published` (default), `unlisted`, or `private` |
+| `session.sourceEntryId` | string | No | VOD entry ID for SimuLive sessions |
+
+**Response:** Returns `{session: {...}, status: "ok"}` — the session object is nested.
+
+**SimuLive example** (pre-recorded content played as live):
+```json
+{
+  "eventId": 12345,
+  "session": {
+    "name": "Pre-recorded Demo",
+    "type": "SimuLive",
+    "startDate": "2024-12-15T15:00:00.000Z",
+    "endDate": "2024-12-15T15:30:00.000Z",
+    "sourceEntryId": "0_prerecorded123"
+  }
+}
+```
+
+```bash
+curl -X POST "$EVENTS_API_URL/sessions/create" \
+  -H "Authorization: Bearer $KS" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "eventId": 12345,
+    "session": {
+      "name": "Main Webcast",
+      "type": "LiveWebcast",
+      "startDate": "2024-12-20T15:00:00.000Z",
+      "endDate": "2024-12-20T16:00:00.000Z",
+      "description": "Main presentation",
+      "visibility": "published"
+    }
+  }'
+```
+
+The response contains a `session` object with `id`, `name`, `type`, and other fields.
+
+## 4.3 List Sessions for an Event
+
+```
+POST /api/v1/sessions/list
+```
+
+```json
+{
+  "eventId": 12345
+}
+```
+
+Returns all sessions belonging to the event. Response uses the `sessions` key.
+
+```bash
+curl -X POST "$EVENTS_API_URL/sessions/list" \
+  -H "Authorization: Bearer $KS" \
+  -H "Content-Type: application/json" \
+  -d '{"eventId": 12345}'
+```
+
+The response contains a `sessions` array with each session's `id`, `name`, `type`, and `visibility`.
+
+## 4.4 List Speakers for a Session
+
+```
+POST /api/v1/sessions/speakerList
+```
+
+```json
+{
+  "eventId": 12345,
+  "sessionId": 67890
+}
+```
+
+Both `eventId` and `sessionId` are required. Returns the list of speakers assigned to the session.
+
+
+# 5. Team Members API
+
+Manage team members (organizers, admins, content managers) for events. Team members are managed at the account level — no `eventId` is needed for create or list.
+
+**Roles:**
+
+| Role | Description |
+|------|-------------|
+| `Admin` | Full administrative access |
+| `Organizer` | Can manage event content and sessions |
+| `ContentManager` | Can manage content within events |
+
+## 5.1 Add a Team Member
+
+```
+POST /api/v1/team-members/create
+```
+
+```json
+{
+  "email": "user@example.com",
+  "role": "Organizer",
+  "firstName": "Jane",
+  "lastName": "Doe"
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `email` | string | Yes | Team member's email address |
+| `role` | string | Yes | One of: `Admin`, `Organizer`, `ContentManager` |
+| `firstName` | string | Yes | First name |
+| `lastName` | string | Yes | Last name |
+
+## 5.2 List Team Members
+
+```
+POST /api/v1/team-members/list
+```
+
+```json
+{}
+```
+
+No parameters required. Returns all team members for the account. Response uses the `teamMembers` key.
+
+## 5.3 Update a Team Member
+
+```
+POST /api/v1/team-members/update
+```
+
+```json
+{
+  "teamMemberId": "abc123",
+  "role": "Admin"
+}
+```
+
+## 5.4 Delete a Team Member
+
+```
+POST /api/v1/team-members/delete
+```
+
+```json
+{
+  "teamMemberId": "abc123"
+}
+```
+
+
+# 6. Event Templates
+
+Templates pre-configure events with specific session types and settings.
+
+| Template ID | Description | Included Session |
+|-------------|-------------|-----------------|
+| `tm0000` | Blank event | No sessions |
+| `tm1000` | Interactive room | MeetingEntry |
+| `tm2000` | Live webcast | LiveWebcast |
+| `tm3000` | Simulive | SimuLive |
+| `tm4000` | Room broadcasting to webcast | MeetingEntry + LiveWebcast |
+
+
+# 7. Event Status Values
+
+| Status | Description |
+|--------|-------------|
+| `draft` | Event created but not published |
+| `scheduled` | Event published and upcoming |
+| `live` | Event currently in progress |
+| `ended` | Event has concluded |
+| `cancelled` | Event was cancelled |
+
+
+# 8. Complete Example — Event Lifecycle
+
+Generate a KS with `userId` via `session.start` (see [Session Guide](KALTURA_SESSION_GUIDE.md)) and set the shell variables:
+
+```bash
+# Prerequisites: set these shell variables before running the commands below
+# EVENTS_API_URL="https://events-api.nvp1.ovp.kaltura.com/api/v1"
+# KS="<your KS with userId>"
+```
+
+```bash
+# --- Step 1: Create an event ---
+curl -X POST "$EVENTS_API_URL/events/create" \
+  -H "Authorization: Bearer $KS" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "API Demo Event",
+    "templateId": "tm0000",
+    "startDate": "2024-12-22T15:00:00.000Z",
+    "endDate": "2024-12-22T17:00:00.000Z",
+    "timezone": "America/New_York",
+    "description": "Created via Events Platform API"
+  }'
+# Save the "id" from the response as EVENT_ID
+
+# --- Step 2: Add a live webcast session ---
+curl -X POST "$EVENTS_API_URL/sessions/create" \
+  -H "Authorization: Bearer $KS" \
+  -H "Content-Type: application/json" \
+  -d "{
+    \"eventId\": $EVENT_ID,
+    \"session\": {
+      \"name\": \"Main Stage\",
+      \"type\": \"LiveWebcast\",
+      \"startDate\": \"2024-12-22T15:00:00.000Z\",
+      \"endDate\": \"2024-12-22T17:00:00.000Z\",
+      \"visibility\": \"published\"
+    }
+  }"
+
+# --- Step 3: List all events ---
+curl -X POST "$EVENTS_API_URL/events/list" \
+  -H "Authorization: Bearer $KS" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "filter": {},
+    "pager": {"offset": 0, "limit": 5},
+    "orderBy": "-startDate"
+  }'
+
+# --- Step 4: Update the event ---
+curl -X POST "$EVENTS_API_URL/events/update" \
+  -H "Authorization: Bearer $KS" \
+  -H "Content-Type: application/json" \
+  -d "{
+    \"id\": $EVENT_ID,
+    \"name\": \"Updated API Demo Event\",
+    \"labels\": [\"demo\", \"api-test\"]
+  }"
+
+# --- Step 5: Delete the event ---
+curl -X POST "$EVENTS_API_URL/events/delete" \
+  -H "Authorization: Bearer $KS" \
+  -H "Content-Type: application/json" \
+  -d "{\"id\": $EVENT_ID}"
+```
+
+
+# 9. Related Guides
+
+- **[Session Guide](KALTURA_SESSION_GUIDE.md)** — Generate the KS needed for Bearer auth (must include `userId`)
+- **[AppTokens Guide](KALTURA_APPTOKENS_API.md)** — Secure token-based auth for integrations
+- **[Upload & Delivery Guide](KALTURA_UPLOAD_AND_DELIVERY_API.md)** — Upload logo/banner assets for events
+- **[Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md)** — Embed event recordings
+- **[REACH Guide](KALTURA_REACH_API.md)** — Auto-caption event session recordings
+- **[Agents Manager](KALTURA_AGENTS_MANAGER_API.md)** — Auto-process event content with triggers and actions
+- **[AI Genie](KALTURA_AI_GENIE_API.md)** — Conversational AI search over event content
+- **MCP Server:** [kaltura/mcp-events](https://github.com/kaltura/mcp-events) — AI agent integration
