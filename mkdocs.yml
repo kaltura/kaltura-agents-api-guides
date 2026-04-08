@@ -1,0 +1,90 @@
+site_name: Kaltura API Guides
+site_url: https://zoharbabin.github.io/kaltura-api-guides/
+site_description: >-
+  Comprehensive, live-tested Kaltura video platform API guides
+  for AI agents and developers. curl examples, test scripts, and
+  full coverage of authentication, upload, search, playback, AI services,
+  virtual events, and multi-stream.
+site_author: Zohar Babin
+repo_url: https://github.com/zoharbabin/kaltura-api-guides
+repo_name: zoharbabin/kaltura-api-guides
+edit_uri: edit/main/
+
+docs_dir: docs
+
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: deep purple
+      accent: amber
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: deep purple
+      accent: amber
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.instant
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.action.edit
+  icon:
+    repo: fontawesome/brands/github
+
+plugins:
+  - search
+
+markdown_extensions:
+  - tables
+  - toc:
+      permalink: true
+  - admonition
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+
+nav:
+  - Home: README.md
+  - Authentication:
+      - Session (KS) Guide: KALTURA_SESSION_GUIDE.md
+      - AppTokens API: KALTURA_APPTOKENS_API.md
+  - Content:
+      - Upload & Delivery: KALTURA_UPLOAD_AND_DELIVERY_API.md
+      - eSearch: KALTURA_ESEARCH_API.md
+  - Playback:
+      - Player Embed: KALTURA_PLAYER_EMBED_GUIDE.md
+      - Multi-Stream: KALTURA_MULTI_STREAM_API.md
+  - AI Services:
+      - REACH API: KALTURA_REACH_API.md
+      - Agents Manager: KALTURA_AGENTS_MANAGER_API.md
+      - AI Genie: KALTURA_AI_GENIE_API.md
+  - Events:
+      - Events Platform: KALTURA_EVENTS_PLATFORM_API.md
+  - Contributing: CONTRIBUTING.md
+  - Roadmap: PLAN.md
+
+exclude_docs: |
+  tests/
+  scripts/
+  .agents/
+  .claude/
+  .cursor/
+  .github/
+  PROMOTION.md
+  context7.json
+  llms.txt
+  llms-full.txt
+  mkdocs.yml

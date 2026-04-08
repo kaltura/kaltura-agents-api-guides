@@ -6,30 +6,30 @@ Kaltura is a Video Platform as a Service (VPaaS) with 80+ REST API services. The
 
 ## Authentication
 
-- [Session (KS) Guide](KALTURA_SESSION_GUIDE.md): Generate, use, and rotate Kaltura Sessions — signed tokens that authenticate every API call and player embed
-- [AppTokens API](KALTURA_APPTOKENS_API.md): Secure server-to-server auth with scoped tokens, HMAC exchange, and instant revocation — no admin secrets exposed
+- [Kaltura Session (KS) Generation and Management](KALTURA_SESSION_GUIDE.md): Generate, use, and rotate Kaltura Sessions (KS) — the signed, time-limited tokens that authenticate every Kaltura API call and player embed.
+- [Kaltura Application Tokens (AppTokens) API](KALTURA_APPTOKENS_API.md): Application Tokens provide secure, scoped API access without exposing admin secrets. Instead of sharing your `adminSecret`, you create an AppToken...
 
 ## Content Management
 
-- [Upload & Delivery API](KALTURA_UPLOAD_AND_DELIVERY_API.md): Chunked/resumable uploads, import-from-URL, playback URLs (HLS/DASH), thumbnail API, flavor assets
-- [eSearch API](KALTURA_ESEARCH_API.md): Full-text search across entries, captions, metadata, categories, and users with AND/OR/NOT operators
+- [Kaltura Upload, Ingest & Content Delivery API](KALTURA_UPLOAD_AND_DELIVERY_API.md): This guide covers the complete lifecycle of getting content into Kaltura and delivering it to viewers: uploading files (including...
+- [Kaltura eSearch API](KALTURA_ESEARCH_API.md): Kaltura's eSearch API, powered by Elasticsearch, provides flexible full-text search across media entries, categories, users, captions, custom...
 
 ## Playback
 
-- [Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md): Embed Player v7 via iframe or JavaScript SDK with autoplay, clipping, KS auth, and programmatic control
-- [Multi-Stream API](KALTURA_MULTI_STREAM_API.md): Dual/multi-screen entries for Picture-in-Picture and Side-by-Side with parent-child entry relationships
+- [Kaltura PlayKit Player: Embedding & Control Guide](KALTURA_PLAYER_EMBED_GUIDE.md): Embed Kaltura's PlayKit player in web applications using iframe or dynamic JavaScript. Both methods support KS-based access control, clipping,...
+- [Kaltura Multi-Stream (Dual/Multi-Screen) Entries API](KALTURA_MULTI_STREAM_API.md): Create synchronized multi-stream entries for dual-screen playback — Picture-in-Picture, Side-by-Side, and stream selection. A multi-stream entry...
 
 ## AI Services
 
-- [REACH API](KALTURA_REACH_API.md): AI and human captions, translation (40+ languages), audio descriptions, chapters, summaries, and AI clips
-- [Agents Manager API](KALTURA_AGENTS_MANAGER_API.md): Automated content-processing agents with triggers and actions for hands-free processing at scale
-- [AI Genie API](KALTURA_AI_GENIE_API.md): Conversational AI search over video content using RAG with streaming structured answers
+- [Kaltura REACH API Guide](KALTURA_REACH_API.md): Kaltura REACH is the **captioning, translation, accessibility, and content enrichment** services framework. Order processing tasks — from...
+- [Kaltura Agents Manager API Guide](KALTURA_AGENTS_MANAGER_API.md): The Agents Manager lets you create **automated content-processing agents** that watch for events on your content and execute actions automatically...
+- [Kaltura AI Genie API Guide](KALTURA_AI_GENIE_API.md): Kaltura AI Genie provides conversational AI search and generative answers over your video content library using RAG (Retrieval-Augmented Generation).
 
 ## Events
 
-- [Events Platform API](KALTURA_EVENTS_PLATFORM_API.md): Virtual events (town halls, webinars, conferences) with sessions, speakers, templates, and multi-region support
+- [Kaltura Virtual Events Platform API](KALTURA_EVENTS_PLATFORM_API.md): The Virtual Events Platform has a dedicated modern REST API (OAS 3.0) for creating and managing virtual events — town halls, webinars,...
 
 ## Optional
 
-- [Project Roadmap](PLAN.md): Full Kaltura API landscape (80+ services) and prioritized guide roadmap
-- [Agent Instructions](AGENTS.md): Project conventions for AI agents contributing to this repo
+- [Kaltura API Guides — Master Plan & Roadmap](PLAN.md): Full Kaltura API landscape (80+ services) and prioritized guide roadmap
+- [Kaltura API Guides — Project Standards](AGENTS.md): Project conventions for AI agents contributing to this repo

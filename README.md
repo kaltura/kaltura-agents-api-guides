@@ -5,6 +5,7 @@
 [![Tests](https://img.shields.io/badge/Live--Tested-156_tests-brightgreen.svg)](#guides)
 [![llms.txt](https://img.shields.io/badge/llms.txt-available-purple.svg)](llms.txt)
 [![Agent Skill](https://img.shields.io/badge/Agent_Skill-kaltura--api-orange.svg)](.agents/skills/kaltura-api/SKILL.md)
+[![Docs Site](https://img.shields.io/badge/Docs-GitHub_Pages-blue.svg)](https://zoharbabin.github.io/kaltura-api-guides/)
 
 Comprehensive, live-tested API guides for [Kaltura](https://www.kaltura.com/) — the leading video platform. Written for **AI agents and developers** building integrations.
 

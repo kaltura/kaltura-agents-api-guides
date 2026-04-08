@@ -1,0 +1,38 @@
+name: Check links
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "**.md"
+  pull_request:
+    paths:
+      - "**.md"
+  schedule:
+    - cron: "0 9 * * 1"  # Every Monday at 9am UTC
+  workflow_dispatch:
+
+jobs:
+  links:
+    name: Validate markdown links
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check links
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: >-
+            --verbose
+            --no-progress
+            --accept 200,204,301,302,403,429
+            --exclude-path tests
+            --exclude-path .github
+            --exclude-path .claude
+            --exclude-path .agents
+            --exclude 'cdnapisec\.kaltura\.com'
+            --exclude 'events-api\.nvp1'
+            --exclude 'agents-manager\.nvp1'
+            --exclude 'genie\.nvp1'
+            '**/*.md'
+          fail: true

@@ -1,0 +1,79 @@
+name: Deploy docs & update llms.txt
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "KALTURA_*.md"
+      - "README.md"
+      - "CONTRIBUTING.md"
+      - "PLAN.md"
+      - "AGENTS.md"
+      - "LICENSE"
+      - "CODE_OF_CONDUCT.md"
+      - "mkdocs.yml"
+      - ".github/workflows/deploy.yml"
+      - "scripts/generate_llms_txt.py"
+      - ".agents/skills/kaltura-api/SKILL.md"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  update-llms-txt:
+    name: Update llms.txt
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate llms.txt
+        run: python3 scripts/generate_llms_txt.py
+
+      - name: Check for changes
+        id: changes
+        run: |
+          if git diff --quiet llms.txt; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Commit updated llms.txt
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add llms.txt
+          git commit -m "Auto-update llms.txt from guide changes"
+          git push
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: update-llms-txt
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install MkDocs Material
+        run: pip install mkdocs-material
+
+      - name: Prepare docs directory
+        run: |
+          mkdir -p docs
+          # Symlink all markdown files into docs/
+          for f in *.md; do
+            ln -sf "../$f" "docs/$f"
+          done
+          ln -sf ../LICENSE docs/LICENSE
+
+      - name: Build and deploy
+        run: mkdocs gh-deploy --force
