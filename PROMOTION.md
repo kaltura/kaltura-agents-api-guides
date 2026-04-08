@@ -24,6 +24,8 @@ Actionable checklist for getting maximum reach for the Kaltura API Guides.
 
 - [ ] **[Postman API Network](https://www.postman.com/explore)** — Create a public Postman workspace with collections for each guide's curl examples. Gets indexed automatically. World's largest public API hub.
 
+- [ ] **[public-api-lists](https://github.com/public-api-lists/public-api-lists)** — PR to add under "Video" category. 730+ APIs across 48 categories, 207 contributors. Separate from PublicAPIs.dev.
+
 ### GitHub Awesome Lists
 
 - [ ] **[krzemienski/awesome-video](https://github.com/krzemienski/awesome-video)** — PR to add under documentation/API section. 3k+ stars, the primary video dev resource list.
@@ -70,6 +72,18 @@ Actionable checklist for getting maximum reach for the Kaltura API Guides.
 - [ ] **Schema.org structured data** — Add JSON-LD `SoftwareSourceCode` and `TechArticle` markup to the MkDocs site via a custom template override. Helps AI systems (ChatGPT, Perplexity, Google AI Overviews) cite the guides in their responses.
 
 - [ ] **Cite sources and stats in guides** — GEO research shows AI engines prefer content with quotations, statistics, and authoritative citations. Review guides for opportunities to add specific numbers and cite official Kaltura docs.
+
+### AI Ecosystem
+
+- [ ] **OpenAI GPT Store** — Create a custom "Kaltura API Assistant" GPT. Upload the guides as knowledge files and add an OpenAPI action spec for key API calls. Publish to the [GPT Store](https://help.openai.com/en/articles/8554397-creating-and-editing-gpts). Puts Kaltura API docs directly inside ChatGPT's ecosystem.
+
+- [ ] **[MkDocs Catalog](https://github.com/mkdocs/catalog)** — PR to add the site to this official curated list of 300+ MkDocs projects. Notable documentation sites are listed alongside plugins.
+
+### Standards-Based Discovery
+
+- [ ] **`/.well-known/ai-plugin.json`** — Host an [OpenAI plugin manifest](https://platform.openai.com/docs/plugins/getting-started) on the GitHub Pages domain. Points to the OpenAPI spec and describes the API for AI agent consumption. APIs.guru auto-populates fields from this file.
+
+- [ ] **RFC 9727 `/.well-known/api-catalog`** — IETF standard for API discovery. Host a Linkset JSON at `/.well-known/api-catalog` on the docs domain pointing to API documentation, OpenAPI specs, and llms.txt. Emerging standard that crawlers and AI agents are starting to support.
 
 ## Tier 3: Relationship-Based (high impact, requires coordination)
 
