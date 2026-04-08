@@ -210,18 +210,6 @@
 
 ---
 
-### Skip (not API-driven or too niche)
-
-| Topic | Reason |
-|-------|--------|
-| Rooms/Virtual Classroom | No REST API — LTI/UI only |
-| Events/Webinars platform | SaaS product, not developer API |
-| Gamification/Leaderboard | Not a standalone public API |
-| Interactive Video (Paths/Hotspots) | Limited REST API, mostly UI-based in KMC |
-| OTT/TV Platform | Separate product with different API — different audience |
-| Unisphere Framework | Early-stage, still evolving — revisit later |
-| DRM/Content Protection | Enterprise-specific, requires special provisioning |
-
 
 ## Execution Pattern (for each guide)
 
