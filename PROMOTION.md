@@ -14,6 +14,16 @@ Actionable checklist for getting maximum reach for the Kaltura API Guides.
 
 - [ ] **Agent Skills registry** — PR to [anthropics/skills](https://github.com/anthropics/skills) to list the `kaltura-api` skill. This makes it discoverable by Claude Code, VS Code Copilot, and Codex users.
 
+### API Directories
+
+- [ ] **[APIs.guru](https://apis.guru/add-api)** — Submit Kaltura's OpenAPI spec URL. 2,500+ APIs indexed, used by AI agents for API discovery. Requires a machine-readable API definition (OpenAPI/Swagger). Category: Video.
+
+- [ ] **[PublicAPIs.dev](https://publicapis.dev/)** — PR to add Kaltura via their [contributing guide](https://github.com/marcelscruz/public-apis/blob/main/CONTRIBUTING.md). Open-source, well-maintained successor to the Public APIs GitHub repo. Searchable and categorized.
+
+- [ ] **[APIs.io](https://apis.io/)** — Register via an `apis.json` file. Lightweight API discovery standard. Create an `apis.json` in the repo root pointing to Kaltura's API documentation.
+
+- [ ] **[Postman API Network](https://www.postman.com/explore)** — Create a public Postman workspace with collections for each guide's curl examples. Gets indexed automatically. World's largest public API hub.
+
 ### GitHub Awesome Lists
 
 - [ ] **[krzemienski/awesome-video](https://github.com/krzemienski/awesome-video)** — PR to add under documentation/API section. 3k+ stars, the primary video dev resource list.
@@ -24,11 +34,13 @@ Actionable checklist for getting maximum reach for the Kaltura API Guides.
 
 ### GitHub Optimization
 
-- [ ] **Enable GitHub Pages** — Repo Settings > Pages > Source: main branch. Creates a browsable site at `zoharbabin.github.io/kaltura-api-guides/` with better Google indexing.
+- [x] **GitHub Pages** — MkDocs Material site deployed at `zoharbabin.github.io/kaltura-api-guides/` with Kaltura branding, dark/light mode, search, and auto-deploy via GitHub Actions.
+
+- [x] **v1.0.0 Release** — Created with release notes summarizing all 10 guides.
+
+- [x] **CI/CD Automation** — Deploy workflow (MkDocs + llms.txt auto-generation) and link checker workflow both active on push to main.
 
 - [ ] **Social preview image** — Create a 1280x640 image at [socialify.git.ci](https://socialify.git.ci/) or Canva. Upload via Repo Settings > Social Preview. Shows on every Twitter/LinkedIn/Slack share.
-
-- [ ] **Seed GitHub Discussions** — Create a pinned "Welcome" discussion and a "Which Kaltura API guide should we write next?" poll.
 
 ## Tier 2: Community Posts (medium effort, high reach)
 
@@ -43,7 +55,7 @@ Actionable checklist for getting maximum reach for the Kaltura API Guides.
 
 - [ ] **Dev.to** — Write an article about making API docs AI-agent-friendly, using this project as the case study. Tags: `#kaltura`, `#api`, `#ai`, `#agents`.
 
-- [ ] **Dev Hunt** — Submit at [devhunt.org](https://devhunt.org/) (open-source Product Hunt alternative for dev tools).
+- [ ] **Dev Hunt** — Submit at [devhunt.org](https://devhunt.org/) (open-source Product Hunt alternative for dev tools). Free, GitHub-authenticated.
 
 ### Newsletters
 
@@ -53,6 +65,12 @@ Actionable checklist for getting maximum reach for the Kaltura API Guides.
 
 - [ ] **Console.dev** — Submit at [console.dev](https://console.dev/). 22k+ subscribers. They review interesting devtools.
 
+### GEO (Generative Engine Optimization)
+
+- [ ] **Schema.org structured data** — Add JSON-LD `SoftwareSourceCode` and `TechArticle` markup to the MkDocs site via a custom template override. Helps AI systems (ChatGPT, Perplexity, Google AI Overviews) cite the guides in their responses.
+
+- [ ] **Cite sources and stats in guides** — GEO research shows AI engines prefer content with quotations, statistics, and authoritative citations. Review guides for opportunities to add specific numbers and cite official Kaltura docs.
+
 ## Tier 3: Relationship-Based (high impact, requires coordination)
 
 ### Kaltura Official Channels
@@ -61,7 +79,7 @@ Actionable checklist for getting maximum reach for the Kaltura API Guides.
 
 - [ ] **Kaltura Knowledge Center** — Request inclusion at [knowledge.kaltura.com](https://knowledge.kaltura.com/help).
 
-- [ ] **Kaltura GitHub Organization** — Get linked from [kaltura.github.io](https://kaltura.github.io/) or relevant repos like [kaltura/mcp-events](https://github.com/kaltura/mcp-events).
+- [ ] **Move to Kaltura GitHub Organization** — Transfer this repo to the [kaltura](https://github.com/kaltura) GitHub org for official standing, better discoverability, and cross-linking with repos like [kaltura/mcp-events](https://github.com/kaltura/mcp-events). Coordinate with Kaltura's GitHub org admins.
 
 ### Stack Overflow
 
@@ -72,12 +90,6 @@ Actionable checklist for getting maximum reach for the Kaltura API Guides.
 - [ ] **Demuxed** — Share in the Demuxed Slack community. Video engineering focused.
 
 - [ ] **Video Dev** — Share in video-dev.org community channels.
-
-## Tier 4: Big Launches (high effort, high impact)
-
-- [ ] **Product Hunt** — Full launch with visuals, description, and first-day engagement. Prep a gallery, tagline, and first comment. Consider finding an experienced Hunter.
-
-- [ ] **Create awesome-kaltura** — No `awesome-kaltura` list exists on GitHub. Create one as a curated directory of Kaltura tools, SDKs, and resources with this repo as a centerpiece.
 
 ## Tracking
 
