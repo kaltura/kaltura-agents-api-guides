@@ -14,18 +14,23 @@ docs_dir: docs
 
 theme:
   name: material
+  logo: assets/images/logo-white.svg
+  favicon: assets/images/favicon.svg
+  font:
+    text: Source Sans Pro
+    code: Source Code Pro
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
-      primary: deep purple
-      accent: amber
+      primary: custom
+      accent: custom
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
-      primary: deep purple
-      accent: amber
+      primary: custom
+      accent: custom
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
@@ -41,6 +46,9 @@ theme:
     - content.action.edit
   icon:
     repo: fontawesome/brands/github
+
+extra_css:
+  - assets/stylesheets/extra.css
 
 plugins:
   - search

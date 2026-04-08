@@ -74,6 +74,8 @@ jobs:
             ln -sf "../$f" "docs/$f"
           done
           ln -sf ../LICENSE docs/LICENSE
+          # Symlink assets (logo, favicon, CSS)
+          ln -sf ../assets docs/assets
 
       - name: Build and deploy
         run: mkdocs gh-deploy --force

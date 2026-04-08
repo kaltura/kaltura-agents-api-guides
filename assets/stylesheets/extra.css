@@ -1,0 +1,102 @@
+/* Kaltura Brand Guidelines — MkDocs Material Override */
+
+/* ── Color Palette ────────────────────────────────────── */
+:root {
+  --kaltura-black: #282828;
+  --kaltura-stream-blue: #006efa;
+  --kaltura-bubblegum-pink: #ff9dff;
+  --kaltura-tomato-red: #ff3d23;
+  --kaltura-sunshine-yellow: #ffd357;
+  --kaltura-apple-green: #5bc686;
+  --kaltura-eggshell: #f8f8f5;
+  --kaltura-light-blue: #b6d7ff;
+  --kaltura-light-pink: #ffe2ff;
+  --kaltura-light-red: #ffc5bd;
+  --kaltura-light-yellow: #fff2cd;
+  --kaltura-light-green: #ceeedb;
+}
+
+/* ── Light Mode ───────────────────────────────────────── */
+[data-md-color-scheme="default"] {
+  --md-primary-fg-color: var(--kaltura-black);
+  --md-primary-bg-color: #fff;
+  --md-accent-fg-color: var(--kaltura-stream-blue);
+  --md-default-bg-color: var(--kaltura-eggshell);
+  --md-typeset-a-color: var(--kaltura-stream-blue);
+}
+
+[data-md-color-scheme="default"] .md-header {
+  background-color: var(--kaltura-black);
+}
+
+[data-md-color-scheme="default"] .md-tabs {
+  background-color: var(--kaltura-black);
+}
+
+/* ── Dark Mode ────────────────────────────────────────── */
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: var(--kaltura-black);
+  --md-primary-bg-color: #1a1a1a;
+  --md-accent-fg-color: var(--kaltura-light-blue);
+  --md-default-bg-color: #1e1e1e;
+  --md-typeset-a-color: var(--kaltura-light-blue);
+}
+
+[data-md-color-scheme="slate"] .md-header {
+  background-color: #1a1a1a;
+}
+
+[data-md-color-scheme="slate"] .md-tabs {
+  background-color: #1a1a1a;
+}
+
+/* ── Typography (Source Sans Pro) ─────────────────────── */
+:root {
+  --md-text-font: "Source Sans Pro", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --md-code-font: "Source Code Pro", "Roboto Mono", SFMono-Regular,
+    Consolas, "Liberation Mono", Menlo, monospace;
+}
+
+/* ── Logo Sizing ──────────────────────────────────────── */
+.md-header__button.md-logo img,
+.md-header__button.md-logo svg {
+  height: 1.6rem;
+  width: auto;
+}
+
+/* ── Navigation Active State ──────────────────────────── */
+.md-nav__link--active,
+.md-nav__link:is(:focus, :hover) {
+  color: var(--kaltura-stream-blue);
+}
+
+/* ── Code Block Accent ────────────────────────────────── */
+.md-typeset code {
+  background-color: rgba(0, 110, 250, 0.06);
+}
+
+[data-md-color-scheme="slate"] .md-typeset code {
+  background-color: rgba(182, 215, 255, 0.1);
+}
+
+/* ── Tables ───────────────────────────────────────────── */
+.md-typeset table:not([class]) th {
+  background-color: var(--kaltura-black);
+  color: #fff;
+}
+
+[data-md-color-scheme="slate"] .md-typeset table:not([class]) th {
+  background-color: #333;
+}
+
+/* ── Search Highlight ─────────────────────────────────── */
+.md-search-result mark {
+  background-color: var(--kaltura-light-yellow);
+  color: var(--kaltura-black);
+}
+
+/* ── Footer ───────────────────────────────────────────── */
+.md-footer {
+  background-color: var(--kaltura-black);
+}
