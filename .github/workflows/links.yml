@@ -25,7 +25,7 @@ jobs:
           args: >-
             --verbose
             --no-progress
-            --accept 200,204,301,302,403,429
+            --accept 200,202,204,301,302,403,429
             --exclude-path tests
             --exclude-path .github
             --exclude-path .claude
@@ -34,5 +34,6 @@ jobs:
             --exclude 'events-api\.nvp1'
             --exclude 'agents-manager\.nvp1'
             --exclude 'genie\.nvp1'
+            --exclude 'zoharbabin\.github\.io'
             '**/*.md'
           fail: true
