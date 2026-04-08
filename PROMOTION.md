@@ -42,7 +42,7 @@ Actionable checklist for getting maximum reach for the Kaltura API Guides.
 
 - [x] **CI/CD Automation** — Deploy workflow (MkDocs + llms.txt auto-generation) and link checker workflow both active on push to main.
 
-- [ ] **Social preview image** — Create a 1280x640 image at [socialify.git.ci](https://socialify.git.ci/) or Canva. Upload via Repo Settings > Social Preview. Shows on every Twitter/LinkedIn/Slack share.
+- [ ] **Social preview image** — Image created at `assets/images/social-preview.png` (1280x640, Kaltura brand flywheel design). Upload via Repo Settings > Social Preview. Shows on every Twitter/LinkedIn/Slack share.
 
 ## Tier 2: Community Posts (medium effort, high reach)
 
@@ -81,7 +81,7 @@ Actionable checklist for getting maximum reach for the Kaltura API Guides.
 
 ### Standards-Based Discovery
 
-- [ ] **`/.well-known/ai-plugin.json`** — Host an [OpenAI plugin manifest](https://platform.openai.com/docs/plugins/getting-started) on the GitHub Pages domain. Points to the OpenAPI spec and describes the API for AI agent consumption. APIs.guru auto-populates fields from this file.
+- [ ] **`/.well-known/ai-plugin.json`** — Host an OpenAI-style plugin manifest on the GitHub Pages domain. Points to the OpenAPI spec and describes the API for AI agent consumption. APIs.guru auto-populates fields from this file.
 
 - [ ] **RFC 9727 `/.well-known/api-catalog`** — IETF standard for API discovery. Host a Linkset JSON at `/.well-known/api-catalog` on the docs domain pointing to API documentation, OpenAPI specs, and llms.txt. Emerging standard that crawlers and AI agents are starting to support.
 
