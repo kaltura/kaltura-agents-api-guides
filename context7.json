@@ -1,6 +1,6 @@
 {
   "name": "Kaltura API Guides",
-  "description": "Live-tested API guides for Kaltura's Digital Experience Platform — authentication, content management, search, player embed, AI-powered content enrichment, conversational AI, virtual events, multi-stream, and more. Written for AI agents building integrations.",
+  "description": "Live-tested API guides for Kaltura — The Agentic Digital Experience Platform. Covers authentication, content management, search, player embed, AI-powered enrichment, conversational AI, virtual events, multi-stream, and more. For AI agents and developers.",
   "focus": [
     "KALTURA_SESSION_GUIDE.md",
     "KALTURA_APPTOKENS_API.md",

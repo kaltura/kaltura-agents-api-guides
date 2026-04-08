@@ -1,21 +1,23 @@
 ---
 name: kaltura-api
-description: Build applications on Kaltura's Digital Experience Platform — authentication, content management, search, playback, AI-powered content enrichment, conversational AI, virtual events, and multi-stream. Covers API v3 (form-encoded) and modern JSON APIs with curl examples and tested workflows.
+description: Build applications on Kaltura — The Agentic Digital Experience Platform. Covers authentication, content management, search, playback, AI-powered content enrichment, conversational AI, virtual events, and multi-stream. API v3 (form-encoded) and modern JSON APIs with curl examples and tested workflows.
 ---
 
 # Kaltura API Integration
 
-Kaltura is a cloud-based Digital Experience Platform with 80+ REST API services for rich media content creation, management, and delivery. This skill gives you the knowledge map to build any Kaltura integration.
+Kaltura — The Agentic Digital Experience Platform. Kaltura is powering rich, agentic digital experiences across organizational journeys for customers, employees, learners, and audiences. The Kaltura platform combines intelligent content creation, enterprise-grade content management and intelligence, and multimodal conversational engagement capabilities. Kaltura serves leading enterprises, financial institutions, educational institutions, media and telecom providers, and other organizations worldwide.
+
+This skill gives you the knowledge map to build any integration on Kaltura's 80+ REST API services.
 
 ## Platform Overview
 
-Kaltura enables organizations to create, manage, and deliver video and rich media experiences — including interactive, conversational, and AI-driven content — across customers, employees, learners, and audiences. The platform is built on three core layers:
+The platform is built on three core layers:
 
-- **Rich Media Content Creation** — Recording, editing, AI-assisted content generation (transcription, translation, captioning, dubbing, summarization, chaptering, clipping, quiz generation), and avatar-based video creation
-- **Rich Media Content Management** — Enterprise-grade management of live and on-demand content with centralized metadata, permissions, workflows, analytics, and AI-driven workflow agents for automated content lifecycle operations
-- **Rich Media Experiences** — Content hubs, virtual events and webinars, player embeds, LMS/CMS integrations, conversational AI agents (Kaltura Genies), and TV streaming applications
+- **Intelligent Content Creation** — Recording, editing, AI-assisted content generation (transcription, translation, captioning, dubbing, summarization, chaptering, clipping, quiz generation), and avatar-based video creation
+- **Enterprise-Grade Content Management and Intelligence** — Centralized management of live and on-demand content with metadata, permissions, workflows, analytics, and AI-driven workflow agents for automated content lifecycle operations
+- **Multimodal Conversational Engagement** — Content hubs, virtual events and webinars, player embeds, LMS/CMS integrations, conversational AI agents (Kaltura Genies and Agentic Avatars), and TV streaming applications
 
-Content is organized as **entries** (media objects with metadata, flavors, thumbnails, and captions). Every API call requires a **Kaltura Session (KS)** — a signed, time-limited auth token. The platform serves 800+ customers including ~30% of Fortune 100 companies and 40%+ of top US R1 universities.
+Content is organized as **entries** (media objects with metadata, flavors, thumbnails, and captions). Every API call requires a **Kaltura Session (KS)** — a signed, time-limited auth token.
 
 ## Authentication
 

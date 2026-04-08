@@ -90,18 +90,18 @@ def main():
     output.append("# Kaltura API Guides")
     output.append("")
     output.append(
-        "> Live-tested API guides for Kaltura's Digital Experience Platform. "
-        "Covers authentication, content management, search, player embed, "
-        "AI-powered content enrichment, conversational AI, virtual events, "
-        "and multi-stream — all with curl examples for AI agents and developers."
+        "> Kaltura — The Agentic Digital Experience Platform. Kaltura is "
+        "powering rich, agentic digital experiences across organizational "
+        "journeys for customers, employees, learners, and audiences."
     )
     output.append("")
     output.append(
-        "Kaltura is a cloud-based Digital Experience Platform with 80+ REST "
-        "API services for rich media content creation, management, and delivery "
-        "with AI-driven and conversational capabilities. These guides document "
-        "the most commonly needed APIs with real, tested curl examples using "
-        "shell variables. Every guide has companion test scripts validated "
+        "The Kaltura platform combines intelligent content creation, "
+        "enterprise-grade content management and intelligence, and multimodal "
+        "conversational engagement capabilities — exposed through 80+ REST "
+        "API services. These are live-tested API guides with curl examples "
+        "using shell variables, written for AI agents and developers building "
+        "integrations. Every guide has companion test scripts validated "
         "against the live Kaltura API."
     )
     output.append("")

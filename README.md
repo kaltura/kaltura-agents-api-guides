@@ -7,7 +7,9 @@
 [![Agent Skill](https://img.shields.io/badge/Agent_Skill-kaltura--api-orange.svg)](.agents/skills/kaltura-api/SKILL.md)
 [![Docs Site](https://img.shields.io/badge/Docs-GitHub_Pages-blue.svg)](https://zoharbabin.github.io/kaltura-api-guides/)
 
-Comprehensive, live-tested API guides for [Kaltura](https://www.kaltura.com/) — a cloud-based Digital Experience Platform for rich media content creation, management, and delivery with AI-driven and conversational capabilities. Written for **AI agents and developers** building integrations.
+[Kaltura](https://corp.kaltura.com/) — The Agentic Digital Experience Platform. Kaltura is powering rich, agentic digital experiences across organizational journeys for customers, employees, learners, and audiences. The Kaltura platform combines intelligent content creation, enterprise-grade content management and intelligence, and multimodal conversational engagement capabilities. Kaltura serves leading enterprises, financial institutions, educational institutions, media and telecom providers, and other organizations worldwide.
+
+These are comprehensive, live-tested API guides written for **AI agents and developers** building integrations on Kaltura.
 
 Every guide uses `curl` examples with shell variables, follows a consistent structure, and has a companion test script that validates every documented endpoint against the live Kaltura API.
 
