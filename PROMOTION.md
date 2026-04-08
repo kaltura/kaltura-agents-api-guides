@@ -37,9 +37,9 @@ Actionable checklist for getting maximum reach for the Kaltura API Guides.
 - [ ] **Hacker News** — Submit as "Show HN: Live-tested Kaltura API guides built for AI agents" at [news.ycombinator.com/submit](https://news.ycombinator.com/submit). Best posted Tuesday-Thursday, 9-11am ET.
 
 - [ ] **Reddit** — Post to these subreddits (adapt the angle per community):
-  - [r/LLMDevs](https://www.reddit.com/r/LLMDevs/) — "Made Kaltura's video API docs agent-friendly with Agent Skills + Context7 + llms.txt"
+  - [r/LLMDevs](https://www.reddit.com/r/LLMDevs/) — "Made Kaltura's Digital Experience Platform API docs agent-friendly with Agent Skills + Context7 + llms.txt"
   - [r/ClaudeAI](https://www.reddit.com/r/ClaudeAI/) — Focus on the Agent Skill angle
-  - [r/webdev](https://www.reddit.com/r/webdev/) — "Open-sourced 10 live-tested Kaltura video API guides with curl examples"
+  - [r/webdev](https://www.reddit.com/r/webdev/) — "Open-sourced 10 live-tested Kaltura API guides for rich media and AI experiences"
 
 - [ ] **Dev.to** — Write an article about making API docs AI-agent-friendly, using this project as the case study. Tags: `#kaltura`, `#api`, `#ai`, `#agents`.
 

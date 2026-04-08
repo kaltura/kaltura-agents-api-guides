@@ -1,10 +1,10 @@
 site_name: Kaltura API Guides
 site_url: https://zoharbabin.github.io/kaltura-api-guides/
 site_description: >-
-  Comprehensive, live-tested Kaltura video platform API guides
-  for AI agents and developers. curl examples, test scripts, and
-  full coverage of authentication, upload, search, playback, AI services,
-  virtual events, and multi-stream.
+  Comprehensive, live-tested API guides for Kaltura's Digital Experience
+  Platform. curl examples, test scripts, and full coverage of authentication,
+  content management, search, playback, AI-powered content enrichment,
+  conversational AI, virtual events, and multi-stream.
 site_author: Zohar Babin
 repo_url: https://github.com/zoharbabin/kaltura-api-guides
 repo_name: zoharbabin/kaltura-api-guides

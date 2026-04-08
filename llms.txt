@@ -1,8 +1,8 @@
 # Kaltura API Guides
 
-> Live-tested API guides for the Kaltura video platform. Covers authentication, upload, search, player embed, AI services, virtual events, and multi-stream — all with curl examples for AI agents and developers.
+> Live-tested API guides for Kaltura's Digital Experience Platform. Covers authentication, content management, search, player embed, AI-powered content enrichment, conversational AI, virtual events, and multi-stream — all with curl examples for AI agents and developers.
 
-Kaltura is a Video Platform as a Service (VPaaS) with 80+ REST API services. These guides document the most commonly needed APIs with real, tested curl examples using shell variables. Every guide has companion test scripts validated against the live Kaltura API.
+Kaltura is a cloud-based Digital Experience Platform with 80+ REST API services for rich media content creation, management, and delivery with AI-driven and conversational capabilities. These guides document the most commonly needed APIs with real, tested curl examples using shell variables. Every guide has companion test scripts validated against the live Kaltura API.
 
 ## Authentication
 

@@ -1,15 +1,21 @@
 ---
 name: kaltura-api
-description: Build applications on the Kaltura video platform — authentication, upload, search, playback, AI services, virtual events, and multi-stream video. Covers API v3 (form-encoded) and modern JSON APIs with curl examples and tested workflows.
+description: Build applications on Kaltura's Digital Experience Platform — authentication, content management, search, playback, AI-powered content enrichment, conversational AI, virtual events, and multi-stream. Covers API v3 (form-encoded) and modern JSON APIs with curl examples and tested workflows.
 ---
 
 # Kaltura API Integration
 
-Kaltura is a video platform (VPaaS) with 80+ REST API services. This skill gives you the knowledge map to build any Kaltura integration.
+Kaltura is a cloud-based Digital Experience Platform with 80+ REST API services for rich media content creation, management, and delivery. This skill gives you the knowledge map to build any Kaltura integration.
 
 ## Platform Overview
 
-Kaltura manages the full video lifecycle: upload, transcode, store, search, deliver, play, caption, translate, analyze, and stream live. Content is organized as **entries** (media objects with metadata, flavors, thumbnails, and captions). Every API call requires a **Kaltura Session (KS)** — a signed, time-limited auth token.
+Kaltura enables organizations to create, manage, and deliver video and rich media experiences — including interactive, conversational, and AI-driven content — across customers, employees, learners, and audiences. The platform is built on three core layers:
+
+- **Rich Media Content Creation** — Recording, editing, AI-assisted content generation (transcription, translation, captioning, dubbing, summarization, chaptering, clipping, quiz generation), and avatar-based video creation
+- **Rich Media Content Management** — Enterprise-grade management of live and on-demand content with centralized metadata, permissions, workflows, analytics, and AI-driven workflow agents for automated content lifecycle operations
+- **Rich Media Experiences** — Content hubs, virtual events and webinars, player embeds, LMS/CMS integrations, conversational AI agents (Kaltura Genies), and TV streaming applications
+
+Content is organized as **entries** (media objects with metadata, flavors, thumbnails, and captions). Every API call requires a **Kaltura Session (KS)** — a signed, time-limited auth token. The platform serves 800+ customers including ~30% of Fortune 100 companies and 40%+ of top US R1 universities.
 
 ## Authentication
 
