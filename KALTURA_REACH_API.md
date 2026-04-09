@@ -6,7 +6,7 @@ Kaltura REACH is the **captioning, translation, accessibility, and content enric
 **Auth:** KS passed as `ks` parameter in POST form data (see [Session Guide](KALTURA_SESSION_GUIDE.md))
 **Format:** Form-encoded POST, `format=1` for JSON responses
 
-REACH services can be triggered manually via the API, automatically via [Kaltura Agents](KALTURA_AGENTS_MANAGER_API.md), or through the KMC/KMS management UIs.
+REACH services can be triggered manually via the API, automatically via REACH profile automation rules (using Boolean event notification conditions), via [Kaltura Agents](KALTURA_AGENTS_MANAGER_API.md), or through the KMC/KMS management UIs.
 
 # Prerequisites
 
@@ -807,6 +807,155 @@ When a task completes, the result is automatically attached to the entry. The `o
 | **Sign Language** (19) | Child entry | New media entry linked via `parentEntryId` |
 
 
+## REACH Automation Rules
+
+REACH profiles support automation rules that automatically order services when specific conditions are met — no application code required. Rules are evaluated by the `kReachManager` engine whenever content events occur (entry created, entry becomes READY, entry added to category, etc.).
+
+Each rule has **conditions** (when to trigger) and **actions** (what to order):
+
+| Component | API Object Type | Key Field | Description |
+|-----------|----------------|-----------|-------------|
+| Rule | `KalturaRule` | `conditions`, `actions`, `stopProcessing` | Container for one automation rule |
+| Boolean Condition | `KalturaBooleanEventNotificationCondition` | `booleanEventNotificationIds` | References Boolean event notification template IDs that define complex conditions |
+| Category Condition | `KalturaCategoryEntryCondition` | `categoryId` | Triggers when an entry is assigned to a specific category |
+| Action | `KalturaAddEntryVendorTaskAction` | `catalogItemIds`, `entryObjectType` | Auto-orders the specified vendor catalog items |
+
+### How It Works
+
+1. A content event fires (e.g., entry reaches READY status)
+2. `kReachManager` loads all active REACH profiles for the partner
+3. For each profile, it evaluates the `rules` array:
+   - **Boolean conditions** — retrieves the referenced Boolean event notification templates and evaluates their `eventConditions` against the event scope
+   - **Category conditions** — checks if the entry belongs to the specified category
+   - **No conditions** — rule always triggers
+4. If conditions are met, `kReachManager` creates `EntryVendorTask` records for each `catalogItemId` in the rule's action
+5. Tasks are created with `creationMode = 2` (AUTOMATIC)
+
+### Configure Rules via Boolean Event Notification Templates
+
+Boolean event notification templates (see [Webhooks API](KALTURA_WEBHOOKS_API.md)) define reusable condition logic — "entry tags match a pattern", "entry status changed to READY", "metadata field contains a value". They evaluate conditions and return true/false, but don't dispatch anything themselves. REACH rules reference them by ID.
+
+**Step 1: Discover available Boolean system templates**
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/eventnotification_eventnotificationtemplate/action/listTemplates" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "filter[objectType]=KalturaEventNotificationTemplateFilter" \
+  -d "filter[typeEqual]=booleanNotification.Boolean"
+```
+
+**Step 2: Clone a Boolean template for your account**
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/eventnotification_eventnotificationtemplate/action/clone" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "id=$BOOLEAN_SYSTEM_TEMPLATE_ID" \
+  -d "eventNotificationTemplate[objectType]=KalturaBooleanNotificationTemplate" \
+  -d "eventNotificationTemplate[name]=Entry Ready for Captioning" \
+  -d "eventNotificationTemplate[status]=2"
+```
+
+Save the cloned template's `id` — this is the `booleanEventNotificationIds` value for the REACH rule.
+
+**Step 3: Add the rule to your REACH profile**
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/reach_reachProfile/action/update" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "id=$REACH_PROFILE_ID" \
+  -d "reachProfile[rules][0][objectType]=KalturaRule" \
+  -d "reachProfile[rules][0][description]=Auto-caption when Boolean condition met" \
+  -d "reachProfile[rules][0][conditions][0][objectType]=KalturaBooleanEventNotificationCondition" \
+  -d "reachProfile[rules][0][conditions][0][booleanEventNotificationIds]=$BOOLEAN_TEMPLATE_ID" \
+  -d "reachProfile[rules][0][actions][0][objectType]=KalturaAddEntryVendorTaskAction" \
+  -d "reachProfile[rules][0][actions][0][catalogItemIds]=$CATALOG_ITEM_ID" \
+  -d "reachProfile[rules][0][actions][0][entryObjectType]=1"
+```
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `rules[N][objectType]` | string | Always `KalturaRule` |
+| `rules[N][description]` | string | Human-readable rule description |
+| `rules[N][stopProcessing]` | boolean | If true, stop evaluating subsequent rules after this one matches |
+| `rules[N][conditions][M][objectType]` | string | `KalturaBooleanEventNotificationCondition` or `KalturaCategoryEntryCondition` |
+| `rules[N][conditions][M][booleanEventNotificationIds]` | string | Comma-separated Boolean template IDs |
+| `rules[N][actions][M][objectType]` | string | `KalturaAddEntryVendorTaskAction` |
+| `rules[N][actions][M][catalogItemIds]` | string | Comma-separated vendor catalog item IDs to auto-order |
+| `rules[N][actions][M][entryObjectType]` | integer | 1=ENTRY (default), 2=ASSET |
+
+### Category-Based Rules
+
+For simpler triggers, use a category condition instead of a Boolean template — auto-order services when an entry is added to a specific category:
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/reach_reachProfile/action/update" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "id=$REACH_PROFILE_ID" \
+  -d "reachProfile[rules][0][objectType]=KalturaRule" \
+  -d "reachProfile[rules][0][description]=Auto-caption entries in Training Videos category" \
+  -d "reachProfile[rules][0][conditions][0][objectType]=KalturaCategoryEntryCondition" \
+  -d "reachProfile[rules][0][conditions][0][categoryId]=$CATEGORY_ID" \
+  -d "reachProfile[rules][0][actions][0][objectType]=KalturaAddEntryVendorTaskAction" \
+  -d "reachProfile[rules][0][actions][0][catalogItemIds]=$CATALOG_ITEM_ID"
+```
+
+### Always-On Rules
+
+A rule with no conditions triggers for every entry that becomes READY:
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/reach_reachProfile/action/update" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "id=$REACH_PROFILE_ID" \
+  -d "reachProfile[rules][0][objectType]=KalturaRule" \
+  -d "reachProfile[rules][0][description]=Auto-caption all new entries" \
+  -d "reachProfile[rules][0][actions][0][objectType]=KalturaAddEntryVendorTaskAction" \
+  -d "reachProfile[rules][0][actions][0][catalogItemIds]=$CAPTION_CATALOG_ID,$TRANSLATION_CATALOG_ID"
+```
+
+Multiple `catalogItemIds` (comma-separated) orders multiple services simultaneously — e.g., captions and translation in one rule.
+
+### Multiple Rules with Priority
+
+Rules are evaluated in array order. Set `stopProcessing=1` to prevent later rules from firing:
+
+```bash
+  -d "reachProfile[rules][0][objectType]=KalturaRule" \
+  -d "reachProfile[rules][0][stopProcessing]=1" \
+  -d "reachProfile[rules][0][conditions][0][objectType]=KalturaBooleanEventNotificationCondition" \
+  -d "reachProfile[rules][0][conditions][0][booleanEventNotificationIds]=111,222" \
+  -d "reachProfile[rules][0][actions][0][objectType]=KalturaAddEntryVendorTaskAction" \
+  -d "reachProfile[rules][0][actions][0][catalogItemIds]=555" \
+  -d "reachProfile[rules][1][objectType]=KalturaRule" \
+  -d "reachProfile[rules][1][conditions][0][objectType]=KalturaCategoryEntryCondition" \
+  -d "reachProfile[rules][1][conditions][0][categoryId]=999" \
+  -d "reachProfile[rules][1][actions][0][objectType]=KalturaAddEntryVendorTaskAction" \
+  -d "reachProfile[rules][1][actions][0][catalogItemIds]=666"
+```
+
+If rule 0's Boolean conditions are met and `stopProcessing=1`, rule 1 is skipped.
+
+### Verifying Automatic Task Creation
+
+After triggering an event that matches your rule conditions, verify the task was created automatically:
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/reach_entryVendorTask/action/list" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "filter[objectType]=KalturaEntryVendorTaskFilter" \
+  -d "filter[entryIdEqual]=$ENTRY_ID" \
+  -d "filter[creationModeEqual]=2"
+```
+
+Filter by `creationModeEqual=2` (AUTOMATIC) to see only rule-generated tasks. The task's `reachProfileId` indicates which profile's rule triggered it.
+
+
 ## REACH with Kaltura Agents
 
 When used through the [Agents Manager](KALTURA_AGENTS_MANAGER_API.md), REACH tasks are created automatically. The Agents Manager's Action Definitions API returns `catalogItemId` values that map directly to the REACH `vendorCatalogItem` IDs described in this guide.
@@ -817,7 +966,7 @@ When used through the [Agents Manager](KALTURA_AGENTS_MANAGER_API.md), REACH tas
 
 The Agents Manager supports these REACH services as automated actions: **captions, translation, dubbing, summary, moderation, and metadata enrichment**. For **AI Clips, Quiz, Live Captions, Live Translation, and Video Analysis**, use the REACH API directly via `entryVendorTask.add`. See the [Agents Manager guide](KALTURA_AGENTS_MANAGER_API.md#kaltura-reach--the-services-behind-agent-actions) for the full mapping.
 
-You can mix approaches: use Agents for automated bulk processing, and the REACH API directly for on-demand or individual requests.
+You can mix approaches: use Agents for automated bulk processing, the REACH API directly for on-demand requests, and REACH automation rules for condition-based automatic ordering.
 
 
 ## Dictionaries (Custom Vocabularies)
@@ -833,7 +982,18 @@ For machine captioning, you can configure **dictionaries** on your REACH profile
 For human captioning, use the `notes` field on the task to provide terminology guidance and context to the human editor.
 
 
-## Error Handling
+# 7. Best Practices
+
+- **Use REACH Automation Rules for automatic processing.** Set always-on rules or Boolean condition rules on your REACH profile to auto-caption every new entry — avoids building custom per-entry task submission logic.
+- **Use Agents Manager for multi-step workflows.** For "caption → translate → summarize" pipelines, use Agents Manager rather than chaining manual REACH task submissions.
+- **Check credit before bulk operations.** Query `reachProfile.get` to compare `credit` vs `usedCredit` before submitting large batches.
+- **Use machine captions (serviceType=2) for speed.** Machine captions complete in minutes; human captions take hours. Use machine for time-sensitive content and human for high-accuracy needs.
+- **Poll task status with backoff.** Use `entryVendorTask.get` with increasing intervals (5s, 10s, 30s) rather than tight polling.
+- **Use `creationModeEqual=2` filter** to distinguish auto-created tasks (from automation rules) from manually submitted tasks in reports.
+- **Use webhooks for task completion notifications.** Set up an HTTP webhook on `ENTRY_VENDOR_TASK` events rather than polling for task status changes.
+- **Configure dictionaries for domain-specific content.** Add custom vocabulary (product names, technical terms) to improve machine captioning accuracy.
+
+# 8. Error Handling
 
 | Scenario | What Happens |
 |---|---|
@@ -853,17 +1013,20 @@ For human captioning, use the `notes` field on the task to provide terminology g
 | `SERVICE_ACCESS_CONTROL_RESTRICTED` | Missing or incorrect `serviceUrl` configuration |
 | `INVALID_KS` | KS is expired, malformed, or lacks required privileges |
 
+**Retry strategy:** For transient errors (HTTP 5xx, timeouts), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (`INVALID_KS`, `ENTRY_VENDOR_TASK_NOT_FOUND`, credit limit exceeded), fix the request before retrying — these will not resolve on their own. For async operations (task processing), poll with increasing intervals (5s, 10s, 30s) rather than tight loops.
 
-## Further Reading
 
-- [REACH Overview](https://corp.kaltura.com/developer-suite/captions-enrichment-services-reach/) — product and vendor partner details
-- [REACH Administration Guide](https://knowledge.kaltura.com/help/introduction-to-reach-captioning-enrichment) — service descriptions, ordering, and configuration
-- [REACH Vendor API Integration](https://knowledge.kaltura.com/help/working-with-the-kaltura-api) — detailed vendor-side integration reference
-- [REACH Integration FAQ](https://knowledge.kaltura.com/help/reach-integration-faq) — common questions on polling, statuses, formats, and edge cases
-- [Kaltura Agents Manager](KALTURA_AGENTS_MANAGER_API.md) — automate REACH tasks with event-driven agents
-- [Session Guide](KALTURA_SESSION_GUIDE.md) — generate the KS required for all REACH API calls
-- [AppTokens](KALTURA_APPTOKENS_API.md) — secure server-to-server auth for production REACH integrations
-- [Upload & Delivery](KALTURA_UPLOAD_AND_DELIVERY_API.md) — upload content before ordering REACH services
-- [eSearch](KALTURA_ESEARCH_API.md) — search entries enriched by REACH captions and metadata
-- [AI Genie](KALTURA_AI_GENIE_API.md) — conversational AI that benefits from REACH-generated transcripts
-- [Player Embed](KALTURA_PLAYER_EMBED_GUIDE.md) — play entries with REACH-generated captions in the player
+# 9. Related Guides
+
+- **[Session Guide](KALTURA_SESSION_GUIDE.md)** — Generate the KS required for all REACH API calls
+- **[AppTokens](KALTURA_APPTOKENS_API.md)** — Secure server-to-server auth for production REACH integrations
+- **[Upload & Delivery](KALTURA_UPLOAD_AND_DELIVERY_API.md)** — Upload content before ordering REACH services
+- **[eSearch](KALTURA_ESEARCH_API.md)** — Search entries enriched by REACH captions and metadata
+- **[AI Genie](KALTURA_AI_GENIE_API.md)** — Conversational AI that benefits from REACH-generated transcripts
+- **[Player Embed](KALTURA_PLAYER_EMBED_GUIDE.md)** — Play entries with REACH-generated captions in the player
+- **[Agents Manager](KALTURA_AGENTS_MANAGER_API.md)** — Automate REACH tasks with event-driven agents
+- **[Webhooks API](KALTURA_WEBHOOKS_API.md)** — Boolean templates as REACH automation rule conditions; HTTP callbacks for task completion events
+- [REACH Overview](https://corp.kaltura.com/developer-suite/captions-enrichment-services-reach/) — Product and vendor partner details
+- [REACH Administration Guide](https://knowledge.kaltura.com/help/introduction-to-reach-captioning-enrichment) — Service descriptions, ordering, and configuration
+- [REACH Vendor API Integration](https://knowledge.kaltura.com/help/working-with-the-kaltura-api) — Detailed vendor-side integration reference
+- [REACH Integration FAQ](https://knowledge.kaltura.com/help/reach-integration-faq) — Common questions on polling, statuses, formats, and edge cases

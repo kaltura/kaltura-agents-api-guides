@@ -831,7 +831,7 @@ curl -X POST "$KALTURA_MESSAGING_URL/domain/activate" \
 ```
 
 
-# 12. Error Responses
+# 12. Error Handling
 
 Validation errors return HTTP 400. Application-level errors follow this structure:
 
@@ -849,6 +849,8 @@ Validation errors return HTTP 400. Application-level errors follow this structur
 | `noActiveGroups` | All specified groups are inactive |
 | `noActiveGroupUsers` | No active users found in any specified group |
 | `someGroupsHaveNoActiveUsers` | Some groups have no active users |
+
+**Retry strategy:** For transient errors (HTTP 5xx, timeouts), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (HTTP 400, `noActiveGroups`, `noActiveGroupUsers`, validation errors), fix the request before retrying — these will not resolve on their own. For async operations (message delivery tracking), poll with increasing intervals (5s, 10s, 30s) rather than tight loops.
 
 
 # 13. Common Integration Patterns
@@ -965,10 +967,20 @@ curl -X POST "$KALTURA_MESSAGING_URL/email-template/add" \
 Users who unsubscribe from the `"event-updates"` group will be automatically excluded from future messages sent with that group.
 
 
-# 14. Related Guides
+# 14. Best Practices
+
+- **Use CAN-SPAM compliant unsubscribe groups.** Assign unsubscribe groups to all marketing/event emails and include `{unsubLink}` tokens — users who unsubscribe are automatically excluded from future sends.
+- **Use dynamic tokens for personalization.** Leverage `{recipient.*}`, `{magicLink}`, `{qrCodeLink}`, and custom tokens to create engaging, per-recipient emails without manual string substitution.
+- **Configure domain authentication.** Set up SPF and DKIM records for your sending domain to maximize deliverability and avoid spam filters.
+- **Track delivery stats and follow up on failures.** Use `msg-history/getStats` and `msg-history/getFiltered` to monitor bounce rates, open rates, and re-send to failed recipients.
+- **Use AppTokens for production access.** Generate KS via `appToken.startSession` with HMAC — keep admin secrets off application servers.
+- **Use the Messaging Service for all email communications.** Prefer the Messaging API over custom SMTP integrations — it provides tracking, analytics, and compliance out of the box.
+
+# 15. Related Guides
 
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — KS generation and management
 - **[AppTokens API](KALTURA_APPTOKENS_API.md)** — Secure server-to-server auth
 - **[App Registry API](KALTURA_APP_REGISTRY_API.md)** — App GUID management (required for templates and messages)
 - **[User Profile API](KALTURA_USER_PROFILE_API.md)** — User registration data (triggers messaging workflows)
 - **[Events Platform API](KALTURA_EVENTS_PLATFORM_API.md)** — Virtual events (messaging for event communications)
+- **[Webhooks API](KALTURA_WEBHOOKS_API.md)** — Event-driven HTTP callbacks; email notifications are delivered via the Messaging Service

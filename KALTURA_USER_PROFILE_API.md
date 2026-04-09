@@ -582,7 +582,7 @@ curl -X POST "$KALTURA_USER_PROFILE_URL/user-profile/firstAttendanceStatusPerApp
 ```
 
 
-# 12. Error Responses
+# 12. Error Handling
 
 Application-level errors return HTTP 200 with an error object:
 
@@ -606,6 +606,8 @@ Validation errors (missing required fields, invalid enum values) return HTTP 400
 | `NOT_YET_SUPPORTED` | bulkAdd with mixed appGuids |
 | `AMOUNT_OF_USERS_SENT_NOT_IN_ALLOWED_RANGE` | bulkAdd array size outside 1-50 range |
 | `SESSION_START_FAILED` | Internal session validation failure |
+
+**Retry strategy:** For transient errors (HTTP 5xx, timeouts, `SESSION_START_FAILED`), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (HTTP 400, `USER_PROFILE_NOT_FOUND`, `USER_ALREADY_ASSOCIATED_TO_APP_GUID`, `USER_ID_NOT_FOUND`), fix the request before retrying — these will not resolve on their own.
 
 
 # 13. Common Integration Patterns
@@ -891,10 +893,20 @@ curl -s -X POST "$KALTURA_SERVICE_URL/service/report/action/getCsvFromStringPara
 ```
 
 
-# Related Guides
+# 14. Best Practices
+
+- **Use `bulkAdd` for batch registration.** Up to 50 profiles per request — significantly faster than individual calls for event registration imports.
+- **Resolve virtual event ID → appGuid via App Registry first.** Use `appCustomIdIn` filter to map event IDs to app GUIDs before managing profiles (see [App Registry API](KALTURA_APP_REGISTRY_API.md)).
+- **Use status transitions to track attendance lifecycle.** Progress users through `created → registered → confirmed → attended → participated` for accurate reporting.
+- **Use `getFiltered` for reporting and analytics.** Filter by status, date range, and fields to build attendance dashboards without downloading all profiles.
+- **Use AppTokens for production access.** Generate KS via `appToken.startSession` with HMAC — keep admin secrets off application servers.
+
+# 15. Related Guides
 
 - **[App Registry API](KALTURA_APP_REGISTRY_API.md)** — Register and manage application instances (prerequisite for user profiles)
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — KS generation and management
 - **[AppTokens API](KALTURA_APPTOKENS_API.md)** — Secure server-to-server auth
 - **[Events Platform API](KALTURA_EVENTS_PLATFORM_API.md)** — Virtual events (complementary to user profile management)
-- **[Messaging API](KALTURA_MESSAGING_API.md)** — Email communications to registered users (event invitations, reminders)
+- **[Messaging API](KALTURA_MESSAGING_API.md)** — Template-based email messaging (triggered by user profile events)
+- **[Webhooks API](KALTURA_WEBHOOKS_API.md)** — Event-driven HTTP callbacks for user and content events
+- **[eSearch API](KALTURA_ESEARCH_API.md)** — Search entries and users across your account

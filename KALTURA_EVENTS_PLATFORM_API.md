@@ -540,7 +540,29 @@ curl -X POST "$KALTURA_EVENTS_API_URL/events/delete" \
 ```
 
 
-# 9. Related Guides
+# 9. Error Handling
+
+| HTTP Status / Error | Meaning | Resolution |
+|---------------------|---------|------------|
+| `401 Unauthorized` | Invalid or expired KS | Generate a fresh KS with `userId` set — Events Platform requires it |
+| `403 Forbidden` | KS lacks required permissions | Use an admin KS (type=2) with the user's `userId` |
+| `404 Not Found` | Event, session, or team member ID does not exist | Verify the integer ID; resource may have been deleted |
+| `400 Bad Request` | Missing required field or invalid date format | Dates must be ISO 8601 format (e.g., `2025-06-15T09:00:00.000Z`). Event IDs are integers. |
+| Duplication job stuck | `duplicateStatus` returns `IN_PROGRESS` indefinitely | Poll with timeout (5 minutes recommended); if stuck, create the event manually |
+
+**Retry strategy:** For transient errors (HTTP 5xx, timeouts), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (`401 Unauthorized`, `403 Forbidden`, `400 Bad Request`), fix the request before retrying — these will not resolve on their own. For async operations (event duplication), poll with increasing intervals (5s, 10s, 30s) rather than tight loops.
+
+# 10. Best Practices
+
+- **Use templates for consistent events.** Clone from preset templates (`tm1000` for interactive room, `tm2000` for live webcast, `tm3000` for simulive) to inherit default session configuration.
+- **Set `doorsOpenDate`** before `startDate` to allow early attendee access (e.g., 15 minutes before start).
+- **Use User Profile API for attendee management.** Registration, attendance tracking, and engagement analytics are handled by the User Profile service, not the Events Platform directly.
+- **Use Messaging API for event communications.** Send invitations, reminders, and follow-ups through the template-based Messaging service rather than building custom email logic.
+- **Use the correct regional endpoint.** Events are region-specific: NVP1 (US), IRP2 (EU), FRP2 (DE). Use the endpoint matching your account's region.
+- **Use AppTokens for production integrations.** Create a scoped AppToken for event management automation.
+- **Set up webhooks for event lifecycle.** Use the Webhooks API to receive callbacks when sessions start/end, recordings become available, or attendee status changes.
+
+# 11. Related Guides
 
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — Generate the KS needed for Bearer auth (must include `userId`)
 - **[AppTokens Guide](KALTURA_APPTOKENS_API.md)** — Secure token-based auth for integrations
@@ -552,4 +574,5 @@ curl -X POST "$KALTURA_EVENTS_API_URL/events/delete" \
 - **[App Registry API](KALTURA_APP_REGISTRY_API.md)** — Application instance registry (events auto-register apps)
 - **[User Profile API](KALTURA_USER_PROFILE_API.md)** — Per-event attendee profiles and attendance tracking
 - **[Messaging API](KALTURA_MESSAGING_API.md)** — Email invitations, reminders, and follow-ups for event attendees
+- **[Webhooks API](KALTURA_WEBHOOKS_API.md)** — HTTP callbacks for event-related content changes (entry ready, metadata changed)
 - **MCP Server:** [kaltura/mcp-events](https://github.com/kaltura/mcp-events) — AI agent integration

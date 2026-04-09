@@ -57,6 +57,17 @@ curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/add" \
   -d "uploadToken[fileSize]=15728640"
 ```
 
+**Response:**
+```json
+{
+  "id": "1_abcdef123456",
+  "status": 0,
+  "fileName": null,
+  "fileSize": null,
+  "objectType": "KalturaUploadToken"
+}
+```
+
 The response includes the `id` (upload token ID) and `status` fields.
 
 ## 2.2 Upload File Data (Single or Chunked)
@@ -173,6 +184,17 @@ curl -X POST "$KALTURA_SERVICE_URL/service/media/action/add" \
   -d "entry[name]=My Uploaded Video" \
   -d "entry[description]=Uploaded via API" \
   -d "entry[tags]=api,upload,demo"
+```
+
+**Response:**
+```json
+{
+  "id": "1_xyz789",
+  "name": "My Video",
+  "status": -2,
+  "mediaType": 1,
+  "objectType": "KalturaMediaEntry"
+}
 ```
 
 The response includes the `id` (entry ID) and `status` fields.
@@ -453,7 +475,30 @@ curl -X POST "$KALTURA_SERVICE_URL/service/media/action/addContent" \
 | `media.bulkUploadAdd` | Batch ingest via CSV/XML | No (URLs in CSV) |
 
 
-# 9. Related Guides
+# 9. Error Handling
+
+| Error Code | Meaning | Resolution |
+|------------|---------|------------|
+| `UPLOAD_TOKEN_NOT_FOUND` | Token ID does not exist or expired | Create a new token with `uploadToken.add` |
+| `UPLOADED_FILE_NOT_FOUND_BY_TOKEN` | Upload not yet completed for this token | Complete the upload before calling `media.addContent` |
+| `ENTRY_ID_NOT_FOUND` | Entry ID does not exist | Verify the entry ID; entry may have been deleted or not yet created |
+| `INVALID_ENTRY_TYPE` | Operation not supported for this entry type | `media.addContent` requires a media entry created via `media.add` |
+| `MAX_FILE_SIZE_EXCEEDED` | File exceeds the partner's upload limit | Use chunked upload for large files, or contact account manager for limit increase |
+| Import stuck at status 0 | `addFromUrl` URL is a redirect (e.g., `playManifest`) | Use a direct MP4 download URL, not a streaming manifest URL |
+
+**Retry strategy:** For transient errors (HTTP 5xx, timeouts), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (`UPLOAD_TOKEN_NOT_FOUND`, `ENTRY_ID_NOT_FOUND`, `MAX_FILE_SIZE_EXCEEDED`), fix the request before retrying — these will not resolve on their own. For async operations (entry transcoding, URL imports), poll with increasing intervals (5s, 10s, 30s) rather than tight loops.
+
+# 10. Best Practices
+
+- **Use chunked upload for files > 10 MB.** Chunked upload supports resume on failure via `resumeAt` parameter.
+- **Use `addFromUrl` for remote files.** Provide direct MP4 download URLs — redirect URLs (playManifest, HLS) cause import failures.
+- **Poll for READY status after upload.** Check `baseEntry.get` for `status=2` before performing operations on the entry.
+- **Use Access Control profiles** to restrict content delivery by IP, domain, geo, or scheduling rather than implementing custom access checks.
+- **Use thumbnail API for previews.** Generate thumbnails dynamically via the thumbnail API rather than storing separate image files.
+- **Use AppTokens for upload services.** Scope the AppToken with `edit:*` privilege for upload-only access.
+- **Set up Agents Manager or REACH automation rules** to auto-process uploaded content (captions, translation, summarization) rather than implementing manual post-upload workflows.
+
+# 11. Related Guides
 
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — How to create and manage KS tokens
 - **[AppTokens Guide](KALTURA_APPTOKENS_API.md)** — Secure token-based auth for upload integrations
@@ -464,4 +509,5 @@ curl -X POST "$KALTURA_SERVICE_URL/service/media/action/addContent" \
 - **[AI Genie](KALTURA_AI_GENIE_API.md)** — Search uploaded content via conversational AI
 - **[Events Platform](KALTURA_EVENTS_PLATFORM_API.md)** — Upload logo/banner assets for virtual events
 - **[Multi-Stream](KALTURA_MULTI_STREAM_API.md)** — Create synchronized dual/multi-screen entries using parent-child relationships
+- **[Webhooks API](KALTURA_WEBHOOKS_API.md)** — Get notified when entries finish processing (HTTP callbacks on entry events)
 - **Reference implementation:** [kaltura_uploader](https://github.com/zoharbabin/kaltura_uploader) — Python CLI with adaptive chunked upload

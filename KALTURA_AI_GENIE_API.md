@@ -380,7 +380,30 @@ curl -N -X POST "$KALTURA_GENIE_URL/assistant/converse" \
 The assistant remembers all prior messages in the thread and will answer in context. Parse the stream the same way as above.
 
 
-# Related Guides
+# 4. Error Handling
+
+| Error / Status | Meaning | Resolution |
+|----------------|---------|------------|
+| `401 Unauthorized` | Invalid or expired KS | Generate a fresh KS; verify the `Authorization: KS $KALTURA_KS` header format (note: `KS` prefix, not `Bearer`) |
+| `404 Not Found` | Invalid endpoint path | Verify the base URL and path (`/mcp/search`, `/assistant/converse`) |
+| `400 Bad Request` | Missing required field | Check that `query` (for search) or `userMessage` (for converse) is present |
+| Empty `results` array | No matching content found | Verify that content has been uploaded, transcoded, and enriched with captions/transcripts via REACH |
+| SSE stream ends without `[DONE]` | Connection interrupted | Implement reconnection logic; for critical use cases, use the polling alternative (section 3) |
+| `threadId` not found | Conversation thread expired or invalid | Start a new conversation without `threadId` — threads are ephemeral |
+
+**Retry strategy:** For transient errors (HTTP 5xx, timeouts, SSE stream interruptions), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (`401 Unauthorized`, `400 Bad Request`, invalid `threadId`), fix the request before retrying — these will not resolve on their own.
+
+# 5. Best Practices
+
+- **Enrich content before querying.** Genie's RAG quality depends on captions, transcripts, and metadata. Use REACH or Agents Manager to process content before making it searchable.
+- **Use `model_type: "fast"` for interactive UIs** where response latency matters. Use `"smart"` for batch or background analysis where quality matters more.
+- **Use streaming (SSE) for real-time UIs.** Parse `data:` lines as they arrive for progressive display.
+- **Use the polling alternative** for server-to-server integrations where SSE is impractical.
+- **Reuse `threadId` for multi-turn conversations.** Pass the `threadId` from the previous response to maintain conversation context.
+- **Use `force_experience`** in the request body to target a specific output format (e.g., `"flashcards"`) or a named Genie experience when your account has multiple configurations.
+- **Use AppTokens for production.** Generate scoped KS tokens server-side; never expose admin secrets in client applications.
+
+# 6. Related Guides
 
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — Generate the KS required for Genie auth (`KS` header)
 - **[AppTokens](KALTURA_APPTOKENS_API.md)** — Secure KS generation for production Genie integrations

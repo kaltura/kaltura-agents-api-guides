@@ -4,16 +4,20 @@
 
 | # | Guide | Tests | Status |
 |---|-------|-------|--------|
-| 1 | `KALTURA_SESSION_GUIDE.md` | — | Done |
-| 2 | `KALTURA_ESEARCH_API.md` | — | Done |
-| 3 | `KALTURA_PLAYER_EMBED_GUIDE.md` | — | Done |
-| 4 | `KALTURA_REACH_API.md` (+ AI Clips workflow) | `test_reach_api.py` (21 tests), `test_clips_api.py` (15 tests) | Done |
+| 1 | `KALTURA_SESSION_GUIDE.md` | `test_session_api.py` (13 tests) | Done |
+| 2 | `KALTURA_ESEARCH_API.md` | `test_esearch_api.py` (19 tests) | Done |
+| 3 | `KALTURA_PLAYER_EMBED_GUIDE.md` | `test_player_embed_api.py` (14 tests) | Done |
+| 4 | `KALTURA_REACH_API.md` (+ AI Clips workflow) | `test_reach_api.py` (32 tests), `test_clips_api.py` (15 tests) | Done |
 | 5 | `KALTURA_AGENTS_MANAGER_API.md` | `test_agents_manager_api.py` (15 tests) | Done |
 | 6 | `KALTURA_AI_GENIE_API.md` | `test_genie_api.py` (17 tests) | Done |
 | 7 | `KALTURA_UPLOAD_AND_DELIVERY_API.md` | `test_upload_delivery_api.py` (25 tests) | Done |
 | 8 | `KALTURA_APPTOKENS_API.md` | `test_apptokens_api.py` (17 tests) | Done |
 | 9 | `KALTURA_EVENTS_PLATFORM_API.md` | `test_events_platform_api.py` (23 tests) | Done |
 | 10 | `KALTURA_MULTI_STREAM_API.md` | `test_multi_stream_api.py` (23 tests) | Done |
+| 11 | `KALTURA_APP_REGISTRY_API.md` | `test_app_registry_api.py` (20 tests) | Done |
+| 12 | `KALTURA_USER_PROFILE_API.md` | `test_user_profile_api.py` (30 tests) | Done |
+| 13 | `KALTURA_MESSAGING_API.md` | `test_messaging_api.py` (21 tests) | Done |
+| 14 | `KALTURA_WEBHOOKS_API.md` | `test_webhooks_api.py` (34 tests) | Done |
 
 
 ## Full Kaltura API Landscape
@@ -159,10 +163,9 @@
 
 ### Tier 2: High Value, Common Need
 
-#### 5. `KALTURA_WEBHOOKS_API.md` — Event Notifications
-**Why:** Essential for automation. Lets developers react to events (entry ready, transcoding done, deleted).
+#### ~~5. `KALTURA_WEBHOOKS_API.md` — Event Notifications~~ ✓ DONE
 
-**Scope:** `eventNotificationTemplate` CRUD, HTTP POST callbacks, event types catalog, payload schemas, retry behavior.
+---
 
 ---
 

@@ -45,6 +45,11 @@ curl -X POST "$KALTURA_SERVICE_URL/service/session/action/start" \
   -d "format=1"
 ```
 
+**Response:**
+```json
+{"ks": "djJ8OTc2NDYx..."}
+```
+
 * `type=0` is USER, `type=2` is ADMIN.
 * `expiry` is in seconds (1800 = 30 minutes).
 * The response JSON contains `{ "result": "<KS_STRING>" }`.
@@ -135,16 +140,18 @@ Keep it tight:
 * TTL you control: you set expiry when starting the session; store issued_at + expiry in your app and refresh as needed *before it lapses*.  
 * Client pattern: your frontend should get KS rendered from your backend. The network never sees secrets.  
 * Always pass KS in POST so it is never cached in proxies.  
-* There isn’t a separate public “validate KS” call you need for steady-state. Validation happens implicitly on each API request. The Kaltura is an asynchronous REST API.  
+* There isn’t a separate public “validate KS” call you need for steady-state. Validation happens implicitly on each API request. The Kaltura API validates the KS on every request and returns an error if it is invalid or expired.  
 * Store KS in memory only; set cache headers to prevent caching.  
 * Pass KS in POST bodies or PlayKit provider config, keeping it out of URLs where it could appear in referrers, logs, and proxies.
 
-# 7. Error handling (production-grade, but short)
+# 7. Error Handling
 
 * Refer to [Kaltura API Documentation > Error Codes](https://developer.kaltura.com/api-docs/Error_Codes) for more details on specific error codes.   
 * On invalid/expired KS or insufficient privileges: re-issue with correct scope.
 * On 5xx / transient: use exponential backoff (e.g., 500ms, 1s, 2s, jitter), and cap retries. Check that your app isn't going wild so it won't be rate throttled.  
 * Observability: log who asked for a session, requested TTL & privileges, and the call outcome (success/failure). Keep secrets out of logs and KS masked (leave last 6 chars).
+
+**Retry strategy:** For transient errors (HTTP 5xx, timeouts), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (4xx, `INVALID_KS`, insufficient privileges), fix the request before retrying — these will not resolve on their own.
 
 # 8. Entitlements & KS Privileges Patterns
 
@@ -210,7 +217,16 @@ Set `sessionid:<GUID>` on the KS privileges and keep that GUID on your backend. 
 
 `sessionid` privilege essentially groups a set of KS’s together. When `session.end` is called with a ks that has `sessionid=X`, all other KS’s that have `sessionid=X` become invalid as well.
 
-# 9. Related Guides
+# 9. Best Practices
+
+- **Use AppTokens in production.** Generate KS via `appToken.startSession` with HMAC — keep admin secrets off application servers (see [AppTokens Guide](KALTURA_APPTOKENS_API.md)).
+- **Use USER KS (type=0) for client-side operations.** Reserve ADMIN KS (type=2) for server-side workflows that require write access.
+- **Set short TTLs.** 1 hour for user-facing sessions, 15 minutes for server-side automation. Shorter sessions reduce exposure if a token leaks.
+- **Scope privileges minimally.** Use `setrole`, `privacycontext`, `sview`, and `iprestrict` to limit what a KS can access.
+- **Call `session.end` to revoke when done.** Use the `sessionid` privilege to enable bulk logout across devices.
+- **Pass KS in POST bodies, not URLs.** URL parameters appear in referrer headers, proxy logs, and browser history.
+
+# 10. Related Guides
 
 - **[AppTokens API](KALTURA_APPTOKENS_API.md)** — Secure server-to-server auth without sharing admin secrets (HMAC-based KS generation)
 - **[Upload & Delivery](KALTURA_UPLOAD_AND_DELIVERY_API.md)** — Upload content and construct playback URLs (requires KS)
@@ -219,4 +235,9 @@ Set `sessionid:<GUID>` on the KS privileges and keep that GUID on your backend. 
 - **[REACH](KALTURA_REACH_API.md)** — AI-powered captions, translation, clips (requires KS)
 - **[Agents Manager](KALTURA_AGENTS_MANAGER_API.md)** — Automate workflows with triggers and actions (Bearer KS)
 - **[AI Genie](KALTURA_AI_GENIE_API.md)** — Conversational AI and RAG search over video content (KS auth)
-- **[Events Platform](KALTURA_EVENTS_PLATFORM_API.md)** — Virtual events with Bearer KS auth	
+- **[Events Platform](KALTURA_EVENTS_PLATFORM_API.md)** — Virtual events with Bearer KS auth
+- **[Multi-Stream](KALTURA_MULTI_STREAM_API.md)** — Dual/multi-screen entries (requires KS)
+- **[App Registry](KALTURA_APP_REGISTRY_API.md)** — Register application instances (Bearer KS)
+- **[User Profile](KALTURA_USER_PROFILE_API.md)** — Per-app user profiles and attendance (Bearer KS)
+- **[Messaging](KALTURA_MESSAGING_API.md)** — Template-based email messaging (Bearer KS)
+- **[Webhooks](KALTURA_WEBHOOKS_API.md)** — Event-driven HTTP callbacks and email notifications (requires KS)	

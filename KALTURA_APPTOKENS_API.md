@@ -73,6 +73,19 @@ curl -X POST "$KALTURA_SERVICE_URL/service/appToken/action/add" \
   -d "appToken[description]=My integration token"
 ```
 
+**Response:**
+```json
+{
+  "id": "1_abc123",
+  "token": "a1b2c3d4...",
+  "partnerId": 123456,
+  "status": 2,
+  "hashType": "SHA256",
+  "sessionPrivileges": "...",
+  "objectType": "KalturaAppToken"
+}
+```
+
 The response includes `id` (token ID) and `token` (the secret value -- store securely, never expose to clients).
 
 ## 3.2 appToken.get — Retrieve a Token
@@ -86,6 +99,13 @@ POST /api_v3/service/appToken/action/get
 | `id` | string | The AppToken ID |
 
 Returns the full `KalturaAppToken` object. The `token` field is included only for the account admin.
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/appToken/action/get" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "id=$APP_TOKEN_ID"
+```
 
 ## 3.3 appToken.list — List All Tokens
 
@@ -202,6 +222,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/appToken/action/startSession" \
   -d "userId=integration-user" \
   -d "type=0" \
   -d "expiry=86400"
+
 # The response is the privileged KS string. Save it as KS.
 
 # --- Use the privileged KS for API calls ---
@@ -211,6 +232,12 @@ curl -X POST "$KALTURA_SERVICE_URL/service/media/action/list" \
   -d "pager[pageSize]=5"
 ```
 
+**Response (Step 3 — appToken.startSession):**
+```json
+{"ks": "djJ8OTc2NDYx..."}
+```
+
+Note: `appToken.startSession` returns the privileged KS string.
 
 # 5. Privilege Reference
 
@@ -299,7 +326,29 @@ curl -X POST "$KALTURA_SERVICE_URL/service/appToken/action/delete" \
 > Use `SHA256` or `SHA512` for new tokens. `hashType` is locked at creation.
 
 
-# 8. Related Guides
+# 8. Error Handling
+
+| Error Code | Meaning | Resolution |
+|------------|---------|------------|
+| `INVALID_APP_TOKEN_ID` | Token ID does not exist | Verify the `id` parameter; token may have been deleted |
+| `INVALID_APP_TOKEN_HASH` | HMAC hash mismatch | Recompute `SHA256(widget_ks + app_token_value)` — check for encoding issues, ensure no extra whitespace |
+| `APP_TOKEN_NOT_ACTIVE` | Token is disabled (status != 2) | Re-enable with `appToken.update` or create a new token |
+| `EXPIRED_TOKEN` | Token has passed its `expiry` timestamp | Create a new token with a future expiry |
+| `PROPERTY_VALIDATION_NOT_UPDATABLE` | Attempted to change `hashType` after creation | `hashType` is immutable — create a new token with the desired hash type |
+| `INVALID_KS` | The KS used to call the API is invalid or expired | Generate a fresh admin KS via `session.start` |
+
+**Retry strategy:** For transient errors (HTTP 5xx, timeouts), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (`INVALID_APP_TOKEN_HASH`, `INVALID_KS`, `EXPIRED_TOKEN`, validation errors), fix the request before retrying — these will not resolve on their own.
+
+# 9. Best Practices
+
+- **Use SHA256 or SHA512** for all new tokens. MD5 and SHA1 are supported for backward compatibility only.
+- **Set `sessionExpiry`** on AppTokens to limit session duration (e.g., 86400 for 24 hours). Shorter is more secure.
+- **Scope privileges tightly.** Use `sessionPrivileges` to restrict what the generated KS can do: `edit:entryId`, `sview:*`, `setrole:ROLE_ID`, `iprestrict:CIDR`.
+- **Rotate tokens periodically.** Create a new token, migrate integrations, then delete the old one. See section 6 (Token Rotation Pattern).
+- **Store tokens server-side.** Never embed AppToken IDs or token values in client-side code. The HMAC exchange should happen on your backend.
+- **One token per integration.** Create separate AppTokens for each application or service to isolate access and simplify revocation.
+
+# 10. Related Guides
 
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — KS generation, privileges, and session management
 - **[Upload & Delivery Guide](KALTURA_UPLOAD_AND_DELIVERY_API.md)** — Use AppToken-generated KS for uploads

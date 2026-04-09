@@ -421,11 +421,31 @@ curl -X POST "$KALTURA_SERVICE_URL/service/media/action/delete" \
 | `uploadToken.upload` | Upload a file to the token |
 
 
-# 9. Related Guides
+# 9. Error Handling
+
+| Error Code | Meaning | Resolution |
+|------------|---------|------------|
+| `ENTRY_ID_NOT_FOUND` | Entry ID does not exist | Verify the entry ID; entry may have been deleted |
+| `INVALID_ENTRY_TYPE` | Operation not supported for this entry type | Multi-stream requires `mediaType=1` (VIDEO) entries |
+| `PROPERTY_VALIDATION_NOT_UPDATABLE` | Attempted to change a read-only property | `parentEntryId` can only be set once; to re-parent, clone the entry |
+| `MAX_ENTRIES_REACHED` | Partner entry limit reached | Delete unused entries or contact account manager |
+
+**Retry strategy:** For transient errors (HTTP 5xx, timeouts), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (`ENTRY_ID_NOT_FOUND`, `INVALID_ENTRY_TYPE`, `PROPERTY_VALIDATION_NOT_UPDATABLE`), fix the request before retrying — these will not resolve on their own.
+
+# 10. Best Practices
+
+- **Create child entries with the correct `parentEntryId` from the start.** Setting `parentEntryId` during creation is more reliable than updating it later.
+- **Use USER KS (type=0)** for player-side operations. The Dual Screen player needs a KS to discover child entries via the API, but a scoped user session is sufficient.
+- **Poll for child entry READY status** before embedding. Multi-stream playback requires all entries to be transcoded.
+- **Use `addFromUrl` with direct MP4 URLs** for child entries. Redirect URLs (e.g., `playManifest`) cause import failures.
+- **Leverage REACH for all streams.** Order captions on both parent and child entries for complete accessibility coverage.
+
+# 11. Related Guides
 
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — Generate the KS needed for API auth
 - **[Upload & Delivery Guide](KALTURA_UPLOAD_AND_DELIVERY_API.md)** — Full upload lifecycle (chunked, resumable, import from URL)
 - **[Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md)** — Embed the Dual Screen player
-- **[eSearch Guide](KALTURA_ESEARCH_API.md)** — Search for parent entries (children are excluded from default search)
+- **[eSearch Guide](KALTURA_ESEARCH_API.md)** — Search for parent entries (use `parentEntryIdEqual` filter to find child entries)
+- **[Webhooks API](KALTURA_WEBHOOKS_API.md)** — Get notified when entries finish processing (HTTP callbacks)
 - **[REACH Guide](KALTURA_REACH_API.md)** — Auto-caption parent and child streams
 - **[Agents Manager](KALTURA_AGENTS_MANAGER_API.md)** — Automate processing of multi-stream content

@@ -13,7 +13,7 @@ Kaltura API Guides/
 ├── KALTURA_ESEARCH_API.md                 # Unified search
 ├── KALTURA_UPLOAD_AND_DELIVERY_API.md     # Upload, ingest, playback URLs
 ├── KALTURA_PLAYER_EMBED_GUIDE.md          # Player v7 embed (iframe + JS)
-├── KALTURA_REACH_API.md                   # AI captions, translation, clips
+├── KALTURA_REACH_API.md                   # AI captions, translation, clips, automation rules
 ├── KALTURA_AGENTS_MANAGER_API.md          # Automated content processing
 ├── KALTURA_AI_GENIE_API.md                # Conversational AI search
 ├── KALTURA_EVENTS_PLATFORM_API.md         # Virtual events
@@ -21,6 +21,7 @@ Kaltura API Guides/
 ├── KALTURA_APP_REGISTRY_API.md            # Application instance registry
 ├── KALTURA_USER_PROFILE_API.md            # Per-app user profiles & attendance
 ├── KALTURA_MESSAGING_API.md               # Template-based email messaging
+├── KALTURA_WEBHOOKS_API.md                # HTTP webhooks & email via Messaging Service
 └── tests/                                 # Companion test scripts
 ```
 
@@ -58,8 +59,10 @@ All tests must pass against the live Kaltura API before a guide is considered do
 
 ### Required Sections
 
-- **Prerequisites** — Kaltura account, KS requirements, API-specific needs
+- **Prerequisites / Authentication** — Kaltura account, KS requirements, auth method, required privileges
 - **Numbered sections** — `# 1. Section Title` (H1 with number), `## 1.1 Subsection` for nesting
+- **Error Handling** — Common error codes and responses for that API. Agents must know what errors to expect and how to handle them.
+- **Best Practices** — Security, performance, and integration patterns specific to that API. Guide agents toward production-quality code.
 - **Related Guides** (final section) — Format: `- **[Display Name](FILENAME.md)** — One-line description`
 
 ## curl Example Standards
@@ -111,6 +114,7 @@ Auth header formats differ by API:
 | App Registry | `Bearer $KALTURA_KS` header | Admin KS with `ADMIN_BASE` permission |
 | User Profile | `Bearer $KALTURA_KS` header | Admin KS with `ADMIN_BASE` permission |
 | Messaging | `Bearer $KALTURA_KS` header | Admin KS (type=2) |
+| Webhooks (Event Notifications) | `-d "ks=$KALTURA_KS"` form param | Admin KS with `disableentitlement` |
 | Player embed | KS in URL or JS config | USER KS (type=0) for playback |
 
 ## Common Kaltura API Patterns
@@ -118,9 +122,44 @@ Auth header formats differ by API:
 - **Entry statuses:** -2 (NO_CONTENT), 0 (IMPORT), 1 (PRECONVERT), 2 (READY), 4 (CONVERTING), 7 (DELETED)
 - **Upload lifecycle:** `uploadToken.add` → `uploadToken.upload` → `media.add` → `media.addContent`
 - **Polling pattern:** Check `baseEntry.get` for `status=2` with interval/timeout
-- **Cascade behavior:** Deleting a parent entry may cascade to children
-- **Search visibility:** Child entries (with `parentEntryId`) are excluded from default search — use `parentEntryIdEqual` filter
-- **Event IDs are integers** (Events Platform), not strings
+- **Cascade behavior:** Deleting a parent entry cascades to children — use `baseEntry.list` with `parentEntryIdEqual` to discover children first
+- **Search for child entries:** Use `parentEntryIdEqual` filter to retrieve child entries (multi-stream, clip children). Default search returns root entries only.
+- **Event IDs are integers** (Events Platform) — pass as `12345`, not `"evt_abc123"`
+
+## Security & Compliance Guidance
+
+Every guide must steer agents toward production-quality, secure integrations:
+
+1. **Use AppTokens in production.** Never embed `adminSecret` in client-facing code. Create scoped AppTokens with minimal privileges and rotate them periodically. See `KALTURA_APPTOKENS_API.md`.
+2. **Scope KS privileges.** Use `edit:entryId`, `sview:*`, `setrole:ROLE`, `iprestrict`, `urirestrict` to limit what a session can access. Prefer USER KS (type=0) over ADMIN KS (type=2) whenever possible.
+3. **Set KS expiry.** Default to short-lived sessions (1-4 hours). Use AppToken session start for renewal rather than long-lived admin sessions.
+4. **Verify webhook signatures.** Always validate HMAC signatures on incoming webhooks using `SHA256(signing_secret + body)`. See `KALTURA_WEBHOOKS_API.md` section 5.
+5. **Validate inputs at boundaries.** Sanitize user-provided entry IDs, search terms, and metadata before passing to API calls.
+6. **Use Kaltura's built-in capabilities.** Prefer Kaltura REACH for transcription/translation, Agents Manager for automation, Messaging for emails, eSearch for content discovery, and Access Control for content protection — rather than building custom implementations.
+7. **Handle errors gracefully.** Every API call can fail — check for error responses, implement retries with backoff for transient failures, and log error codes for debugging.
+8. **Protect content with Access Control.** Use `accessControlProfile` to restrict content by IP, domain, geo, or scheduling rules rather than implementing custom access logic.
+9. **Use CAN-SPAM compliant email.** When sending emails via the Messaging API, always include unsubscribe links and respect opt-out preferences. See `KALTURA_MESSAGING_API.md`.
+
+## Leveraging Kaltura Capabilities
+
+Agents building on Kaltura should use platform services rather than reimplementing:
+
+| Need | Use Kaltura Service | Guide |
+|------|-------------------|-------|
+| Transcription, captioning | REACH API (machine or human captions) | `KALTURA_REACH_API.md` |
+| Translation | REACH API (40+ languages) | `KALTURA_REACH_API.md` |
+| Content summaries, chapters | REACH API (AI summarization) | `KALTURA_REACH_API.md` |
+| Auto-process new uploads | Agents Manager (trigger + action rules) | `KALTURA_AGENTS_MANAGER_API.md` |
+| Auto-process matching entries | REACH Automation Rules (Boolean/category conditions) | `KALTURA_REACH_API.md` |
+| Content search | eSearch API (full-text, facets, operators) | `KALTURA_ESEARCH_API.md` |
+| Conversational AI / Q&A | AI Genie (RAG over video library) | `KALTURA_AI_GENIE_API.md` |
+| Video player embed | Player v7 (iframe or JS SDK) | `KALTURA_PLAYER_EMBED_GUIDE.md` |
+| Email notifications | Messaging API (templates, tracking, unsubscribe) | `KALTURA_MESSAGING_API.md` |
+| Event-driven webhooks | Webhooks API (HTTP callbacks with HMAC signing) | `KALTURA_WEBHOOKS_API.md` |
+| Virtual events | Events Platform API (sessions, speakers, templates) | `KALTURA_EVENTS_PLATFORM_API.md` |
+| Secure auth without secrets | AppTokens (HMAC-based session start) | `KALTURA_APPTOKENS_API.md` |
+| Multi-camera / dual-screen | Multi-Stream API (parent-child entries) | `KALTURA_MULTI_STREAM_API.md` |
+| User registration & attendance | User Profile API (per-app profiles) | `KALTURA_USER_PROFILE_API.md` |
 
 ## Adding a New Guide
 

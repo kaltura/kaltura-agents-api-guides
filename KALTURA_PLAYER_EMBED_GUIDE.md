@@ -166,7 +166,28 @@ The Kaltura player exposes a DOM-style event system and a Promise for readiness.
 ```
 
 
-# 5. Related Guides
+# 5. Error Handling
+
+| Scenario | Detection | Resolution |
+|----------|-----------|------------|
+| Invalid `entryId` | Player shows "Media not found" error | Verify entry exists and has status=2 (READY) via `baseEntry.get` |
+| Expired or invalid KS | Player shows access denied | Generate a fresh KS; for production, use AppToken session renewal |
+| Player library not loaded | `KalturaPlayer is not defined` | Check the script `src` URL — verify `partnerId` and `uiConfId` are correct |
+| Plugin not available | `player.getService('name')` returns undefined | The plugin may not be enabled for this player config — verify `uiConfId` |
+| Autoplay blocked by browser | Video loads but does not play | Set `playback.autoplay: true` with `muted: true` — browsers require muted autoplay |
+
+**Retry strategy:** For transient errors (expired KS, network failures), implement KS refresh logic and retry `loadMedia`. For client errors (invalid `entryId`, missing player library, wrong `uiConfId`), fix the configuration before retrying — these will not resolve on their own.
+
+# 6. Best Practices
+
+- **Use USER KS (type=0)** for player embeds. Scope to specific entries with `sview:entryId` when possible.
+- **Set short KS expiry** (1-4 hours). For long-running pages, implement KS refresh logic.
+- **Use iframe embed for simple integrations.** It handles library loading and configuration automatically.
+- **Use JS embed for programmatic control.** When you need play/pause/seek, event listeners, or plugin interaction.
+- **Load the player library once.** Cache the `<script>` tag — do not reload it per video. Use `KalturaPlayer.setup()` for each new instance.
+- **Use Access Control profiles** on entries for content protection (geo, domain, IP restrictions) rather than implementing client-side checks.
+
+# 7. Related Guides
 
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — Generate KS for access-controlled player embeds
 - **[AppTokens](KALTURA_APPTOKENS_API.md)** — Secure KS generation for production player integrations

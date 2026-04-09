@@ -445,7 +445,28 @@ In addition to the API, agents can be configured through Kaltura's management in
 - **Supported action types:** captions, translation, dubbing, summary, moderation, metadata enrichment. For AI Clips, Quiz, Live Captions, and Video Analysis, use the [REACH API](KALTURA_REACH_API.md) directly. Call `actionDefinition/list` to discover available action types for your account.
 
 
-# Related Guides
+# 8. Error Handling
+
+| Error Code / Status | Meaning | Resolution |
+|---------------------|---------|------------|
+| `401 Unauthorized` | Invalid or expired KS | Generate a fresh admin KS with Bearer auth |
+| `404 Not Found` | Agent, trigger, or action ID does not exist | Verify the resource ID; it may have been deleted |
+| `400 Bad Request` | Missing required field or invalid payload | Check the request body against the schema — `objectType`, `triggers`, `actions` are required |
+| Execution status `FAILED` | Agent action failed during processing | Check execution history via `execution/list` — common causes: invalid entry, insufficient REACH credit, unsupported language |
+| Execution status `PARTIAL` | Some actions succeeded, others failed | Review individual action results in the execution response |
+
+**Retry strategy:** For transient errors (HTTP 5xx, timeouts), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (`401 Unauthorized`, `400 Bad Request`, `404 Not Found`), fix the request before retrying — these will not resolve on their own. For async operations (agent executions), poll with increasing intervals (5s, 10s, 30s) rather than tight loops.
+
+# 9. Best Practices
+
+- **Use specific triggers.** Prefer `ENTRY_READY` (fires once when transcoding completes) over `ENTRY_ADDED` (fires before content is playable).
+- **Filter triggers by category.** Use `categoryIds` in trigger configuration to limit which entries an agent processes — avoids processing test or draft content.
+- **Use REACH automation rules for simple single-action workflows** (e.g., "caption every new video"). Use Agents Manager for multi-step workflows (e.g., "caption, then translate to 3 languages, then generate summary").
+- **Monitor execution history.** Poll `execution/list` to verify agents are firing and completing successfully.
+- **Use AppTokens for production.** Create a scoped AppToken for your agent automation service rather than using raw admin secrets.
+- **Set up one agent per workflow.** Separate agents for different processing pipelines (captioning, translation, moderation) makes debugging easier.
+
+# 10. Related Guides
 
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — Generate the KS needed for Bearer auth
 - **[AppTokens](KALTURA_APPTOKENS_API.md)** — Secure server-to-server auth for agent automation services
@@ -453,3 +474,4 @@ In addition to the API, agents can be configured through Kaltura's management in
 - **[Upload & Delivery](KALTURA_UPLOAD_AND_DELIVERY_API.md)** — Upload content that triggers agent processing
 - **[AI Genie](KALTURA_AI_GENIE_API.md)** — Conversational AI search over content processed by agents
 - **[eSearch](KALTURA_ESEARCH_API.md)** — Search entries to find content for agent processing
+- **[Webhooks](KALTURA_WEBHOOKS_API.md)** — HTTP callbacks for agent execution events

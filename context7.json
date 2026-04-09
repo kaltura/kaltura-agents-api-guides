@@ -1,6 +1,6 @@
 {
   "name": "Kaltura API Guides",
-  "description": "Live-tested API guides for Kaltura — The Agentic Digital Experience Platform. Covers authentication, content management, search, player embed, AI-powered enrichment, conversational AI, virtual events, multi-stream, and more. For AI agents and developers.",
+  "description": "Live-tested API guides for Kaltura — The Agentic Digital Experience Platform. Covers authentication, content management, search, player embed, AI-powered enrichment (captions, translation, automation rules), conversational AI, virtual events, multi-stream, webhooks, email messaging, and more. 318 tests validated against live API. For AI agents and developers.",
   "focus": [
     "KALTURA_SESSION_GUIDE.md",
     "KALTURA_APPTOKENS_API.md",
@@ -15,6 +15,7 @@
     "KALTURA_APP_REGISTRY_API.md",
     "KALTURA_USER_PROFILE_API.md",
     "KALTURA_MESSAGING_API.md",
+    "KALTURA_WEBHOOKS_API.md",
     "AGENTS.md",
     ".agents/skills/kaltura-api/SKILL.md"
   ],
@@ -33,6 +34,8 @@
     "Entry statuses: -2 (NO_CONTENT), 0 (IMPORT), 1 (PRECONVERT), 2 (READY), 4 (CONVERTING), 7 (DELETED).",
     "Upload lifecycle: uploadToken.add → uploadToken.upload → media.add → media.addContent.",
     "Auth differs by API: v3 uses -d 'ks=$KALTURA_KS' form param, Events/Agents use Bearer $KALTURA_KS header, Genie uses KS $KALTURA_KS header.",
-    "Use AppTokens (appToken.startSession with HMAC) for production integrations instead of raw admin secrets."
+    "Use AppTokens (appToken.startSession with HMAC) for production integrations instead of raw admin secrets.",
+    "Use Kaltura's built-in services: REACH for transcription/translation, Agents Manager for automation, Messaging for emails, eSearch for search, Webhooks for event-driven callbacks.",
+    "Every guide includes Error Handling and Best Practices sections — consult these for production-quality integrations."
   ]
 }

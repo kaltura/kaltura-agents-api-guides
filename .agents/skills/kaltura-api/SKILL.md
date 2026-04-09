@@ -62,6 +62,8 @@ Some newer services use JSON bodies with auth headers:
 | AI Genie | `https://genie.nvp1.ovp.kaltura.com` | `Authorization: KS $KALTURA_KS` |
 | Messaging | `https://messaging.nvp1.ovp.kaltura.com/api/v1` | `Authorization: Bearer $KALTURA_KS` |
 
+> **Regional deployments** may use different base URLs (e.g., `irp2` for EU, `frp2` for DE). The URLs above are for the default NVP1 (US) region. Check your Kaltura account configuration for the correct regional endpoints.
+
 ## Common Integration Flows
 
 ### Upload → Process → Deliver → Embed
@@ -109,7 +111,7 @@ Read the relevant guide when you need to implement a specific capability:
 
 ### AI Services
 
-- **[REACH API](../../../KALTURA_REACH_API.md)** — Order AI or human captions, translations (40+ languages), audio descriptions, in-video chapters, summaries, and smart clips. Results auto-attach to entries. Includes the AI Clips workflow for generating highlight reels.
+- **[REACH API](../../../KALTURA_REACH_API.md)** — Order AI or human captions, translations (40+ languages), audio descriptions, in-video chapters, summaries, and smart clips. Results auto-attach to entries. Includes the AI Clips workflow for generating highlight reels and REACH Automation Rules (Boolean event conditions, category conditions, always-on) for automatic processing of matching entries.
 
 - **[Agents Manager API](../../../KALTURA_AGENTS_MANAGER_API.md)** — Create automated content-processing agents with triggers ("when a new entry is uploaded") and actions ("generate captions, then translate to Spanish"). Hands-free processing at scale.
 
@@ -124,6 +126,23 @@ Read the relevant guide when you need to implement a specific capability:
 - **[User Profile API](../../../KALTURA_USER_PROFILE_API.md)** — Per-application user profile management with event attendance lifecycle tracking. Manage registration, attendance status progression (created → registered → confirmed → attended → participated), bulk user import, attendance reporting, and incremental data sync. Includes cross-service registration data retrieval (virtualEvent → App Registry → User Profile → user.list) and engagement analytics via Reports API (report IDs 3030, 3037). Depends on App Registry for app context.
 
 - **[Messaging API](../../../KALTURA_MESSAGING_API.md)** — Template-based email messaging for event communications, attendee notifications, and personalized outreach. Create templates with dynamic tokens (user profile fields, magic login links, QR codes, unsubscribe links), send personalized emails to individual users or groups, track delivery status and engagement (opens, clicks, bounces), and manage CAN-SPAM compliant unsubscribe preferences. Depends on App Registry for app context (appGuid) and integrates with User Profile for recipient data.
+
+### Integration & Automation
+
+- **[Webhooks & Event Notifications API](../../../KALTURA_WEBHOOKS_API.md)** — Real-time HTTP webhooks and email notifications triggered by content events (entry ready, metadata changed, caption added, REACH task completed). Clone pre-built system templates, configure webhook URLs with HMAC signing, set event conditions, and use manual dispatch for testing. Email notifications are delivered via the Messaging Service (SendGrid) with delivery tracking and engagement analytics. Uses the `eventnotification_eventnotificationtemplate` API v3 plugin service. Boolean Event Notification Templates serve as conditions for REACH Automation Rules (documented in the REACH guide).
+
+## Security & Best Practices
+
+When building on Kaltura, follow these principles for production-quality integrations:
+
+- **Use AppTokens for production auth.** Never expose `adminSecret` in client code. Create scoped AppTokens with minimal privileges and rotate periodically. See [AppTokens API](../../../KALTURA_APPTOKENS_API.md).
+- **Prefer USER KS (type=0)** for end-user operations. Reserve ADMIN KS (type=2) for backend-only management. Scope privileges with `edit:`, `sview:`, `setrole:`, `iprestrict:`.
+- **Verify webhook signatures.** Validate `SHA256(signing_secret + body)` on all incoming HTTP webhooks before processing.
+- **Use Kaltura's built-in services** rather than reimplementing. REACH for transcription/translation, Agents Manager for automated processing, Messaging for email delivery, eSearch for search, Access Control for content protection.
+- **Handle errors and retries.** Check every API response for error codes. Implement exponential backoff for transient failures (HTTP 500, rate limits). Log error codes for debugging.
+- **Set short KS expiry.** Default to 1-4 hour sessions. Use AppToken session renewal rather than long-lived admin sessions.
+- **Sanitize inputs.** Validate user-provided entry IDs, search terms, and metadata before passing to API calls.
+- **Use CAN-SPAM compliant email patterns.** Include unsubscribe links and respect opt-out preferences when using the Messaging API.
 
 ## Environment Setup
 

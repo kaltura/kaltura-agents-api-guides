@@ -129,6 +129,21 @@ Examples pipe to `jq` for readability.
     -d "format=1" | jq .
     ```
 
+**Response:**
+```json
+{
+  "totalCount": 42,
+  "objects": [
+    {
+      "object": { "id": "1_abc123", "name": "...", "objectType": "KalturaMediaEntry" },
+      "highlight": [{ "fieldName": "name", "hits": "<em>search term</em> in title" }],
+      "itemsData": [...]
+    }
+  ],
+  "objectType": "KalturaESearchEntryResponse"
+}
+```
+
 **B. Field-Specific Search (Entry Name, Starts With)**
 * **Goal:** Find entries where the name starts with "AI Hacker".
 * **Capability:** Field-specific search, Starts With matching.
@@ -288,6 +303,8 @@ Examples pipe to `jq` for readability.
     * `PERMISSION_READ_ELASTIC_SEARCH_NOT_ALLOWED`: The `ks` used does not have the necessary permissions.
 * Implement logging for errors to aid debugging.
 
+**Retry strategy:** For transient errors (HTTP 5xx, `ESEARCH_SERVICE_DOWN`, timeouts), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (`INVALID_KS`, `ELASTIC_SEARCH_QUERY_NOT_VALID`, permission errors), fix the request before retrying — these will not resolve on their own.
+
 
 # 11. Related Guides
 
@@ -297,3 +314,5 @@ Examples pipe to `jq` for readability.
 - **[Player Embed](KALTURA_PLAYER_EMBED_GUIDE.md)** — Embed search results for playback
 - **[REACH](KALTURA_REACH_API.md)** — Enrich entries with captions and metadata (improves search quality)
 - **[AI Genie](KALTURA_AI_GENIE_API.md)** — Conversational AI search (uses eSearch internally for RAG)
+- **[Multi-Stream](KALTURA_MULTI_STREAM_API.md)** — Search for parent entries; use `parentEntryIdEqual` filter to find child entries
+- **[Webhooks](KALTURA_WEBHOOKS_API.md)** — Trigger notifications based on content events (search results inform webhook conditions)

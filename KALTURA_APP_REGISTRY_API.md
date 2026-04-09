@@ -385,7 +385,7 @@ Each app record has a `version` field (starts at 0). The version increments by 1
 The version does NOT increment if an `enable`/`disable` call matches the current status (idempotent no-op).
 
 
-# 11. Error Responses
+# 11. Error Handling
 
 Application-level errors return HTTP 200 with an error object:
 
@@ -406,6 +406,8 @@ Validation errors (missing required fields, invalid enum values) return HTTP 400
 | `ORGANIZATION_ID_DOMAIN_AND_APP_TYPE_MUST_BE_UNIQUE` | Domain/org/type combination already taken |
 | `APP_CANNOT_BE_ASSIGNED_TO_PARTNER` | Invalid app type for your partner |
 | `UNKNOWN_PARTNER_ID` | KS does not contain a valid partner ID |
+
+**Retry strategy:** For transient errors (HTTP 5xx, timeouts), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (HTTP 400, `OBJECT_NOT_FOUND`, `APP_REGISTRY_ALREADY_EXISTS_WITH_THIS_APP_CUSTOM_ID`), fix the request before retrying — these will not resolve on their own.
 
 
 # 12. Common Integration Patterns
@@ -546,10 +548,19 @@ curl -s -X POST "$KALTURA_APP_REGISTRY_URL/app-registry/list" \
 Store the last record's `updatedAt` timestamp as a watermark and use it as the start of the next sync window.
 
 
-# Related Guides
+# 13. Best Practices
+
+- **Use `appCustomId` for external system mapping.** Map virtual event IDs or external identifiers to app GUIDs for cross-service lookups (e.g., Events Platform auto-registers with `appCustomId` = virtual event ID).
+- **Track `version` numbers for concurrency detection.** The version increments on each state change — use it to detect concurrent modifications.
+- **Enable apps after configuration is complete.** Create and configure first, then enable — other services (User Profile, Messaging) only interact with enabled apps.
+- **Use the delta sync pattern for production integrations.** Filter by `updatedAt` range and paginate to keep your system in sync without full re-scans.
+- **Use AppTokens for production access.** Generate KS via `appToken.startSession` with HMAC — keep admin secrets off application servers.
+
+# 14. Related Guides
 
 - [Session Guide](KALTURA_SESSION_GUIDE.md) — KS generation and management
 - [AppTokens API](KALTURA_APPTOKENS_API.md) — Secure server-to-server auth
 - [User Profile API](KALTURA_USER_PROFILE_API.md) — Per-app user profile management (depends on App Registry)
 - [Events Platform API](KALTURA_EVENTS_PLATFORM_API.md) — Virtual events (auto-creates app registrations)
 - [Messaging API](KALTURA_MESSAGING_API.md) — Template-based email messaging (uses appGuid for message context)
+- [Webhooks API](KALTURA_WEBHOOKS_API.md) — Event-driven HTTP callbacks and email notifications
