@@ -25,9 +25,12 @@ The Kaltura platform combines intelligent content creation, enterprise-grade con
 - [Kaltura Agents Manager API Guide](KALTURA_AGENTS_MANAGER_API.md): The Agents Manager lets you create **automated content-processing agents** that watch for events on your content and execute actions automatically...
 - [Kaltura AI Genie API Guide](KALTURA_AI_GENIE_API.md): Kaltura AI Genie provides conversational AI search and generative answers over your video content library using RAG (Retrieval-Augmented Generation).
 
-## Events
+## Events & User Management
 
 - [Kaltura Virtual Events Platform API](KALTURA_EVENTS_PLATFORM_API.md): The Virtual Events Platform has a dedicated modern REST API (OAS 3.0) for creating and managing virtual events — town halls, webinars,...
+- [Kaltura App Registry API](KALTURA_APP_REGISTRY_API.md): Register and manage Kaltura application instances (KMS, Events Platform, custom apps). Each app gets a unique GUID used by other services for app context.
+- [Kaltura User Profile API](KALTURA_USER_PROFILE_API.md): Per-application user profiles with event attendance lifecycle (created → registered → confirmed → attended → participated). Bulk import, filtering, and attendance reporting.
+- [Kaltura Messaging API](KALTURA_MESSAGING_API.md): Template-based email messaging with dynamic tokens (user fields, magic links, QR codes), bulk sending, delivery tracking, engagement analytics, and CAN-SPAM unsubscribe management. Integrates with App Registry and Events Platform for event communications.
 
 ## Optional
 

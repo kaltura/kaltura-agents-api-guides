@@ -44,6 +44,9 @@ KS = _require_env("KALTURA_KS")
 SERVICE_URL = os.environ.get("KALTURA_SERVICE_URL", "https://www.kaltura.com/api_v3")
 AGENTS_MANAGER_URL = os.environ.get("KALTURA_AGENTS_MANAGER_URL", "https://agents-manager.nvp1.ovp.kaltura.com")
 GENIE_BASE_URL = os.environ.get("KALTURA_GENIE_URL", "https://genie.nvp1.ovp.kaltura.com")
+APP_REGISTRY_URL = os.environ.get("KALTURA_APP_REGISTRY_URL", "https://app-registry.nvp1.ovp.kaltura.com/api/v1")
+USER_PROFILE_URL = os.environ.get("KALTURA_USER_PROFILE_URL", "https://user.nvp1.ovp.kaltura.com/api/v1")
+MESSAGING_URL = os.environ.get("KALTURA_MESSAGING_URL", "https://messaging.nvp1.ovp.kaltura.com/api/v1")
 
 
 def kaltura_post(service, action, params=None):
@@ -61,6 +64,42 @@ def kaltura_post(service, action, params=None):
     if isinstance(result, dict) and result.get("objectType") == "KalturaAPIException":
         raise Exception(f"Kaltura API error: {result.get('message')} (code: {result.get('code')})")
     return result
+
+
+def bearer_post(base_url, path, json_body=None, timeout=30):
+    """POST to a Kaltura JSON API with Bearer KS auth. Returns parsed JSON."""
+    headers = {
+        "Authorization": f"Bearer {KS}",
+        "Content-Type": "application/json",
+    }
+    resp = requests.post(
+        f"{base_url}{path}",
+        headers=headers,
+        json=json_body or {},
+        timeout=timeout,
+    )
+    resp.raise_for_status()
+    if not resp.content:
+        return {}
+    result = resp.json()
+    if isinstance(result, dict) and result.get("objectType") == "KalturaAPIException":
+        raise Exception(f"API error: {result.get('message')} (code: {result.get('code')})")
+    return result
+
+
+def app_registry_post(action, json_body=None):
+    """POST to App Registry API. Returns parsed JSON."""
+    return bearer_post(APP_REGISTRY_URL, f"/app-registry/{action}", json_body)
+
+
+def user_profile_post(path, json_body=None, timeout=30):
+    """POST to User Profile API. Returns parsed JSON."""
+    return bearer_post(USER_PROFILE_URL, path, json_body, timeout=timeout)
+
+
+def messaging_post(service, action, json_body=None):
+    """POST to Messaging API. Returns parsed JSON."""
+    return bearer_post(MESSAGING_URL, f"/{service}/{action}", json_body)
 
 
 def agents_post(path, json_body=None):

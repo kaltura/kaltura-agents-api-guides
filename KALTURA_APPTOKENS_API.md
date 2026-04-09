@@ -62,8 +62,8 @@ POST /api_v3/service/appToken/action/add
 | `appToken[expiry]` | int | Unix timestamp when token expires (0 = never) |
 
 ```bash
-curl -X POST "$SERVICE_URL/service/appToken/action/add" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/appToken/action/add" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "appToken[objectType]=KalturaAppToken" \
   -d "appToken[hashType]=SHA256" \
@@ -102,8 +102,8 @@ POST /api_v3/service/appToken/action/list
 | `pager[pageIndex]` | int | Page number (1-based) |
 
 ```bash
-curl -X POST "$SERVICE_URL/service/appToken/action/list" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/appToken/action/list" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "filter[statusEqual]=2" \
   -d "pager[pageSize]=10"
@@ -176,8 +176,8 @@ POST /api_v3/service/appToken/action/startSession
 
 ```bash
 # --- Step 1: Get a widget session (unprivileged) ---
-curl -X POST "$SERVICE_URL/service/session/action/startWidgetSession" \
-  -d "widgetId=_$PARTNER_ID" \
+curl -X POST "$KALTURA_SERVICE_URL/service/session/action/startWidgetSession" \
+  -d "widgetId=_$KALTURA_PARTNER_ID" \
   -d "format=1"
 # Save the "ks" from the response as WIDGET_KS
 
@@ -194,7 +194,7 @@ curl -X POST "$SERVICE_URL/service/session/action/startWidgetSession" \
 #   SHA512: echo -n "..." | shasum -a 512 | cut -d' ' -f1
 
 # --- Step 3: Exchange for a privileged KS ---
-curl -X POST "$SERVICE_URL/service/appToken/action/startSession" \
+curl -X POST "$KALTURA_SERVICE_URL/service/appToken/action/startSession" \
   -d "ks=$WIDGET_KS" \
   -d "format=1" \
   -d "id=$APP_TOKEN_ID" \
@@ -205,8 +205,8 @@ curl -X POST "$SERVICE_URL/service/appToken/action/startSession" \
 # The response is the privileged KS string. Save it as KS.
 
 # --- Use the privileged KS for API calls ---
-curl -X POST "$SERVICE_URL/service/media/action/list" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/media/action/list" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "pager[pageSize]=5"
 ```
@@ -269,8 +269,8 @@ Rotating AppTokens without downtime:
 
 ```bash
 # Step 1: Create new token
-curl -X POST "$SERVICE_URL/service/appToken/action/add" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/appToken/action/add" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "appToken[objectType]=KalturaAppToken" \
   -d "appToken[hashType]=SHA256" \
@@ -280,8 +280,8 @@ curl -X POST "$SERVICE_URL/service/appToken/action/add" \
 
 # Step 3 (after deploying new token to integrations):
 # Delete old token
-curl -X POST "$SERVICE_URL/service/appToken/action/delete" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/appToken/action/delete" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "id=$OLD_TOKEN_ID"
 ```

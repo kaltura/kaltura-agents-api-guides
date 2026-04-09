@@ -50,8 +50,8 @@ POST /api_v3/service/uploadToken/action/add
 | 3 | CLOSED | Token consumed by addContent |
 
 ```bash
-curl -X POST "$SERVICE_URL/service/uploadToken/action/add" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/add" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "uploadToken[fileName]=my_video.mp4" \
   -d "uploadToken[fileSize]=15728640"
@@ -76,8 +76,8 @@ POST /api_v3/service/uploadToken/action/upload
 ### Single-file upload (small files)
 
 ```bash
-curl -X POST "$SERVICE_URL/service/uploadToken/action/upload" \
-  -F "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/upload" \
+  -F "ks=$KALTURA_KS" \
   -F "uploadTokenId=$UPLOAD_TOKEN_ID" \
   -F "resume=false" \
   -F "finalChunk=true" \
@@ -92,8 +92,8 @@ Split the file into chunks (e.g., 2 MB each) and upload each chunk sequentially:
 ```bash
 # First chunk (offset 0)
 dd if=big_video.mp4 bs=2097152 count=1 skip=0 2>/dev/null | \
-curl -X POST "$SERVICE_URL/service/uploadToken/action/upload" \
-  -F "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/upload" \
+  -F "ks=$KALTURA_KS" \
   -F "uploadTokenId=$UPLOAD_TOKEN_ID" \
   -F "resume=false" \
   -F "resumeAt=0" \
@@ -102,8 +102,8 @@ curl -X POST "$SERVICE_URL/service/uploadToken/action/upload" \
 
 # Subsequent chunks (resume=true, resumeAt=byte offset)
 dd if=big_video.mp4 bs=2097152 count=1 skip=1 2>/dev/null | \
-curl -X POST "$SERVICE_URL/service/uploadToken/action/upload" \
-  -F "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/upload" \
+  -F "ks=$KALTURA_KS" \
   -F "uploadTokenId=$UPLOAD_TOKEN_ID" \
   -F "resume=true" \
   -F "resumeAt=2097152" \
@@ -112,8 +112,8 @@ curl -X POST "$SERVICE_URL/service/uploadToken/action/upload" \
 
 # Final chunk (finalChunk=true)
 dd if=big_video.mp4 bs=2097152 count=1 skip=2 2>/dev/null | \
-curl -X POST "$SERVICE_URL/service/uploadToken/action/upload" \
-  -F "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/upload" \
+  -F "ks=$KALTURA_KS" \
   -F "uploadTokenId=$UPLOAD_TOKEN_ID" \
   -F "resume=true" \
   -F "resumeAt=4194304" \
@@ -165,8 +165,8 @@ POST /api_v3/service/media/action/add
 **Response:** `KalturaMediaEntry` with `id`, `status` (-2 = NO_CONTENT until file attached)
 
 ```bash
-curl -X POST "$SERVICE_URL/service/media/action/add" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/media/action/add" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "entry[objectType]=KalturaMediaEntry" \
   -d "entry[mediaType]=1" \
@@ -192,10 +192,10 @@ POST /api_v3/service/media/action/addContent
 This triggers transcoding. Entry status changes to `IMPORT (1)` or `CONVERTING (4)`.
 
 ```bash
-curl -X POST "$SERVICE_URL/service/media/action/addContent" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/media/action/addContent" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "entryId=$ENTRY_ID" \
+  -d "entryId=$KALTURA_ENTRY_ID" \
   -d "resource[objectType]=KalturaUploadedFileTokenResource" \
   -d "resource[token]=$UPLOAD_TOKEN_ID"
 ```
@@ -216,8 +216,8 @@ POST /api_v3/service/media/action/addFromUrl
 Kaltura fetches the file server-side. Entry starts in `IMPORT (1)` status.
 
 ```bash
-curl -X POST "$SERVICE_URL/service/media/action/addFromUrl" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/media/action/addFromUrl" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "mediaEntry[objectType]=KalturaMediaEntry" \
   -d "mediaEntry[name]=Imported from URL" \
@@ -329,10 +329,10 @@ POST /api_v3/service/flavorAsset/action/list
 - `isOriginal` -- `true` if this is the source file
 
 ```bash
-curl -X POST "$SERVICE_URL/service/flavorAsset/action/list" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/flavorAsset/action/list" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "filter[entryIdEqual]=$ENTRY_ID"
+  -d "filter[entryIdEqual]=$KALTURA_ENTRY_ID"
 ```
 
 The response `objects` array contains each flavor with `id`, `width`, `height`, `bitrate`, `size`, `status`, and `isOriginal` fields.
@@ -380,8 +380,8 @@ The following sequence of curl commands demonstrates the full chunked upload lif
 
 ```bash
 # --- Step 1: Create an upload token ---
-curl -X POST "$SERVICE_URL/service/uploadToken/action/add" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/add" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "uploadToken[fileName]=my_video.mp4" \
   -d "uploadToken[fileSize]=6291456"
@@ -391,8 +391,8 @@ curl -X POST "$SERVICE_URL/service/uploadToken/action/add" \
 
 # Chunk 1 (first 2 MB)
 dd if=my_video.mp4 bs=2097152 count=1 skip=0 2>/dev/null | \
-curl -X POST "$SERVICE_URL/service/uploadToken/action/upload" \
-  -F "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/upload" \
+  -F "ks=$KALTURA_KS" \
   -F "uploadTokenId=$UPLOAD_TOKEN_ID" \
   -F "resume=false" \
   -F "resumeAt=0" \
@@ -401,8 +401,8 @@ curl -X POST "$SERVICE_URL/service/uploadToken/action/upload" \
 
 # Chunk 2 (next 2 MB)
 dd if=my_video.mp4 bs=2097152 count=1 skip=1 2>/dev/null | \
-curl -X POST "$SERVICE_URL/service/uploadToken/action/upload" \
-  -F "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/upload" \
+  -F "ks=$KALTURA_KS" \
   -F "uploadTokenId=$UPLOAD_TOKEN_ID" \
   -F "resume=true" \
   -F "resumeAt=2097152" \
@@ -411,8 +411,8 @@ curl -X POST "$SERVICE_URL/service/uploadToken/action/upload" \
 
 # Chunk 3 / final chunk (last 2 MB)
 dd if=my_video.mp4 bs=2097152 count=1 skip=2 2>/dev/null | \
-curl -X POST "$SERVICE_URL/service/uploadToken/action/upload" \
-  -F "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/upload" \
+  -F "ks=$KALTURA_KS" \
   -F "uploadTokenId=$UPLOAD_TOKEN_ID" \
   -F "resume=true" \
   -F "resumeAt=4194304" \
@@ -420,8 +420,8 @@ curl -X POST "$SERVICE_URL/service/uploadToken/action/upload" \
   -F "fileData=@-;filename=chunk_4194304"
 
 # --- Step 3: Create a media entry ---
-curl -X POST "$SERVICE_URL/service/media/action/add" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/media/action/add" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "entry[objectType]=KalturaMediaEntry" \
   -d "entry[mediaType]=1" \
@@ -429,15 +429,15 @@ curl -X POST "$SERVICE_URL/service/media/action/add" \
 # Save the "id" from the response as ENTRY_ID
 
 # --- Step 4: Attach the upload token to the entry ---
-curl -X POST "$SERVICE_URL/service/media/action/addContent" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/media/action/addContent" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "entryId=$ENTRY_ID" \
+  -d "entryId=$KALTURA_ENTRY_ID" \
   -d "resource[objectType]=KalturaUploadedFileTokenResource" \
   -d "resource[token]=$UPLOAD_TOKEN_ID"
 
 # The entry is now processing. Check its thumbnail at:
-# https://cdnapisec.kaltura.com/p/$PARTNER_ID/thumbnail/entry_id/$ENTRY_ID
+# https://cdnapisec.kaltura.com/p/$KALTURA_PARTNER_ID/thumbnail/entry_id/$KALTURA_ENTRY_ID
 ```
 
 **Resume after failure:** Call `uploadToken.get` to check `uploadedFileSize`, then resume from that byte offset.

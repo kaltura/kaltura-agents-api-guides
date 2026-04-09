@@ -8,7 +8,7 @@ Kaltura REACH is the **captioning, translation, accessibility, and content enric
 
 REACH services can be triggered manually via the API, automatically via [Kaltura Agents](KALTURA_AGENTS_MANAGER_API.md), or through the KMC/KMS management UIs.
 
-## Prerequisites
+# Prerequisites
 
 - Know how to generate Kaltura Sessions (KS) in your backend (see [Session Guide](KALTURA_SESSION_GUIDE.md))
 - Have a Kaltura account with REACH services enabled (contact your Kaltura account manager to provision)
@@ -180,7 +180,7 @@ The typical flow: discover available catalog items for your account, then create
 | 2 | AUTOMATIC | Created automatically by a rule or agent |
 
 
-## 1. List Available Catalog Items
+# 1. List Available Catalog Items
 
 Discover which services are available for your account.
 
@@ -256,7 +256,7 @@ Save the `id` — this is the `catalogItemId` you use when creating tasks.
 When creating tasks via `entryVendorTask.add`, always use `objectType=KalturaEntryVendorTask` regardless of the catalog item type.
 
 
-## 2. Get REACH Profile
+# 2. Get REACH Profile
 
 Retrieve your REACH profile to understand account-level settings (credit balance, output preferences, dictionaries).
 
@@ -323,7 +323,7 @@ ks=<YOUR_KS>
 | `flavorParamsIds` | Preferred video flavor IDs for processing (comma-separated) |
 
 
-## 3. Create a Task (Order a Service)
+# 3. Create a Task (Order a Service)
 
 Submit a captioning, translation, or enrichment request for a specific entry.
 
@@ -381,7 +381,7 @@ ks=<YOUR_KS>
 The task begins in `PENDING` (1) status. If the entry is still processing, it starts in `PENDING_ENTRY_READY` (8) and moves to `PENDING` once the entry is ready. If moderation is enabled on your REACH profile, completed tasks will go to `PENDING_MODERATION` (4) before results are applied.
 
 
-## 4. Check Task Status
+# 4. Check Task Status
 
 **`entryVendorTask.get`**
 
@@ -408,7 +408,7 @@ ks=<YOUR_KS>
 | `finishTime` | Unix timestamp when processing completed |
 
 
-## 5. List Tasks
+# 5. List Tasks
 
 Query tasks with filters for monitoring and reporting.
 
@@ -444,7 +444,7 @@ ks=<YOUR_KS>
 **Order by:** `+createdAt`, `-createdAt`, `+updatedAt`, `-updatedAt`, `+status`, `-status`, `+price`, `-price`, `+expectedFinishTime`, `-expectedFinishTime`
 
 
-## 6. Manage Tasks
+# 6. Manage Tasks
 
 ### Approve a moderated task
 ```

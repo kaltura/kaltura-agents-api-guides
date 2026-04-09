@@ -6,27 +6,30 @@ Kaltura's eSearch API, powered by Elasticsearch, provides flexible full-text sea
 **Auth:** KS passed as `ks` parameter in POST form data (see [Session Guide](KALTURA_SESSION_GUIDE.md))
 **Format:** Form-encoded POST (`application/x-www-form-urlencoded`), `format=1` for JSON responses
 
-### 1. API Endpoint & Structure
-* **Base URL:** `https://www.kaltura.com/api_v3/`
+# 1. API Endpoint & Structure
+
 * **Service:** `elasticsearch_esearch`
 * **Primary Actions:**
     * `searchEntry`: Search across media entries and their related data.
     * `searchCategory`: Search category objects.
     * `searchUser`: Search user objects.
     * `searchGroup`: Search group objects.
-* **Endpoint Format:** `[Base URL]/service/[service_name]/action/[action_name]`
-    * Example: `https://www.kaltura.com/api_v3/service/elasticsearch_esearch/action/searchEntry`
+* **Endpoint Format:** `$KALTURA_SERVICE_URL/service/elasticsearch_esearch/action/{action}`
 * **HTTP Method:** `POST`
 * **Data Format:** `application/x-www-form-urlencoded` (Form Data). Nested parameters use standard array notation (e.g., `param[key][subkey]=value`).
 
-### 3. Authentication
-* Authentication is performed using a Kaltura Session string (`ks`).
-* Include the `ks` as part of the POST form data:
-    ```
-    ks=Your_Valid_Kaltura_Session_String
-    ```
 
-### 4. Core Request Parameters & Objects
+# 2. Authentication
+
+Include the `ks` as part of the POST form data:
+
+```bash
+-d "ks=$KALTURA_KS"
+-d "format=1"
+```
+
+
+# 3. Core Request Parameters & Objects
 
 Requests are built using specific Kaltura objects passed as form parameters.
 
@@ -51,7 +54,7 @@ Requests are built using specific Kaltura objects passed as form parameters.
     * `pageIndex` (Integer): The page number to retrieve (starts at 1).
     * `pageSize` (Integer): Number of results per page (default 30, max 500).
 
-### 5. Search Item (`searchItems`) Deep Dive
+# 4. Search Item (`searchItems`) Deep Dive
 
 These objects define *what* you're searching for within the `searchOperator.searchItems` array.
 
@@ -85,7 +88,7 @@ These objects define *what* you're searching for within the `searchOperator.sear
 * `metadataProfileId` (Integer, for Metadata items): ID of the metadata profile to search within.
 * `xpath` (String, optional for Metadata items): Targets a specific XML path within the metadata. If omitted, searches all fields in the profile.
 
-### 6. API Response Format (JSON)
+# 5. API Response Format (JSON)
 
 The API typically returns a JSON object structured as follows:
 
@@ -106,17 +109,17 @@ The API typically returns a JSON object structured as follows:
         * `value` (String): The specific value for the bucket (e.g., `"1"` for video media type).
         * `count` (Integer): The number of results falling into this bucket.
 
-### 7. Capabilities & Scenarios (with Curl Examples)
+# 6. Capabilities & Scenarios (with Curl Examples)
 
-**Note:** Replace `[Your_Valid_Kaltura_Session_String]` with a valid KS. Examples use `jq` for readability.
+Examples pipe to `jq` for readability.
 
 **A. Basic Unified Keyword Search with Highlighting**
 * **Goal:** Find entries matching "visual studio code" anywhere, show highlights.
 * **Capability:** Unified search, Highlighting, Partial/Synonym matching.
 * **Curl:**
     ```bash
-    curl -X POST https://www.kaltura.com/api_v3/service/elasticsearch_esearch/action/searchEntry \
-    -d "ks=[Your_Valid_Kaltura_Session_String]" \
+    curl -X POST "$KALTURA_SERVICE_URL/service/elasticsearch_esearch/action/searchEntry" \
+    -d "ks=$KALTURA_KS" \
     -d "searchParams[searchOperator][searchItems][0][objectType]=KalturaESearchUnifiedItem" \
     -d "searchParams[searchOperator][searchItems][0][searchTerm]=visual studio code" \
     -d "searchParams[searchOperator][searchItems][0][itemType]=2" \
@@ -131,8 +134,8 @@ The API typically returns a JSON object structured as follows:
 * **Capability:** Field-specific search, Starts With matching.
 * **Curl:**
     ```bash
-    curl -X POST https://www.kaltura.com/api_v3/service/elasticsearch_esearch/action/searchEntry \
-    -d "ks=[Your_Valid_Kaltura_Session_String]" \
+    curl -X POST "$KALTURA_SERVICE_URL/service/elasticsearch_esearch/action/searchEntry" \
+    -d "ks=$KALTURA_KS" \
     -d "searchParams[searchOperator][searchItems][0][objectType]=KalturaESearchEntryItem" \
     -d "searchParams[searchOperator][searchItems][0][searchTerm]=AI Hacker" \
     -d "searchParams[searchOperator][searchItems][0][itemType]=3" \
@@ -147,8 +150,8 @@ The API typically returns a JSON object structured as follows:
 * **Capability:** Multi-language, Field-specific search.
 * **Curl:**
     ```bash
-    curl -X POST https://www.kaltura.com/api_v3/service/elasticsearch_esearch/action/searchEntry \
-    -d "ks=[Your_Valid_Kaltura_Session_String]" \
+    curl -X POST "$KALTURA_SERVICE_URL/service/elasticsearch_esearch/action/searchEntry" \
+    -d "ks=$KALTURA_KS" \
     -d "searchParams[searchOperator][searchItems][0][objectType]=KalturaESearchCaptionItem" \
     -d "searchParams[searchOperator][searchItems][0][searchTerm]=食谱" \
     -d "searchParams[searchOperator][searchItems][0][itemType]=2" \
@@ -164,8 +167,8 @@ The API typically returns a JSON object structured as follows:
 * **Capability:** Metadata search, XPath targeting, Exact Match.
 * **Curl:**
     ```bash
-    curl -X POST https://www.kaltura.com/api_v3/service/elasticsearch_esearch/action/searchEntry \
-    -d "ks=[Your_Valid_Kaltura_Session_String]" \
+    curl -X POST "$KALTURA_SERVICE_URL/service/elasticsearch_esearch/action/searchEntry" \
+    -d "ks=$KALTURA_KS" \
     -d "searchParams[searchOperator][searchItems][0][objectType]=KalturaESearchEntryMetadataItem" \
     -d "searchParams[searchOperator][searchItems][0][searchTerm]=recipe" \
     -d "searchParams[searchOperator][searchItems][0][itemType]=1" \
@@ -182,8 +185,8 @@ The API typically returns a JSON object structured as follows:
 * **Capability:** Complex logic operators, Field-specific search, Cue point search.
 * **Curl:**
     ```bash
-    curl -X POST https://www.kaltura.com/api_v3/service/elasticsearch_esearch/action/searchEntry \
-    -d "ks=[Your_Valid_Kaltura_Session_String]" \
+    curl -X POST "$KALTURA_SERVICE_URL/service/elasticsearch_esearch/action/searchEntry" \
+    -d "ks=$KALTURA_KS" \
     # Main AND operator combines two items:
     -d "searchParams[searchOperator][operator]=1" \
     -d "searchParams[searchOperator][objectType]=KalturaESearchEntryOperator" \
@@ -210,8 +213,8 @@ The API typically returns a JSON object structured as follows:
 * **Capability:** Range searching on date fields.
 * **Curl:**
     ```bash
-    curl -X POST https://www.kaltura.com/api_v3/service/elasticsearch_esearch/action/searchEntry \
-    -d "ks=[Your_Valid_Kaltura_Session_String]" \
+    curl -X POST "$KALTURA_SERVICE_URL/service/elasticsearch_esearch/action/searchEntry" \
+    -d "ks=$KALTURA_KS" \
     -d "searchParams[searchOperator][searchItems][0][objectType]=KalturaESearchEntryItem" \
     -d "searchParams[searchOperator][searchItems][0][itemType]=5" \
     -d "searchParams[searchOperator][searchItems][0][fieldName]=created_at" \
@@ -228,8 +231,8 @@ The API typically returns a JSON object structured as follows:
 * **Capability:** Aggregation, Sorting.
 * **Curl:**
     ```bash
-    curl -X POST https://www.kaltura.com/api_v3/service/elasticsearch_esearch/action/searchEntry \
-    -d "ks=[Your_Valid_Kaltura_Session_String]" \
+    curl -X POST "$KALTURA_SERVICE_URL/service/elasticsearch_esearch/action/searchEntry" \
+    -d "ks=$KALTURA_KS" \
     -d "searchParams[searchOperator][searchItems][0][objectType]=KalturaESearchUnifiedItem" \
     -d "searchParams[searchOperator][searchItems][0][searchTerm]=visual studio code" \
     -d "searchParams[searchOperator][searchItems][0][itemType]=2" \
@@ -244,7 +247,7 @@ The API typically returns a JSON object structured as follows:
     -d "format=1" | jq .
     ```
 
-### 8. Advanced Topics & Use Cases
+# 7. Advanced Topics & Use Cases
 
 * **Aggregations (`searchParams[aggregations]`):**
     * **Use Case:** Get a summary view without retrieving all results, e.g., "Show me the count of videos vs. images matching 'tutorial'".
@@ -257,7 +260,7 @@ The API typically returns a JSON object structured as follows:
     * **Use Case:** Combining complex AND/OR/NOT logic as shown in Scenario E.
     * **How:** Place a `KalturaESearchEntryOperator` (or similar) within the `searchItems` array of another operator. This allows nesting conditions (e.g., `A AND (B OR (NOT C))`).
 
-### 9. Edge Cases & Best Practices
+# 8. Edge Cases & Best Practices
 
 * **Large Result Sets:** Always use the `pager` parameter (`pageIndex`, `pageSize`) to retrieve results in manageable chunks. Iterate through pages by incrementing `pageIndex` until the number of returned objects is less than `pageSize` or zero.
 * **Highlighting Context:** Remember that highlights (`<em>` tags) are embedded in the text. You might need to parse or display this HTML carefully. The `itemsData` array provides more context for matches in captions or metadata than the top-level `highlight` array.
@@ -265,7 +268,7 @@ The API typically returns a JSON object structured as follows:
 * **Performance:** Unified searches (`KalturaESearchUnifiedItem`) are convenient but can be slower than targeted searches using specific `fieldName`s (like `NAME` or `CAPTIONS_CONTENT`) because they query more fields. Optimize by specifying fields when possible.
 * **Schema Reference:** The Kaltura API schema (XML) is the definitive source for all object structures, properties, enums, and their exact names. Refer to it frequently.
 
-### 10. Key Objects & Enums Quick Reference
+# 9. Key Objects & Enums Quick Reference
 
 * **Params:** `KalturaESearchEntryParams`, `KalturaESearchCategoryParams`, `KalturaESearchUserParams`
 * **Operator:** `KalturaESearchEntryOperator` (and variants)
@@ -273,7 +276,7 @@ The API typically returns a JSON object structured as follows:
 * **Enums:** `KalturaESearchItemType`, `KalturaESearchOperatorType`, `KalturaESearchEntryFieldName` (and variants for other objects), `KalturaESearchEntryOrderByFieldName`, `KalturaESearchSortOrder`, `KalturaESearchLanguage`
 * **Response:** `KalturaESearchEntryResponse` (and variants), `KalturaESearchEntryResult` (and variants), `KalturaESearchHighlight`, `KalturaESearchItemDataResult`, `KalturaESearchAggregationResponse`
 
-### 11. Error Handling
+# 10. Error Handling
 
 * Check the HTTP status code first.
 * If the status is not 200, parse the JSON error response. Key fields are usually:
@@ -286,7 +289,7 @@ The API typically returns a JSON object structured as follows:
 * Implement logging for errors to aid debugging.
 
 
-### 12. Related Guides
+# 11. Related Guides
 
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — Generate the KS required for all eSearch calls
 - **[AppTokens](KALTURA_APPTOKENS_API.md)** — Secure KS generation for production integrations

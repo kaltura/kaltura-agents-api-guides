@@ -18,6 +18,9 @@ Kaltura API Guides/
 ├── KALTURA_AI_GENIE_API.md                # Conversational AI search
 ├── KALTURA_EVENTS_PLATFORM_API.md         # Virtual events
 ├── KALTURA_MULTI_STREAM_API.md            # Dual/multi-screen entries
+├── KALTURA_APP_REGISTRY_API.md            # Application instance registry
+├── KALTURA_USER_PROFILE_API.md            # Per-app user profiles & attendance
+├── KALTURA_MESSAGING_API.md               # Template-based email messaging
 └── tests/                                 # Companion test scripts
 ```
 
@@ -64,34 +67,34 @@ All tests must pass against the live Kaltura API before a guide is considered do
 ### Kaltura API v3 (form-encoded)
 
 ```bash
-curl -X POST "$SERVICE_URL/service/{service}/action/{action}" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/{service}/action/{action}" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "param[key]=value"
 ```
 
-- Shell variables: `$SERVICE_URL`, `$KS`, `$PARTNER_ID`, `$ENTRY_ID`
+- Shell variables: `$KALTURA_SERVICE_URL`, `$KALTURA_KS`, `$KALTURA_PARTNER_ID`, `$KALTURA_ENTRY_ID`
 - Always include `format=1` for JSON responses
 - One `-d` parameter per line with backslash continuation
 
 ### Modern JSON APIs (Events Platform, Agents Manager, AI Genie)
 
 ```bash
-curl -X POST "$BASE_URL/endpoint" \
-  -H "Authorization: Bearer $KS" \
+curl -X POST "$KALTURA_BASE_URL/endpoint" \
+  -H "Authorization: Bearer $KALTURA_KS" \
   -H "Content-Type: application/json" \
   -d '{"key": "value"}'
 ```
 
 Auth header formats differ by API:
-- **Events Platform & Agents Manager:** `Authorization: Bearer $KS`
-- **AI Genie:** `Authorization: KS $KS`
-- **API v3:** KS as form parameter (`-d "ks=$KS"`)
+- **Events Platform & Agents Manager:** `Authorization: Bearer $KALTURA_KS`
+- **AI Genie:** `Authorization: KS $KALTURA_KS`
+- **API v3:** KS as form parameter (`-d "ks=$KALTURA_KS"`)
 
 ## Writing Style
 
 - **No negative framing.** Write "Use UTC format for dates" not "Non-UTC dates are rejected."
-- **No language-specific code.** curl only in guides.
+- **No language-specific code.** curl only in guides. **Exception:** Guides for front-end components (Player embed, editor, Unisphere widgets) include JavaScript/HTML examples where the component's API is inherently browser-based. These guides still use curl for any server-side API calls.
 - **Minimal commentary.** Let API parameters and examples speak. Prose only when behavior is non-obvious.
 - **Tables for structured data.** Parameter lists, status codes, enum values.
 - **Inline code for identifiers.** Backticks for parameter names, values, IDs, env vars.
@@ -101,10 +104,13 @@ Auth header formats differ by API:
 
 | API | Auth Method | KS Notes |
 |-----|------------|----------|
-| API v3 (media, baseEntry, etc.) | `-d "ks=$KS"` form param | Admin KS with `disableentitlement` for full access |
-| Events Platform | `Bearer $KS` header | KS must have `userId` set |
-| Agents Manager | `Bearer $KS` header | Standard admin KS |
-| AI Genie | `KS $KS` header | Standard admin KS |
+| API v3 (media, baseEntry, etc.) | `-d "ks=$KALTURA_KS"` form param | Admin KS with `disableentitlement` for full access |
+| Events Platform | `Bearer $KALTURA_KS` header | KS must have `userId` set |
+| Agents Manager | `Bearer $KALTURA_KS` header | Standard admin KS |
+| AI Genie | `KS $KALTURA_KS` header | Standard admin KS |
+| App Registry | `Bearer $KALTURA_KS` header | Admin KS with `ADMIN_BASE` permission |
+| User Profile | `Bearer $KALTURA_KS` header | Admin KS with `ADMIN_BASE` permission |
+| Messaging | `Bearer $KALTURA_KS` header | Admin KS (type=2) |
 | Player embed | KS in URL or JS config | USER KS (type=0) for playback |
 
 ## Common Kaltura API Patterns

@@ -39,8 +39,8 @@ For full auth details, KS privileges, and AppToken HMAC workflow:
 ### API v3 (most services)
 
 ```bash
-curl -X POST "$SERVICE_URL/service/{service}/action/{action}" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/{service}/action/{action}" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "param[key]=value"
 ```
@@ -55,9 +55,12 @@ Some newer services use JSON bodies with auth headers:
 
 | API | Base URL | Auth Header |
 |-----|----------|-------------|
-| Events Platform | `https://events-api.nvp1.ovp.kaltura.com/api/v1` | `Authorization: Bearer $KS` |
-| Agents Manager | `https://agents-manager.nvp1.ovp.kaltura.com` | `Authorization: Bearer $KS` |
-| AI Genie | `https://genie.nvp1.ovp.kaltura.com` | `Authorization: KS $KS` |
+| Events Platform | `https://events-api.nvp1.ovp.kaltura.com/api/v1` | `Authorization: Bearer $KALTURA_KS` |
+| App Registry | `https://app-registry.nvp1.ovp.kaltura.com/api/v1` | `Authorization: Bearer $KALTURA_KS` |
+| User Profile | `https://user.nvp1.ovp.kaltura.com/api/v1` | `Authorization: Bearer $KALTURA_KS` |
+| Agents Manager | `https://agents-manager.nvp1.ovp.kaltura.com` | `Authorization: Bearer $KALTURA_KS` |
+| AI Genie | `https://genie.nvp1.ovp.kaltura.com` | `Authorization: KS $KALTURA_KS` |
+| Messaging | `https://messaging.nvp1.ovp.kaltura.com/api/v1` | `Authorization: Bearer $KALTURA_KS` |
 
 ## Common Integration Flows
 
@@ -112,16 +115,22 @@ Read the relevant guide when you need to implement a specific capability:
 
 - **[AI Genie API](../../../KALTURA_AI_GENIE_API.md)** — Conversational AI search over your video library using RAG. Streaming responses with structured answers (flashcards, sources, follow-ups). Supports both semantic search and multi-turn conversations.
 
-### Events
+### Events & User Management
 
 - **[Events Platform API](../../../KALTURA_EVENTS_PLATFORM_API.md)** — Create and manage virtual events (town halls, webinars, conferences). Modern REST API with session types (Interactive Room, LiveWebcast, SimuLive), team members, speakers, templates, and event duplication. Multi-region support.
+
+- **[App Registry API](../../../KALTURA_APP_REGISTRY_API.md)** — Register and manage Kaltura application instances (KMS sites, Events Platform portals, custom apps). Each registered app gets a unique GUID used by other services to associate data with specific app contexts. When Events Platform creates a virtual event, the event ID becomes the `appCustomId` — use `appCustomIdIn` filter to resolve virtual event IDs to app GUIDs.
+
+- **[User Profile API](../../../KALTURA_USER_PROFILE_API.md)** — Per-application user profile management with event attendance lifecycle tracking. Manage registration, attendance status progression (created → registered → confirmed → attended → participated), bulk user import, attendance reporting, and incremental data sync. Includes cross-service registration data retrieval (virtualEvent → App Registry → User Profile → user.list) and engagement analytics via Reports API (report IDs 3030, 3037). Depends on App Registry for app context.
+
+- **[Messaging API](../../../KALTURA_MESSAGING_API.md)** — Template-based email messaging for event communications, attendee notifications, and personalized outreach. Create templates with dynamic tokens (user profile fields, magic login links, QR codes, unsubscribe links), send personalized emails to individual users or groups, track delivery status and engagement (opens, clicks, bounces), and manage CAN-SPAM compliant unsubscribe preferences. Depends on App Registry for app context (appGuid) and integrates with User Profile for recipient data.
 
 ## Environment Setup
 
 ```bash
-export SERVICE_URL="https://www.kaltura.com/api_v3"
-export PARTNER_ID="your_partner_id"
-export KS="your_kaltura_session"
+export KALTURA_SERVICE_URL="https://www.kaltura.com/api_v3"
+export KALTURA_PARTNER_ID="your_partner_id"
+export KALTURA_KS="your_kaltura_session"
 ```
 
 Regional deployments may use different base URLs. Check with your Kaltura account configuration.

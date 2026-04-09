@@ -6,12 +6,12 @@ Embed Kaltura's PlayKit player in web applications using iframe or dynamic JavaS
 **Auth:** Optional KS for access-controlled content (see [Session Guide](KALTURA_SESSION_GUIDE.md))
 **Format:** HTML embed (iframe) or JavaScript SDK (PlayKit)
 
-## 0. When to use which embed
+# 1. When to use which embed
 
 - **Iframe embed** – Simplest drop-in, great when you don’t need programmatic control from the host page. The iframe embed is good for sites that don't allow third-party JavaScript to be embedded in their pages. It is possible to control the configuration passed to the player by adding query strings params.   
 - **Dynamic JS (PlayKit)** – recommended when you need **runtime config**, **start time**, **programmatic control**, or richer integrations. 
 
-## 1. Kaltura Player Iframe Embed
+# 2. Kaltura Player Iframe Embed
 
 Use the Kaltura iframe endpoint and pass parameters via **query string**. This form accepts `entry_id`, `uiconf_id`, optional `ks`, and most common initial config and playback flags.
 
@@ -52,7 +52,7 @@ Use the Kaltura iframe endpoint and pass parameters via **query string**. This f
 
 > Note: we're using cdnapisec.kaltura.com in this example, but your account region/deployment may differ. Make sure to use the correct base URL of your Kaltura account.  
 
-## 2. Dynamic JS (PlayKit) embed
+# 3. Dynamic JS (PlayKit) embed
 
 Load the **PlayKit/Kaltura Player JS** for your PID/UiConfID, then call `KalturaPlayer.setup(...)` and `loadMedia(...)`.
 
@@ -96,7 +96,7 @@ Load the **PlayKit/Kaltura Player JS** for your PID/UiConfID, then call `Kaltura
   }
 ```
 
-## 3. JS Control (Play/Pause/Seek/Volume)
+# 4. JS Control (Play/Pause/Seek/Volume)
 
 With **dynamic JS embeds**, the player instance exposes standard controls:
 
@@ -114,7 +114,7 @@ player.volume = 0.5;
 
 These APIs are part of the web player’s base interface (play/pause, `currentTime` getter/setter, `volume` getter/setter).  [See Kaltura Player API Docs for more](https://kaltura.github.io/kaltura-player-js/docs/guides.html)
 
-## 3.1 Binding to JS player events (drive app flows)
+## 4.1 Binding to JS player events (drive app flows)
 
 The Kaltura player exposes a DOM-style event system and a Promise for readiness. Use it for analytics beacons, UI reactions, gated flows, etc.  
 
@@ -166,7 +166,7 @@ The Kaltura player exposes a DOM-style event system and a Promise for readiness.
 ```
 
 
-## 4. Related Guides
+# 5. Related Guides
 
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — Generate KS for access-controlled player embeds
 - **[AppTokens](KALTURA_APPTOKENS_API.md)** — Secure KS generation for production player integrations

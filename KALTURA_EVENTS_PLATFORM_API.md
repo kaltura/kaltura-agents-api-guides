@@ -73,8 +73,8 @@ Set `doorsOpenDate` via `events/update` after the event is created.
 **Response:** Event object with `id`, `name`, `status`, dates, and nested session/team data.
 
 ```bash
-curl -X POST "$EVENTS_API_URL/events/create" \
-  -H "Authorization: Bearer $KS" \
+curl -X POST "$KALTURA_EVENTS_API_URL/events/create" \
+  -H "Authorization: Bearer $KALTURA_KS" \
   -H "Content-Type: application/json" \
   -d '{
     "name": "API Demo Webinar",
@@ -132,8 +132,8 @@ POST /api/v1/events/list
 **Response keys:** Event lists use the `events` key. Total count is in `totalCount`.
 
 ```bash
-curl -X POST "$EVENTS_API_URL/events/list" \
-  -H "Authorization: Bearer $KS" \
+curl -X POST "$KALTURA_EVENTS_API_URL/events/list" \
+  -H "Authorization: Bearer $KALTURA_KS" \
   -H "Content-Type: application/json" \
   -d '{
     "filter": {},
@@ -240,15 +240,15 @@ POST /api/v1/events/duplicateStatus
 
 ```bash
 # Start duplication
-curl -X POST "$EVENTS_API_URL/events/duplicate" \
-  -H "Authorization: Bearer $KS" \
+curl -X POST "$KALTURA_EVENTS_API_URL/events/duplicate" \
+  -H "Authorization: Bearer $KALTURA_KS" \
   -H "Content-Type: application/json" \
   -d '{"sourceEventId": 12345}'
 # Save the "jobId" from the response as JOB_ID
 
 # Poll for completion
-curl -X POST "$EVENTS_API_URL/events/duplicateStatus" \
-  -H "Authorization: Bearer $KS" \
+curl -X POST "$KALTURA_EVENTS_API_URL/events/duplicateStatus" \
+  -H "Authorization: Bearer $KALTURA_KS" \
   -H "Content-Type: application/json" \
   -d "{\"jobId\": \"$JOB_ID\"}"
 # Repeat until "status" is "completed" or "failed"
@@ -319,8 +319,8 @@ POST /api/v1/sessions/create
 ```
 
 ```bash
-curl -X POST "$EVENTS_API_URL/sessions/create" \
-  -H "Authorization: Bearer $KS" \
+curl -X POST "$KALTURA_EVENTS_API_URL/sessions/create" \
+  -H "Authorization: Bearer $KALTURA_KS" \
   -H "Content-Type: application/json" \
   -d '{
     "eventId": 12345,
@@ -352,8 +352,8 @@ POST /api/v1/sessions/list
 Returns all sessions belonging to the event. Response uses the `sessions` key.
 
 ```bash
-curl -X POST "$EVENTS_API_URL/sessions/list" \
-  -H "Authorization: Bearer $KS" \
+curl -X POST "$KALTURA_EVENTS_API_URL/sessions/list" \
+  -H "Authorization: Bearer $KALTURA_KS" \
   -H "Content-Type: application/json" \
   -d '{"eventId": 12345}'
 ```
@@ -478,14 +478,14 @@ Generate a KS with `userId` via `session.start` (see [Session Guide](KALTURA_SES
 
 ```bash
 # Prerequisites: set these shell variables before running the commands below
-# EVENTS_API_URL="https://events-api.nvp1.ovp.kaltura.com/api/v1"
-# KS="<your KS with userId>"
+# KALTURA_EVENTS_API_URL="https://events-api.nvp1.ovp.kaltura.com/api/v1"
+# KALTURA_KS="<your KS with userId>"
 ```
 
 ```bash
 # --- Step 1: Create an event ---
-curl -X POST "$EVENTS_API_URL/events/create" \
-  -H "Authorization: Bearer $KS" \
+curl -X POST "$KALTURA_EVENTS_API_URL/events/create" \
+  -H "Authorization: Bearer $KALTURA_KS" \
   -H "Content-Type: application/json" \
   -d '{
     "name": "API Demo Event",
@@ -498,8 +498,8 @@ curl -X POST "$EVENTS_API_URL/events/create" \
 # Save the "id" from the response as EVENT_ID
 
 # --- Step 2: Add a live webcast session ---
-curl -X POST "$EVENTS_API_URL/sessions/create" \
-  -H "Authorization: Bearer $KS" \
+curl -X POST "$KALTURA_EVENTS_API_URL/sessions/create" \
+  -H "Authorization: Bearer $KALTURA_KS" \
   -H "Content-Type: application/json" \
   -d "{
     \"eventId\": $EVENT_ID,
@@ -513,8 +513,8 @@ curl -X POST "$EVENTS_API_URL/sessions/create" \
   }"
 
 # --- Step 3: List all events ---
-curl -X POST "$EVENTS_API_URL/events/list" \
-  -H "Authorization: Bearer $KS" \
+curl -X POST "$KALTURA_EVENTS_API_URL/events/list" \
+  -H "Authorization: Bearer $KALTURA_KS" \
   -H "Content-Type: application/json" \
   -d '{
     "filter": {},
@@ -523,8 +523,8 @@ curl -X POST "$EVENTS_API_URL/events/list" \
   }'
 
 # --- Step 4: Update the event ---
-curl -X POST "$EVENTS_API_URL/events/update" \
-  -H "Authorization: Bearer $KS" \
+curl -X POST "$KALTURA_EVENTS_API_URL/events/update" \
+  -H "Authorization: Bearer $KALTURA_KS" \
   -H "Content-Type: application/json" \
   -d "{
     \"id\": $EVENT_ID,
@@ -533,8 +533,8 @@ curl -X POST "$EVENTS_API_URL/events/update" \
   }"
 
 # --- Step 5: Delete the event ---
-curl -X POST "$EVENTS_API_URL/events/delete" \
-  -H "Authorization: Bearer $KS" \
+curl -X POST "$KALTURA_EVENTS_API_URL/events/delete" \
+  -H "Authorization: Bearer $KALTURA_KS" \
   -H "Content-Type: application/json" \
   -d "{\"id\": $EVENT_ID}"
 ```
@@ -549,4 +549,7 @@ curl -X POST "$EVENTS_API_URL/events/delete" \
 - **[REACH Guide](KALTURA_REACH_API.md)** — Auto-caption event session recordings
 - **[Agents Manager](KALTURA_AGENTS_MANAGER_API.md)** — Auto-process event content with triggers and actions
 - **[AI Genie](KALTURA_AI_GENIE_API.md)** — Conversational AI search over event content
+- **[App Registry API](KALTURA_APP_REGISTRY_API.md)** — Application instance registry (events auto-register apps)
+- **[User Profile API](KALTURA_USER_PROFILE_API.md)** — Per-event attendee profiles and attendance tracking
+- **[Messaging API](KALTURA_MESSAGING_API.md)** — Email invitations, reminders, and follow-ups for event attendees
 - **MCP Server:** [kaltura/mcp-events](https://github.com/kaltura/mcp-events) — AI agent integration

@@ -59,14 +59,25 @@ def main():
     runner.run_test("Active REACH profile available", test_reach_profile)
 
     def test_find_ready_entry():
-        """Find an existing ready video entry with sufficient duration."""
+        """Find a short (2-3 min) ready video entry for faster clip processing."""
+        # Prefer entries between 90-240s for fast turnaround
         result = kaltura_post("media", "list", {
             "filter[statusEqual]": 2,
             "filter[mediaTypeEqual]": 1,
-            "filter[durationGreaterThan]": 60,
+            "filter[durationGreaterThan]": 90,
+            "filter[durationLessThan]": 240,
             "filter[orderBy]": "-plays",
             "pager[pageSize]": 1,
         })
+        if result["totalCount"] == 0:
+            # Fall back to any entry > 60s if no short ones exist
+            result = kaltura_post("media", "list", {
+                "filter[statusEqual]": 2,
+                "filter[mediaTypeEqual]": 1,
+                "filter[durationGreaterThan]": 60,
+                "filter[orderBy]": "+duration",  # shortest first
+                "pager[pageSize]": 1,
+            })
         assert result["totalCount"] > 0, "No ready video entries with duration > 60s"
         entry = result["objects"][0]
         state["source_entry_id"] = entry["id"]
@@ -74,7 +85,7 @@ def main():
         print(f"    Source entry: {entry['id']} — {entry.get('name', '?')}, "
               f"duration={state['source_duration']}s")
 
-    runner.run_test("Find ready source entry (duration > 60s)", test_find_ready_entry)
+    runner.run_test("Find ready source entry (prefer 90-240s, fallback >60s)", test_find_ready_entry)
 
     # ════════════════════════════════════════════
     # Phase 2: Order AI Clip Generation
@@ -82,7 +93,8 @@ def main():
 
     def test_clips_task_add():
         """Order AI clip generation using KalturaClipsVendorTaskData."""
-        clips_duration = min(120, state["source_duration"])
+        # Use 10-20s clip duration for fast processing (user directive)
+        clips_duration = min(20, max(10, state["source_duration"] // 10))
         result = kaltura_post("reach_entryVendorTask", "add", {
             "entryVendorTask[objectType]": "KalturaEntryVendorTask",
             "entryVendorTask[entryId]": state["source_entry_id"],

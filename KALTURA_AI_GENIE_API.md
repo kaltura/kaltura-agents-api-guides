@@ -6,7 +6,7 @@ Kaltura AI Genie provides conversational AI search and generative answers over y
 **Auth:** `Authorization: KS <YOUR_KS>` header
 **Format:** JSON request/response bodies, all endpoints use POST
 
-## Prerequisites
+# Prerequisites
 
 This guide assumes you already:
 - Know how to generate Kaltura Sessions (KS) in your backend, setting privileges.   
@@ -42,7 +42,7 @@ Notes:
 - `sview:*` - lets Genie return playable clips; your **entitlements** still gate access per user and privacy context.
 - `privacycontext` - should match the category privacy context Genie indexes for your account.
 
-## 1. Stateless RAG Search (no session, quick hits)
+# 1. Stateless RAG Search (no session, quick hits)
 
 **POST** `/mcp/search`
 
@@ -109,7 +109,7 @@ Each chapter includes:
 Use these to deep-link into playback at the relevant point: `loadMedia({ entryId }, { startTime, clipTo })`.
 
 
-## 2. Conversational Answers — **Streaming**
+# 2. Conversational Answers — **Streaming**
 
 ```bash
 POST /assistant/converse
@@ -231,7 +231,7 @@ A parser should:
 - For each `keypoint`, attach its `title`/`summary` to the clips under `citation → clips`.
 - Extract **entry_id**, **start_time**, **end_time** and de-dupe clips.
 
-## 3. Smart Search Sessions — Polling (SSE alternative)
+# 3. Smart Search Sessions — Polling (SSE alternative)
 
 Use this when your client polls rather than holding an SSE stream. You open a session, then poll every N seconds until the final payload is ready. If your deployment returns 404 on these endpoints, use `/assistant/converse` (streaming) or `/mcp/search` (stateless).
 
@@ -335,8 +335,8 @@ Use `vid_sec` to show a frame from the clip's `start_time` — this gives users 
 ### Stateless RAG Search (`/mcp/search`)
 
 ```bash
-curl -X POST "$GENIE_URL/mcp/search" \
-  -H "Authorization: KS $KS" \
+curl -X POST "$KALTURA_GENIE_URL/mcp/search" \
+  -H "Authorization: KS $KALTURA_KS" \
   -H "Content-Type: application/json" \
   -d '{
     "query": "how to create an interactive video?",
@@ -349,8 +349,8 @@ curl -X POST "$GENIE_URL/mcp/search" \
 The `-N` flag disables output buffering so you see SSE events as they arrive:
 
 ```bash
-curl -N -X POST "$GENIE_URL/assistant/converse" \
-  -H "Authorization: KS $KS" \
+curl -N -X POST "$KALTURA_GENIE_URL/assistant/converse" \
+  -H "Authorization: KS $KALTURA_KS" \
   -H "Content-Type: application/json" \
   -d '{
     "userMessage": "What are the key features?",
@@ -366,8 +366,8 @@ Each line in the response is prefixed with `data:` and contains a JSON object. R
 Pass the `threadId` returned from a previous response to continue the conversation with full context:
 
 ```bash
-curl -N -X POST "$GENIE_URL/assistant/converse" \
-  -H "Authorization: KS $KS" \
+curl -N -X POST "$KALTURA_GENIE_URL/assistant/converse" \
+  -H "Authorization: KS $KALTURA_KS" \
   -H "Content-Type: application/json" \
   -d '{
     "userMessage": "Can you go deeper on the second point?",
@@ -380,7 +380,7 @@ curl -N -X POST "$GENIE_URL/assistant/converse" \
 The assistant remembers all prior messages in the thread and will answer in context. Parse the stream the same way as above.
 
 
-## Related Guides
+# Related Guides
 
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — Generate the KS required for Genie auth (`KS` header)
 - **[AppTokens](KALTURA_APPTOKENS_API.md)** — Secure KS generation for production Genie integrations

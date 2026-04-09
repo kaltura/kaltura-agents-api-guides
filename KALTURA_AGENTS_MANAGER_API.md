@@ -65,7 +65,7 @@ Most agent actions are powered by **Kaltura REACH** services. The `catalogItemId
 The actions available to your agents depend on which services are enabled on your Kaltura account. Your account's full catalog of available action types — including any services added after this guide was written — can always be retrieved at runtime by calling the **Action Definitions API** (see [Step 1](#1-discover-available-action-types) below). This ensures your integration automatically discovers new action types as they become available, without code changes.
 
 
-## 1. Discover Available Action Types
+# 1. Discover Available Action Types
 
 Retrieve the catalog of actions available for your account. The response includes vendor information, supported languages, and `catalogItemId` values needed to build your actions payload.
 
@@ -124,7 +124,7 @@ Retrieve the catalog of actions available for your account. The response include
 - Not all action types have vendors/languages (e.g., `summary`, `publish_entry` may have different structures).
 
 
-## 2. Create a Trigger
+# 2. Create a Trigger
 
 Define when your agent should run. Triggers use a `systemName` to identify the event type.
 
@@ -155,7 +155,7 @@ Define when your agent should run. Triggers use a `systemName` to identify the e
 ```
 
 
-## 3. Create Actions
+# 3. Create Actions
 
 Define what your agent should do. Actions reference a `workflowId` and contain one or more `workflowActions`, each specifying a REACH profile, action type, and catalog item.
 
@@ -200,7 +200,7 @@ Define what your agent should do. Actions reference a `workflowId` and contain o
 ```
 
 
-## 4. Create an Agent
+# 4. Create an Agent
 
 Tie the trigger and actions together into an agent.
 
@@ -245,7 +245,7 @@ Enable the trigger and actions first, then set the agent status to `"Enabled"`. 
 Note: The create response includes full inline `trigger` and `actions` objects. The list endpoint returns only `triggerId` and `actionsId` as string references (see below).
 
 
-## 5. List Agents
+# 5. List Agents
 
 Retrieve all agents configured for your account.
 
@@ -276,7 +276,7 @@ Retrieve all agents configured for your account.
 ```
 
 
-## 6. Delete Resources
+# 6. Delete Resources
 
 Each resource type has its own delete endpoint. **Triggers and actions must be deleted explicitly** — they are not automatically removed when an agent is deleted.
 
@@ -300,7 +300,7 @@ Delete the agent first, then its trigger and actions:
 Each delete returns the object with `"status": "Deleted"`.
 
 
-## 7. Execution Tracking
+# 7. Execution Tracking
 
 Every agent execution is tracked and queryable:
 
@@ -342,18 +342,18 @@ Done.    Every new video that finishes processing will
 Set up your environment variables first:
 
 ```bash
-export BASE_URL="https://agents-manager.nvp1.ovp.kaltura.com"
-export PARTNER_ID="12345"
-export KS="YOUR_KS"  # see KALTURA_SESSION_GUIDE.md
+export KALTURA_BASE_URL="https://agents-manager.nvp1.ovp.kaltura.com"
+export KALTURA_PARTNER_ID="12345"
+export KALTURA_KS="YOUR_KS"  # see KALTURA_SESSION_GUIDE.md
 ```
 
 **1. List action definitions** — find the `catalogItemId` and `reachProfileId` for English captions:
 
 ```bash
-curl -X POST "$BASE_URL/api/v1/actionDefinition/list" \
-  -H "Authorization: Bearer $KS" \
+curl -X POST "$KALTURA_BASE_URL/api/v1/actionDefinition/list" \
+  -H "Authorization: Bearer $KALTURA_KS" \
   -H "Content-Type: application/json" \
-  -d "{\"partnerId\": \"$PARTNER_ID\"}"
+  -d "{\"partnerId\": \"$KALTURA_PARTNER_ID\"}"
 ```
 
 From the response, locate the `captions` action definition and note the `catalogItemId` for English (e.g., `27762`) and the `reachProfiles[].id` (e.g., `261`).
@@ -361,10 +361,10 @@ From the response, locate the `captions` action definition and note the `catalog
 **2. Create a trigger** — fires on every new entry ready:
 
 ```bash
-curl -X POST "$BASE_URL/api/v1/trigger/create" \
-  -H "Authorization: Bearer $KS" \
+curl -X POST "$KALTURA_BASE_URL/api/v1/trigger/create" \
+  -H "Authorization: Bearer $KALTURA_KS" \
   -H "Content-Type: application/json" \
-  -d "{\"partnerId\": \"$PARTNER_ID\", \"systemName\": \"ENTRY_READY\", \"triggerParameters\": {}}"
+  -d "{\"partnerId\": \"$KALTURA_PARTNER_ID\", \"systemName\": \"ENTRY_READY\", \"triggerParameters\": {}}"
 ```
 
 Note the `id` from the response (e.g., `abc123def456`).
@@ -372,10 +372,10 @@ Note the `id` from the response (e.g., `abc123def456`).
 **3. Create actions** — generate English captions using the values from step 1:
 
 ```bash
-curl -X POST "$BASE_URL/api/v1/actions/create" \
-  -H "Authorization: Bearer $KS" \
+curl -X POST "$KALTURA_BASE_URL/api/v1/actions/create" \
+  -H "Authorization: Bearer $KALTURA_KS" \
   -H "Content-Type: application/json" \
-  -d "{\"partnerId\": \"$PARTNER_ID\", \"workflowId\": \"publishing_workflow_dag\", \"workflowActions\": [{\"reach_profile_id\": 261, \"type\": \"captions\", \"catalog_item_id\": 27762}]}"
+  -d "{\"partnerId\": \"$KALTURA_PARTNER_ID\", \"workflowId\": \"publishing_workflow_dag\", \"workflowActions\": [{\"reach_profile_id\": 261, \"type\": \"captions\", \"catalog_item_id\": 27762}]}"
 ```
 
 Note the `id` from the response (e.g., `xyz789abc012`).
@@ -383,10 +383,10 @@ Note the `id` from the response (e.g., `xyz789abc012`).
 **4. Create and enable the agent** — link the trigger and actions:
 
 ```bash
-curl -X POST "$BASE_URL/api/v1/agent/create" \
-  -H "Authorization: Bearer $KS" \
+curl -X POST "$KALTURA_BASE_URL/api/v1/agent/create" \
+  -H "Authorization: Bearer $KALTURA_KS" \
   -H "Content-Type: application/json" \
-  -d "{\"partnerId\": \"$PARTNER_ID\", \"name\": \"Auto-Caption All New Videos\", \"description\": \"English captions on every new entry\", \"triggerId\": \"abc123def456\", \"actionsId\": \"xyz789abc012\", \"status\": \"Enabled\"}"
+  -d "{\"partnerId\": \"$KALTURA_PARTNER_ID\", \"name\": \"Auto-Caption All New Videos\", \"description\": \"English captions on every new entry\", \"triggerId\": \"abc123def456\", \"actionsId\": \"xyz789abc012\", \"status\": \"Enabled\"}"
 ```
 
 The response includes the full agent object with inline trigger and actions.
@@ -445,7 +445,7 @@ In addition to the API, agents can be configured through Kaltura's management in
 - **Supported action types:** captions, translation, dubbing, summary, moderation, metadata enrichment. For AI Clips, Quiz, Live Captions, and Video Analysis, use the [REACH API](KALTURA_REACH_API.md) directly. Call `actionDefinition/list` to discover available action types for your account.
 
 
-## Related Guides
+# Related Guides
 
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — Generate the KS needed for Bearer auth
 - **[AppTokens](KALTURA_APPTOKENS_API.md)** — Secure server-to-server auth for agent automation services

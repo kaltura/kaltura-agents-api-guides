@@ -48,14 +48,14 @@ Upload and create the parent entry using the standard upload flow:
 
 ```bash
 # Step 1: Create upload token
-curl -X POST "$SERVICE_URL/service/uploadToken/action/add" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/add" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1"
 # Save the "id" from response as PARENT_TOKEN_ID
 
 # Step 2: Upload the file
-curl -X POST "$SERVICE_URL/service/uploadToken/action/upload" \
-  -F "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/upload" \
+  -F "ks=$KALTURA_KS" \
   -F "uploadTokenId=$PARENT_TOKEN_ID" \
   -F "resume=false" \
   -F "finalChunk=true" \
@@ -63,8 +63,8 @@ curl -X POST "$SERVICE_URL/service/uploadToken/action/upload" \
   -F "fileData=@primary-video.mp4;type=video/mp4"
 
 # Step 3: Create the media entry
-curl -X POST "$SERVICE_URL/service/media/action/add" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/media/action/add" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "entry[objectType]=KalturaMediaEntry" \
   -d "entry[mediaType]=1" \
@@ -72,8 +72,8 @@ curl -X POST "$SERVICE_URL/service/media/action/add" \
 # Save the "id" from response as PARENT_ENTRY_ID
 
 # Step 4: Attach the file to the entry
-curl -X POST "$SERVICE_URL/service/media/action/addContent" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/media/action/addContent" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "entryId=$PARENT_ENTRY_ID" \
   -d "resource[objectType]=KalturaUploadedFileTokenResource" \
@@ -88,14 +88,14 @@ The key difference from a normal upload: set `entry[parentEntryId]` in the `medi
 
 ```bash
 # Step 1: Create upload token for child
-curl -X POST "$SERVICE_URL/service/uploadToken/action/add" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/add" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1"
 # Save the "id" from response as CHILD_TOKEN_ID
 
 # Step 2: Upload the child file
-curl -X POST "$SERVICE_URL/service/uploadToken/action/upload" \
-  -F "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/upload" \
+  -F "ks=$KALTURA_KS" \
   -F "uploadTokenId=$CHILD_TOKEN_ID" \
   -F "resume=false" \
   -F "finalChunk=true" \
@@ -103,8 +103,8 @@ curl -X POST "$SERVICE_URL/service/uploadToken/action/upload" \
   -F "fileData=@screen-share.mp4;type=video/mp4"
 
 # Step 3: Create the child entry — set parentEntryId
-curl -X POST "$SERVICE_URL/service/media/action/add" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/media/action/add" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "entry[objectType]=KalturaMediaEntry" \
   -d "entry[mediaType]=1" \
@@ -113,8 +113,8 @@ curl -X POST "$SERVICE_URL/service/media/action/add" \
 # Save the "id" from response as CHILD_ENTRY_ID
 
 # Step 4: Attach the file
-curl -X POST "$SERVICE_URL/service/media/action/addContent" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/media/action/addContent" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "entryId=$CHILD_ENTRY_ID" \
   -d "resource[objectType]=KalturaUploadedFileTokenResource" \
@@ -129,8 +129,8 @@ Repeat this step for each additional stream. Each child entry must reference the
 If you already have both videos as independent entries, link them after the fact using `baseEntry.update`:
 
 ```bash
-curl -X POST "$SERVICE_URL/service/baseEntry/action/update" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/baseEntry/action/update" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "entryId=$ENTRY_TO_BECOME_CHILD" \
   -d "baseEntry[parentEntryId]=$PARENT_ENTRY_ID"
@@ -139,8 +139,8 @@ curl -X POST "$SERVICE_URL/service/baseEntry/action/update" \
 To unlink a child entry (make it independent again), clear the `parentEntryId`:
 
 ```bash
-curl -X POST "$SERVICE_URL/service/baseEntry/action/update" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/baseEntry/action/update" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "entryId=$CHILD_ENTRY_ID" \
   -d "baseEntry[parentEntryId]="
@@ -153,14 +153,14 @@ curl -X POST "$SERVICE_URL/service/baseEntry/action/update" \
 
 ```bash
 # Get parent entry details
-curl -X POST "$SERVICE_URL/service/baseEntry/action/get" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/baseEntry/action/get" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "entryId=$PARENT_ENTRY_ID"
 
 # Get child entry — confirm parentEntryId is set
-curl -X POST "$SERVICE_URL/service/baseEntry/action/get" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/baseEntry/action/get" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "entryId=$CHILD_ENTRY_ID"
 ```
@@ -175,8 +175,8 @@ Confirm:
 Use `baseEntry.list` with the `parentEntryIdEqual` filter:
 
 ```bash
-curl -X POST "$SERVICE_URL/service/baseEntry/action/list" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/baseEntry/action/list" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "filter[parentEntryIdEqual]=$PARENT_ENTRY_ID"
 ```
@@ -343,12 +343,12 @@ See the [Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md) for full embedding d
 
 ```bash
 # Prerequisites: set these shell variables before running the commands below
-# SERVICE_URL="https://www.kaltura.com/api_v3"
-# KS="<your Kaltura Session>"
+# KALTURA_SERVICE_URL="https://www.kaltura.com/api_v3"
+# KALTURA_KS="<your Kaltura Session>"
 
 # --- Step 1: Create the parent entry (using addFromUrl for simplicity) ---
-curl -X POST "$SERVICE_URL/service/media/action/addFromUrl" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/media/action/addFromUrl" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "mediaEntry[objectType]=KalturaMediaEntry" \
   -d "mediaEntry[name]=Speaker Camera" \
@@ -357,8 +357,8 @@ curl -X POST "$SERVICE_URL/service/media/action/addFromUrl" \
 # Save the "id" from response as PARENT_ENTRY_ID
 
 # --- Step 2: Create a child entry linked to the parent ---
-curl -X POST "$SERVICE_URL/service/media/action/addFromUrl" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/media/action/addFromUrl" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "mediaEntry[objectType]=KalturaMediaEntry" \
   -d "mediaEntry[name]=Screen Share" \
@@ -368,40 +368,40 @@ curl -X POST "$SERVICE_URL/service/media/action/addFromUrl" \
 # Save the "id" from response as CHILD_ENTRY_ID
 
 # --- Step 3: Verify the relationship ---
-curl -X POST "$SERVICE_URL/service/baseEntry/action/get" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/baseEntry/action/get" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "entryId=$CHILD_ENTRY_ID"
 # Confirm parentEntryId matches PARENT_ENTRY_ID
 
 # --- Step 4: List all children of the parent ---
-curl -X POST "$SERVICE_URL/service/baseEntry/action/list" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/baseEntry/action/list" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "filter[parentEntryIdEqual]=$PARENT_ENTRY_ID"
 
 # --- Step 5: Link another existing entry as a child ---
-curl -X POST "$SERVICE_URL/service/baseEntry/action/update" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/baseEntry/action/update" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "entryId=$ANOTHER_ENTRY_ID" \
   -d "baseEntry[parentEntryId]=$PARENT_ENTRY_ID"
 
 # --- Step 6: Unlink a child (make it independent) ---
-curl -X POST "$SERVICE_URL/service/baseEntry/action/update" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/baseEntry/action/update" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "entryId=$CHILD_ENTRY_ID" \
   -d "baseEntry[parentEntryId]="
 
 # --- Step 7: Clean up ---
-curl -X POST "$SERVICE_URL/service/media/action/delete" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/media/action/delete" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "entryId=$CHILD_ENTRY_ID"
 
-curl -X POST "$SERVICE_URL/service/media/action/delete" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/media/action/delete" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "entryId=$PARENT_ENTRY_ID"
 ```

@@ -12,6 +12,9 @@
     "KALTURA_AI_GENIE_API.md",
     "KALTURA_EVENTS_PLATFORM_API.md",
     "KALTURA_MULTI_STREAM_API.md",
+    "KALTURA_APP_REGISTRY_API.md",
+    "KALTURA_USER_PROFILE_API.md",
+    "KALTURA_MESSAGING_API.md",
     "AGENTS.md",
     ".agents/skills/kaltura-api/SKILL.md"
   ],
@@ -24,12 +27,12 @@
     "CODE_OF_CONDUCT.md"
   ],
   "rules": [
-    "All API examples use curl with shell variables ($SERVICE_URL, $KS, $PARTNER_ID). Adapt to the developer's target language.",
+    "All API examples use curl with shell variables ($KALTURA_SERVICE_URL, $KALTURA_KS, $KALTURA_PARTNER_ID). Adapt to the developer's target language.",
     "Kaltura API v3 uses form-encoded POST with format=1 for JSON responses. Modern APIs (Events, Agents, Genie) use JSON with Bearer or KS auth headers.",
     "Always include format=1 in API v3 requests to get JSON responses.",
     "Entry statuses: -2 (NO_CONTENT), 0 (IMPORT), 1 (PRECONVERT), 2 (READY), 4 (CONVERTING), 7 (DELETED).",
     "Upload lifecycle: uploadToken.add → uploadToken.upload → media.add → media.addContent.",
-    "Auth differs by API: v3 uses -d 'ks=$KS' form param, Events/Agents use Bearer $KS header, Genie uses KS $KS header.",
+    "Auth differs by API: v3 uses -d 'ks=$KALTURA_KS' form param, Events/Agents use Bearer $KALTURA_KS header, Genie uses KS $KALTURA_KS header.",
     "Use AppTokens (appToken.startSession with HMAC) for production integrations instead of raw admin secrets."
   ]
 }

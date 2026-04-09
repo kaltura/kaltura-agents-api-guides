@@ -1,8 +1,8 @@
 # Kaltura API Guides
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Guides](https://img.shields.io/badge/Guides-10-green.svg)](#guides)
-[![Tests](https://img.shields.io/badge/Live--Tested-156_tests-brightgreen.svg)](#guides)
+[![Guides](https://img.shields.io/badge/Guides-13-green.svg)](#guides)
+[![Tests](https://img.shields.io/badge/Live--Tested-274_tests-brightgreen.svg)](#guides)
 [![llms.txt](https://img.shields.io/badge/llms.txt-available-purple.svg)](llms.txt)
 [![Agent Skill](https://img.shields.io/badge/Agent_Skill-kaltura--api-orange.svg)](.agents/skills/kaltura-api/SKILL.md)
 [![Docs Site](https://img.shields.io/badge/Docs-GitHub_Pages-blue.svg)](https://zoharbabin.github.io/kaltura-api-guides/)
@@ -28,15 +28,18 @@ These guides are optimized for AI agent consumption through multiple discovery m
 
 | Guide | Description | Tests |
 |-------|-------------|-------|
-| [Session (KS) Guide](KALTURA_SESSION_GUIDE.md) | Kaltura Session generation and management | -- |
+| [Session (KS) Guide](KALTURA_SESSION_GUIDE.md) | Kaltura Session generation and management | 13 tests |
 | [AppTokens API](KALTURA_APPTOKENS_API.md) | Secure server-to-server auth without admin secrets | 17 tests |
-| [eSearch API](KALTURA_ESEARCH_API.md) | Unified search across entries, captions, metadata | -- |
+| [eSearch API](KALTURA_ESEARCH_API.md) | Unified search across entries, captions, metadata | 19 tests |
 | [Upload & Delivery API](KALTURA_UPLOAD_AND_DELIVERY_API.md) | Upload, chunked ingest, playback URLs, thumbnails | 25 tests |
-| [Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md) | Player v7 embed (iframe + JavaScript) | -- |
+| [Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md) | Player v7 embed (iframe + JavaScript) | 14 tests |
 | [REACH API](KALTURA_REACH_API.md) | AI captions, translation, dubbing, clips | 36 tests |
 | [Agents Manager API](KALTURA_AGENTS_MANAGER_API.md) | Automated content processing agents | 15 tests |
 | [AI Genie API](KALTURA_AI_GENIE_API.md) | Conversational AI search and RAG | 17 tests |
 | [Events Platform API](KALTURA_EVENTS_PLATFORM_API.md) | Virtual events, sessions, speakers, templates | 23 tests |
+| [App Registry API](KALTURA_APP_REGISTRY_API.md) | Register and manage application instances | 20 tests |
+| [User Profile API](KALTURA_USER_PROFILE_API.md) | Per-app user profiles, event attendance lifecycle | 30 tests |
+| [Messaging API](KALTURA_MESSAGING_API.md) | Template-based email messaging, delivery tracking, unsubscribe management | 22 tests |
 | [Multi-Stream API](KALTURA_MULTI_STREAM_API.md) | Dual/multi-screen video entries | 23 tests |
 
 ## Quick Start
