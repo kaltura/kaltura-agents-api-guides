@@ -893,7 +893,7 @@ curl -s -X POST "$KALTURA_SERVICE_URL/service/report/action/getCsvFromStringPara
 ```
 
 
-# 14. Best Practices
+# 15. Best Practices
 
 - **Use `bulkAdd` for batch registration.** Up to 50 profiles per request — significantly faster than individual calls for event registration imports.
 - **Resolve virtual event ID → appGuid via App Registry first.** Use `appCustomIdIn` filter to map event IDs to app GUIDs before managing profiles (see [App Registry API](KALTURA_APP_REGISTRY_API.md)).
@@ -901,7 +901,7 @@ curl -s -X POST "$KALTURA_SERVICE_URL/service/report/action/getCsvFromStringPara
 - **Use `getFiltered` for reporting and analytics.** Filter by status, date range, and fields to build attendance dashboards without downloading all profiles.
 - **Use AppTokens for production access.** Generate KS via `appToken.startSession` with HMAC — keep admin secrets off application servers.
 
-# 15. Related Guides
+# 16. Related Guides
 
 - **[App Registry API](KALTURA_APP_REGISTRY_API.md)** — Register and manage application instances (prerequisite for user profiles)
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — KS generation and management
@@ -910,3 +910,4 @@ curl -s -X POST "$KALTURA_SERVICE_URL/service/report/action/getCsvFromStringPara
 - **[Messaging API](KALTURA_MESSAGING_API.md)** — Template-based email messaging (triggered by user profile events)
 - **[Webhooks API](KALTURA_WEBHOOKS_API.md)** — Event-driven HTTP callbacks for user and content events
 - **[eSearch API](KALTURA_ESEARCH_API.md)** — Search entries and users across your account
+- **[User Management API](KALTURA_USER_MANAGEMENT_API.md)** — Core user CRUD, roles, and groups (the account-level user records that User Profile extends per-app)

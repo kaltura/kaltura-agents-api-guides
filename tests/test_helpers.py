@@ -47,6 +47,7 @@ GENIE_BASE_URL = os.environ.get("KALTURA_GENIE_URL", "https://genie.nvp1.ovp.kal
 APP_REGISTRY_URL = os.environ.get("KALTURA_APP_REGISTRY_URL", "https://app-registry.nvp1.ovp.kaltura.com/api/v1")
 USER_PROFILE_URL = os.environ.get("KALTURA_USER_PROFILE_URL", "https://user.nvp1.ovp.kaltura.com/api/v1")
 MESSAGING_URL = os.environ.get("KALTURA_MESSAGING_URL", "https://messaging.nvp1.ovp.kaltura.com/api/v1")
+AUTH_BROKER_URL = os.environ.get("KALTURA_AUTH_BROKER_URL", "https://auth.nvp1.ovp.kaltura.com/api/v1")
 
 
 def kaltura_post(service, action, params=None):
@@ -100,6 +101,46 @@ def user_profile_post(path, json_body=None, timeout=30):
 def messaging_post(service, action, json_body=None):
     """POST to Messaging API. Returns parsed JSON."""
     return bearer_post(MESSAGING_URL, f"/{service}/{action}", json_body)
+
+
+def auth_broker_post(service, action, json_body=None, timeout=30):
+    """POST to Auth Broker API with KS auth header. Returns parsed JSON."""
+    headers = {
+        "Authorization": f"KS {KS}",
+        "Content-Type": "application/json",
+    }
+    resp = requests.post(
+        f"{AUTH_BROKER_URL}/{service}/{action}",
+        headers=headers,
+        json=json_body or {},
+        timeout=timeout,
+    )
+    if not resp.ok:
+        try:
+            err = resp.json()
+            msg = err.get("message", resp.text)
+            code = err.get("code", resp.status_code)
+            raise Exception(f"Auth Broker error: {msg} (code: {code})")
+        except (ValueError, KeyError):
+            resp.raise_for_status()
+    if not resp.content:
+        return {}
+    result = resp.json()
+    if isinstance(result, dict) and result.get("objectType") == "KalturaAPIException":
+        raise Exception(f"Auth Broker error: {result.get('message')} (code: {result.get('code')})")
+    return result
+
+
+def auth_broker_get(path, timeout=30):
+    """GET from Auth Broker API with KS auth header. Returns raw response text."""
+    headers = {"Authorization": f"KS {KS}"}
+    resp = requests.get(
+        f"{AUTH_BROKER_URL}{path}",
+        headers=headers,
+        timeout=timeout,
+    )
+    resp.raise_for_status()
+    return resp.text
 
 
 def agents_post(path, json_body=None):

@@ -1026,6 +1026,7 @@ For human captioning, use the `notes` field on the task to provide terminology g
 - **[Player Embed](KALTURA_PLAYER_EMBED_GUIDE.md)** — Play entries with REACH-generated captions in the player
 - **[Agents Manager](KALTURA_AGENTS_MANAGER_API.md)** — Automate REACH tasks with event-driven agents
 - **[Webhooks API](KALTURA_WEBHOOKS_API.md)** — Boolean templates as REACH automation rule conditions; HTTP callbacks for task completion events
+- **[Metadata & Captions API](KALTURA_METADATA_AND_CAPTIONS_API.md)** — Caption assets created and managed by REACH tasks; custom metadata schemas for enrichment
 - [REACH Overview](https://corp.kaltura.com/developer-suite/captions-enrichment-services-reach/) — Product and vendor partner details
 - [REACH Administration Guide](https://knowledge.kaltura.com/help/introduction-to-reach-captioning-enrichment) — Service descriptions, ordering, and configuration
 - [REACH Vendor API Integration](https://knowledge.kaltura.com/help/working-with-the-kaltura-api) — Detailed vendor-side integration reference

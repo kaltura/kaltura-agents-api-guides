@@ -1,6 +1,6 @@
 ---
 name: kaltura-api
-description: Build applications on Kaltura — The Agentic Digital Experience Platform. Covers authentication, content management, search, playback, AI-powered content enrichment, conversational AI, virtual events, and multi-stream. API v3 (form-encoded) and modern JSON APIs with curl examples and tested workflows.
+description: Build applications on Kaltura — The Agentic Digital Experience Platform. Covers authentication (sessions, AppTokens, SSO/SAML), content management (upload, search, categories, metadata, captions), playback, AI services (captions, translation, agents, conversational AI), virtual events, user management, and multi-stream. API v3 (form-encoded) and modern JSON APIs with curl examples and tested workflows.
 ---
 
 # Kaltura API Integration
@@ -33,6 +33,7 @@ KS types: **USER** (type=0) for end-user operations, **ADMIN** (type=2) for back
 For full auth details, KS privileges, and AppToken HMAC workflow:
 - [Session Guide](../../../KALTURA_SESSION_GUIDE.md) — KS generation, types, privileges, security practices
 - [AppTokens API](../../../KALTURA_APPTOKENS_API.md) — Create, distribute, and rotate scoped tokens
+- [Auth Broker API](../../../KALTURA_AUTH_BROKER_API.md) — SSO/SAML configuration, app subscriptions, federated login
 
 ## API Patterns
 
@@ -61,6 +62,7 @@ Some newer services use JSON bodies with auth headers:
 | Agents Manager | `https://agents-manager.nvp1.ovp.kaltura.com` | `Authorization: Bearer $KALTURA_KS` |
 | AI Genie | `https://genie.nvp1.ovp.kaltura.com` | `Authorization: KS $KALTURA_KS` |
 | Messaging | `https://messaging.nvp1.ovp.kaltura.com/api/v1` | `Authorization: Bearer $KALTURA_KS` |
+| Auth Broker | `https://auth.nvp1.ovp.kaltura.com/api/v1` | `Authorization: KS $KALTURA_KS` |
 
 > **Regional deployments** may use different base URLs (e.g., `irp2` for EU, `frp2` for DE). The URLs above are for the default NVP1 (US) region. Check your Kaltura account configuration for the correct regional endpoints.
 
@@ -103,6 +105,10 @@ Read the relevant guide when you need to implement a specific capability:
 
 - **[eSearch API](../../../KALTURA_ESEARCH_API.md)** — Full-text search across entries, captions, metadata, categories, and users. Supports AND/OR/NOT operators, nested filters, highlighting, facets, and sorting.
 
+- **[Categories & Access Control API](../../../KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md)** — Hierarchical content taxonomy via `category` service, membership and entitlement via `categoryUser`, content assignment via `categoryEntry`, and `accessControlProfile` rules (geo/IP/domain/scheduling restrictions). Accounts with entitlement enabled require `disableentitlement` KS privilege for cross-category operations.
+
+- **[Metadata & Captions API](../../../KALTURA_METADATA_AND_CAPTIONS_API.md)** — Custom metadata schemas (XSD) via `metadata_metadataProfile` plugin service, per-entry structured metadata CRUD via `metadata_metadata`, caption asset management (SRT/VTT/DFXP) via `caption_captionAsset` with two-step creation (add → setContent). Search caption text via eSearch `KalturaESearchCaptionItem`.
+
 ### Playback
 
 - **[Player Embed Guide](../../../KALTURA_PLAYER_EMBED_GUIDE.md)** — Embed Kaltura's Player v7 via iframe or JavaScript SDK. Covers autoplay, clipping (start/end times), access-controlled playback with KS, and programmatic player control.
@@ -118,6 +124,10 @@ Read the relevant guide when you need to implement a specific capability:
 - **[AI Genie API](../../../KALTURA_AI_GENIE_API.md)** — Conversational AI search over your video library using RAG. Streaming responses with structured answers (flashcards, sources, follow-ups). Supports both semantic search and multi-turn conversations.
 
 ### Events & User Management
+
+- **[User Management API](../../../KALTURA_USER_MANAGEMENT_API.md)** — Full user lifecycle via `user` service (add, get, list, update, delete), login and credential management (enableLogin/disableLogin), role-based access control (RBAC) via `userRole` service (add, get, list, update, clone, delete), and groups via `group_group` service with `groupUser` membership. User statuses: 0 (BLOCKED), 1 (ACTIVE), 2 (DELETED).
+
+- **[Auth Broker API](../../../KALTURA_AUTH_BROKER_API.md)** — SSO/SAML configuration microservice at `https://auth.nvp1.ovp.kaltura.com/api/v1`. Auth profiles (SAML IdP config with certificate, attribute mappings, group sync), app subscriptions (link apps to auth providers), SAML metadata endpoint, and SPA proxy for KMC. Uses `Authorization: KS <KS>` header (not Bearer).
 
 - **[Events Platform API](../../../KALTURA_EVENTS_PLATFORM_API.md)** — Create and manage virtual events (town halls, webinars, conferences). Modern REST API with session types (Interactive Room, LiveWebcast, SimuLive), team members, speakers, templates, and event duplication. Multi-region support.
 

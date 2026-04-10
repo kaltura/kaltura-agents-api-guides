@@ -1,0 +1,642 @@
+# Kaltura Auth Broker API
+
+The Auth Broker is a standalone microservice for managing SSO authentication via SAML and OAuth2/OIDC identity providers. It handles IdP profile configuration, app-to-profile subscriptions, login flows, and just-in-time user provisioning — separate from the main Kaltura API v3.
+
+**Base URL:** `https://auth.nvp1.ovp.kaltura.com/api/v1` (production NVP region)
+**Auth:** `Authorization: KS <KS>` header (KS prefix, not Bearer)
+**Format:** JSON request/response bodies, all endpoints use POST (except SAML metadata which is GET)
+**Regions:** NVP (default `nvp1`), EU (`irp2`), DE (`frp2`)
+
+
+# 1. Authentication
+
+All requests require a valid KS in the `Authorization` header with the `KS` prefix:
+
+```
+Authorization: KS <your_kaltura_session>
+```
+
+The `KS` prefix differs from other Kaltura microservices that use `Bearer`. The Auth Broker operates under system partner ID `-17` and requires the `FEATURE_AUTH_BROKER_PERMISSION` to be enabled on the partner account.
+
+Generate a KS via `session.start` (see [Session Guide](KALTURA_SESSION_GUIDE.md)) or `appToken.startSession` (see [AppTokens Guide](KALTURA_APPTOKENS_API.md)).
+
+```bash
+# Set up environment
+export KALTURA_AUTH_BROKER_URL="https://auth.nvp1.ovp.kaltura.com/api/v1"
+```
+
+
+# 2. Architecture Overview
+
+The Auth Broker is a NestJS microservice with four service endpoints:
+
+| Service | URL Path | Purpose |
+|---------|----------|---------|
+| auth-profile | `/api/v1/auth-profile/` | CRUD for SAML/OAuth2 IdP profiles |
+| auth-manager | `/api/v1/auth-manager/` | Login flow, SAML/OIDC callbacks, SP metadata |
+| app-subscription | `/api/v1/app-subscription/` | Subscribe apps to auth profiles |
+| spa-proxy | `/api/v1/spa-proxy/` | SPA login proxy for KMC |
+
+### Regional Endpoints
+
+| Region | Base URL |
+|--------|----------|
+| NVP (default) | `https://auth.nvp1.ovp.kaltura.com/api/v1` |
+| EU | `https://auth.irp2.ovp.kaltura.com/api/v1` |
+| DE | `https://auth.frp2.ovp.kaltura.com/api/v1` |
+
+Use the region that matches your Kaltura account deployment.
+
+### Relationship to App Registry
+
+The Auth Broker uses `appGuid` values from the [App Registry API](KALTURA_APP_REGISTRY_API.md) to link SSO profiles to specific application instances. Each app subscription references an `appGuid` and one or more `authProfileIds`, creating the bridge between "which app" and "which IdP handles login."
+
+
+# 3. Auth Profile CRUD
+
+Auth profiles define the connection to an identity provider (SAML or OAuth2/OIDC). Actions: `add`, `get`, `list`, `update`, `delete`, `generatePvKeys`.
+
+## 3.1 Auth Profile Object
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | Auto-generated MongoDB ObjectId (read-only) |
+| `objectType` | string | Always `"AuthProfile"` (read-only) |
+| `partnerId` | integer | Partner ID from KS (read-only) |
+| `name` | string | Display name for the profile |
+| `description` | string | Profile description |
+| `providerType` | string | Identity provider type (see enum below) |
+| `authStrategy` | string | `saml` or `oauth2` |
+| `isAdminProfile` | boolean | Whether this profile is for admin users |
+| `createNewUser` | boolean | Enable JIT user provisioning |
+| `createNewGroups` | boolean | Auto-create groups from IdP claims |
+| `removeFromExistingGroups` | boolean | Remove user from groups not in IdP claims |
+| `userGroupsSyncAll` | boolean | Sync all groups from IdP (overrides mapping) |
+| `userIdAttribute` | string | IdP attribute used as Kaltura user ID |
+| `authStrategyConfig` | object | IdP-specific configuration (see section 3.2) |
+| `userAttributeMappings` | object | Map IdP attributes to Kaltura user fields (see section 4) |
+| `userGroupMappings` | object | Map IdP group claims to Kaltura groups (see section 5) |
+| `ksPrivileges` | string | Additional KS privileges for authenticated users |
+| `syncDelayTimeoutMin` | integer | Minutes to wait before syncing groups |
+| `version` | integer | Auto-incrementing version (read-only) |
+| `status` | string | `enabled` or `disabled` |
+| `createdAt` | string | ISO 8601 timestamp (read-only) |
+| `updatedAt` | string | ISO 8601 timestamp (read-only) |
+
+### Provider Types
+
+| Value | Description |
+|-------|-------------|
+| `azure` | Microsoft Azure AD / Entra ID |
+| `okta` | Okta |
+| `aws` | AWS IAM Identity Center (SSO) |
+| `akamai` | Akamai Identity Cloud |
+| `other` | Any other SAML/OAuth2 IdP |
+
+### Auth Strategies
+
+| Value | Description |
+|-------|-------------|
+| `saml` | SAML 2.0 SSO |
+| `oauth2` | OAuth2 / OpenID Connect |
+
+## 3.2 Auth Strategy Config (SAML)
+
+The `authStrategyConfig` object for SAML profiles:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `issuer` | string | SP entity ID / issuer name |
+| `entryPoint` | string | IdP SSO URL (where SAML requests are sent) |
+| `callbackUrl` | string | ACS URL — set to `https://auth.{region}.ovp.kaltura.com/api/v1/auth-manager/saml/ac` |
+| `logoutUrl` | string | IdP Single Logout URL |
+| `logoutCallbackUrl` | string | SP logout callback — set to `https://auth.{region}.ovp.kaltura.com/api/v1/auth-manager/saml/logout` |
+| `cert` | string | IdP signing certificate (PEM, without headers) |
+| `validateInResponseTo` | boolean | Validate SAML `InResponseTo` attribute |
+| `digestAlgorithm` | string | `sha1` or `sha256` |
+| `signatureAlgorithm` | string | `sha1` or `sha256` |
+| `enableRequestSign` | boolean | Sign SAML authentication requests |
+| `enableAssertsDecryption` | boolean | Decrypt encrypted SAML assertions |
+| `disableRequestedAuthnContext` | boolean | Omit `RequestedAuthnContext` from SAML request |
+| `requestIdExpirationPeriodMs` | integer | Request ID expiration in milliseconds (default: 28800000 = 8 hours) |
+
+## 3.3 Add an Auth Profile
+
+```
+POST /api/v1/auth-profile/add
+Content-Type: application/json
+Authorization: KS <KS>
+```
+
+```bash
+curl -X POST "$KALTURA_AUTH_BROKER_URL/auth-profile/add" \
+  -H "Authorization: KS $KALTURA_KS" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Corporate Okta SSO",
+    "description": "SAML SSO via Okta for all employees",
+    "providerType": "okta",
+    "authStrategy": "saml",
+    "isAdminProfile": false,
+    "createNewUser": true,
+    "createNewGroups": true,
+    "removeFromExistingGroups": false,
+    "userGroupsSyncAll": false,
+    "userIdAttribute": "Core_User_Email",
+    "authStrategyConfig": {
+      "issuer": "kaltura-sso-production",
+      "entryPoint": "https://your-org.okta.com/app/APPID/sso/saml",
+      "callbackUrl": "https://auth.nvp1.ovp.kaltura.com/api/v1/auth-manager/saml/ac",
+      "logoutUrl": "https://your-org.okta.com/app/APPID/slo/saml",
+      "logoutCallbackUrl": "https://auth.nvp1.ovp.kaltura.com/api/v1/auth-manager/saml/logout",
+      "cert": "MIIDnj...(IdP certificate, base64 encoded)...",
+      "validateInResponseTo": false,
+      "digestAlgorithm": "sha1",
+      "signatureAlgorithm": "sha1",
+      "enableRequestSign": false,
+      "enableAssertsDecryption": false,
+      "disableRequestedAuthnContext": true,
+      "requestIdExpirationPeriodMs": 28800000
+    },
+    "userAttributeMappings": {
+      "firstName": "Core_User_FirstName",
+      "lastName": "Core_User_LastName",
+      "email": "Core_User_Email"
+    },
+    "userGroupMappings": {},
+    "ksPrivileges": "",
+    "syncDelayTimeoutMin": 5
+  }'
+```
+
+Save the `id` from the response as `AUTH_PROFILE_ID`.
+
+The `userGroupMappings` field is required even when empty. Omitting it results in a `USER_GROUPS_SYNC_ALL_FALSE_AND_GROUPS_MISSING` error when `userGroupsSyncAll` is `false`.
+
+## 3.4 Get an Auth Profile
+
+```
+POST /api/v1/auth-profile/get
+Content-Type: application/json
+Authorization: KS <KS>
+```
+
+```bash
+curl -X POST "$KALTURA_AUTH_BROKER_URL/auth-profile/get" \
+  -H "Authorization: KS $KALTURA_KS" \
+  -H "Content-Type: application/json" \
+  -d "{\"id\": \"$AUTH_PROFILE_ID\"}"
+```
+
+**Response:** Full auth profile object.
+
+## 3.5 List Auth Profiles
+
+```
+POST /api/v1/auth-profile/list
+Content-Type: application/json
+Authorization: KS <KS>
+```
+
+```bash
+curl -X POST "$KALTURA_AUTH_BROKER_URL/auth-profile/list" \
+  -H "Authorization: KS $KALTURA_KS" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "filter": {},
+    "pager": {"offset": 0, "limit": 25}
+  }'
+```
+
+**Response:** `{ "objects": [...], "totalCount": N }` containing auth profile objects.
+
+## 3.6 Update an Auth Profile
+
+```
+POST /api/v1/auth-profile/update
+Content-Type: application/json
+Authorization: KS <KS>
+```
+
+```bash
+curl -X POST "$KALTURA_AUTH_BROKER_URL/auth-profile/update" \
+  -H "Authorization: KS $KALTURA_KS" \
+  -H "Content-Type: application/json" \
+  -d "{
+    \"id\": \"$AUTH_PROFILE_ID\",
+    \"name\": \"Updated Okta SSO Profile\",
+    \"createNewUser\": true
+  }"
+```
+
+Fields not included in the request remain unchanged. The `version` increments on each successful update.
+
+## 3.7 Delete an Auth Profile
+
+```
+POST /api/v1/auth-profile/delete
+Content-Type: application/json
+Authorization: KS <KS>
+```
+
+```bash
+curl -X POST "$KALTURA_AUTH_BROKER_URL/auth-profile/delete" \
+  -H "Authorization: KS $KALTURA_KS" \
+  -H "Content-Type: application/json" \
+  -d "{\"id\": \"$AUTH_PROFILE_ID\"}"
+```
+
+Remove all app subscriptions referencing this profile before deleting it.
+
+## 3.8 Generate Private/Public Keys
+
+Generate a key pair for SAML request signing or assertion decryption:
+
+```bash
+curl -X POST "$KALTURA_AUTH_BROKER_URL/auth-profile/generatePvKeys" \
+  -H "Authorization: KS $KALTURA_KS" \
+  -H "Content-Type: application/json" \
+  -d "{\"id\": \"$AUTH_PROFILE_ID\"}"
+```
+
+Use this when `enableRequestSign` or `enableAssertsDecryption` is set to `true`. The generated public key is included in the SP metadata (see section 9).
+
+
+# 4. Attribute Mapping
+
+The `userAttributeMappings` object maps IdP assertion attributes to Kaltura user fields. When a user authenticates via SSO, the Auth Broker reads the IdP response attributes and sets the corresponding Kaltura user fields.
+
+| Kaltura Field | Description | Example IdP Attribute |
+|---------------|-------------|----------------------|
+| `firstName` | User's first name | `Core_User_FirstName` |
+| `lastName` | User's last name | `Core_User_LastName` |
+| `email` | User's email address | `Core_User_Email` |
+
+```json
+{
+  "userAttributeMappings": {
+    "firstName": "Core_User_FirstName",
+    "lastName": "Core_User_LastName",
+    "email": "Core_User_Email"
+  }
+}
+```
+
+The `userIdAttribute` field (top-level on the auth profile) specifies which IdP attribute is used as the Kaltura `userId`. This is typically the email attribute (e.g., `Core_User_Email`). The value from this attribute becomes the user's `externalId` in the Kaltura user record.
+
+### Azure AD / Entra ID Attribute Names
+
+| Kaltura Field | Azure AD Attribute |
+|---------------|-------------------|
+| `firstName` | `http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname` |
+| `lastName` | `http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname` |
+| `email` | `http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress` |
+
+### Okta Attribute Names
+
+| Kaltura Field | Okta Attribute |
+|---------------|---------------|
+| `firstName` | `Core_User_FirstName` |
+| `lastName` | `Core_User_LastName` |
+| `email` | `Core_User_Email` |
+
+
+# 5. Group Sync
+
+The Auth Broker can synchronize user group memberships from IdP claims to Kaltura groups using the `groupUser.sync` mechanism.
+
+## 5.1 Configuration Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `createNewGroups` | boolean | Auto-create Kaltura groups from IdP claims if they do not exist |
+| `removeFromExistingGroups` | boolean | Remove user from Kaltura groups not present in IdP claims |
+| `userGroupsSyncAll` | boolean | Sync all groups from the IdP group attribute (ignores `userGroupMappings`) |
+| `userGroupMappings` | object | Map specific IdP group names to Kaltura group IDs |
+| `syncDelayTimeoutMin` | integer | Minutes to delay group sync after login (allows batch processing) |
+
+## 5.2 Group Mapping Modes
+
+**Sync all groups** (`userGroupsSyncAll: true`): Every group from the IdP group attribute is synced to Kaltura. The `userGroupMappings` field is ignored.
+
+**Map specific groups** (`userGroupsSyncAll: false`): Only groups listed in `userGroupMappings` are synced. The mapping translates IdP group names to Kaltura group IDs:
+
+```json
+{
+  "userGroupsSyncAll": false,
+  "userGroupMappings": {
+    "IdP_Engineering_Team": "kaltura_engineering",
+    "IdP_Marketing_Team": "kaltura_marketing"
+  }
+}
+```
+
+When `userGroupsSyncAll` is `false`, the `userGroupMappings` field is required (even if empty `{}`). Omitting it triggers the `USER_GROUPS_SYNC_ALL_FALSE_AND_GROUPS_MISSING` error.
+
+## 5.3 Group Removal
+
+When `removeFromExistingGroups` is `true`, users are removed from any Kaltura groups that are not present in the current IdP assertion. This ensures Kaltura group membership stays in sync with IdP state. When `false`, groups are only added — users keep existing Kaltura group memberships even if removed from the IdP group.
+
+
+# 6. App Subscription CRUD
+
+App subscriptions link registered applications (from the [App Registry](KALTURA_APP_REGISTRY_API.md)) to auth profiles, defining which IdP handles login for each app. Actions: `add`, `get`, `list`, `update`, `delete`.
+
+## 6.1 App Subscription Object
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | Auto-generated ID (read-only) |
+| `objectType` | string | Always `"AppSubscription"` (read-only) |
+| `partnerId` | integer | Partner ID from KS (read-only) |
+| `name` | string | Subscription display name |
+| `appGuid` | string | App GUID from the App Registry |
+| `authProfileIds` | string[] | Array of auth profile IDs to use for this app |
+| `status` | string | `enabled` or `disabled` |
+| `version` | integer | Auto-incrementing version (read-only) |
+| `appLandingPage` | string | URL to redirect after successful login (receives KS + JWT) |
+| `appErrorPage` | string | URL to redirect on authentication error |
+| `redirectMethod` | string | `HTTP-POST` or `HTTP-GET` — how to deliver credentials to landing page |
+| `ksPrivileges` | string | KS privileges for sessions created through this subscription |
+| `permissionList` | array | Permission list for fine-grained access control |
+| `permissionListStatus` | string | `none`, `whitelist`, or `blacklist` |
+| `attributePermissionListStatus` | string | `none`, `whitelist`, or `blacklist` |
+| `userGroupsSyncAll` | boolean | Override profile-level group sync for this subscription |
+| `createdAt` | string | ISO 8601 timestamp (read-only) |
+| `updatedAt` | string | ISO 8601 timestamp (read-only) |
+
+### Redirect Methods
+
+| Value | Description |
+|-------|-------------|
+| `HTTP-POST` | Credentials sent as form POST body to landing page (more secure, prevents URL leakage) |
+| `HTTP-GET` | Credentials appended as URL query parameters |
+
+## 6.2 Add an App Subscription
+
+```
+POST /api/v1/app-subscription/add
+Content-Type: application/json
+Authorization: KS <KS>
+```
+
+```bash
+curl -X POST "$KALTURA_AUTH_BROKER_URL/app-subscription/add" \
+  -H "Authorization: KS $KALTURA_KS" \
+  -H "Content-Type: application/json" \
+  -d "{
+    \"name\": \"Events Portal SSO\",
+    \"appGuid\": \"$APP_GUID\",
+    \"authProfileIds\": [\"$AUTH_PROFILE_ID\"],
+    \"appLandingPage\": \"https://events.example.com/user/authenticate\",
+    \"appErrorPage\": \"https://events.example.com/user/authenticate\",
+    \"redirectMethod\": \"HTTP-POST\",
+    \"ksPrivileges\": \"kmslogin\"
+  }"
+```
+
+Save the `id` from the response as `APP_SUBSCRIPTION_ID`. The `appGuid` must reference an existing, enabled app in the [App Registry](KALTURA_APP_REGISTRY_API.md).
+
+## 6.3 Get an App Subscription
+
+```bash
+curl -X POST "$KALTURA_AUTH_BROKER_URL/app-subscription/get" \
+  -H "Authorization: KS $KALTURA_KS" \
+  -H "Content-Type: application/json" \
+  -d "{\"id\": \"$APP_SUBSCRIPTION_ID\"}"
+```
+
+## 6.4 List App Subscriptions
+
+```bash
+curl -X POST "$KALTURA_AUTH_BROKER_URL/app-subscription/list" \
+  -H "Authorization: KS $KALTURA_KS" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "filter": {},
+    "pager": {"offset": 0, "limit": 25}
+  }'
+```
+
+**Response:** `{ "objects": [...], "totalCount": N }` containing app subscription objects.
+
+## 6.5 Update an App Subscription
+
+```bash
+curl -X POST "$KALTURA_AUTH_BROKER_URL/app-subscription/update" \
+  -H "Authorization: KS $KALTURA_KS" \
+  -H "Content-Type: application/json" \
+  -d "{
+    \"id\": \"$APP_SUBSCRIPTION_ID\",
+    \"appLandingPage\": \"https://events.example.com/sso-redirect\",
+    \"redirectMethod\": \"HTTP-GET\"
+  }"
+```
+
+## 6.6 Delete an App Subscription
+
+```bash
+curl -X POST "$KALTURA_AUTH_BROKER_URL/app-subscription/delete" \
+  -H "Authorization: KS $KALTURA_KS" \
+  -H "Content-Type: application/json" \
+  -d "{\"id\": \"$APP_SUBSCRIPTION_ID\"}"
+```
+
+
+# 7. SSO Login Flow
+
+The complete SSO login sequence involves generating a token, redirecting to the IdP, and processing the callback.
+
+## 7.1 Flow Sequence
+
+```
+1. App calls generateAuthBrokerToken with {appGuid, authProfileId, origURL}
+2. Auth Broker returns an encrypted token
+3. App POSTs the token to /auth-manager/login
+4. Auth Broker responds with 302 redirect to the IdP
+5. User authenticates at the IdP
+6. IdP POSTs SAML assertion to /auth-manager/saml/ac (or redirects to /oidc/ac)
+7. Auth Broker validates the assertion, extracts attributes
+8. Auth Broker creates or updates the Kaltura user (JIT provisioning)
+9. Auth Broker syncs group memberships from IdP claims
+10. Auth Broker generates a KS and signs a JWT
+11. Auth Broker redirects to appLandingPage with KS and JWT
+```
+
+## 7.2 Generate Auth Broker Token
+
+```
+POST /api/v1/auth-manager/generateAuthBrokerToken
+Content-Type: application/json
+Authorization: KS <KS>
+```
+
+```bash
+curl -X POST "$KALTURA_AUTH_BROKER_URL/auth-manager/generateAuthBrokerToken" \
+  -H "Authorization: KS $KALTURA_KS" \
+  -H "Content-Type: application/json" \
+  -d "{
+    \"appGuid\": \"$APP_GUID\",
+    \"authProfileId\": \"$AUTH_PROFILE_ID\",
+    \"origURL\": \"https://events.example.com/dashboard\"
+  }"
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `appGuid` | string | Yes | App GUID from App Registry |
+| `authProfileId` | string | Yes | Auth profile ID to use for login |
+| `origURL` | string | Yes | URL to redirect back to after login |
+
+**Response:** An encrypted token string.
+
+## 7.3 Start Login
+
+```
+POST /api/v1/auth-manager/login
+Content-Type: application/json
+Authorization: KS <KS>
+```
+
+```bash
+curl -X POST "$KALTURA_AUTH_BROKER_URL/auth-manager/login" \
+  -H "Authorization: KS $KALTURA_KS" \
+  -H "Content-Type: application/json" \
+  -d "{\"token\": \"$ENCRYPTED_TOKEN\"}"
+```
+
+**Response:** HTTP 302 redirect to the IdP login page. The browser follows this redirect automatically.
+
+## 7.4 Callback Endpoints
+
+After the user authenticates at the IdP, the IdP sends the response to one of these callback URLs:
+
+| Protocol | Callback URL | HTTP Method |
+|----------|-------------|-------------|
+| SAML | `/api/v1/auth-manager/saml/ac` | POST |
+| OIDC | `/api/v1/auth-manager/oidc/ac` | GET or POST |
+| OAuth2 | `/api/v1/auth-manager/oauth2/ac` | GET |
+
+These callbacks are configured in the IdP and must match the `callbackUrl` in the auth profile's `authStrategyConfig`. The Auth Broker processes the callback, provisions the user, and redirects to the `appLandingPage` with credentials.
+
+
+# 8. SPA Proxy
+
+The SPA Proxy provides a login entry point for single-page applications like KMC that need to discover the correct auth profile and redirect flow.
+
+```
+POST /api/v1/spa-proxy/login
+Content-Type: application/json
+Authorization: KS <KS>
+```
+
+```bash
+curl -X POST "$KALTURA_AUTH_BROKER_URL/spa-proxy/login" \
+  -H "Authorization: KS $KALTURA_KS" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "appType": "kmc",
+    "email": "user@example.com"
+  }'
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `appType` | string | Yes | Application type (e.g., `kmc`, `kms`) |
+| `email` | string | Yes | User email for IdP discovery |
+| `organizationId` | string | No | Organization ID for multi-tenant setups |
+| `authProfileId` | string | No | Specific auth profile to use (skips discovery) |
+
+The SPA Proxy resolves the correct auth profile based on the email domain and app type, then initiates the login flow.
+
+### Per-App Integration Patterns
+
+| Application | Login Method | Landing Page |
+|-------------|-------------|--------------|
+| MediaSpace (KMS) | `generateAuthBrokerToken` | `/user/authenticate` |
+| KMC | `sso.login` with fallback to `spa-proxy/login` | `/index.php/kmcng/actions/persist-login-by-ks` |
+| Events Platform | Template-based auth profiles | `{epServer}/sso-redirect` |
+
+
+# 9. SAML SP Metadata
+
+Retrieve the SAML Service Provider metadata XML for a specific auth profile. This metadata is provided to the IdP during SSO setup.
+
+```
+GET /api/v1/auth-manager/saml/metadata/{partnerId}/{profileId}
+```
+
+```bash
+curl -X GET "$KALTURA_AUTH_BROKER_URL/auth-manager/saml/metadata/$PARTNER_ID/$AUTH_PROFILE_ID"
+```
+
+**Response:** XML document containing the SP entity ID, ACS URL, logout URL, and (if generated) the SP signing/encryption certificate. Provide this metadata URL or download the XML file and upload it to your IdP configuration.
+
+
+# 10. Shared User Model
+
+The Auth Broker integrates with the core Kaltura user system through the `externalId` field on the `KalturaUser` object.
+
+## 10.1 External ID Linking
+
+When a user authenticates via SSO, the Auth Broker sets the `externalId` on the Kaltura user record to the value of the `userIdAttribute` from the IdP assertion. This `externalId` is the key for all subsequent SSO lookups — if the user logs in again, the Auth Broker finds the existing Kaltura user by `externalId`.
+
+## 10.2 JIT User Provisioning
+
+When `createNewUser` is `true` on the auth profile, the Auth Broker automatically creates a new Kaltura user if no user with the matching `externalId` exists. The user's `firstName`, `lastName`, and `email` are populated from the `userAttributeMappings`.
+
+When `createNewUser` is `false`, users must already exist in Kaltura — SSO login fails for unknown users.
+
+## 10.3 Group Sync via groupUser
+
+After user provisioning, the Auth Broker calls the `groupUser.sync` API to update group memberships based on IdP claims. This uses the `userGroupMappings` or `userGroupsSyncAll` configuration from the auth profile (see section 5).
+
+
+# 11. Error Handling
+
+Application-level errors return HTTP 200 with an error object:
+
+```json
+{
+  "code": "OBJECT_NOT_FOUND",
+  "message": "Description of the error",
+  "objectType": "KalturaAPIException"
+}
+```
+
+Validation errors (missing required fields, invalid values) return HTTP 400.
+
+| Error Code | Meaning |
+|------------|---------|
+| `OBJECT_NOT_FOUND` | Auth profile or subscription not found for your partner |
+| `USER_GROUPS_SYNC_ALL_FALSE_AND_GROUPS_MISSING` | `userGroupsSyncAll` is `false` but `userGroupMappings` field is missing — include `userGroupMappings` (even empty `{}`) |
+| `INVALID_AUTH_STRATEGY` | `authStrategy` value is not `saml` or `oauth2` |
+| `INVALID_PROVIDER_TYPE` | `providerType` value is not one of `azure`, `okta`, `aws`, `akamai`, `other` |
+| `FEATURE_AUTH_BROKER_PERMISSION` | Partner does not have Auth Broker enabled — contact Kaltura support |
+| `INVALID_KS` | KS is expired, malformed, or missing |
+| `UNKNOWN_PARTNER_ID` | KS does not contain a valid partner ID |
+
+**Retry strategy:** For transient errors (HTTP 5xx, timeouts), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (HTTP 400, `OBJECT_NOT_FOUND`, `USER_GROUPS_SYNC_ALL_FALSE_AND_GROUPS_MISSING`), fix the request before retrying — these will not resolve on their own.
+
+
+# 12. Best Practices
+
+- **Always include `userGroupMappings` when creating profiles.** Even if empty (`{}`), this field is required when `userGroupsSyncAll` is `false` to avoid validation errors.
+- **Use `HTTP-POST` as the redirect method.** This prevents KS and JWT tokens from appearing in browser URL bars, server logs, and referrer headers.
+- **Match callback URLs to your region.** The `callbackUrl` and `logoutCallbackUrl` in `authStrategyConfig` must use the same regional hostname as your Auth Broker base URL.
+- **Download SP metadata for IdP setup.** Use the `/auth-manager/saml/metadata/{partnerId}/{profileId}` endpoint to get the SP metadata XML and upload it to your IdP.
+- **Use `generatePvKeys` before enabling request signing.** Generate a key pair first, then set `enableRequestSign: true` on the profile update.
+- **Set `createNewUser: true` for self-service SSO.** JIT provisioning reduces manual user management. Combine with group sync to automate role assignment.
+- **Use `removeFromExistingGroups: true` for strict access control.** This ensures Kaltura group membership mirrors IdP state exactly, revoking access when users leave IdP groups.
+- **Use AppTokens for production integrations.** Generate KS via `appToken.startSession` with HMAC — keep admin secrets off application servers.
+- **Test with a single app subscription first.** Validate the full SSO flow (token generation, IdP redirect, callback, user provisioning) with one app before rolling out to multiple applications.
+
+
+# 13. Related Guides
+
+- **[Session Guide](KALTURA_SESSION_GUIDE.md)** — KS generation and management (Auth Broker uses KS prefix auth)
+- **[AppTokens API](KALTURA_APPTOKENS_API.md)** — Secure server-to-server auth for production
+- **[User Management API](KALTURA_USER_MANAGEMENT_API.md)** — Core user CRUD (Auth Broker provisions users via this API)
+- **[User Profile API](KALTURA_USER_PROFILE_API.md)** — Per-app user profiles and event registration data
+- **[App Registry API](KALTURA_APP_REGISTRY_API.md)** — Application instance registry (provides `appGuid` for subscriptions)
+- **[Events Platform API](KALTURA_EVENTS_PLATFORM_API.md)** — Virtual events (uses Auth Broker for SSO login)

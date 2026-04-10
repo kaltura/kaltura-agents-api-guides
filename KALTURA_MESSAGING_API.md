@@ -984,3 +984,4 @@ Users who unsubscribe from the `"event-updates"` group will be automatically exc
 - **[User Profile API](KALTURA_USER_PROFILE_API.md)** — User registration data (triggers messaging workflows)
 - **[Events Platform API](KALTURA_EVENTS_PLATFORM_API.md)** — Virtual events (messaging for event communications)
 - **[Webhooks API](KALTURA_WEBHOOKS_API.md)** — Event-driven HTTP callbacks; email notifications are delivered via the Messaging Service
+- **[User Management API](KALTURA_USER_MANAGEMENT_API.md)** — Manage recipient users and groups for targeted messaging

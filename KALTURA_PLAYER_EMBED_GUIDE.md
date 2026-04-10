@@ -196,4 +196,5 @@ The Kaltura player exposes a DOM-style event system and a Promise for readiness.
 - **[REACH](KALTURA_REACH_API.md)** — Add captions and translations that appear in the player
 - **[Events Platform](KALTURA_EVENTS_PLATFORM_API.md)** — Create events with live webcast sessions (played via embedded player)
 - **[Multi-Stream](KALTURA_MULTI_STREAM_API.md)** — Dual Screen / multi-screen entries for PiP and Side-by-Side playback
+- **[Categories & Access Control API](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md)** — Access control profiles for restricting player playback (geo, domain, IP, scheduling)
 

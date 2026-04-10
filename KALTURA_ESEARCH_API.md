@@ -316,3 +316,5 @@ Examples pipe to `jq` for readability.
 - **[AI Genie](KALTURA_AI_GENIE_API.md)** — Conversational AI search (uses eSearch internally for RAG)
 - **[Multi-Stream](KALTURA_MULTI_STREAM_API.md)** — Search for parent entries; use `parentEntryIdEqual` filter to find child entries
 - **[Webhooks](KALTURA_WEBHOOKS_API.md)** — Trigger notifications based on content events (search results inform webhook conditions)
+- **[Categories & Access Control API](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md)** — Category-based filtering and entitlements that affect search result visibility
+- **[Metadata & Captions API](KALTURA_METADATA_AND_CAPTIONS_API.md)** — Custom metadata schemas and caption assets searchable via eSearch

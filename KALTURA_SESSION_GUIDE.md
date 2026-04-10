@@ -240,4 +240,6 @@ Set `sessionid:<GUID>` on the KS privileges and keep that GUID on your backend. 
 - **[App Registry](KALTURA_APP_REGISTRY_API.md)** — Register application instances (Bearer KS)
 - **[User Profile](KALTURA_USER_PROFILE_API.md)** — Per-app user profiles and attendance (Bearer KS)
 - **[Messaging](KALTURA_MESSAGING_API.md)** — Template-based email messaging (Bearer KS)
-- **[Webhooks](KALTURA_WEBHOOKS_API.md)** — Event-driven HTTP callbacks and email notifications (requires KS)	
+- **[Webhooks](KALTURA_WEBHOOKS_API.md)** — Event-driven HTTP callbacks and email notifications (requires KS)
+- **[User Management API](KALTURA_USER_MANAGEMENT_API.md)** — Provision users and assign roles before creating sessions
+- **[Categories & Access Control API](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md)** — Category entitlements and access control profiles (related to `disableentitlement` / `enableentitlement` KS privileges)

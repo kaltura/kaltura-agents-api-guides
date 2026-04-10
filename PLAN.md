@@ -18,6 +18,10 @@
 | 12 | `KALTURA_USER_PROFILE_API.md` | `test_user_profile_api.py` (30 tests) | Done |
 | 13 | `KALTURA_MESSAGING_API.md` | `test_messaging_api.py` (21 tests) | Done |
 | 14 | `KALTURA_WEBHOOKS_API.md` | `test_webhooks_api.py` (34 tests) | Done |
+| 15 | `KALTURA_USER_MANAGEMENT_API.md` | `test_user_management_api.py` (24 tests) | Done |
+| 16 | `KALTURA_AUTH_BROKER_API.md` | `test_auth_broker_api.py` (12 tests) | Done |
+| 17 | `KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md` | `test_categories_access_control_api.py` (27 tests) | Done |
+| 18 | `KALTURA_METADATA_AND_CAPTIONS_API.md` | `test_metadata_captions_api.py` (26 tests) | Done |
 
 
 ## Full Kaltura API Landscape

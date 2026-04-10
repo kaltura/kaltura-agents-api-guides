@@ -22,6 +22,10 @@ Kaltura API Guides/
 ├── KALTURA_USER_PROFILE_API.md            # Per-app user profiles & attendance
 ├── KALTURA_MESSAGING_API.md               # Template-based email messaging
 ├── KALTURA_WEBHOOKS_API.md                # HTTP webhooks & email via Messaging Service
+├── KALTURA_USER_MANAGEMENT_API.md         # User CRUD, roles (RBAC), groups
+├── KALTURA_AUTH_BROKER_API.md             # SSO/SAML auth profiles, app subscriptions
+├── KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md  # Categories, membership, access control
+├── KALTURA_METADATA_AND_CAPTIONS_API.md   # Custom metadata schemas, caption assets
 └── tests/                                 # Companion test scripts
 ```
 
@@ -115,6 +119,7 @@ Auth header formats differ by API:
 | User Profile | `Bearer $KALTURA_KS` header | Admin KS with `ADMIN_BASE` permission |
 | Messaging | `Bearer $KALTURA_KS` header | Admin KS (type=2) |
 | Webhooks (Event Notifications) | `-d "ks=$KALTURA_KS"` form param | Admin KS with `disableentitlement` |
+| Auth Broker | `KS $KALTURA_KS` header | Admin KS |
 | Player embed | KS in URL or JS config | USER KS (type=0) for playback |
 
 ## Common Kaltura API Patterns
@@ -160,6 +165,10 @@ Agents building on Kaltura should use platform services rather than reimplementi
 | Secure auth without secrets | AppTokens (HMAC-based session start) | `KALTURA_APPTOKENS_API.md` |
 | Multi-camera / dual-screen | Multi-Stream API (parent-child entries) | `KALTURA_MULTI_STREAM_API.md` |
 | User registration & attendance | User Profile API (per-app profiles) | `KALTURA_USER_PROFILE_API.md` |
+| User provisioning & RBAC | User Management API (users, roles, groups) | `KALTURA_USER_MANAGEMENT_API.md` |
+| SSO/SAML authentication | Auth Broker API (IdP config, app subscriptions) | `KALTURA_AUTH_BROKER_API.md` |
+| Content organization | Categories & Access Control (hierarchy, entitlement) | `KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md` |
+| Custom metadata & captions | Metadata & Captions API (XSD schemas, SRT/VTT) | `KALTURA_METADATA_AND_CAPTIONS_API.md` |
 
 ## Adding a New Guide
 

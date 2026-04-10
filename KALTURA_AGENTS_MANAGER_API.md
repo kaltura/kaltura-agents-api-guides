@@ -475,3 +475,4 @@ In addition to the API, agents can be configured through Kaltura's management in
 - **[AI Genie](KALTURA_AI_GENIE_API.md)** — Conversational AI search over content processed by agents
 - **[eSearch](KALTURA_ESEARCH_API.md)** — Search entries to find content for agent processing
 - **[Webhooks](KALTURA_WEBHOOKS_API.md)** — HTTP callbacks for agent execution events
+- **[Categories & Access Control API](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md)** — Category-based agent triggers (filter agents to fire only for entries in specific categories)

@@ -1,8 +1,8 @@
 # Kaltura API Guides
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Guides](https://img.shields.io/badge/Guides-14-green.svg)](#guides)
-[![Tests](https://img.shields.io/badge/Live--Tested-318_tests-brightgreen.svg)](#guides)
+[![Guides](https://img.shields.io/badge/Guides-18-green.svg)](#guides)
+[![Tests](https://img.shields.io/badge/Live--Tested-407_tests-brightgreen.svg)](#guides)
 [![llms.txt](https://img.shields.io/badge/llms.txt-available-purple.svg)](llms.txt)
 [![Agent Skill](https://img.shields.io/badge/Agent_Skill-kaltura--api-orange.svg)](.agents/skills/kaltura-api/SKILL.md)
 [![Docs Site](https://img.shields.io/badge/Docs-GitHub_Pages-blue.svg)](https://zoharbabin.github.io/kaltura-api-guides/)
@@ -43,6 +43,10 @@ These guides are optimized for AI agent consumption through multiple discovery m
 | [Messaging API](KALTURA_MESSAGING_API.md) | Template-based email messaging, delivery tracking, unsubscribe management | 21 tests |
 | [Webhooks API](KALTURA_WEBHOOKS_API.md) | HTTP webhooks and email notifications on content events | 34 tests |
 | [Multi-Stream API](KALTURA_MULTI_STREAM_API.md) | Dual/multi-screen video entries | 23 tests |
+| [User Management API](KALTURA_USER_MANAGEMENT_API.md) | User CRUD, roles (RBAC), groups, login management | 24 tests |
+| [Auth Broker API](KALTURA_AUTH_BROKER_API.md) | SSO/SAML auth profiles, app subscriptions, SPA proxy | 12 tests |
+| [Categories & Access Control API](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md) | Category hierarchy, membership, entitlement, access control profiles | 27 tests |
+| [Metadata & Captions API](KALTURA_METADATA_AND_CAPTIONS_API.md) | Custom metadata schemas (XSD), caption assets (SRT/VTT/DFXP) | 26 tests |
 
 ## Quick Start
 
@@ -110,7 +114,6 @@ See [PLAN.md](PLAN.md) for the full Kaltura API landscape and prioritized list o
 
 - Live Streaming
 - Analytics
-- Content Management (Users, Categories, Metadata)
 - Virtual Avatar
 
 ## License
