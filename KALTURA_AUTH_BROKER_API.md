@@ -573,26 +573,133 @@ curl -X GET "$KALTURA_AUTH_BROKER_URL/auth-manager/saml/metadata/$PARTNER_ID/$AU
 **Response:** XML document containing the SP entity ID, ACS URL, logout URL, and (if generated) the SP signing/encryption certificate. Provide this metadata URL or download the XML file and upload it to your IdP configuration.
 
 
-# 10. Shared User Model
+# 10. Multi-SSO Configuration
+
+A partner can configure multiple identity providers and control how they are selected per application. This is useful when different user populations authenticate through different IdPs (e.g., employees via Azure AD, contractors via Okta).
+
+## 10.1 Multiple Auth Profiles per Partner
+
+Each call to `auth-profile/add` creates an independent IdP configuration. A single partner can have any number of auth profiles — one per identity provider or per authentication strategy:
+
+```bash
+# Create an Azure AD profile
+curl -X POST "$KALTURA_AUTH_BROKER_URL/auth-profile/add" \
+  -H "Authorization: KS $KALTURA_KS" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Azure AD - Employees",
+    "providerType": "azure",
+    "authStrategy": "saml",
+    "createNewUser": true,
+    "userIdAttribute": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress",
+    "authStrategyConfig": { ... },
+    "userAttributeMappings": { ... },
+    "userGroupMappings": {}
+  }'
+# Save response id as AZURE_PROFILE_ID
+
+# Create an Okta profile
+curl -X POST "$KALTURA_AUTH_BROKER_URL/auth-profile/add" \
+  -H "Authorization: KS $KALTURA_KS" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Okta - Contractors",
+    "providerType": "okta",
+    "authStrategy": "saml",
+    "createNewUser": true,
+    "userIdAttribute": "Core_User_Email",
+    "authStrategyConfig": { ... },
+    "userAttributeMappings": { ... },
+    "userGroupMappings": {}
+  }'
+# Save response id as OKTA_PROFILE_ID
+```
+
+Each profile has its own IdP connection settings, attribute mappings, group sync rules, and JIT provisioning behavior.
+
+## 10.2 App-Level Profile Selection
+
+An app subscription can reference multiple auth profiles via the `authProfileIds` array. When a login flow is initiated for that app, the system uses the `authProfileId` parameter in `generateAuthBrokerToken` to route the user to a specific IdP:
+
+```bash
+curl -X POST "$KALTURA_AUTH_BROKER_URL/app-subscription/add" \
+  -H "Authorization: KS $KALTURA_KS" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Multi-SSO App",
+    "appGuid": "'$APP_GUID'",
+    "authProfileIds": ["'$AZURE_PROFILE_ID'", "'$OKTA_PROFILE_ID'"],
+    "appLandingPage": "https://myapp.example.com/auth/callback",
+    "appErrorPage": "https://myapp.example.com/auth/error",
+    "ksPrivileges": "kmslogin"
+  }'
+```
+
+When calling `generateAuthBrokerToken`, specify which profile to use:
+
+```bash
+# Route to Azure AD
+curl -X POST "$KALTURA_AUTH_BROKER_URL/auth-manager/generateAuthBrokerToken" \
+  -H "Authorization: KS $KALTURA_KS" \
+  -H "Content-Type: application/json" \
+  -d "{
+    \"appGuid\": \"$APP_GUID\",
+    \"authProfileId\": \"$AZURE_PROFILE_ID\",
+    \"origURL\": \"https://myapp.example.com/dashboard\"
+  }"
+```
+
+The specified `authProfileId` must be listed in the subscription's `authProfileIds` array.
+
+## 10.3 Per-Subscription Overrides
+
+Each app subscription can override `ksPrivileges` from the auth profile, allowing the same IdP profile to produce different session privileges per application. The `userIdAttribute` on the auth profile determines user identity, but the subscription's `ksPrivileges` controls what the resulting KS can access:
+
+| Field | Auth Profile Level | App Subscription Level | Behavior |
+|-------|-------------------|----------------------|----------|
+| `ksPrivileges` | Default privileges for all apps | Override for this specific app | Subscription value takes precedence when set |
+| `userGroupsSyncAll` | Default group sync mode | Override for this specific app | Subscription value takes precedence when set |
+
+This allows a single Azure AD profile to grant `kmslogin` privileges for a MediaSpace subscription and different privileges for an Events Platform subscription, without duplicating the IdP configuration.
+
+## 10.4 Organization-Based Routing
+
+For `spa-proxy/login`, when no `authProfileId` is specified, the system can route users to the correct IdP based on `organizationId`:
+
+```bash
+curl -X POST "$KALTURA_AUTH_BROKER_URL/spa-proxy/login" \
+  -H "Authorization: KS $KALTURA_KS" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "appType": "kmc",
+    "email": "user@example.com",
+    "organizationId": "org-acme-corp"
+  }'
+```
+
+The `organizationId` enables domain-based IdP discovery: the system resolves which auth profile is associated with the organization and initiates the login flow with that IdP. This is useful in multi-tenant setups where different organizations within the same partner account use different identity providers.
+
+
+# 11. Shared User Model
 
 The Auth Broker integrates with the core Kaltura user system through the `externalId` field on the `KalturaUser` object.
 
-## 10.1 External ID Linking
+## 11.1 External ID Linking
 
 When a user authenticates via SSO, the Auth Broker sets the `externalId` on the Kaltura user record to the value of the `userIdAttribute` from the IdP assertion. This `externalId` is the key for all subsequent SSO lookups — if the user logs in again, the Auth Broker finds the existing Kaltura user by `externalId`.
 
-## 10.2 JIT User Provisioning
+## 11.2 JIT User Provisioning
 
 When `createNewUser` is `true` on the auth profile, the Auth Broker automatically creates a new Kaltura user if no user with the matching `externalId` exists. The user's `firstName`, `lastName`, and `email` are populated from the `userAttributeMappings`.
 
 When `createNewUser` is `false`, users must already exist in Kaltura — SSO login fails for unknown users.
 
-## 10.3 Group Sync via groupUser
+## 11.3 Group Sync via groupUser
 
 After user provisioning, the Auth Broker calls the `groupUser.sync` API to update group memberships based on IdP claims. This uses the `userGroupMappings` or `userGroupsSyncAll` configuration from the auth profile (see section 5).
 
 
-# 11. Error Handling
+# 12. Error Handling
 
 Application-level errors return HTTP 200 with an error object:
 
@@ -619,7 +726,7 @@ Validation errors (missing required fields, invalid values) return HTTP 400.
 **Retry strategy:** For transient errors (HTTP 5xx, timeouts), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (HTTP 400, `OBJECT_NOT_FOUND`, `USER_GROUPS_SYNC_ALL_FALSE_AND_GROUPS_MISSING`), fix the request before retrying — these will not resolve on their own.
 
 
-# 12. Best Practices
+# 13. Best Practices
 
 - **Always include `userGroupMappings` when creating profiles.** Even if empty (`{}`), this field is required when `userGroupsSyncAll` is `false` to avoid validation errors.
 - **Use `HTTP-POST` as the redirect method.** This prevents KS and JWT tokens from appearing in browser URL bars, server logs, and referrer headers.
@@ -632,7 +739,7 @@ Validation errors (missing required fields, invalid values) return HTTP 400.
 - **Test with a single app subscription first.** Validate the full SSO flow (token generation, IdP redirect, callback, user provisioning) with one app before rolling out to multiple applications.
 
 
-# 13. Related Guides
+# 14. Related Guides
 
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — KS generation and management (Auth Broker uses KS prefix auth)
 - **[AppTokens API](KALTURA_APPTOKENS_API.md)** — Secure server-to-server auth for production

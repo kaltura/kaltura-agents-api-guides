@@ -293,7 +293,36 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/add" \
 
 Each object can have at most one metadata instance per profile. Adding metadata when one already exists for the same profile+object returns an error.
 
-## 3.3 Get Metadata
+## 3.3 Add Metadata from URL
+
+Import metadata XML from a URL instead of providing it inline:
+
+```
+POST /service/metadata_metadata/action/addFromUrl
+```
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/addFromUrl" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "metadataProfileId=12345" \
+  -d "objectType=1" \
+  -d "objectId=0_abc123" \
+  -d "url=https://example.com/metadata/entry_metadata.xml"
+```
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `metadataProfileId` | integer | Yes | Profile ID defining the schema |
+| `objectType` | integer | Yes | `1` = ENTRY, `2` = CATEGORY, `3` = USER, `4` = PARTNER, `5` = DYNAMIC_OBJECT |
+| `objectId` | string | Yes | ID of the object to attach metadata to |
+| `url` | string | Yes | URL to an XML file conforming to the profile's XSD |
+
+**Response:** Full `KalturaMetadata` object with generated `id` and `status=1` (VALID).
+
+The server fetches the XML from the provided URL and validates it against the profile's XSD schema. The same one-instance-per-profile constraint applies: if metadata already exists for the given profile+object combination, the call returns an error.
+
+## 3.4 Get Metadata
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/get" \
@@ -304,7 +333,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/get" \
 
 Returns the full `KalturaMetadata` object including the XML content.
 
-## 3.4 List Metadata
+## 3.5 List Metadata
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/list" \
@@ -348,7 +377,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/list" \
 }
 ```
 
-## 3.5 Update Metadata
+## 3.6 Update Metadata
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/update" \
@@ -365,7 +394,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/update" \
 
 **Response:** Full updated `KalturaMetadata` object with incremented `version`.
 
-## 3.6 Serve (Raw XML)
+## 3.7 Serve (Raw XML)
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/serve" \
@@ -376,7 +405,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/serve" \
 
 Returns the raw XML content of the metadata instance. Useful for programmatic XML processing.
 
-## 3.7 Delete Metadata
+## 3.8 Delete Metadata
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/delete" \
@@ -701,6 +730,26 @@ curl -X POST "$KALTURA_SERVICE_URL/service/caption_captionAsset/action/getUrl" \
 ```
 
 Returns a direct download URL string for the caption file.
+
+## 6.5 Serve by Entry ID
+
+Serve caption content for the default caption asset of an entry in a single call, without needing to look up the caption asset ID first:
+
+```
+POST /service/caption_captionAsset/action/serveByEntryId
+```
+
+```bash
+curl "$KALTURA_SERVICE_URL/service/caption_captionAsset/action/serveByEntryId?ks=$KALTURA_KS&entryId=0_abc123"
+```
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `entryId` | string | Yes | Media entry ID |
+
+**Response:** Raw caption content for the entry's default caption asset. The response Content-Type matches the caption format of the default asset.
+
+This is a convenience endpoint that combines looking up the default caption asset and serving its content. If no default caption asset exists for the entry, the call returns an error.
 
 
 # 7. Common Integration Patterns

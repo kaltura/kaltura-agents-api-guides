@@ -239,6 +239,29 @@ Deletes the category. Child categories are also deleted. Entries assigned to the
 | `id` | integer | Yes | Category ID to delete |
 | `moveEntriesToParentCategory` | integer | No | `1` to move entries to parent before deleting |
 
+## 3.6 Clone a Category Branch
+
+Duplicate a category and its entire subtree:
+
+```
+POST /service/category/action/clone
+```
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/category/action/clone" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "id=12345" \
+  -d "cloneOptions[objectType]=KalturaCategoryClone"
+```
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | integer | Yes | Source category ID to clone |
+| `cloneOptions[objectType]` | string | Yes | Always `KalturaCategoryClone` |
+
+**Response:** A new `KalturaCategory` object representing the cloned root. The entire branch (all descendants) is duplicated under the same parent as the source category. The cloned categories receive new IDs while preserving the hierarchy structure, names, and settings of the source branch.
+
 
 # 4. Category Hierarchy
 
@@ -796,7 +819,110 @@ curl -X POST "$KALTURA_SERVICE_URL/service/session/action/start" \
 Only `jane.doe@example.com` (a category member) can see entries in this category when using this KS. Other users with entitlement enabled for the same `privacycontext` are unable to see the entries.
 
 
-# 9. Error Handling
+# 9. Bulk Operations
+
+Use bulk upload actions to create categories, assign members, or assign entries in batch via CSV.
+
+## 9.1 Bulk Category Creation
+
+Upload a CSV file to create multiple categories at once:
+
+```
+POST /service/category/action/addFromBulkUpload
+```
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/category/action/addFromBulkUpload" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "bulkUploadData[objectType]=KalturaBulkUploadCsvJobData" \
+  --form "fileData=@categories.csv"
+```
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `fileData` | file | Yes | CSV file with category data |
+| `bulkUploadData[objectType]` | string | Yes | Always `KalturaBulkUploadCsvJobData` |
+| `bulkUploadCategoryData[objectType]` | string | No | `KalturaBulkUploadCategoryData` for additional options |
+
+**CSV columns:** `name`, `parentId`, `referenceId`, `description`, `tags`, `privacy`, `contributionPolicy`, `appearInList`, `privacyContext`
+
+**Response:** A `KalturaBulkUpload` job object with `id`, `status`, and `uploadedBy`. Poll the job status via `bulk.get` to track completion.
+
+## 9.2 Bulk Membership Assignment
+
+Assign multiple users to categories in batch:
+
+```
+POST /service/categoryUser/action/addFromBulkUpload
+```
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/categoryUser/action/addFromBulkUpload" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "bulkUploadData[objectType]=KalturaBulkUploadCsvJobData" \
+  --form "fileData=@category_members.csv"
+```
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `fileData` | file | Yes | CSV file with membership data |
+| `bulkUploadData[objectType]` | string | Yes | Always `KalturaBulkUploadCsvJobData` |
+| `bulkUploadCategoryUserData[objectType]` | string | No | `KalturaBulkUploadCategoryUserData` for additional options |
+
+**CSV columns:** `categoryId`, `userId`, `permissionLevel`, `status`
+
+**Response:** A `KalturaBulkUpload` job object. Each row creates a `KalturaCategoryUser` membership record.
+
+## 9.3 Bulk Content Assignment
+
+Assign multiple entries to categories in batch:
+
+```
+POST /service/categoryEntry/action/addFromBulkUpload
+```
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/categoryEntry/action/addFromBulkUpload" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "bulkUploadData[objectType]=KalturaBulkUploadCsvJobData" \
+  --form "fileData=@category_entries.csv"
+```
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `fileData` | file | Yes | CSV file with entry-category assignments |
+| `bulkUploadData[objectType]` | string | Yes | Always `KalturaBulkUploadCsvJobData` |
+| `bulkUploadCategoryEntryData[objectType]` | string | No | `KalturaBulkUploadCategoryEntryData` for additional options |
+
+**CSV columns:** `categoryId`, `entryId`
+
+**Response:** A `KalturaBulkUpload` job object. Each row creates a `KalturaCategoryEntry` assignment.
+
+## 9.4 Tracking Bulk Job Status
+
+Poll the bulk upload job to check completion:
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/bulk/action/get" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "id=$BULK_JOB_ID"
+```
+
+| Status Value | Name | Description |
+|-------------|------|-------------|
+| 0 | PENDING | Job queued |
+| 1 | UPLOADING | File is being uploaded |
+| 2 | UPLOADED | File uploaded, processing not started |
+| 3 | PROCESSING | Job is in progress |
+| 4 | PROCESSED | Job completed (check `errorCount` for partial failures) |
+| 5 | ABORTED | Job was cancelled |
+
+
+# 10. Error Handling
 
 | Error Code | Meaning |
 |------------|---------|
@@ -815,7 +941,7 @@ Only `jane.doe@example.com` (a category member) can see entries in this category
 **Retry strategy:** For transient errors (HTTP 5xx, timeouts), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (HTTP 400, `CATEGORY_NOT_FOUND`, `INVALID_ENTRY_ID`), fix the request before retrying.
 
 
-# 10. Best Practices
+# 11. Best Practices
 
 - **Design hierarchy before creating categories.** Plan your category tree structure in advance. Moving categories later triggers a full path recalculation for all descendants.
 - **Use `referenceId` for external system mapping.** Store external system IDs in `referenceId` to simplify integration and avoid needing to track Kaltura category IDs.
@@ -827,7 +953,7 @@ Only `jane.doe@example.com` (a category member) can see entries in this category
 - **Prefer `enableentitlement` in USER KS.** ADMIN KS has entitlement disabled by default. For production playback, generate USER KS (type=0) with `enableentitlement` and the appropriate `privacycontext`.
 
 
-# 11. Related Guides
+# 12. Related Guides
 
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — `enableentitlement`, `privacycontext` KS privileges, user vs admin sessions
 - **[User Management API](KALTURA_USER_MANAGEMENT_API.md)** — Users for category membership (`categoryUser` references KalturaUser IDs)
