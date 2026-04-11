@@ -394,10 +394,20 @@ def main():
     runner.run_test("Cleanup — abort clips task if still pending", test_cleanup_task)
 
     # ════════════════════════════════════════════
-    # Summary
+    # Cleanup & Summary
     # ════════════════════════════════════════════
 
-    runner.cleanup()
+    keep = "--keep" in sys.argv
+    if keep:
+        print("\n--- Keeping test resources (--keep flag) ---")
+        for key, val in state.items():
+            if key.endswith("_id") and val:
+                print(f"    {key} = {val}")
+    else:
+        if sys.stdin.isatty():
+            input("\nPress Enter to clean up...")
+        runner.cleanup()
+
     success = runner.summary()
     sys.exit(0 if success else 1)
 

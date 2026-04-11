@@ -48,6 +48,8 @@ APP_REGISTRY_URL = os.environ.get("KALTURA_APP_REGISTRY_URL", "https://app-regis
 USER_PROFILE_URL = os.environ.get("KALTURA_USER_PROFILE_URL", "https://user.nvp1.ovp.kaltura.com/api/v1")
 MESSAGING_URL = os.environ.get("KALTURA_MESSAGING_URL", "https://messaging.nvp1.ovp.kaltura.com/api/v1")
 AUTH_BROKER_URL = os.environ.get("KALTURA_AUTH_BROKER_URL", "https://auth.nvp1.ovp.kaltura.com/api/v1")
+REPORTS_URL = os.environ.get("KALTURA_REPORTS_URL", "https://reports.nvp1.ovp.kaltura.com")
+SCM_URL = os.environ.get("KALTURA_SCM_URL", "https://scm.nvp1.ovp.kaltura.com/api/v1")
 
 
 def kaltura_post(service, action, params=None):
@@ -141,6 +143,16 @@ def auth_broker_get(path, timeout=30):
     )
     resp.raise_for_status()
     return resp.text
+
+
+def reports_post(path, json_body=None, timeout=30):
+    """POST to Reports Microservice with Bearer KS auth. Returns parsed JSON."""
+    return bearer_post(REPORTS_URL, path, json_body, timeout=timeout)
+
+
+def scm_post(controller, action, json_body=None, timeout=30):
+    """POST to Game Services (SCM) API. Returns parsed JSON."""
+    return bearer_post(SCM_URL, f"/{controller}/{action}", json_body, timeout=timeout)
 
 
 def agents_post(path, json_body=None):

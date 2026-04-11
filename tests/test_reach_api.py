@@ -630,7 +630,17 @@ def main():
     # Cleanup & Summary
     # ════════════════════════════════════════════
 
-    runner.cleanup()
+    keep = "--keep" in sys.argv
+    if keep:
+        print("\n--- Keeping test resources (--keep flag) ---")
+        for key, val in state.items():
+            if "id" in key.lower():
+                print(f"    {key}: {val}")
+    else:
+        if sys.stdin.isatty():
+            input("\nPress Enter to clean up...")
+        runner.cleanup()
+
     success = runner.summary()
     sys.exit(0 if success else 1)
 

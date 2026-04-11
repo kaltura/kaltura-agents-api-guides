@@ -1,8 +1,8 @@
 # Kaltura API Guides
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Guides](https://img.shields.io/badge/Guides-18-green.svg)](#guides)
-[![Tests](https://img.shields.io/badge/Live--Tested-407_tests-brightgreen.svg)](#guides)
+[![Guides](https://img.shields.io/badge/Guides-21-green.svg)](#guides)
+[![Tests](https://img.shields.io/badge/Live--Tested-482_tests-brightgreen.svg)](#guides)
 [![llms.txt](https://img.shields.io/badge/llms.txt-available-purple.svg)](llms.txt)
 [![Agent Skill](https://img.shields.io/badge/Agent_Skill-kaltura--api-orange.svg)](.agents/skills/kaltura-api/SKILL.md)
 [![Docs Site](https://img.shields.io/badge/Docs-GitHub_Pages-blue.svg)](https://zoharbabin.github.io/kaltura-api-guides/)
@@ -47,6 +47,9 @@ These guides are optimized for AI agent consumption through multiple discovery m
 | [Auth Broker API](KALTURA_AUTH_BROKER_API.md) | SSO/SAML auth profiles, app subscriptions, SPA proxy | 12 tests |
 | [Categories & Access Control API](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md) | Category hierarchy, membership, entitlement, access control profiles | 27 tests |
 | [Metadata & Captions API](KALTURA_METADATA_AND_CAPTIONS_API.md) | Custom metadata schemas (XSD), caption assets (SRT/VTT/DFXP) | 26 tests |
+| [Analytics Reports API](KALTURA_ANALYTICS_REPORTS_API.md) | Reports, CSV exports, live analytics, stream health | 27 tests |
+| [Analytics Events Collection API](KALTURA_ANALYTICS_EVENTS_COLLECTION_API.md) | Playback/engagement event collection, stats.collect, trackEvent | 16 tests |
+| [Gamification API](KALTURA_GAMIFICATION_API.md) | Leaderboards, badges, certificates, lead scoring, rules engine | 32 tests |
 
 ## Quick Start
 
@@ -113,7 +116,6 @@ All contributions that improve accuracy and coverage are appreciated.
 See [PLAN.md](PLAN.md) for the full Kaltura API landscape and prioritized list of upcoming guides, including:
 
 - Live Streaming
-- Analytics
 - Virtual Avatar
 
 ## License

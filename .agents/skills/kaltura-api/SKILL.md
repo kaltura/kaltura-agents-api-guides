@@ -63,6 +63,8 @@ Some newer services use JSON bodies with auth headers:
 | AI Genie | `https://genie.nvp1.ovp.kaltura.com` | `Authorization: KS $KALTURA_KS` |
 | Messaging | `https://messaging.nvp1.ovp.kaltura.com/api/v1` | `Authorization: Bearer $KALTURA_KS` |
 | Auth Broker | `https://auth.nvp1.ovp.kaltura.com/api/v1` | `Authorization: KS $KALTURA_KS` |
+| Reports Microservice | `https://reports.nvp1.ovp.kaltura.com` | `Authorization: Bearer $KALTURA_KS` |
+| Game Services (SCM) | `https://scm.nvp1.ovp.kaltura.com/api/v1` | `Authorization: Bearer $KALTURA_KS` |
 
 > **Regional deployments** may use different base URLs (e.g., `irp2` for EU, `frp2` for DE). The URLs above are for the default NVP1 (US) region. Check your Kaltura account configuration for the correct regional endpoints.
 
@@ -136,6 +138,14 @@ Read the relevant guide when you need to implement a specific capability:
 - **[User Profile API](../../../KALTURA_USER_PROFILE_API.md)** — Per-application user profile management with event attendance lifecycle tracking. Manage registration, attendance status progression (created → registered → confirmed → attended → participated), bulk user import, attendance reporting, and incremental data sync. Includes cross-service registration data retrieval (virtualEvent → App Registry → User Profile → user.list) and engagement analytics via Reports API (report IDs 3030, 3037). Depends on App Registry for app context.
 
 - **[Messaging API](../../../KALTURA_MESSAGING_API.md)** — Template-based email messaging for event communications, attendee notifications, and personalized outreach. Create templates with dynamic tokens (user profile fields, magic login links, QR codes, unsubscribe links), send personalized emails to individual users or groups, track delivery status and engagement (opens, clicks, bounces), and manage CAN-SPAM compliant unsubscribe preferences. Depends on App Registry for app context (appGuid) and integrates with User Profile for recipient data.
+
+### Analytics & Gamification
+
+- **[Analytics Reports API](../../../KALTURA_ANALYTICS_REPORTS_API.md)** — Pull analytics data: `report.getTable/getTotal/getGraphs` for VOD/Live/Webcast metrics, CSV exports via `getUrlForReportAsCsv` and `getCsvFromStringParams`, async Reports Microservice (generate/serve), live analytics via `liveReports.getEvents` and `beacon.list` for stream health. Pipe-delimited response format with paging, date-range filters, and multi-request batching.
+
+- **[Analytics Events Collection API](../../../KALTURA_ANALYTICS_EVENTS_COLLECTION_API.md)** — Report playback and engagement events back to Kaltura analytics. `stats.collect` for server-side player events (WIDGET_LOADED, PLAY, quartiles, SEEK, buffer, replay), `analytics.trackEvent` for application-level tracking (PageLoad, ButtonClicked). Supports `appId` KS privilege for per-application segmentation and custom event context fields.
+
+- **[Gamification API](../../../KALTURA_GAMIFICATION_API.md)** — Leaderboards, badges, certificates, lead scoring, and a rules engine via the Game Services (SCM) microservice. Rule types: sum, count, countUnique, countBoolean, external, override. Participation policies (display/do_not_display/do_not_save with email domain or group matching). Sub-leaderboards with filterPaths. Certificate PDF generation with text overlays. External events via CSV import. Scheduled game objects for automated status transitions.
 
 ### Integration & Automation
 
