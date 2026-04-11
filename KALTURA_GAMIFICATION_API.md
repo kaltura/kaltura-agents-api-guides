@@ -1121,6 +1121,478 @@ curl -s -X POST "$KALTURA_SCM_URL/scheduledGameObject/create" \
   }'
 ```
 
+## 13.5 CPE / Continuing Education Credits
+
+Track Continuing Professional Education (CPE) credits per session for accreditation bodies (medical, legal, accounting). Each session awards credits based on verified watch time, and a branded PDF certificate is generated for submission to the accreditation authority.
+
+**Workflow:**
+1. Create a certificate with `externalId` (accreditation program ID), `certificateEligibility: "perEntry"` (one certificate per session per user), and `certifiedCreditsThreshold` (minimum credits for certification)
+2. Create a `sum` rule on `viewPeriod` scoped to a session category via a `categories` condition, so only content in that category contributes credits
+3. Configure `creditsMapping` to map watch-time thresholds to credit values (e.g., 60 minutes = 1.0 credit, 90 minutes = 1.5 credits)
+4. Set participation policies to exclude speakers from earning credits
+5. Generate per-entry certificates for submission to the accreditation body
+
+```bash
+# 1. Create CPE certificate with per-entry eligibility
+CERT=$(curl -s -X POST "$KALTURA_SCM_URL/certificate/create" \
+  -H "Authorization: Bearer $KALTURA_KS" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "CPE Credit Certificate",
+    "description": "Continuing Professional Education — 1 credit per qualifying session",
+    "status": "disabled",
+    "externalId": "NASBA-PROG-2025-4821",
+    "certificateEligibility": "perEntry",
+    "certifiedCreditsThreshold": 1,
+    "host": "https://training.events.kaltura.com",
+    "participationPolicy": {
+      "userDefaultPolicy": "display",
+      "policies": [
+        {"policy": "do_not_save", "matchCriteria": "byGroup", "values": ["speakers"]}
+      ]
+    },
+    "outputFileConfiguration": {
+      "outputFileElements": [
+        {"url": "https://cfvod.kaltura.com/p/'$PARTNER_ID'/thumbnail/entry_id/'$BG_ENTRY_ID'/width/1397/height/1080"},
+        {"textElementType": "userFullName", "fontSize": 30, "y": 440},
+        {"textElementType": "entryName", "fontSize": 30, "y": 570},
+        {"textElementType": "credits", "fontSize": 23, "x": 1060, "y": 699},
+        {"textElementType": "certificationDate", "fontSize": 18, "x": 695, "y": 636}
+      ]
+    }
+  }' | jq -r '.id')
+
+# 2. Create viewership rule scoped to accredited sessions category
+RULE=$(curl -s -X POST "$KALTURA_SCM_URL/rule/create" \
+  -H "Authorization: Bearer $KALTURA_KS" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "gameObjectType": "certificate",
+    "gameObjectId": "'$CERT'",
+    "name": "CPE session watch time",
+    "conditions": [
+      {"fact": "eventType", "operator": "equal", "value": "viewPeriod"},
+      {"fact": "categories", "operator": "in", "value": "'$CATEGORY_ID'"}
+    ],
+    "type": "sum",
+    "mode": "distribute_points",
+    "metric": "playTime",
+    "groupBy": "kuserId,entryId",
+    "goal": "60",
+    "points": "1",
+    "maxPoints": "unlimited",
+    "reportFormat": "in_minutes"
+  }' | jq -r '.id')
+
+# 3. Enable certificate with credits mapping (watch-time to CPE credit tiers)
+curl -s -X POST "$KALTURA_SCM_URL/certificate/update" \
+  -H "Authorization: Bearer $KALTURA_KS" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "id": "'$CERT'",
+    "status": "enabled",
+    "creditsMapping": "credits,'$RULE'\n1.0,1\n1.5,2\n2.0,3"
+  }'
+
+# 4. Generate per-entry certificate report for accreditation submission
+curl -s -X POST "$KALTURA_SCM_URL/report/generate" \
+  -H "Authorization: Bearer $KALTURA_KS" \
+  -H "Content-Type: application/json" \
+  -d '{"reportType": "entryCertificate", "gameObjectId": "'$CERT'"}'
+```
+
+The `categories` condition in the rule ensures only sessions within the accredited category contribute watch time. The `certificateEligibility: "perEntry"` setting generates a separate certificate per session, so each CPE credit maps to a specific session for audit purposes.
+
+> **See also:** [Events Platform](KALTURA_EVENTS_PLATFORM_API.md) for virtual event and session category setup, [Metadata & Captions](KALTURA_METADATA_AND_CAPTIONS_API.md) for attaching accreditation metadata to entries.
+
+## 13.6 External Score Import (Hybrid Events)
+
+Hybrid events combine in-person and digital activities on a single leaderboard. Booth visits, physical check-ins, and external quiz platforms produce scores outside the Kaltura analytics pipeline. Import those scores via CSV so they appear alongside digital engagement on the same leaderboard.
+
+**Workflow:**
+1. Create an `external` type rule (metric: `"score"`) on the leaderboard so it accepts imported events
+2. Prepare a CSV file with `userId`, `score`, and `eventType` columns
+3. Upload via `event/sendExternalEventsFromCSV` with `delta` mode (add to existing) or `upsert` mode (replace existing)
+4. Verify imported scores in `userScore/list`
+
+```bash
+# 1. Create external rule on the leaderboard
+curl -s -X POST "$KALTURA_SCM_URL/rule/create" \
+  -H "Authorization: Bearer $KALTURA_KS" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "gameObjectType": "leaderboard",
+    "gameObjectId": "'$LEADERBOARD_ID'",
+    "name": "Booth visits and physical activities",
+    "conditions": [{"fact": "eventType", "operator": "equal", "value": "boothVisit"}],
+    "type": "external",
+    "mode": "distribute_points",
+    "metric": "score",
+    "groupBy": "kuserId",
+    "goal": "1",
+    "points": "score",
+    "maxPoints": "unlimited"
+  }'
+
+# 2. Import scores — delta mode (add to existing scores)
+# CSV columns: userId, score, eventType
+curl -s -X POST "$KALTURA_SCM_URL/event/sendExternalEventsFromCSV" \
+  -H "Authorization: Bearer $KALTURA_KS" \
+  -F "eventAction=delta" \
+  -F "csvFile=@-;filename=scores.csv" <<'CSVEOF'
+userId,score,eventType
+user1@example.com,50,boothVisit
+user2@example.com,75,boothVisit
+user3@example.com,100,boothVisit
+CSVEOF
+
+# 3. Import scores — upsert mode (replace existing scores)
+# Use upsert when the external system provides final scores (e.g., quiz retake)
+curl -s -X POST "$KALTURA_SCM_URL/event/sendExternalEventsFromCSV" \
+  -H "Authorization: Bearer $KALTURA_KS" \
+  -F "eventAction=upsert" \
+  -F "csvFile=@-;filename=quiz_finals.csv" <<'CSVEOF'
+userId,score,eventType
+user1@example.com,90,boothVisit
+user2@example.com,85,boothVisit
+CSVEOF
+```
+
+Use `delta` for incremental activities where each occurrence adds points (booth scans, check-ins). Use `upsert` when the external system provides a corrected or final score that should replace the previous value (exam retakes, final quiz grades).
+
+> **See also:** Section 9 (External Events & CSV Import) for CSV format details, [Analytics Reports](KALTURA_ANALYTICS_REPORTS_API.md) for verifying imported data in analytics.
+
+## 13.7 Sponsor Engagement Tracking & ROI Reports
+
+Event sponsors need measurable engagement data to justify renewal. Organize sponsor content by category, track booth page visits via analytics events, score engagement on a per-sponsor leaderboard, and generate per-sponsor reports.
+
+**Workflow:**
+1. Create a category per sponsor using the [Categories & Access Control API](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md)
+2. Create leaderboard rules with `categories` conditions scoping to each sponsor's category
+3. Track booth page engagement via `analytics.trackEvent` (eventType 10003 for page loads)
+4. Pull per-sponsor analytics via `report.getTable` with `categoriesIdsIn` filter
+5. Generate per-sponsor gamification reports
+
+```bash
+# 1. Create leaderboard rule scoped to sponsor category
+curl -s -X POST "$KALTURA_SCM_URL/rule/create" \
+  -H "Authorization: Bearer $KALTURA_KS" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "gameObjectType": "leaderboard",
+    "gameObjectId": "'$LEADERBOARD_ID'",
+    "name": "Sponsor booth engagement",
+    "conditions": [
+      {"fact": "eventType", "operator": "equal", "value": "viewPeriod"},
+      {"fact": "categories", "operator": "in", "value": "'$SPONSOR_CATEGORY_ID'"}
+    ],
+    "type": "sum",
+    "mode": "distribute_points",
+    "metric": "playTime",
+    "groupBy": "kuserId,entryId",
+    "goal": "30",
+    "points": "15",
+    "maxPoints": "150"
+  }'
+
+# 2. Track sponsor booth page visit via analytics.trackEvent (API v3)
+curl -s -X POST "$KALTURA_SERVICE_URL/service/analytics/action/trackEvent" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "event[objectType]=KalturaStatsEvent" \
+  -d "event[eventType]=10003" \
+  -d "event[entryId]=$SPONSOR_ENTRY_ID" \
+  -d "event[partnerId]=$PARTNER_ID"
+
+# 3. Pull per-sponsor engagement data via report.getTable (API v3)
+curl -s -X POST "$KALTURA_SERVICE_URL/service/report/action/getTable" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "reportType=38" \
+  -d "reportInputFilter[objectType]=KalturaReportInputFilter" \
+  -d "reportInputFilter[fromDate]=1717200000" \
+  -d "reportInputFilter[toDate]=1717459200" \
+  -d "reportInputFilter[categoriesIdsIn]=$SPONSOR_CATEGORY_ID" \
+  -d "pager[objectType]=KalturaFilterPager" \
+  -d "pager[pageSize]=100" \
+  -d "pager[pageIndex]=1"
+
+# 4. Generate per-sponsor gamification report
+curl -s -X POST "$KALTURA_SCM_URL/report/generate" \
+  -H "Authorization: Bearer $KALTURA_KS" \
+  -H "Content-Type: application/json" \
+  -d '{"reportType": "userScore", "gameObjectId": "'$LEADERBOARD_ID'"}'
+```
+
+The `categories` condition on the rule ensures only content within the sponsor's category contributes engagement points. Combine the gamification `userScore` report with the API v3 `report.getTable` data (reportType 38 = Top Content) to build a comprehensive sponsor ROI package showing both engagement scores and detailed viewing analytics.
+
+> **See also:** [Categories & Access Control](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md) for sponsor category setup, [Events Collection](KALTURA_ANALYTICS_EVENTS_COLLECTION_API.md) for analytics event tracking, [Analytics Reports](KALTURA_ANALYTICS_REPORTS_API.md) for report.getTable usage, [Events Platform](KALTURA_EVENTS_PLATFORM_API.md) for virtual event structure.
+
+## 13.8 Employee Onboarding Gamification
+
+Make employee onboarding engaging with module-based scoring, milestone badges, and a branded completion certificate. HR managers track cohort progress and generate records for compliance.
+
+**Workflow:**
+1. Create a leaderboard with a 90-day cohort window (startDate/endDate)
+2. Create `sum` rules per onboarding module category (company culture, IT security, benefits)
+3. Create milestone badges with inline rules ("Day 1 Done", "Security Certified", "Fully Onboarded")
+4. Create a completion certificate with HR-branded PDF template
+5. Managers query `userScore/list` for cohort progress and `report/generate` for HR records
+
+```bash
+# 1. Create 90-day onboarding leaderboard
+ONBOARD_LB=$(curl -s -X POST "$KALTURA_SCM_URL/leaderboard/create" \
+  -H "Authorization: Bearer $KALTURA_KS" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "objectType": "Leaderboard",
+    "name": "Q2 Onboarding Cohort",
+    "description": "New hire onboarding progress — 90-day window",
+    "status": "scheduled",
+    "startDate": "2025-04-01T00:00:00Z",
+    "endDate": "2025-06-30T23:59:59Z",
+    "participationPolicy": {"userDefaultPolicy": "display", "policies": []},
+    "virtualEventIds": ["$VIRTUAL_EVENT_ID"]
+  }' | jq -r '.id')
+
+# 2. Create module completion rule (scoped to IT Security category)
+curl -s -X POST "$KALTURA_SCM_URL/rule/create" \
+  -H "Authorization: Bearer $KALTURA_KS" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "gameObjectType": "leaderboard",
+    "gameObjectId": "'$ONBOARD_LB'",
+    "name": "IT Security module completion",
+    "conditions": [
+      {"fact": "eventType", "operator": "equal", "value": "viewPeriod"},
+      {"fact": "categories", "operator": "in", "value": "'$IT_SECURITY_CATEGORY_ID'"}
+    ],
+    "type": "sum",
+    "mode": "distribute_points",
+    "metric": "playTime",
+    "groupBy": "kuserId,entryId",
+    "goal": "60",
+    "points": "20",
+    "maxPoints": "100"
+  }'
+
+# 3. Create "Security Certified" milestone badge
+curl -s -X POST "$KALTURA_SCM_URL/badge/create" \
+  -H "Authorization: Bearer $KALTURA_KS" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Security Certified",
+    "description": "Complete all IT security training modules and pass the quiz",
+    "virtualEventIds": ["$VIRTUAL_EVENT_ID"],
+    "iconUrl": "https://example.com/badges/security-certified.png",
+    "participationPolicy": {"userDefaultPolicy": "display", "policies": []},
+    "rules": [
+      {
+        "name": "Watch all IT security sessions",
+        "conditions": [
+          {"fact": "eventType", "operator": "equal", "value": "viewPeriod"},
+          {"fact": "categories", "operator": "in", "value": "'$IT_SECURITY_CATEGORY_ID'"}
+        ],
+        "type": "countUnique",
+        "metric": "entryId",
+        "groupBy": "kuserId",
+        "goal": "5",
+        "points": "1",
+        "maxPoints": "1"
+      },
+      {
+        "name": "Pass IT security quiz",
+        "conditions": [
+          {"fact": "eventType", "operator": "equal", "value": "quizSubmitted"},
+          {"fact": "categories", "operator": "in", "value": "'$IT_SECURITY_CATEGORY_ID'"}
+        ],
+        "type": "count",
+        "metric": "kuserId",
+        "groupBy": "kuserId",
+        "goal": "1",
+        "points": "1",
+        "maxPoints": "1"
+      }
+    ]
+  }'
+
+# 4. Create HR-branded onboarding completion certificate
+ONBOARD_CERT=$(curl -s -X POST "$KALTURA_SCM_URL/certificate/create" \
+  -H "Authorization: Bearer $KALTURA_KS" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Onboarding Complete",
+    "description": "New hire onboarding program — all modules completed",
+    "status": "enabled",
+    "certificateEligibility": "once",
+    "certifiedCreditsThreshold": 3,
+    "host": "https://onboarding.internal.example.com",
+    "participationPolicy": {"userDefaultPolicy": "display", "policies": []},
+    "outputFileConfiguration": {
+      "outputFileElements": [
+        {"url": "https://cfvod.kaltura.com/p/'$PARTNER_ID'/thumbnail/entry_id/'$HR_BG_ENTRY_ID'/width/1397/height/1080"},
+        {"textElementType": "userFullName", "fontSize": 30, "y": 440},
+        {"textElementType": "certificationDate", "fontSize": 18, "x": 695, "y": 636}
+      ]
+    }
+  }' | jq -r '.id')
+
+# 5. Generate onboarding completion report for HR records
+curl -s -X POST "$KALTURA_SCM_URL/report/generate" \
+  -H "Authorization: Bearer $KALTURA_KS" \
+  -H "Content-Type: application/json" \
+  -d '{"reportType": "userCertificate", "gameObjectId": "'$ONBOARD_CERT'"}'
+```
+
+The 90-day window on the leaderboard defines the cohort period. Each onboarding module maps to a category, so rules can target specific modules. The badge requires both watching all sessions (`countUnique` on `entryId`) and passing the quiz (`count` on `quizSubmitted`), ensuring comprehensive completion before awarding the milestone.
+
+> **See also:** [Categories & Access Control](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md) for organizing onboarding modules by category, [User Management](KALTURA_USER_MANAGEMENT_API.md) for managing new hire user accounts and group assignments.
+
+## 13.9 Customer Education Academy with Badges
+
+Reduce support tickets by building a customer education portal with visible achievement badges. Each product area has a badge requiring both content consumption and quiz completion. Track customer progress and export completion data to CRM.
+
+**Workflow:**
+1. Organize courses by product area categories (Admin Console, API Development, Analytics)
+2. Create badges per module with inline rules — `countUnique` on `entryId` for content completion, `count` on `quizSubmitted` for knowledge verification
+3. Create a "Certified Administrator" certificate for customers completing all modules
+4. Query `userBadge/list` for per-customer progress
+5. Generate badge completion reports for CRM integration
+
+```bash
+# 1. Create "API Expert" badge with content + quiz requirements
+curl -s -X POST "$KALTURA_SCM_URL/badge/create" \
+  -H "Authorization: Bearer $KALTURA_KS" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "API Expert",
+    "description": "Complete all API training courses and pass the certification quiz",
+    "virtualEventIds": ["$VIRTUAL_EVENT_ID"],
+    "iconUrl": "https://example.com/badges/api-expert.png",
+    "participationPolicy": {"userDefaultPolicy": "display", "policies": []},
+    "rules": [
+      {
+        "name": "Complete API training courses",
+        "conditions": [
+          {"fact": "eventType", "operator": "equal", "value": "viewPeriod"},
+          {"fact": "categories", "operator": "in", "value": "'$API_TRAINING_CATEGORY_ID'"}
+        ],
+        "type": "countUnique",
+        "metric": "entryId",
+        "groupBy": "kuserId",
+        "goal": "8",
+        "points": "1",
+        "maxPoints": "1"
+      },
+      {
+        "name": "Pass API certification quiz",
+        "conditions": [
+          {"fact": "eventType", "operator": "equal", "value": "quizSubmitted"},
+          {"fact": "categories", "operator": "in", "value": "'$API_TRAINING_CATEGORY_ID'"}
+        ],
+        "type": "count",
+        "metric": "kuserId",
+        "groupBy": "kuserId",
+        "goal": "1",
+        "points": "1",
+        "maxPoints": "1"
+      }
+    ]
+  }'
+
+# 2. Query per-customer badge progress
+curl -s -X POST "$KALTURA_SCM_URL/userBadge/list" \
+  -H "Authorization: Bearer $KALTURA_KS" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "gameObjectId": "'$BADGE_ID'",
+    "pager": {"pageSize": 100, "pageIndex": 1}
+  }'
+
+# 3. Generate badge completion report for CRM export
+curl -s -X POST "$KALTURA_SCM_URL/report/generate" \
+  -H "Authorization: Bearer $KALTURA_KS" \
+  -H "Content-Type: application/json" \
+  -d '{"reportType": "userBadge", "gameObjectId": "'$BADGE_ID'"}'
+```
+
+Each badge requires both content consumption (`countUnique` ensures the customer watched distinct courses, not the same one repeatedly) and quiz completion (`count` on `quizSubmitted`). The `userBadge/list` response includes per-rule `rulesData` with `progress` and `completed` fields, so your application can render a progress bar per badge. Export the `userBadge` report to your CRM to trigger follow-up workflows when customers achieve certifications.
+
+> **See also:** [Categories & Access Control](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md) for product area category structure, [eSearch](KALTURA_ESEARCH_API.md) for searching entries and users by badge-related metadata.
+
+## 13.10 Team-Based Competitions
+
+Run department-level or regional competitions alongside individual rankings. Sub-leaderboards automatically aggregate individual scores by a user profile property (company, country, department), so team standings update in real time without separate team-level scoring logic.
+
+**Workflow:**
+1. Create a leaderboard with `subLeaderboards` using `filterPaths` referencing user profile properties (e.g., `["company"]` for department grouping)
+2. Individual scores auto-aggregate within their team segment
+3. Create a team-level badge to recognize the top-performing department
+4. Query sub-leaderboard rankings via `userScore/list` with `gameObjectType: "leaderboard"`
+
+```bash
+# 1. Create leaderboard with department-based sub-leaderboards
+TEAM_LB=$(curl -s -X POST "$KALTURA_SCM_URL/leaderboard/create" \
+  -H "Authorization: Bearer $KALTURA_KS" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "objectType": "Leaderboard",
+    "name": "Sales Kickoff Competition",
+    "description": "Individual and department rankings for SKO 2025",
+    "status": "scheduled",
+    "startDate": "2025-06-01T09:00:00Z",
+    "endDate": "2025-06-03T18:00:00Z",
+    "participationPolicy": {
+      "userDefaultPolicy": "display",
+      "policies": [
+        {"policy": "do_not_display", "matchCriteria": "byGroup", "values": ["executives"]}
+      ]
+    },
+    "subLeaderboards": [
+      {"name": "By Department", "filterPaths": ["company"], "id": 0}
+    ],
+    "virtualEventIds": ["$VIRTUAL_EVENT_ID"]
+  }' | jq -r '.id')
+
+# 2. Create "Top Department" team badge
+curl -s -X POST "$KALTURA_SCM_URL/badge/create" \
+  -H "Authorization: Bearer $KALTURA_KS" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Top Department",
+    "description": "Awarded to every member of the highest-scoring department",
+    "virtualEventIds": ["$VIRTUAL_EVENT_ID"],
+    "iconUrl": "https://example.com/badges/top-department.png",
+    "participationPolicy": {"userDefaultPolicy": "display", "policies": []},
+    "rules": [
+      {
+        "name": "Department total engagement",
+        "conditions": [{"fact": "eventType", "operator": "equal", "value": "viewPeriod"}],
+        "type": "sum",
+        "metric": "playTime",
+        "groupBy": "kuserId",
+        "goal": "300",
+        "points": "1",
+        "maxPoints": "1"
+      }
+    ]
+  }'
+
+# 3. Query team standings (sub-leaderboard rankings)
+curl -s -X POST "$KALTURA_SCM_URL/userScore/list" \
+  -H "Authorization: Bearer $KALTURA_KS" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "gameObjectId": "'$TEAM_LB'",
+    "gameObjectType": "leaderboard",
+    "pager": {"pageSize": 50, "pageIndex": 1}
+  }'
+```
+
+The `filterPaths: ["company"]` setting on the sub-leaderboard groups users by the `company` property from their [User Profile](KALTURA_USER_PROFILE_API.md). Individual scores accumulate normally, and the sub-leaderboard aggregates them per team automatically. Use `do_not_display` for executives so they participate (their scores count toward the department total) but do not appear in individual rankings.
+
+> **See also:** [User Profile](KALTURA_USER_PROFILE_API.md) for user properties that power `filterPaths` grouping, [Events Platform](KALTURA_EVENTS_PLATFORM_API.md) for virtual event scoping.
+
 
 # 14. Best Practices
 

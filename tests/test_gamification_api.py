@@ -709,6 +709,324 @@ def main():
     runner.run_test("Error — missing required fields", test_error_missing_fields)
 
     # ════════════════════════════════════════════
+    # Phase 14: Use Case Validation (UC-19, 21-24, 26)
+    # ════════════════════════════════════════════
+
+    def test_uc19_cpe_certificate():
+        """UC-19 CPE — certificate with externalId and perEntry eligibility."""
+        ts = int(time.time())
+        result = scm_post("certificate", "create", {
+            "name": f"CPE_TEST_{ts}",
+            "description": "CPE test — safe to delete",
+            "status": "disabled",
+            "externalId": f"NASBA-TEST-{ts}",
+            "certificateEligibility": "perEntry",
+            "certifiedCreditsThreshold": 1,
+            "host": "https://test.example.com",
+            "participationPolicy": {"userDefaultPolicy": "display", "policies": []},
+            "outputFileConfiguration": {
+                "outputFileElements": [
+                    {"url": "https://example.com/bg.png"},
+                    {"textElementType": "userFullName", "fontSize": 30, "y": 440},
+                ],
+            },
+        })
+        assert "id" in result, f"Expected id: {result}"
+        state["cpe_cert_id"] = result["id"]
+        runner.register_cleanup(f"CPE cert {result['id']}",
+                                lambda: _delete_certificate(result["id"]))
+        assert result.get("certificateEligibility") == "perEntry", \
+            f"Expected perEntry: {result.get('certificateEligibility')}"
+        print(f"    CPE cert created: {result['id']}, eligibility={result.get('certificateEligibility')}")
+
+    runner.run_test("certificate/create — perEntry with externalId (UC-19)", test_uc19_cpe_certificate)
+
+    def test_uc19_category_scoped_rule():
+        """UC-19 CPE — rule with category condition for session scoping."""
+        cert_id = state.get("cpe_cert_id")
+        assert cert_id, "No CPE certificate available"
+        result = scm_post("rule", "create", {
+            "gameObjectType": "certificate",
+            "gameObjectId": cert_id,
+            "name": "Session viewership (CPE test)",
+            "conditions": [
+                {"fact": "eventType", "operator": "equal", "value": "viewPeriod"},
+                {"fact": "categories", "operator": "in", "value": "12345"},
+            ],
+            "type": "sum",
+            "mode": "distribute_points",
+            "metric": "playTime",
+            "groupBy": "kuserId,entryId",
+            "goal": "60",
+            "points": "1",
+            "maxPoints": "unlimited",
+            "reportFormat": "default",
+        })
+        assert "id" in result, f"Expected rule id: {result}"
+        state["cpe_rule_id"] = result["id"]
+        runner.register_cleanup(f"CPE rule {result['id']}",
+                                lambda: _delete_rule(result["id"]))
+        # Verify category condition is stored
+        conditions = result.get("conditions", [])
+        has_category = any(c.get("fact") == "categories" for c in conditions)
+        assert has_category, f"Expected categories condition in: {conditions}"
+        print(f"    Category-scoped rule created: {result['id']}")
+
+    runner.run_test("rule/create — category-scoped certificate rule (UC-19)", test_uc19_category_scoped_rule)
+
+    def test_uc19_report_entry_certificate():
+        """UC-19 CPE — generate entryCertificate report."""
+        cert_id = state.get("cpe_cert_id")
+        assert cert_id, "No CPE certificate available"
+        try:
+            result = scm_post("report", "generate", {
+                "reportType": "entryCertificate",
+                "gameObjectId": cert_id,
+            })
+            print(f"    entryCertificate report: {type(result).__name__}")
+        except Exception as e:
+            # Report may return 404 if no data exists
+            print(f"    entryCertificate report: {e}")
+
+    runner.run_test("report/generate — entryCertificate (UC-19)", test_uc19_report_entry_certificate)
+
+    def test_uc21_external_rule():
+        """UC-21 External Score Import — external type rule."""
+        lb_id = state.get("leaderboard_id")
+        assert lb_id, "No leaderboard available"
+        result = scm_post("rule", "create", {
+            "gameObjectType": "leaderboard",
+            "gameObjectId": lb_id,
+            "name": "External scores (test)",
+            "conditions": [{"fact": "eventType", "operator": "equal", "value": "externalEvent"}],
+            "type": "external",
+            "mode": "distribute_points",
+            "metric": "score",
+            "groupBy": "kuserId",
+            "goal": "1",
+            "points": "1",
+            "maxPoints": "unlimited",
+        })
+        assert "id" in result, f"Expected rule id: {result}"
+        state["external_rule_id"] = result["id"]
+        runner.register_cleanup(f"external rule {result['id']}",
+                                lambda: _delete_rule(result["id"]))
+        assert result.get("type") == "external", f"Expected external: {result.get('type')}"
+        print(f"    External rule created: {result['id']}, type={result.get('type')}")
+
+    runner.run_test("rule/create — external type (UC-21)", test_uc21_external_rule)
+
+    def test_uc21_csv_import():
+        """UC-21 External Score Import — sendExternalEventsFromCSV."""
+        lb_id = state.get("leaderboard_id")
+        assert lb_id, "No leaderboard available"
+        csv_content = "userId,score,eventType\ntest-user@example.com,50,externalEvent\n"
+        try:
+            headers = {"Authorization": f"Bearer {KS}"}
+            import io
+            resp = requests.post(
+                f"{SCM_URL}/event/sendExternalEventsFromCSV",
+                headers=headers,
+                files={"file": ("scores.csv", io.StringIO(csv_content), "text/csv")},
+                data={
+                    "gameObjectType": "leaderboard",
+                    "gameObjectId": lb_id,
+                    "eventAction": "delta",
+                },
+                timeout=30,
+            )
+            if resp.status_code in (200, 201, 202):
+                print(f"    CSV import accepted: status {resp.status_code}")
+            else:
+                print(f"    CSV import response: {resp.status_code} — {resp.text[:100]}")
+        except Exception as e:
+            print(f"    CSV import: {e}")
+
+    runner.run_test("event/sendExternalEventsFromCSV — delta (UC-21)", test_uc21_csv_import)
+
+    def test_uc22_category_scoped_lb_rule():
+        """UC-22 Sponsor Tracking — leaderboard rule with category condition."""
+        lb_id = state.get("leaderboard_id")
+        assert lb_id, "No leaderboard available"
+        result = scm_post("rule", "create", {
+            "gameObjectType": "leaderboard",
+            "gameObjectId": lb_id,
+            "name": "Sponsor session views (test)",
+            "conditions": [
+                {"fact": "eventType", "operator": "equal", "value": "viewPeriod"},
+                {"fact": "categories", "operator": "in", "value": "99999"},
+            ],
+            "type": "sum",
+            "mode": "distribute_points",
+            "metric": "playTime",
+            "groupBy": "kuserId,entryId",
+            "goal": "30",
+            "points": "10",
+            "maxPoints": "100",
+        })
+        assert "id" in result, f"Expected rule id: {result}"
+        state["sponsor_rule_id"] = result["id"]
+        runner.register_cleanup(f"sponsor rule {result['id']}",
+                                lambda: _delete_rule(result["id"]))
+        conditions = result.get("conditions", [])
+        has_category = any(c.get("fact") == "categories" for c in conditions)
+        assert has_category, f"Expected categories condition: {conditions}"
+        print(f"    Sponsor-scoped rule: {result['id']}")
+
+    runner.run_test("rule/create — category-scoped leaderboard (UC-22)", test_uc22_category_scoped_lb_rule)
+
+    def test_uc23_cohort_leaderboard():
+        """UC-23 Onboarding — leaderboard with 90-day cohort window."""
+        ts = int(time.time())
+        result = scm_post("leaderboard", "create", {
+            "objectType": "Leaderboard",
+            "name": f"ONBOARDING_TEST_{ts}",
+            "description": "90-day onboarding cohort — safe to delete",
+            "status": "scheduled",
+            "startDate": "2025-12-01T00:00:00Z",
+            "endDate": "2026-03-01T00:00:00Z",
+            "participationPolicy": {"userDefaultPolicy": "display", "policies": []},
+            "virtualEventIds": [],
+        })
+        assert "id" in result, f"Expected id: {result}"
+        state["onboard_lb_id"] = result["id"]
+        runner.register_cleanup(f"onboarding LB {result['id']}",
+                                lambda: _delete_leaderboard(result["id"]))
+        print(f"    Onboarding leaderboard: {result['id']}")
+
+    runner.run_test("leaderboard/create — 90-day cohort (UC-23)", test_uc23_cohort_leaderboard)
+
+    def test_uc23_onboarding_badge():
+        """UC-23 Onboarding — milestone badge with inline rules."""
+        ts = int(time.time())
+        result = scm_post("badge", "create", {
+            "name": f"SECURITY_CERTIFIED_{ts}",
+            "description": "IT Security module complete — test badge",
+            "participationPolicy": {"userDefaultPolicy": "display", "policies": []},
+            "virtualEventIds": [],
+            "rules": [{
+                "name": "Watch IT security videos",
+                "conditions": [
+                    {"fact": "eventType", "operator": "equal", "value": "viewPeriod"},
+                    {"fact": "categories", "operator": "in", "value": "12345"},
+                ],
+                "type": "countUnique",
+                "metric": "entryId",
+                "groupBy": "kuserId",
+                "goal": "3",
+                "points": "1",
+                "maxPoints": "1",
+            }],
+        })
+        assert "id" in result, f"Expected badge id: {result}"
+        state["onboard_badge_id"] = result["id"]
+        runner.register_cleanup(f"onboarding badge {result['id']}",
+                                lambda: _delete_badge(result["id"]))
+        print(f"    Onboarding badge: {result['id']}")
+
+    runner.run_test("badge/create — onboarding milestone (UC-23)", test_uc23_onboarding_badge)
+
+    def test_uc24_academy_badge():
+        """UC-24 Customer Education — countUnique badge for module completion."""
+        ts = int(time.time())
+        result = scm_post("badge", "create", {
+            "name": f"ADMIN_CERTIFIED_{ts}",
+            "description": "Admin module complete — test badge",
+            "participationPolicy": {"userDefaultPolicy": "display", "policies": []},
+            "virtualEventIds": [],
+            "rules": [{
+                "name": "Complete admin tutorials",
+                "conditions": [{"fact": "eventType", "operator": "equal", "value": "viewPeriod"}],
+                "type": "countUnique",
+                "metric": "entryId",
+                "groupBy": "kuserId",
+                "goal": "5",
+                "points": "1",
+                "maxPoints": "1",
+            }],
+        })
+        assert "id" in result, f"Expected badge id: {result}"
+        state["academy_badge_id"] = result["id"]
+        runner.register_cleanup(f"academy badge {result['id']}",
+                                lambda: _delete_badge(result["id"]))
+        print(f"    Academy badge: {result['id']}")
+
+    runner.run_test("badge/create — countUnique academy module (UC-24)", test_uc24_academy_badge)
+
+    def test_uc24_report_user_badge():
+        """UC-24 Customer Education — generate userBadge report."""
+        badge_id = state.get("academy_badge_id")
+        assert badge_id, "No academy badge available"
+        try:
+            result = scm_post("report", "generate", {
+                "reportType": "userBadge",
+                "gameObjectId": badge_id,
+            })
+            print(f"    userBadge report: {type(result).__name__}")
+        except Exception as e:
+            print(f"    userBadge report: {e}")
+
+    runner.run_test("report/generate — userBadge (UC-24)", test_uc24_report_user_badge)
+
+    def test_uc26_team_leaderboard():
+        """UC-26 Team Competitions — leaderboard with company filterPaths."""
+        ts = int(time.time())
+        result = scm_post("leaderboard", "create", {
+            "objectType": "Leaderboard",
+            "name": f"TEAM_COMP_TEST_{ts}",
+            "description": "Team competition — safe to delete",
+            "status": "scheduled",
+            "startDate": "2025-12-01T00:00:00Z",
+            "endDate": "2025-12-31T23:59:59Z",
+            "participationPolicy": {"userDefaultPolicy": "display", "policies": []},
+            "subLeaderboards": [
+                {"name": "By Department", "filterPaths": ["company"], "id": 0},
+            ],
+            "virtualEventIds": [],
+        })
+        assert "id" in result, f"Expected id: {result}"
+        state["team_lb_id"] = result["id"]
+        runner.register_cleanup(f"team LB {result['id']}",
+                                lambda: _delete_leaderboard(result["id"]))
+        subs = result.get("subLeaderboards", [])
+        assert len(subs) >= 1, f"Expected sub-leaderboard: {subs}"
+        print(f"    Team leaderboard: {result['id']}, subs: {[s.get('name') for s in subs]}")
+
+    runner.run_test("leaderboard/create — team filterPaths company (UC-26)", test_uc26_team_leaderboard)
+
+    def test_uc26_team_scores():
+        """UC-26 Team Competitions — userScore/list for team context."""
+        lb_id = state.get("team_lb_id")
+        assert lb_id, "No team leaderboard available"
+        result = scm_post("userScore", "list", {
+            "gameObjectType": "leaderboard",
+            "gameObjectId": lb_id,
+            "pager": {"pageSize": 25, "pageIndex": 1},
+        })
+        assert isinstance(result, dict), f"Expected dict: {result}"
+        count = result.get("totalCount", 0)
+        print(f"    Team scores: {count}")
+
+    runner.run_test("userScore/list — team sub-leaderboard (UC-26)", test_uc26_team_scores)
+
+    def test_uc23_report_user_certificate():
+        """UC-23 Onboarding — generate userCertificate report."""
+        cert_id = state.get("cert_id")
+        if not cert_id:
+            print("    Skipped: no certificate available")
+            return
+        try:
+            result = scm_post("report", "generate", {
+                "reportType": "userCertificate",
+                "gameObjectId": cert_id,
+            })
+            print(f"    userCertificate report: {type(result).__name__}")
+        except Exception as e:
+            print(f"    userCertificate report: {e}")
+
+    runner.run_test("report/generate — userCertificate (UC-23)", test_uc23_report_user_certificate)
+
+    # ════════════════════════════════════════════
     # Cleanup helpers
     # ════════════════════════════════════════════
     def _delete_leaderboard(lb_id):

@@ -623,3 +623,4 @@ KS_B=$(curl -s -X POST "$KALTURA_SERVICE_URL/service/session/action/start" \
 | [AppTokens](KALTURA_APPTOKENS_API.md) | Scoped tokens for client-side event reporting |
 | [Gamification](KALTURA_GAMIFICATION_API.md) | `viewPeriod` events from playback feed leaderboard and badge rules |
 | [Events Platform](KALTURA_EVENTS_PLATFORM_API.md) | Virtual event context for scoping events |
+| [Analytics Reports: Cross-Guide Workflows](KALTURA_ANALYTICS_REPORTS_API.md) | Full Event Lifecycle (section 13.15), Content Automation Pipeline (13.16), CRM Integration (13.17) — end-to-end orchestration patterns spanning all three analytics/gamification guides |

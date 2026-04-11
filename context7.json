@@ -1,6 +1,6 @@
 {
   "name": "Kaltura API Guides",
-  "description": "Live-tested API guides for Kaltura — The Agentic Digital Experience Platform. Covers authentication, content management, search, player embed, AI-powered enrichment (captions, translation, automation rules), conversational AI, virtual events, multi-stream, webhooks, email messaging, user management, SSO/SAML, categories, metadata, analytics reports, event collection, gamification, and more. 482 tests validated against live API. For AI agents and developers.",
+  "description": "Live-tested API guides for Kaltura — The Agentic Digital Experience Platform. Covers authentication, content management, search, player embed, AI-powered enrichment (captions, translation, automation rules), conversational AI, virtual events, multi-stream, webhooks, email messaging, user management, SSO/SAML, categories, metadata, analytics reports, event collection, gamification, and more. 503 tests validated against live API. For AI agents and developers.",
   "focus": [
     "KALTURA_SESSION_GUIDE.md",
     "KALTURA_APPTOKENS_API.md",

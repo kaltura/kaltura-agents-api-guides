@@ -22,9 +22,9 @@
 | 16 | `KALTURA_AUTH_BROKER_API.md` | `test_auth_broker_api.py` (12 tests) | Done |
 | 17 | `KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md` | `test_categories_access_control_api.py` (27 tests) | Done |
 | 18 | `KALTURA_METADATA_AND_CAPTIONS_API.md` | `test_metadata_captions_api.py` (26 tests) | Done |
-| 19 | `KALTURA_ANALYTICS_REPORTS_API.md` | `test_analytics_reports_api.py` (27 tests) | Done |
+| 19 | `KALTURA_ANALYTICS_REPORTS_API.md` | `test_analytics_reports_api.py` (35 tests) | Done |
 | 20 | `KALTURA_ANALYTICS_EVENTS_COLLECTION_API.md` | `test_analytics_events_collection_api.py` (16 tests) | Done |
-| 21 | `KALTURA_GAMIFICATION_API.md` | `test_gamification_api.py` (32 tests) | Done |
+| 21 | `KALTURA_GAMIFICATION_API.md` | `test_gamification_api.py` (45 tests) | Done |
 
 
 ## Full Kaltura API Landscape

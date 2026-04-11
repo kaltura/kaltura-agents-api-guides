@@ -1035,6 +1035,413 @@ curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getTable" \
   -d "responseOptions[delimiter]=|"
 ```
 
+## 13.10 Accessibility Coverage Reporting
+
+Universities and government agencies subject to WCAG 2.1 AA requirements need to audit their entire video library for caption coverage, prioritize uncaptioned content by viewership, and auto-queue captioning jobs. This workflow combines eSearch for discovery, `captionAsset.list` for per-entry detail, report-based prioritization, and REACH task submission.
+
+```bash
+# Step 1: Find entries that already have captions using eSearch
+#   captionAssetItems with an exists condition returns only entries with at least one caption track
+curl -X POST "$KALTURA_SERVICE_URL/service/eSearch/action/searchEntry" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "searchParams[objectType]=KalturaESearchEntryParams" \
+  -d "searchParams[searchOperator][objectType]=KalturaESearchEntryOperator" \
+  -d "searchParams[searchOperator][operator]=1" \
+  -d "searchParams[searchOperator][searchItems][0][objectType]=KalturaESearchCaptionItem" \
+  -d "searchParams[searchOperator][searchItems][0][fieldName]=content" \
+  -d "searchParams[searchOperator][searchItems][0][itemType]=3" \
+  -d "pager[pageSize]=500" \
+  -d "pager[pageIndex]=1"
+
+# Step 2: List caption languages for a specific entry
+curl -X POST "$KALTURA_SERVICE_URL/service/captionAsset/action/list" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "filter[objectType]=KalturaAssetFilter" \
+  -d "filter[entryIdEqual]=$ENTRY_ID"
+
+# Step 3: Rank uncaptioned content by play count for prioritization
+#   Use topContentCreator (reportType=38) filtered to the list of uncaptioned entry IDs
+curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getTable" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "reportType=38" \
+  -d "reportInputFilter[objectType]=KalturaEndUserReportInputFilter" \
+  -d "reportInputFilter[fromDate]=$FROM_TIMESTAMP" \
+  -d "reportInputFilter[toDate]=$TO_TIMESTAMP" \
+  -d "reportInputFilter[entryIdIn]=$UNCAPTIONED_ENTRY_IDS" \
+  -d "order=-count_plays" \
+  -d "pager[pageSize]=100" \
+  -d "pager[pageIndex]=1" \
+  -d "responseOptions[objectType]=KalturaReportResponseOptions" \
+  -d "responseOptions[delimiter]=|"
+```
+
+After ranking, submit the highest-traffic entries to REACH for automatic captioning (see [REACH Guide](KALTURA_REACH_API.md) section on `entryVendorTask.add`). Track caption completion through webhooks on `ENTRY_VENDOR_TASK_STATUS_CHANGED` events (see [Webhooks Guide](KALTURA_WEBHOOKS_API.md)), then re-run the eSearch query to update the coverage dashboard.
+
+See also: [eSearch Guide](KALTURA_ESEARCH_API.md) for advanced search operators, [Metadata & Captions Guide](KALTURA_METADATA_AND_CAPTIONS_API.md) for caption management.
+
+## 13.11 Lecture Capture & LMS Analytics
+
+Universities track per-student engagement to identify struggling students before they fall behind. This workflow pulls individual student viewing data scoped to a course category, analyzes drop-off patterns for specific lectures, and exports enriched reports with student name and email for LMS gradebook sync.
+
+```bash
+# Step 1: Per-student engagement for a course category
+#   userTopContent (reportType=13) filtered by course category and specific students
+curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getTable" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "reportType=13" \
+  -d "reportInputFilter[objectType]=KalturaEndUserReportInputFilter" \
+  -d "reportInputFilter[fromDate]=$FROM_TIMESTAMP" \
+  -d "reportInputFilter[toDate]=$TO_TIMESTAMP" \
+  -d "reportInputFilter[categoriesIdsIn]=$COURSE_CATEGORY_ID" \
+  -d "reportInputFilter[userIds]=$STUDENT_USER_IDS" \
+  -d "order=-sum_time_viewed" \
+  -d "pager[pageSize]=200" \
+  -d "pager[pageIndex]=1" \
+  -d "responseOptions[objectType]=KalturaReportResponseOptions" \
+  -d "responseOptions[delimiter]=|"
+
+# Step 2: Drop-off analysis for a specific lecture
+#   contentDropoff (reportType=2) shows impression-to-play ratio and quartile play-through
+curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getTable" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "reportType=2" \
+  -d "reportInputFilter[objectType]=KalturaEndUserReportInputFilter" \
+  -d "reportInputFilter[fromDate]=$FROM_TIMESTAMP" \
+  -d "reportInputFilter[toDate]=$TO_TIMESTAMP" \
+  -d "reportInputFilter[entryIdIn]=$LECTURE_ENTRY_ID" \
+  -d "pager[pageSize]=25" \
+  -d "pager[pageIndex]=1" \
+  -d "responseOptions[objectType]=KalturaReportResponseOptions" \
+  -d "responseOptions[delimiter]=|"
+
+# Step 3: Enriched per-student report with name, email, company for LMS export
+#   Report ID 3007 returns CSV with user metadata joined to engagement data
+curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getCsvFromStringParams" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "id=3007" \
+  -d "params=from_date_id=$FROM_DATE;to_date_id=$TO_DATE;cat_ids=$COURSE_CATEGORY_ID;timezone_offset=-240"
+```
+
+Students with low quartile completion on key lectures are candidates for early intervention. Parse the `count_plays_25` through `count_plays_100` columns from the drop-off report to identify where students disengage.
+
+See also: [Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md) for embedded player analytics events, [Categories & Access Control Guide](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md) for course category setup.
+
+## 13.12 Investor Relations Webcast Analytics
+
+Public companies hosting earnings webcasts need segment-level engagement heatmaps for the IR team, geographic distribution for SEC Regulation FD compliance documentation, per-user engagement for investor follow-up, and bulk CSV exports for the board package.
+
+```bash
+# Step 1: Segment-level engagement heatmap
+#   userEngagementTimeline (reportType=34) returns time-based engagement data
+curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getTable" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "reportType=34" \
+  -d "reportInputFilter[objectType]=KalturaEndUserReportInputFilter" \
+  -d "reportInputFilter[fromDate]=$FROM_TIMESTAMP" \
+  -d "reportInputFilter[toDate]=$TO_TIMESTAMP" \
+  -d "reportInputFilter[entryIdIn]=$WEBCAST_ENTRY_ID" \
+  -d "pager[pageSize]=100" \
+  -d "pager[pageIndex]=1" \
+  -d "responseOptions[objectType]=KalturaReportResponseOptions" \
+  -d "responseOptions[delimiter]=|"
+
+# Step 2: Geographic distribution for Regulation FD compliance
+#   mapOverlayCountry (reportType=36) provides country-level viewer breakdown
+curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getTable" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "reportType=36" \
+  -d "reportInputFilter[objectType]=KalturaEndUserReportInputFilter" \
+  -d "reportInputFilter[fromDate]=$FROM_TIMESTAMP" \
+  -d "reportInputFilter[toDate]=$TO_TIMESTAMP" \
+  -d "reportInputFilter[entryIdIn]=$WEBCAST_ENTRY_ID" \
+  -d "pager[pageSize]=50" \
+  -d "pager[pageIndex]=1" \
+  -d "responseOptions[objectType]=KalturaReportResponseOptions" \
+  -d "responseOptions[delimiter]=|"
+
+# Step 3: Per-user engagement for investor follow-up
+#   Report ID 4021 (User Reactions Report) provides per-attendee interaction data
+curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getCsvFromStringParams" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "id=4021" \
+  -d "params=from_date=$FROM_TIMESTAMP;to_date=$TO_TIMESTAMP;entry_ids=$WEBCAST_ENTRY_ID"
+
+# Step 4: Bulk CSV export for the board package
+CSV_URL=$(curl -s -X POST "$KALTURA_SERVICE_URL/service/report/action/getUrlForReportAsCsv" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "reportTitle=Earnings+Webcast+Analytics" \
+  -d "reportText=Q2+2025+Earnings+Call" \
+  -d "headers=Entry,Name,Plays,Minutes,Unique+Viewers,Avg+Completion" \
+  -d "reportType=38" \
+  -d "reportInputFilter[objectType]=KalturaEndUserReportInputFilter" \
+  -d "reportInputFilter[fromDate]=$FROM_TIMESTAMP" \
+  -d "reportInputFilter[toDate]=$TO_TIMESTAMP" \
+  -d "reportInputFilter[entryIdIn]=$WEBCAST_ENTRY_ID" \
+  -d "responseOptions[objectType]=KalturaReportResponseOptions" \
+  -d "responseOptions[delimiter]=|" | tr -d '"')
+curl -o earnings_webcast_report.csv "$CSV_URL"
+```
+
+The geographic report demonstrates that the webcast was accessible globally, which supports Regulation FD fair-disclosure documentation. The segment heatmap reveals which portions of the earnings call drew peak engagement (e.g., Q&A segment vs. prepared remarks).
+
+See also: [Events Platform Guide](KALTURA_EVENTS_PLATFORM_API.md) for webcast setup, [User Profile Guide](KALTURA_USER_PROFILE_API.md) for attendee registration data.
+
+## 13.13 Thumbnail A/B Testing
+
+Content teams optimize click-through rates by testing different thumbnail images. This workflow creates thumbnail variants from video frames, rotates the active thumbnail between test periods, and uses drop-off analytics to measure the impression-to-play conversion rate for each variant.
+
+```bash
+# Step 1: Create a thumbnail variant from a specific video frame
+#   addFromEntry captures a frame at the specified offset (in seconds)
+curl -X POST "$KALTURA_SERVICE_URL/service/thumbAsset/action/addFromEntry" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "entryId=$ENTRY_ID" \
+  -d "thumbAsset[objectType]=KalturaThumbAsset" \
+  -d "thumbAsset[tags]=ab_test_variant_b" \
+  -d "thumbOffset=45"
+
+# Step 2: Switch the active thumbnail to the new variant
+#   setAsDefault makes this thumbnail the one shown in listings and embed previews
+curl -X POST "$KALTURA_SERVICE_URL/service/thumbAsset/action/setAsDefault" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "thumbAssetId=$THUMB_ASSET_ID"
+
+# Step 3: Compare impression-to-play ratio across date ranges
+#   contentDropoff (reportType=2) includes count_loads (impressions) and count_plays
+#   Run this for each variant's date range and compare the plays/impressions ratio
+curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getTable" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "reportType=2" \
+  -d "reportInputFilter[objectType]=KalturaEndUserReportInputFilter" \
+  -d "reportInputFilter[fromDate]=$VARIANT_B_START" \
+  -d "reportInputFilter[toDate]=$VARIANT_B_END" \
+  -d "reportInputFilter[entryIdIn]=$ENTRY_ID" \
+  -d "pager[pageSize]=25" \
+  -d "pager[pageIndex]=1" \
+  -d "responseOptions[objectType]=KalturaReportResponseOptions" \
+  -d "responseOptions[delimiter]=|"
+```
+
+Run the same `reportType=2` query with Variant A's date range, then compare the `count_plays / count_loads` ratio. A higher ratio indicates the thumbnail is more effective at converting impressions to plays. For statistically significant results, run each variant for at least 7 days with comparable traffic.
+
+See also: [Upload & Delivery Guide](KALTURA_UPLOAD_AND_DELIVERY_API.md) for thumbnail management.
+
+## 13.14 Webhook-Triggered Automated Reporting
+
+Automate weekly analytics reports, real-time engagement alerts, and compliance report generation by combining webhooks with the report service. Webhooks fire on content events, trigger report generation, and route results through the messaging system.
+
+```bash
+# Step 1: Create an HTTP webhook template that fires on entry status changes
+#   This webhook can trigger a report-generation endpoint when content goes live
+curl -X POST "$KALTURA_SERVICE_URL/service/eventNotificationTemplate/action/add" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "eventNotificationTemplate[objectType]=KalturaHttpNotificationTemplate" \
+  -d "eventNotificationTemplate[name]=Analytics+Report+Trigger" \
+  -d "eventNotificationTemplate[description]=Triggers+report+generation+on+entry+changes" \
+  -d "eventNotificationTemplate[type]=httpNotification.Http" \
+  -d "eventNotificationTemplate[eventType]=3" \
+  -d "eventNotificationTemplate[eventObjectType]=1" \
+  -d "eventNotificationTemplate[url]=$REPORT_WEBHOOK_ENDPOINT" \
+  -d "eventNotificationTemplate[method]=2" \
+  -d "eventNotificationTemplate[contentType][objectType]=KalturaHttpNotificationObjectData"
+
+# Step 2: Verify the webhook template is registered
+curl -X POST "$KALTURA_SERVICE_URL/service/eventNotificationTemplate/action/list" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "filter[objectType]=KalturaEventNotificationTemplateFilter" \
+  -d "filter[typeEqual]=httpNotification.Http" \
+  -d "pager[pageSize]=25" \
+  -d "pager[pageIndex]=1"
+
+# Step 3: Scheduled CSV export (run weekly via cron or webhook timer)
+#   Generate a full weekly report and download the CSV
+CSV_URL=$(curl -s -X POST "$KALTURA_SERVICE_URL/service/report/action/getUrlForReportAsCsv" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "reportTitle=Weekly+Content+Report" \
+  -d "reportText=Automated+weekly+analytics" \
+  -d "headers=Entry,Name,Plays,Minutes,Unique+Viewers" \
+  -d "reportType=38" \
+  -d "reportInputFilter[objectType]=KalturaEndUserReportInputFilter" \
+  -d "reportInputFilter[fromDate]=$WEEK_START" \
+  -d "reportInputFilter[toDate]=$WEEK_END" \
+  -d "responseOptions[objectType]=KalturaReportResponseOptions" \
+  -d "responseOptions[delimiter]=|" | tr -d '"')
+curl -o weekly_report.csv "$CSV_URL"
+```
+
+For real-time alerting: when the webhook endpoint receives an event, call `report.getTable` with `reportType=35` (uniqueUsersPlay) to check concurrent viewer count. If the count drops below a threshold, send an alert via the Messaging service (see [Messaging Guide](KALTURA_MESSAGING_API.md)). For enriched compliance reports, use `report.getCsvFromStringParams` with IDs 3006-3008 to include user metadata.
+
+See also: [Webhooks Guide](KALTURA_WEBHOOKS_API.md) for event notification template configuration, [Messaging Guide](KALTURA_MESSAGING_API.md) for alert delivery.
+
+## 13.15 Cross-Guide Workflow: Full Event Lifecycle
+
+This master workflow demonstrates how the Analytics Reports, Events Collection, and Gamification guides work together with other guides to orchestrate a complete virtual event from planning through post-event follow-up.
+
+### Pre-Event Setup
+
+1. **Create the virtual event** with sessions, rooms, and schedule [Events Platform](KALTURA_EVENTS_PLATFORM_API.md)
+2. **Configure gamification rules** for the event — point values for watching, polling, Q&A, and networking [Gamification](KALTURA_GAMIFICATION_API.md)
+3. **Set up analytics dashboards** by creating report filters scoped to the event's `virtualEventId` [Analytics Reports]
+4. **Register attendees** and assign them to user groups for segmented reporting [User Profile](KALTURA_USER_PROFILE_API.md)
+5. **Send invitations** with personalized join links via the messaging system [Messaging](KALTURA_MESSAGING_API.md)
+6. **Configure webhooks** to fire on session start/end for automated metric collection [Webhooks](KALTURA_WEBHOOKS_API.md)
+
+### During the Event
+
+1. **Player fires playback events automatically** — play, pause, seek, quartile milestones, buffer events — all collected by the analytics pipeline with zero application code [Events Collection](KALTURA_ANALYTICS_EVENTS_COLLECTION_API.md)
+2. **Custom portal events** are reported via `analytics.trackEvent` — page views, CTA clicks, resource downloads, booth visits [Events Collection](KALTURA_ANALYTICS_EVENTS_COLLECTION_API.md)
+3. **Gamification rules engine scores in real-time** — each playback and custom event feeds the scoring engine, updating leaderboards and triggering badge awards [Gamification](KALTURA_GAMIFICATION_API.md)
+4. **Production monitors stream health** via `beacon.list` for encoder data and `liveReports.getEvents` for concurrent viewer counts [Analytics Reports]
+5. **Flash challenges** are launched via `scheduledGameObject` — time-limited bonus point opportunities that drive engagement spikes [Gamification](KALTURA_GAMIFICATION_API.md)
+6. **Real-time leaderboard** displays on the event portal, pulling from the gamification leaderboard API [Gamification](KALTURA_GAMIFICATION_API.md)
+
+```bash
+# During-event: Monitor live stream health (poll every 10 seconds)
+curl -X POST "$KALTURA_SERVICE_URL/service/beacon/action/list" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "filter[objectType]=KalturaBeaconFilter" \
+  -d "filter[eventTypeIn]=0_healthData,1_healthData" \
+  -d "filter[indexTypeEqual]=log" \
+  -d "filter[relatedObjectTypeIn]=4" \
+  -d "filter[objectIdIn]=$LIVE_ENTRY_ID" \
+  -d "filter[orderBy]=-updatedAt"
+
+# During-event: Get concurrent viewer count (poll every 30 seconds)
+FROM_UNIX=$(($(date +%s) - 110))
+TO_UNIX=$(($(date +%s) - 20))
+curl -X POST "$KALTURA_SERVICE_URL/service/liveReports/action/getEvents" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "reportType=ENTRY_TIME_LINE" \
+  -d "filter[objectType]=KalturaLiveReportInputFilter" \
+  -d "filter[entryIds]=$LIVE_ENTRY_ID" \
+  -d "filter[fromTime]=$FROM_UNIX" \
+  -d "filter[toTime]=$TO_UNIX" \
+  -d "filter[live]=1"
+```
+
+### Post-Event Follow-Up
+
+1. **Generate lead scoring report** from the gamification engine — classify attendees as Hot/Warm/Cold based on total engagement score [Gamification](KALTURA_GAMIFICATION_API.md)
+2. **Pull per-user engagement** via report ID 4021 (User Reactions Report) with per-attendee poll answers, reactions, and Q&A participation [Analytics Reports]
+3. **Generate C&C reports** via the Reports Microservice for polls activity, registration data, and session attendance [Analytics Reports]
+4. **Export badge and certificate reports** listing which attendees earned which awards [Gamification](KALTURA_GAMIFICATION_API.md)
+5. **Bulk CSV export** via `report.getUrlForReportAsCsv` for import into BI tools and CRM [Analytics Reports]
+6. **Send follow-up emails** segmented by engagement tier — personalized content recommendations for high-engagement attendees, re-engagement prompts for low-engagement [Messaging](KALTURA_MESSAGING_API.md)
+7. **On-demand replay** continues feeding both analytics and gamification — viewers who watch the replay earn points and their engagement data flows into the same reporting pipeline [Events Collection](KALTURA_ANALYTICS_EVENTS_COLLECTION_API.md), [Gamification](KALTURA_GAMIFICATION_API.md)
+
+```bash
+# Post-event: Per-attendee engagement report
+curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getCsvFromStringParams" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "id=4021" \
+  -d "params=from_date=$EVENT_START;to_date=$EVENT_END;virtualeventid=$VIRTUAL_EVENT_ID"
+```
+
+## 13.16 Cross-Guide Workflow: Analytics-Driven Content Automation Pipeline
+
+This pipeline automates the full content lifecycle from upload through performance monitoring, using webhooks to chain together processing, enrichment, and analytics-driven optimization.
+
+1. **Upload content** via chunked upload or `addFromUrl` [Upload & Delivery](KALTURA_UPLOAD_AND_DELIVERY_API.md)
+2. **Webhook fires on ENTRY_READY** when transcoding completes, triggering the enrichment pipeline [Webhooks](KALTURA_WEBHOOKS_API.md)
+3. **Auto-process via REACH and AI Agents** — the webhook handler submits the entry for captioning, translation, and AI-generated metadata [REACH](KALTURA_REACH_API.md), [Agents Manager](KALTURA_AGENTS_MANAGER_API.md)
+4. **Webhook fires on task completion** when captions and metadata are ready, confirming enrichment is complete [Webhooks](KALTURA_WEBHOOKS_API.md)
+5. **Player fires playback events** as viewers watch the content — play, quartile, seek, and buffer events flow automatically into analytics [Events Collection](KALTURA_ANALYTICS_EVENTS_COLLECTION_API.md)
+6. **Analytics accumulate** over the monitoring window — plays, watch time, engagement rate, drop-off patterns build up in the reporting pipeline [Analytics Reports]
+7. **Scheduled report check** runs `report.getTable` to evaluate content performance against thresholds — if engagement rate falls below target, send an alert via Messaging [Analytics Reports], [Messaging](KALTURA_MESSAGING_API.md)
+8. **Compare enriched vs. non-enriched metrics** — pull reports for entries with and without captions/AI-metadata to quantify the ROI of automated enrichment [Analytics Reports]
+
+```bash
+# Step 7: Scheduled performance check — flag underperforming content
+#   topContentCreator (reportType=38) ordered by plays, filtered to recent uploads
+curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getTable" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "reportType=38" \
+  -d "reportInputFilter[objectType]=KalturaEndUserReportInputFilter" \
+  -d "reportInputFilter[fromDate]=$MONITORING_START" \
+  -d "reportInputFilter[toDate]=$MONITORING_END" \
+  -d "reportInputFilter[entryIdIn]=$RECENT_ENTRY_IDS" \
+  -d "order=-count_plays" \
+  -d "pager[pageSize]=100" \
+  -d "pager[pageIndex]=1" \
+  -d "responseOptions[objectType]=KalturaReportResponseOptions" \
+  -d "responseOptions[delimiter]=|"
+
+# Step 8: Compare engagement for captioned vs. uncaptioned entries
+#   Run the same report for each group and compare avg_view_drop_off and sum_time_viewed
+curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getTable" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "reportType=2" \
+  -d "reportInputFilter[objectType]=KalturaEndUserReportInputFilter" \
+  -d "reportInputFilter[fromDate]=$MONITORING_START" \
+  -d "reportInputFilter[toDate]=$MONITORING_END" \
+  -d "reportInputFilter[entryIdIn]=$CAPTIONED_ENTRY_IDS" \
+  -d "pager[pageSize]=100" \
+  -d "pager[pageIndex]=1" \
+  -d "responseOptions[objectType]=KalturaReportResponseOptions" \
+  -d "responseOptions[delimiter]=|"
+```
+
+## 13.17 Cross-Guide Workflow: CRM Integration Pipeline
+
+This pipeline connects event engagement data to CRM systems for sales follow-up, combining user registration, gamification-based lead scoring, playback analytics, and automated data export.
+
+1. **Register attendees** via the User Profile API and capture registration metadata (company, title, interest areas) [User Profile](KALTURA_USER_PROFILE_API.md)
+2. **Configure gamification rules** that assign point values to high-intent actions — watching product demos earns more than watching keynotes, booth visits earn more than passive viewing [Gamification](KALTURA_GAMIFICATION_API.md)
+3. **Playback events collected automatically** as attendees watch sessions — the player reports play, quartile completion, and seek events to the analytics pipeline [Events Collection](KALTURA_ANALYTICS_EVENTS_COLLECTION_API.md)
+4. **Custom engagement events tracked** via `analytics.trackEvent` — CTA clicks, resource downloads, meeting requests, and demo sign-ups [Events Collection](KALTURA_ANALYTICS_EVENTS_COLLECTION_API.md)
+5. **Lead scoring report classifies attendees** into Hot/Warm/Cold tiers based on cumulative gamification score — Hot leads (top 10%) are flagged for immediate sales outreach [Gamification](KALTURA_GAMIFICATION_API.md)
+6. **User Reactions Report (ID 4021)** provides per-attendee interaction detail — poll responses, Q&A questions, reactions — enriching the CRM contact record [Analytics Reports]
+7. **Push to CRM** via CSV export or webhook — `getUrlForReportAsCsv` generates a downloadable file for batch import, or a webhook endpoint receives real-time score updates [Analytics Reports], [Webhooks](KALTURA_WEBHOOKS_API.md)
+8. **Ongoing sync** — replay viewers continue accumulating engagement, and scheduled report runs update CRM records weekly [Analytics Reports]
+
+```bash
+# Step 6: Per-attendee interaction detail for CRM enrichment
+#   User Reactions Report (ID 4021) provides poll answers, reactions, Q&A data
+curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getCsvFromStringParams" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "id=4021" \
+  -d "params=from_date=$EVENT_START;to_date=$EVENT_END;virtualeventid=$VIRTUAL_EVENT_ID"
+
+# Step 7: Bulk export for CRM import
+#   Generate a CSV with engagement data for all event attendees
+CSV_URL=$(curl -s -X POST "$KALTURA_SERVICE_URL/service/report/action/getUrlForReportAsCsv" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "reportTitle=CRM+Lead+Export" \
+  -d "reportText=Event+Engagement+for+CRM" \
+  -d "headers=User,Name,Email,Plays,Minutes,Unique+Sessions,Engagement+Score" \
+  -d "reportType=38" \
+  -d "reportInputFilter[objectType]=KalturaEndUserReportInputFilter" \
+  -d "reportInputFilter[fromDate]=$EVENT_START" \
+  -d "reportInputFilter[toDate]=$EVENT_END" \
+  -d "reportInputFilter[virtualEventIdIn]=$VIRTUAL_EVENT_ID" \
+  -d "responseOptions[objectType]=KalturaReportResponseOptions" \
+  -d "responseOptions[delimiter]=|" | tr -d '"')
+curl -o crm_lead_export.csv "$CSV_URL"
+```
+
 
 # 14. Best Practices
 
