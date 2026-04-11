@@ -89,6 +89,7 @@ POST /api_v3/service/uploadToken/action/upload
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/upload" \
   -F "ks=$KALTURA_KS" \
+  -F "format=1" \
   -F "uploadTokenId=$UPLOAD_TOKEN_ID" \
   -F "resume=false" \
   -F "finalChunk=true" \
@@ -105,6 +106,7 @@ Split the file into chunks (e.g., 2 MB each) and upload each chunk sequentially:
 dd if=big_video.mp4 bs=2097152 count=1 skip=0 2>/dev/null | \
 curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/upload" \
   -F "ks=$KALTURA_KS" \
+  -F "format=1" \
   -F "uploadTokenId=$UPLOAD_TOKEN_ID" \
   -F "resume=false" \
   -F "resumeAt=0" \
@@ -115,6 +117,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/upload" \
 dd if=big_video.mp4 bs=2097152 count=1 skip=1 2>/dev/null | \
 curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/upload" \
   -F "ks=$KALTURA_KS" \
+  -F "format=1" \
   -F "uploadTokenId=$UPLOAD_TOKEN_ID" \
   -F "resume=true" \
   -F "resumeAt=2097152" \
@@ -125,6 +128,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/upload" \
 dd if=big_video.mp4 bs=2097152 count=1 skip=2 2>/dev/null | \
 curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/upload" \
   -F "ks=$KALTURA_KS" \
+  -F "format=1" \
   -F "uploadTokenId=$UPLOAD_TOKEN_ID" \
   -F "resume=true" \
   -F "resumeAt=4194304" \
@@ -415,6 +419,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/add" \
 dd if=my_video.mp4 bs=2097152 count=1 skip=0 2>/dev/null | \
 curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/upload" \
   -F "ks=$KALTURA_KS" \
+  -F "format=1" \
   -F "uploadTokenId=$UPLOAD_TOKEN_ID" \
   -F "resume=false" \
   -F "resumeAt=0" \
@@ -425,6 +430,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/upload" \
 dd if=my_video.mp4 bs=2097152 count=1 skip=1 2>/dev/null | \
 curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/upload" \
   -F "ks=$KALTURA_KS" \
+  -F "format=1" \
   -F "uploadTokenId=$UPLOAD_TOKEN_ID" \
   -F "resume=true" \
   -F "resumeAt=2097152" \
@@ -435,6 +441,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/upload" \
 dd if=my_video.mp4 bs=2097152 count=1 skip=2 2>/dev/null | \
 curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/upload" \
   -F "ks=$KALTURA_KS" \
+  -F "format=1" \
   -F "uploadTokenId=$UPLOAD_TOKEN_ID" \
   -F "resume=true" \
   -F "resumeAt=4194304" \

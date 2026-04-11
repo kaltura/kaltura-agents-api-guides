@@ -1055,7 +1055,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/eSearch/action/searchEntry" \
   -d "pager[pageIndex]=1"
 
 # Step 2: List caption languages for a specific entry
-curl -X POST "$KALTURA_SERVICE_URL/service/captionAsset/action/list" \
+curl -X POST "$KALTURA_SERVICE_URL/service/caption_captionAsset/action/list" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "filter[objectType]=KalturaAssetFilter" \

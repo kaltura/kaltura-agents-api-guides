@@ -56,6 +56,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/add" \
 # Step 2: Upload the file
 curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/upload" \
   -F "ks=$KALTURA_KS" \
+  -F "format=1" \
   -F "uploadTokenId=$PARENT_TOKEN_ID" \
   -F "resume=false" \
   -F "finalChunk=true" \
@@ -96,6 +97,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/add" \
 # Step 2: Upload the child file
 curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/upload" \
   -F "ks=$KALTURA_KS" \
+  -F "format=1" \
   -F "uploadTokenId=$CHILD_TOKEN_ID" \
   -F "resume=false" \
   -F "finalChunk=true" \

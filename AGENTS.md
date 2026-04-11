@@ -26,6 +26,9 @@ Kaltura API Guides/
 ├── KALTURA_AUTH_BROKER_API.md             # SSO/SAML auth profiles, app subscriptions
 ├── KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md  # Categories, membership, access control
 ├── KALTURA_METADATA_AND_CAPTIONS_API.md   # Custom metadata schemas, caption assets
+├── KALTURA_ANALYTICS_REPORTS_API.md       # Reports, CSV exports, live analytics, stream health
+├── KALTURA_ANALYTICS_EVENTS_COLLECTION_API.md  # Playback & engagement event collection
+├── KALTURA_GAMIFICATION_API.md            # Leaderboards, badges, certificates, lead scoring
 └── tests/                                 # Companion test scripts
 ```
 
