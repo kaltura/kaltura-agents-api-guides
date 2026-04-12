@@ -30,7 +30,8 @@ Kaltura API Guides/
 ├── KALTURA_ANALYTICS_REPORTS_API.md       # Reports, CSV exports, live analytics, stream health
 ├── KALTURA_ANALYTICS_EVENTS_COLLECTION_API.md  # Playback & engagement event collection
 ├── KALTURA_GAMIFICATION_API.md            # Leaderboards, badges, certificates, lead scoring
-├── KALTURA_DISTRIBUTION_AND_SYNDICATION_API.md  # Content distribution connectors, syndication feeds
+├── KALTURA_DISTRIBUTION_API.md                 # Content distribution connectors (push to YouTube/FB/FTP)
+├── KALTURA_SYNDICATION_API.md                   # Syndication feeds (RSS/MRSS/iTunes/Roku pull)
 └── tests/                                 # Companion test scripts
 ```
 
@@ -178,7 +179,8 @@ Agents building on Kaltura should use platform services rather than reimplementi
 | Content organization | Categories & Access Control (hierarchy, entitlement) | `KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md` |
 | Custom metadata schemas | Custom Metadata API (XSD schemas, appinfo, XSLT) | `KALTURA_CUSTOM_METADATA_API.md` |
 | Captions & transcripts | Captions & Transcripts API (SRT/VTT/DFXP, REACH) | `KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md` |
-| Content distribution | Distribution & Syndication (YouTube, FTP, RSS feeds) | `KALTURA_DISTRIBUTION_AND_SYNDICATION_API.md` |
+| Content distribution | Distribution connectors (YouTube, Facebook, FTP, cross-Kaltura) | `KALTURA_DISTRIBUTION_API.md` |
+| Syndication feeds | RSS/MRSS/iTunes/Roku feeds for external platforms | `KALTURA_SYNDICATION_API.md` |
 
 ## Adding a New Guide
 

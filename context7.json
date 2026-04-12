@@ -1,6 +1,6 @@
 {
   "name": "Kaltura API Guides",
-  "description": "Live-tested API guides for Kaltura — The Agentic Digital Experience Platform. Covers authentication, content management, search, player embed, AI-powered enrichment (captions, translation, automation rules), conversational AI, virtual events, multi-stream, webhooks, email messaging, user management, SSO/SAML, categories, custom metadata, captions & transcripts, analytics reports, event collection, gamification, distribution & syndication, and more. 573 tests validated against live API. For AI agents and developers.",
+  "description": "Live-tested API guides for Kaltura — The Agentic Digital Experience Platform. Covers authentication, content management, search, player embed, AI-powered enrichment (captions, translation, automation rules), conversational AI, virtual events, multi-stream, webhooks, email messaging, user management, SSO/SAML, categories, custom metadata, captions & transcripts, analytics reports, event collection, gamification, content distribution, syndication feeds, and more. 573 tests validated against live API. For AI agents and developers.",
   "focus": [
     "KALTURA_SESSION_GUIDE.md",
     "KALTURA_APPTOKENS_API.md",
@@ -24,7 +24,8 @@
     "KALTURA_ANALYTICS_REPORTS_API.md",
     "KALTURA_ANALYTICS_EVENTS_COLLECTION_API.md",
     "KALTURA_GAMIFICATION_API.md",
-    "KALTURA_DISTRIBUTION_AND_SYNDICATION_API.md",
+    "KALTURA_DISTRIBUTION_API.md",
+    "KALTURA_SYNDICATION_API.md",
     "AGENTS.md",
     ".agents/skills/kaltura-api/SKILL.md"
   ],

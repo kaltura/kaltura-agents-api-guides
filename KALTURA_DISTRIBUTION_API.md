@@ -1,34 +1,23 @@
-# Kaltura Distribution & Syndication API
+# Kaltura Content Distribution API
 
-Kaltura's content distribution system pushes media to external platforms (YouTube, Facebook, FTP servers, cross-Kaltura accounts) via configurable connectors, while syndication feeds generate RSS/MRSS/XML feeds that external platforms pull. Both systems share MRSS as the interchange format and are part of the same content distribution workflow. Distribution profiles define how and when content is pushed; syndication feeds define what content is available for pull.
+Kaltura's content distribution system pushes media to external platforms (YouTube, Facebook, FTP servers, cross-Kaltura accounts) via configurable connectors. Distribution profiles define how and when content is pushed to each target platform. Entry distributions track the per-entry lifecycle through a state machine — from validation and submission to status monitoring and error recovery.
 
 **Base URL:** `https://www.kaltura.com/api_v3` (may differ by region/deployment)
 **Auth:** KS passed as `ks` parameter in POST form data (see [Session Guide](KALTURA_SESSION_GUIDE.md))
 **Format:** Form-encoded POST, `format=1` for JSON responses
-**Services:** `contentDistribution_distributionProfile`, `contentDistribution_entryDistribution`, `contentDistribution_distributionProvider`, `syndicationFeed`
+**Services:** `contentDistribution_distributionProvider`, `contentDistribution_distributionProfile`, `contentDistribution_entryDistribution`
 
 
 # Prerequisites
 
 - A Kaltura account with the Content Distribution plugin enabled (contact your Kaltura account manager if distribution actions return `SERVICE_FORBIDDEN`)
 - An ADMIN KS (type=2) with `disableentitlement` privilege for full distribution management
-- For distribution: at least one distribution profile configured (YouTube API, FTP, Cross-Kaltura, etc.)
-- For syndication: no additional configuration required — syndication feed creation is available to all accounts
+- At least one distribution profile configured (YouTube API, FTP, Cross-Kaltura, etc.)
 
 
 # 1. Core Concepts
 
-## 1.1 Distribution vs Syndication
-
-| Aspect | Distribution | Syndication |
-|--------|-------------|-------------|
-| Direction | Push — Kaltura sends content to external platform | Pull — External platform fetches feed from Kaltura |
-| Trigger | Manual API call or automatic on entry ready/moderation | External platform polls the feed URL |
-| Protocol | Per-connector (OAuth, FTP, SFTP, HTTP) | HTTP GET on a feed URL |
-| Format | Provider-specific (via MRSS + XSLT transforms) | Standard RSS/MRSS/XML |
-| Tracking | Per-entry status, dirty flags, validation errors | Entry count, feed caching |
-
-## 1.2 Distribution Workflow
+## 1.1 Distribution Workflow
 
 1. **Configure a distribution profile** — defines the target platform, credentials, and automation rules
 2. **Bind an entry to a profile** — creates an `entryDistribution` record linking the entry to the profile
@@ -36,7 +25,7 @@ Kaltura's content distribution system pushes media to external platforms (YouTub
 4. **Submit** — pushes the entry to the remote platform; status tracks progress through the state machine
 5. **Monitor** — track status changes, dirty flags (content updated), and sunrise/sunset scheduling
 
-## 1.3 Service Name Prefix
+## 1.2 Service Name Prefix
 
 Distribution services use the `contentDistribution_` plugin prefix:
 
@@ -45,7 +34,6 @@ Distribution services use the `contentDistribution_` plugin prefix:
 | Distribution Provider | `contentDistribution_distributionProvider` |
 | Distribution Profile | `contentDistribution_distributionProfile` |
 | Entry Distribution | `contentDistribution_entryDistribution` |
-| Syndication Feed | `syndicationFeed` (no prefix) |
 
 
 # 2. Distribution Providers
@@ -273,9 +261,9 @@ Entry distributions bind a specific media entry to a distribution profile, track
 | `id` | int | Entry distribution ID (auto-assigned) |
 | `entryId` | string | The Kaltura entry ID |
 | `distributionProfileId` | int | The distribution profile ID |
-| `status` | int | Current status (see section 8.1) |
-| `dirtyStatus` | int | What changed since last sync (see section 8.4) |
-| `sunStatus` | int | Sunrise/sunset state (see section 8.4) |
+| `status` | int | Current status (see section 9.1) |
+| `dirtyStatus` | int | What changed since last sync (see section 9.3) |
+| `sunStatus` | int | Sunrise/sunset state (see section 9.3) |
 | `thumbAssetIds` | string | Comma-separated thumbnail asset IDs to distribute |
 | `flavorAssetIds` | string | Comma-separated flavor asset IDs to distribute |
 | `sunrise` | int | Unix timestamp — content becomes active |
@@ -520,7 +508,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution
   -d "id=$ENTRY_DISTRIBUTION_ID"
 ```
 
-This marks the entry distribution as deleted locally. To also remove the content from the remote platform, call `submitDelete` first.
+This removes the entry distribution record. To also remove the content from the remote platform, call `submitDelete` first.
 
 
 # 5. Distribution Triggers & Automation
@@ -578,7 +566,7 @@ When `submitWhenReady=true` and sunrise is in the future, the entry distribution
 
 ## 5.4 Dirty Status & Update Propagation
 
-When a distributed entry changes (metadata update, new flavors, thumbnail change), the `dirtyStatus` bitmask is set:
+When a distributed entry changes (metadata update, new flavors, thumbnail change), the `dirtyStatus` is set:
 
 | Value | Name | Description |
 |-------|------|-------------|
@@ -690,308 +678,9 @@ Key fields:
 | `sendMetadataAfterAssets` | Send MRSS file after asset uploads |
 
 
-# 7. Syndication Feeds
+# 7. MRSS & Field Configuration
 
-Syndication feeds generate RSS/MRSS/XML feeds that external platforms pull via HTTP GET. Feeds include entry metadata, content URLs, and thumbnails in standard formats.
-
-## 7.1 Feed Types
-
-| Type | Value | Object Type | Output Format |
-|------|-------|-------------|---------------|
-| Google Video Sitemap | 1 | `KalturaGoogleVideoSyndicationFeed` | XML sitemap with `<video:video>` elements |
-| Yahoo MRSS | 2 | `KalturaYahooSyndicationFeed` | RSS 2.0 with `<media:*>` namespace |
-| iTunes Podcast | 3 | `KalturaITunesSyndicationFeed` | RSS with `<itunes:*>` namespace |
-| Flexible Format (XSLT) | 6 | `KalturaGenericXsltSyndicationFeed` | Custom XSLT-transformed MRSS |
-| Roku Direct Publisher | 7 | `KalturaRokuSyndicationFeed` | Roku-specific MRSS |
-| Opera TV | 8 | `KalturaOperaSyndicationFeed` | Opera TV format |
-
-## 7.2 Feed Object Fields
-
-Base fields (all feed types):
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `id` | string | Feed ID (auto-assigned, e.g., `1_abc12345`) |
-| `feedUrl` | string | Public URL to fetch the feed XML |
-| `name` | string | Feed display name |
-| `type` | int | Feed type enum |
-| `status` | int | Feed status |
-| `playlistId` | string | Content filter — restrict to a specific playlist |
-| `landingPage` | string | Template URL for video links (use `{entry_id}` placeholder) |
-| `allowEmbed` | bool | Include embed URLs in feed |
-| `enforceEntitlement` | bool | Apply access control to feed entries |
-| `entryFilter` | object | `KalturaMediaEntryFilter` — filter by tags, mediaType, categories |
-| `feedContentTypeHeader` | string | Response Content-Type (default: `text/xml; charset=utf-8`) |
-
-**iTunes-specific fields:**
-
-| Field | Description |
-|-------|-------------|
-| `feedDescription` | Channel description |
-| `language` | Feed language code (e.g., `EN`) |
-| `ownerName` | Podcast owner name |
-| `ownerEmail` | Podcast owner email |
-| `feedImageUrl` | Album art / channel logo URL |
-| `feedAuthor` | Podcast author |
-| `adultContent` | Explicit content flag |
-
-## 7.3 syndicationFeed.add
-
-Create a syndication feed. The `objectType` must match the desired feed type.
-
-**Google Video Sitemap:**
-
-```bash
-curl -X POST "$KALTURA_SERVICE_URL/service/syndicationFeed/action/add" \
-  -d "ks=$KALTURA_KS" \
-  -d "format=1" \
-  -d "syndicationFeed[objectType]=KalturaGoogleVideoSyndicationFeed" \
-  -d "syndicationFeed[name]=Video Sitemap" \
-  -d "syndicationFeed[type]=1" \
-  -d "syndicationFeed[landingPage]=https://example.com/video/{entry_id}"
-```
-
-**Yahoo MRSS:**
-
-```bash
-curl -X POST "$KALTURA_SERVICE_URL/service/syndicationFeed/action/add" \
-  -d "ks=$KALTURA_KS" \
-  -d "format=1" \
-  -d "syndicationFeed[objectType]=KalturaYahooSyndicationFeed" \
-  -d "syndicationFeed[name]=MRSS Feed" \
-  -d "syndicationFeed[type]=2"
-```
-
-**iTunes Podcast:**
-
-```bash
-curl -X POST "$KALTURA_SERVICE_URL/service/syndicationFeed/action/add" \
-  -d "ks=$KALTURA_KS" \
-  -d "format=1" \
-  -d "syndicationFeed[objectType]=KalturaITunesSyndicationFeed" \
-  -d "syndicationFeed[name]=My Podcast" \
-  -d "syndicationFeed[type]=3" \
-  -d "syndicationFeed[feedDescription]=A podcast feed for video content" \
-  -d "syndicationFeed[language]=EN" \
-  -d "syndicationFeed[ownerName]=Channel Owner" \
-  -d "syndicationFeed[ownerEmail]=owner@example.com"
-```
-
-**Roku Direct Publisher:**
-
-```bash
-curl -X POST "$KALTURA_SERVICE_URL/service/syndicationFeed/action/add" \
-  -d "ks=$KALTURA_KS" \
-  -d "format=1" \
-  -d "syndicationFeed[objectType]=KalturaRokuSyndicationFeed" \
-  -d "syndicationFeed[name]=Roku Channel Feed" \
-  -d "syndicationFeed[type]=7"
-```
-
-**Flexible Format (Generic XSLT):**
-
-```bash
-curl -X POST "$KALTURA_SERVICE_URL/service/syndicationFeed/action/add" \
-  -d "ks=$KALTURA_KS" \
-  -d "format=1" \
-  -d "syndicationFeed[objectType]=KalturaGenericXsltSyndicationFeed" \
-  -d "syndicationFeed[name]=Custom Feed" \
-  -d "syndicationFeed[type]=6" \
-  --data-urlencode 'syndicationFeed[xslt]=<?xml version="1.0"?><xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:output method="xml"/><xsl:template match="/"><feed><xsl:copy-of select="."/></feed></xsl:template></xsl:stylesheet>'
-```
-
-The Generic XSLT feed type requires an `xslt` parameter containing the XSLT stylesheet that transforms Kaltura's internal MRSS into the desired output format.
-
-**Response** includes the `feedUrl` for accessing the generated XML:
-
-```json
-{
-  "id": "1_abc12345",
-  "feedUrl": "http://www.kaltura.com/api_v3/getFeed.php?partnerId=123456&feedId=1_abc12345",
-  "name": "Video Sitemap",
-  "type": 1,
-  "objectType": "KalturaGoogleVideoSyndicationFeed"
-}
-```
-
-## 7.4 syndicationFeed.get
-
-Retrieve a syndication feed by ID:
-
-```bash
-curl -X POST "$KALTURA_SERVICE_URL/service/syndicationFeed/action/get" \
-  -d "ks=$KALTURA_KS" \
-  -d "format=1" \
-  -d "id=$FEED_ID"
-```
-
-## 7.5 syndicationFeed.list
-
-List syndication feeds:
-
-```bash
-curl -X POST "$KALTURA_SERVICE_URL/service/syndicationFeed/action/list" \
-  -d "ks=$KALTURA_KS" \
-  -d "format=1"
-```
-
-## 7.6 syndicationFeed.update
-
-Update a syndication feed:
-
-```bash
-curl -X POST "$KALTURA_SERVICE_URL/service/syndicationFeed/action/update" \
-  -d "ks=$KALTURA_KS" \
-  -d "format=1" \
-  -d "id=$FEED_ID" \
-  -d "syndicationFeed[objectType]=KalturaRokuSyndicationFeed" \
-  -d "syndicationFeed[name]=Updated Feed Name"
-```
-
-## 7.7 syndicationFeed.delete
-
-Delete a syndication feed:
-
-```bash
-curl -X POST "$KALTURA_SERVICE_URL/service/syndicationFeed/action/delete" \
-  -d "ks=$KALTURA_KS" \
-  -d "format=1" \
-  -d "id=$FEED_ID"
-```
-
-## 7.8 syndicationFeed.getEntryCount
-
-Get the number of entries in a syndication feed:
-
-```bash
-curl -X POST "$KALTURA_SERVICE_URL/service/syndicationFeed/action/getEntryCount" \
-  -d "ks=$KALTURA_KS" \
-  -d "format=1" \
-  -d "feedId=$FEED_ID"
-```
-
-**Response:**
-
-```json
-{
-  "totalEntryCount": 27118,
-  "actualEntryCount": 27118,
-  "requireTranscodingCount": 0,
-  "objectType": "KalturaSyndicationFeedEntryCount"
-}
-```
-
-- `totalEntryCount` — entries matching the feed filter
-- `actualEntryCount` — entries with required flavors available
-- `requireTranscodingCount` — entries needing transcoding before inclusion
-
-## 7.9 Feed URL & XML Output
-
-All feeds are served at: `https://{service_url}/api_v3/getFeed.php?partnerId={PARTNER_ID}&feedId={FEED_ID}`
-
-Append `&limit=N` to cap the number of entries returned (also reduces cache TTL from 24 hours to 30 minutes).
-
-**Roku MRSS output example:**
-
-```xml
-<rss xmlns:media="http://search.yahoo.com/mrss/" xmlns:atom="http://www.w3.org/2005/Atom"
-     xmlns:dcterms="http://purl.org/dc/terms/" version="2.0">
-  <channel>
-    <title><![CDATA[Feed Name]]></title>
-    <description><![CDATA[Description]]></description>
-    <item>
-      <guid isPermaLink="false">ENTRY_ID</guid>
-      <title><![CDATA[Entry Title]]></title>
-      <pubDate>Mon, 21 Jul 2014 07:20:18 -0400</pubDate>
-      <media:content url="http://cdnapi.kaltura.com/.../playManifest/.../a.m3u8" duration="2969"/>
-      <media:thumbnail url="https://cfvod.kaltura.com/.../thumbnail/.../width/800/height/450"/>
-      <media:keywords><![CDATA[tag1, tag2]]></media:keywords>
-    </item>
-  </channel>
-</rss>
-```
-
-**iTunes Podcast RSS output example:**
-
-```xml
-<rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">
-  <channel>
-    <title>Feed Name</title>
-    <language>EN</language>
-    <itunes:owner>
-      <itunes:name>Owner Name</itunes:name>
-      <itunes:email>owner@example.com</itunes:email>
-    </itunes:owner>
-    <item>
-      <title>Entry Title</title>
-      <enclosure url="https://cfvod.kaltura.com/.../serveFlavor/.../name/a.mp4" type="video/mp4"/>
-      <itunes:duration>1:58:18</itunes:duration>
-      <itunes:image href="https://cfvod.kaltura.com/.../thumbnail/.../ext.jpg"/>
-    </item>
-  </channel>
-</rss>
-```
-
-**Google Video Sitemap output example:**
-
-```xml
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
-  <url>
-    <loc>https://example.com/video/ENTRY_ID</loc>
-    <video:video>
-      <video:title>Entry Title</video:title>
-      <video:thumbnail_loc>https://cfvod.kaltura.com/.../thumbnail/...</video:thumbnail_loc>
-      <video:content_loc>https://cfvod.kaltura.com/.../serveFlavor/...</video:content_loc>
-    </video:video>
-  </url>
-</urlset>
-```
-
-## 7.10 Entry Filtering
-
-Scope a syndication feed to specific content using `entryFilter` or `playlistId`.
-
-**Filter by tags:**
-
-```bash
-curl -X POST "$KALTURA_SERVICE_URL/service/syndicationFeed/action/add" \
-  -d "ks=$KALTURA_KS" \
-  -d "format=1" \
-  -d "syndicationFeed[objectType]=KalturaGoogleVideoSyndicationFeed" \
-  -d "syndicationFeed[name]=Tagged Content Feed" \
-  -d "syndicationFeed[type]=1" \
-  -d "syndicationFeed[landingPage]=https://example.com/video/{entry_id}" \
-  -d "syndicationFeed[entryFilter][objectType]=KalturaMediaEntryFilter" \
-  -d "syndicationFeed[entryFilter][tagsLike]=webinar"
-```
-
-**Filter by playlist:**
-
-```bash
-curl -X POST "$KALTURA_SERVICE_URL/service/syndicationFeed/action/add" \
-  -d "ks=$KALTURA_KS" \
-  -d "format=1" \
-  -d "syndicationFeed[objectType]=KalturaYahooSyndicationFeed" \
-  -d "syndicationFeed[name]=Playlist Feed" \
-  -d "syndicationFeed[type]=2" \
-  -d "syndicationFeed[playlistId]=$PLAYLIST_ID"
-```
-
-Feeds without a `playlistId` or `entryFilter` include all account entries.
-
-## 7.11 Feed Caching & Performance
-
-- Default feed cache TTL: **24 hours**
-- Adding `&limit=N` to the feed URL reduces cache to **30 minutes** and caps at N items
-- Special characters in entry metadata are XML-escaped automatically
-- Feeds without content filters on large accounts can include tens of thousands of entries — use `playlistId` or `entryFilter` to scope appropriately
-- Google Video Sitemap feeds require a valid `landingPage` URL to generate `<loc>` elements
-
-
-# 8. MRSS & Field Configuration
-
-## 8.1 MRSS Structure
+## 7.1 MRSS Structure
 
 Kaltura generates an internal MRSS (Media RSS) feed for each entry that includes all metadata, content URLs, thumbnails, and distribution-specific data. This MRSS is the input for distribution connectors — each connector transforms it into the provider-specific format.
 
@@ -1017,7 +706,7 @@ Each entry's MRSS includes a `<distribution>` block per active distribution:
 </distribution>
 ```
 
-## 8.2 Field Configuration (fieldConfigArray)
+## 7.2 Field Configuration (fieldConfigArray)
 
 Configurable distribution profiles (YouTube, Facebook, etc.) use `fieldConfigArray` to map Kaltura MRSS elements to provider fields:
 
@@ -1043,9 +732,9 @@ Configurable distribution profiles (YouTube, Facebook, etc.) use `fieldConfigArr
 When `updateOnChange=true` and the corresponding entry field changes, the `dirtyStatus` is automatically set, triggering an update cycle if `updateEnabled=AUTOMATIC`.
 
 
-# 9. Status & Error Reference
+# 8. Status & Error Reference
 
-## 9.1 Entry Distribution Status Values
+## 8.1 Entry Distribution Status Values
 
 | Value | Name | Description |
 |-------|------|-------------|
@@ -1063,7 +752,7 @@ When `updateOnChange=true` and the corresponding entry field changes, the `dirty
 | 11 | IMPORT_SUBMITTING | Importing from remote |
 | 12 | IMPORT_UPDATING | Updating import |
 
-## 9.2 Distribution Validation Error Types
+## 8.2 Distribution Validation Error Types
 
 | Error Object | errorType | Description |
 |-------------|-----------|-------------|
@@ -1074,7 +763,7 @@ When `updateOnChange=true` and the corresponding entry field changes, the `dirty
 | `KalturaDistributionValidationErrorMissingAsset` | 5 | Required asset not found |
 | `KalturaDistributionValidationErrorConditionNotMet` | 6 | XSLT distribution condition not satisfied |
 
-## 9.3 Dirty Status & Sun Status Flags
+## 8.3 Dirty Status & Sun Status Flags
 
 **Dirty status** (tracks what changed since last sync):
 
@@ -1095,7 +784,7 @@ When `updateOnChange=true` and the corresponding entry field changes, the `dirty
 | 3 | AFTER_SUNSET | Content has expired |
 
 
-# 10. Error Handling
+# 9. Error Handling
 
 | Error Code | Meaning | Resolution |
 |------------|---------|------------|
@@ -1105,28 +794,25 @@ When `updateOnChange=true` and the corresponding entry field changes, the `dirty
 | `ENTRY_NOT_FOUND` | The entry ID in the distribution binding does not exist | Verify the entry ID |
 | `SERVICE_FORBIDDEN` | Content Distribution plugin not enabled | Contact your Kaltura account manager |
 | `PROPERTY_VALIDATION_CANNOT_BE_NULL` | A required field is missing | Add the required parameter |
-| `PROPERTY_VALIDATION_NOT_UPDATABLE` | Attempted to update an immutable field | Check which fields are read-only for the object type |
 | `INVALID_KS` | KS is invalid, expired, or lacks privileges | Generate a fresh admin KS |
 
 **Retry strategy:** For transient errors (HTTP 5xx, timeouts), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (`ENTRY_DISTRIBUTION_NOT_FOUND`, `SERVICE_FORBIDDEN`), fix the request before retrying. Distribution submission is asynchronous — after calling `submitAdd`, poll the entry distribution status rather than retrying the submit call.
 
 
-# 11. Best Practices
+# 10. Best Practices
 
 - **Validate before submitting.** Call `entryDistribution.validate` before `submitAdd` to catch missing flavors, thumbnails, or metadata. Fix validation errors before attempting submission.
 - **Use `submitWhenReady=true` for newly uploaded content.** Entries that are still processing will be automatically submitted once they reach READY status, avoiding timing issues.
 - **Monitor dirty status for content updates.** When `updateEnabled=MANUAL`, periodically check for entry distributions with `dirtyStatus != 0` and call `submitUpdate` to push changes.
 - **Use sunrise/sunset for time-based releases.** Schedule content activation and expiration via timestamps rather than manual submit/delete calls.
-- **Scope syndication feeds with filters.** Use `playlistId` or `entryFilter` to limit feed content — unscoped feeds on large accounts return all entries.
-- **Add `&limit=N` to feed URLs for testing.** This reduces the cache TTL to 30 minutes and caps entries, making iteration faster during development.
-- **Use HTTPS for feed URLs.** The `feedUrl` returned by the API uses `http://` — convert to `https://` in production.
 - **Check `serveSentData` / `serveReturnedData` for debugging.** When distribution fails, inspect the raw XML sent to and received from the remote platform.
 - **Use entry distribution `list` with filters for monitoring.** Filter by `statusEqual` to find failed distributions (status 7, 8, 9) and retry or investigate.
+- **Call `submitDelete` before `delete`.** To remove content from both the remote platform and Kaltura, call `submitDelete` first (removes from remote), then `delete` (removes the local record).
 
 
-# 12. Common Integration Patterns
+# 11. Common Integration Patterns
 
-## 12.1 Multi-Platform Publishing Pipeline
+## 11.1 Multi-Platform Publishing Pipeline
 
 Distribute a single entry to multiple platforms simultaneously by binding it to multiple distribution profiles:
 
@@ -1161,7 +847,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution
   -d "submitWhenReady=true"
 ```
 
-## 12.2 YouTube Channel Distribution
+## 11.2 YouTube Channel Distribution
 
 Full workflow for distributing content to YouTube:
 
@@ -1206,12 +892,11 @@ curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution
   -d "id=$ENTRY_DISTRIBUTION_ID"
 ```
 
-## 12.3 Time-Based Content Release
+## 11.3 Time-Based Content Release
 
 Schedule content to go live on a remote platform at a future date and expire automatically:
 
 ```bash
-# Create entry distribution with sunrise/sunset
 curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution/action/add" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
@@ -1221,7 +906,6 @@ curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution
   -d "entryDistribution[sunrise]=$GO_LIVE_TIMESTAMP" \
   -d "entryDistribution[sunset]=$EXPIRE_TIMESTAMP"
 
-# Submit — will be queued until sunrise
 curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution/action/submitAdd" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
@@ -1229,23 +913,17 @@ curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution
   -d "submitWhenReady=true"
 ```
 
-## 12.4 Monitoring Distribution Health
+## 11.4 Monitoring Distribution Health
 
 Find all failed distributions and retry them:
 
 ```bash
-# Find all distributions with ERROR_SUBMITTING status
+# Find distributions with ERROR_SUBMITTING status
 curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution/action/list" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "filter[objectType]=KalturaEntryDistributionFilter" \
   -d "filter[statusEqual]=7"
-
-# Inspect the error
-curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution/action/get" \
-  -d "ks=$KALTURA_KS" \
-  -d "format=1" \
-  -d "id=$FAILED_ENTRY_DIST_ID"
 
 # View what was sent to the remote platform
 curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution/action/serveSentData" \
@@ -1261,46 +939,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution
   -d "id=$FAILED_ENTRY_DIST_ID"
 ```
 
-## 12.5 Google Video Sitemap for SEO
-
-Generate a Google-compatible video sitemap for search engine indexing:
-
-```bash
-# Create a Google Video Sitemap feed scoped to published content
-curl -X POST "$KALTURA_SERVICE_URL/service/syndicationFeed/action/add" \
-  -d "ks=$KALTURA_KS" \
-  -d "format=1" \
-  -d "syndicationFeed[objectType]=KalturaGoogleVideoSyndicationFeed" \
-  -d "syndicationFeed[name]=Video Sitemap - Published" \
-  -d "syndicationFeed[type]=1" \
-  -d "syndicationFeed[landingPage]=https://mysite.com/watch/{entry_id}" \
-  -d "syndicationFeed[entryFilter][objectType]=KalturaMediaEntryFilter" \
-  -d "syndicationFeed[entryFilter][tagsLike]=published"
-```
-
-Submit the feed URL to Google Search Console as a video sitemap.
-
-## 12.6 Podcast Feed Generation
-
-Create an iTunes-compatible podcast feed:
-
-```bash
-curl -X POST "$KALTURA_SERVICE_URL/service/syndicationFeed/action/add" \
-  -d "ks=$KALTURA_KS" \
-  -d "format=1" \
-  -d "syndicationFeed[objectType]=KalturaITunesSyndicationFeed" \
-  -d "syndicationFeed[name]=Company Podcast" \
-  -d "syndicationFeed[type]=3" \
-  -d "syndicationFeed[feedDescription]=Weekly insights from our team" \
-  -d "syndicationFeed[language]=EN" \
-  -d "syndicationFeed[ownerName]=My Company" \
-  -d "syndicationFeed[ownerEmail]=podcast@example.com" \
-  -d "syndicationFeed[playlistId]=$PODCAST_PLAYLIST_ID"
-```
-
-Use `playlistId` to restrict the podcast to a curated playlist of episodes.
-
-## 12.7 Webhook-Triggered Distribution
+## 11.5 Webhook-Triggered Distribution
 
 Combine distribution with [webhooks](KALTURA_WEBHOOKS_API.md) for event-driven publishing. Set up a webhook that fires when entry metadata changes, then programmatically manage distribution updates:
 
@@ -1308,36 +947,8 @@ Combine distribution with [webhooks](KALTURA_WEBHOOKS_API.md) for event-driven p
 2. In your webhook handler, check if the entry has active distributions
 3. If `dirtyStatus != 0`, call `entryDistribution.submitUpdate` to push changes
 
-## 12.8 Content Syndication for News and Media
 
-Create multiple feed formats for different distribution channels:
-
-```bash
-# MRSS for news aggregators
-curl -X POST "$KALTURA_SERVICE_URL/service/syndicationFeed/action/add" \
-  -d "ks=$KALTURA_KS" \
-  -d "format=1" \
-  -d "syndicationFeed[objectType]=KalturaYahooSyndicationFeed" \
-  -d "syndicationFeed[name]=News Video Feed" \
-  -d "syndicationFeed[type]=2" \
-  -d "syndicationFeed[entryFilter][objectType]=KalturaMediaEntryFilter" \
-  -d "syndicationFeed[entryFilter][tagsLike]=news"
-
-# Roku feed for OTT
-curl -X POST "$KALTURA_SERVICE_URL/service/syndicationFeed/action/add" \
-  -d "ks=$KALTURA_KS" \
-  -d "format=1" \
-  -d "syndicationFeed[objectType]=KalturaRokuSyndicationFeed" \
-  -d "syndicationFeed[name]=Roku Channel" \
-  -d "syndicationFeed[type]=7" \
-  -d "syndicationFeed[entryFilter][objectType]=KalturaMediaEntryFilter" \
-  -d "syndicationFeed[entryFilter][tagsLike]=featured"
-```
-
-
-# 13. API Actions Reference
-
-## Distribution Services
+# 12. API Actions Reference
 
 | Service | Action | Description |
 |---------|--------|-------------|
@@ -1362,25 +973,15 @@ curl -X POST "$KALTURA_SERVICE_URL/service/syndicationFeed/action/add" \
 | `contentDistribution_entryDistribution` | `serveSentData` | Retrieve XML sent to remote |
 | `contentDistribution_entryDistribution` | `serveReturnedData` | Retrieve XML returned from remote |
 
-## Syndication Services
 
-| Service | Action | Description |
-|---------|--------|-------------|
-| `syndicationFeed` | `add` | Create syndication feed |
-| `syndicationFeed` | `get` | Get feed by ID |
-| `syndicationFeed` | `list` | List feeds |
-| `syndicationFeed` | `update` | Update feed config |
-| `syndicationFeed` | `delete` | Delete feed |
-| `syndicationFeed` | `getEntryCount` | Count entries in feed |
-
-
-# 14. Related Guides
+# 13. Related Guides
 
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — KS generation and management
 - **[AppTokens API](KALTURA_APPTOKENS_API.md)** — Secure server-to-server auth for automated distribution workflows
+- **[Syndication Feeds API](KALTURA_SYNDICATION_API.md)** — Generate RSS/MRSS/iTunes/Roku feeds for external platforms to pull (pull model vs distribution's push model)
 - **[Upload & Delivery API](KALTURA_UPLOAD_AND_DELIVERY_API.md)** — Content upload, flavors, and delivery (entries and assets that feed distribution)
 - **[Webhooks API](KALTURA_WEBHOOKS_API.md)** — Event-driven automation (trigger distribution on content events)
 - **[Custom Metadata API](KALTURA_CUSTOM_METADATA_API.md)** — Structured metadata schemas (metadata mapped to distribution provider fields)
 - **[Captions & Transcripts API](KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md)** — Caption assets included in distribution (Cross-Kaltura distributes captions)
-- **[Categories & Access Control API](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md)** — Content organization and access control (used in distribution conditions and feed filtering)
+- **[Categories & Access Control API](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md)** — Content organization (used in distribution conditions)
 - **[Analytics Reports API](KALTURA_ANALYTICS_REPORTS_API.md)** — Engagement analytics for distributed content
