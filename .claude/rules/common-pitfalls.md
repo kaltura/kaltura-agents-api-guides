@@ -12,3 +12,7 @@
 | Hardcoded URLs in curl examples | Breaks for non-default regions/deployments | Use `$SERVICE_URL`, `$KS`, `$PARTNER_ID` shell variables |
 | Missing `format=1` in API v3 calls | Response comes back as XML instead of JSON | Always include `format=1` in every API v3 request |
 | Events Platform string IDs | API expects integers for event IDs | Use integers: `12345` not `"evt_abc123"` |
+| Documenting SERVICE_FORBIDDEN actions | Customers can't use documented features, guide loses trust | Test every action with a customer KS before documenting. Exclude actions returning SERVICE_FORBIDDEN |
+| Tests catching errors as "expected" | Test passes but the feature doesn't work for customers. Masks inaccessible actions | Tests must succeed with actual API responses. If a test expects FORBIDDEN/PERMISSION errors, the feature should not be documented |
+| Linking to non-existent guides | Broken references in Related Guides and cross-references | Only link to published guides. Remove or replace references to planned/future guides |
+| Bundling unrelated services in one guide | Guide grows unwieldy, each service gets shallow coverage, hard to find information | One guide per service boundary. Split if services don't share actions, don't depend on each other, and aren't always used together |

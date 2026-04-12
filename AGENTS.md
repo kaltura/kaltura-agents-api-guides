@@ -25,7 +25,8 @@ Kaltura API Guides/
 ├── KALTURA_USER_MANAGEMENT_API.md         # User CRUD, roles (RBAC), groups
 ├── KALTURA_AUTH_BROKER_API.md             # SSO/SAML auth profiles, app subscriptions
 ├── KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md  # Categories, membership, access control
-├── KALTURA_METADATA_AND_CAPTIONS_API.md   # Custom metadata schemas, caption assets
+├── KALTURA_CUSTOM_METADATA_API.md          # XSD schemas, metadata profiles, XSLT transforms
+├── KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md # Caption assets, transcripts, multi-language, REACH
 ├── KALTURA_ANALYTICS_REPORTS_API.md       # Reports, CSV exports, live analytics, stream health
 ├── KALTURA_ANALYTICS_EVENTS_COLLECTION_API.md  # Playback & engagement event collection
 ├── KALTURA_GAMIFICATION_API.md            # Leaderboards, badges, certificates, lead scoring
@@ -49,6 +50,8 @@ All tests must pass against the live Kaltura API before a guide is considered do
 2. **Language-agnostic.** All API examples use `curl` with shell variables. Agents choose their own language.
 3. **Live-tested.** Every guide has a companion test script that validates documented behavior against the real API.
 4. **Agent-first.** Write for an AI agent that reads top-to-bottom and executes. Clear structure, explicit parameters, no ambiguity.
+5. **Customer-accessible only.** Document only API actions and features that are accessible to customer accounts. Verify every action against the live API with a standard customer KS. If an action returns `SERVICE_FORBIDDEN`, it is an internal/system action and must not be documented. The `disableentitlement` KS privilege bypasses content entitlement checks but does NOT override partner-level service restrictions.
+6. **One guide per service boundary.** Each guide covers one cohesive API service or tightly-coupled service cluster. Two services belong in the same guide only if they share API actions, one depends on the other at the API level, or a developer using one always needs the other. Services that merely "relate to entries" (e.g., metadata and captions) are separate guides. When in doubt, split — standalone guides can cross-reference each other, but a bundled guide cannot be unbundled without losing coverage depth.
 
 ## Guide File Structure
 
@@ -171,17 +174,19 @@ Agents building on Kaltura should use platform services rather than reimplementi
 | User provisioning & RBAC | User Management API (users, roles, groups) | `KALTURA_USER_MANAGEMENT_API.md` |
 | SSO/SAML authentication | Auth Broker API (IdP config, app subscriptions) | `KALTURA_AUTH_BROKER_API.md` |
 | Content organization | Categories & Access Control (hierarchy, entitlement) | `KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md` |
-| Custom metadata & captions | Metadata & Captions API (XSD schemas, SRT/VTT) | `KALTURA_METADATA_AND_CAPTIONS_API.md` |
+| Custom metadata schemas | Custom Metadata API (XSD schemas, appinfo, XSLT) | `KALTURA_CUSTOM_METADATA_API.md` |
+| Captions & transcripts | Captions & Transcripts API (SRT/VTT/DFXP, REACH) | `KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md` |
 
 ## Adding a New Guide
 
 1. **Research.** Explore the API surface — endpoints, params, response schemas, auth. Test calls live.
-2. **Write the guide.** Follow the header block, numbered sections, curl examples, Related Guides structure.
-3. **Create the test file.** `tests/test_{name}.py` — cover every documented endpoint with real API calls.
-4. **Run tests.** All tests must pass against the live API.
-5. **Cross-reference.** Add to Related Guides sections of existing guides where relevant.
-6. **Update PLAN.md.** Add a row to the Completed Guides table.
-7. **Iterate.** If tests reveal undocumented behavior, update the guide to match reality.
+2. **Verify accessibility.** Test every action you plan to document with a customer account KS. If any action returns `SERVICE_FORBIDDEN` or requires partner-level permissions beyond standard KS privileges, exclude it from the guide. `disableentitlement` bypasses content entitlement checks but does NOT unlock partner-level service restrictions.
+3. **Write the guide.** Follow the header block, numbered sections, curl examples, Related Guides structure.
+4. **Create the test file.** `tests/test_{name}.py` — cover every documented endpoint with real API calls.
+5. **Run tests.** All tests must pass against the live API. Tests must succeed with actual successful API responses — not by catching expected errors.
+6. **Cross-reference.** Add to Related Guides sections of existing guides where relevant. Only link to published guides — never reference planned or future guides.
+7. **Update PLAN.md.** Add a row to the Completed Guides table.
+8. **Iterate.** If tests reveal undocumented behavior, update the guide to match reality.
 
 ### Naming Convention
 

@@ -1203,7 +1203,7 @@ curl -s -X POST "$KALTURA_SCM_URL/report/generate" \
 
 The `categories` condition in the rule ensures only sessions within the accredited category contribute watch time. The `certificateEligibility: "perEntry"` setting generates a separate certificate per session, so each CPE credit maps to a specific session for audit purposes.
 
-> **See also:** [Events Platform](KALTURA_EVENTS_PLATFORM_API.md) for virtual event and session category setup, [Metadata & Captions](KALTURA_METADATA_AND_CAPTIONS_API.md) for attaching accreditation metadata to entries.
+> **See also:** [Events Platform](KALTURA_EVENTS_PLATFORM_API.md) for virtual event and session category setup, [Custom Metadata](KALTURA_CUSTOM_METADATA_API.md) for attaching accreditation metadata to entries.
 
 ## 13.6 External Score Import (Hybrid Events)
 
@@ -1624,5 +1624,5 @@ The `filterPaths: ["company"]` setting on the sub-leaderboard groups users by th
 | [Messaging](KALTURA_MESSAGING_API.md) | Certificate download email delivery; winner notification emails |
 | [Webhooks](KALTURA_WEBHOOKS_API.md) | Event notifications on gamification state changes |
 | [Session Guide](KALTURA_SESSION_GUIDE.md) | Admin KS as Bearer token; `GAME_BASE`/`GAME_MANAGE` permissions |
-| [Metadata & Captions](KALTURA_METADATA_AND_CAPTIONS_API.md) | `metadataProfileId` on certificates for PDF generation context |
+| [Custom Metadata](KALTURA_CUSTOM_METADATA_API.md) | `metadataProfileId` on certificates for PDF generation context |
 | [Categories & Access Control](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md) | Category IDs in rule conditions for content scoping |

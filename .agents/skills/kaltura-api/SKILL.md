@@ -109,7 +109,9 @@ Read the relevant guide when you need to implement a specific capability:
 
 - **[Categories & Access Control API](../../../KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md)** — Hierarchical content taxonomy via `category` service, membership and entitlement via `categoryUser`, content assignment via `categoryEntry`, and `accessControlProfile` rules (geo/IP/domain/scheduling restrictions). Accounts with entitlement enabled require `disableentitlement` KS privilege for cross-category operations.
 
-- **[Metadata & Captions API](../../../KALTURA_METADATA_AND_CAPTIONS_API.md)** — Custom metadata schemas (XSD) via `metadata_metadataProfile` plugin service, per-entry structured metadata CRUD via `metadata_metadata`, caption asset management (SRT/VTT/DFXP) via `caption_captionAsset` with two-step creation (add → setContent). Search caption text via eSearch `KalturaESearchCaptionItem`.
+- **[Custom Metadata API](../../../KALTURA_CUSTOM_METADATA_API.md)** — XSD-based metadata schemas via `metadata_metadataProfile` plugin service with Kaltura-native types (textType, dateType, objectType, listType) and `<appinfo>` annotations for KMC rendering. Per-object structured metadata CRUD via `metadata_metadata` with optimistic locking, XSLT transformation pipeline, and eSearch integration via `KalturaESearchEntryMetadataItem`.
+
+- **[Captions & Transcripts API](../../../KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md)** — Caption asset management (SRT/WebVTT/DFXP/SCC) via `caption_captionAsset` with two-step creation (add → setContent), on-the-fly WebVTT conversion, HLS segmented delivery, JSON serving for AI/LLM integrations, caption parameter templates via `caption_captionParams`, multi-language workflows, REACH integration for ASR/translation, and eSearch caption search via `KalturaESearchCaptionItem`.
 
 ### Playback
 

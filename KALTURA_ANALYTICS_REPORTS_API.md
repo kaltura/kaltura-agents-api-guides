@@ -1080,7 +1080,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getTable" \
 
 After ranking, submit the highest-traffic entries to REACH for automatic captioning (see [REACH Guide](KALTURA_REACH_API.md) section on `entryVendorTask.add`). Track caption completion through webhooks on `ENTRY_VENDOR_TASK_STATUS_CHANGED` events (see [Webhooks Guide](KALTURA_WEBHOOKS_API.md)), then re-run the eSearch query to update the coverage dashboard.
 
-See also: [eSearch Guide](KALTURA_ESEARCH_API.md) for advanced search operators, [Metadata & Captions Guide](KALTURA_METADATA_AND_CAPTIONS_API.md) for caption management.
+See also: [eSearch Guide](KALTURA_ESEARCH_API.md) for advanced search operators, [Captions & Transcripts Guide](KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md) for caption management.
 
 ## 13.11 Lecture Capture & LMS Analytics
 

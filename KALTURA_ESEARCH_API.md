@@ -317,4 +317,5 @@ Examples pipe to `jq` for readability.
 - **[Multi-Stream](KALTURA_MULTI_STREAM_API.md)** — Search for parent entries; use `parentEntryIdEqual` filter to find child entries
 - **[Webhooks](KALTURA_WEBHOOKS_API.md)** — Trigger notifications based on content events (search results inform webhook conditions)
 - **[Categories & Access Control API](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md)** — Category-based filtering and entitlements that affect search result visibility
-- **[Metadata & Captions API](KALTURA_METADATA_AND_CAPTIONS_API.md)** — Custom metadata schemas and caption assets searchable via eSearch
+- **[Custom Metadata API](KALTURA_CUSTOM_METADATA_API.md)** — Custom metadata schemas searchable via `KalturaESearchEntryMetadataItem`
+- **[Captions & Transcripts API](KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md)** — Caption assets searchable via `KalturaESearchCaptionItem`

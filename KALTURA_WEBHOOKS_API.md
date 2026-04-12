@@ -862,4 +862,5 @@ curl -X POST "$KALTURA_SERVICE_URL/service/eventnotification_eventnotificationte
 - **[Messaging API](KALTURA_MESSAGING_API.md)** — Template-based email messaging with delivery tracking, engagement analytics, and unsubscribe management (shared delivery infrastructure for email notifications; use directly for application-triggered emails)
 - **[User Management API](KALTURA_USER_MANAGEMENT_API.md)** — User event notifications (user creation, role changes)
 - **[Categories & Access Control API](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md)** — Category event notifications (category membership changes, access control updates)
-- **[Metadata & Captions API](KALTURA_METADATA_AND_CAPTIONS_API.md)** — Metadata and caption change events that trigger webhook notifications
+- **[Custom Metadata API](KALTURA_CUSTOM_METADATA_API.md)** — Metadata change events (OBJECT_ADDED, OBJECT_DATA_CHANGED, OBJECT_DELETED) that trigger webhook notifications
+- **[Captions & Transcripts API](KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md)** — Caption asset events that trigger webhook notifications

@@ -61,6 +61,13 @@ if __name__ == "__main__":
 - **Polling for async operations.** Use `_wait_for_ready()` with configurable `POLL_INTERVAL` and `POLL_TIMEOUT` when waiting for entry processing (status=2 READY).
 - **Direct MP4 URLs for imports.** Use direct MP4 download URLs with `addFromUrl`, not playManifest redirect URLs.
 
+## Accessibility Validation
+
+- **Every test must succeed with an actual API response.** A test that catches `SERVICE_FORBIDDEN`, `PERMISSION_DENIED`, or similar errors and marks itself as passing is invalid. If the action isn't accessible to customers, remove both the test and the corresponding guide section.
+- **Test with a standard customer admin KS.** The `disableentitlement` KS privilege bypasses content entitlement checks but does NOT override partner-level service restrictions (`SERVICE_FORBIDDEN`). An action that fails with `SERVICE_FORBIDDEN` even with `disableentitlement` is not customer-accessible.
+- **Flag suspicious patterns.** If you find yourself writing `if "FORBIDDEN" in err: print("expected")`, stop — the feature should be removed from the guide, not excused in the test.
+- **Verify before documenting.** Test every action you plan to document before writing the guide section. Discovering inaccessible actions after the guide is written creates rework and risks publishing inaccurate documentation.
+
 ## Environment Configuration
 
 Tests load config from `tests/.env` (force-overrides system env vars):
