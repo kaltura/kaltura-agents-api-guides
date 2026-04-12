@@ -1,6 +1,6 @@
 ---
 name: kaltura-api
-description: Build applications on Kaltura — The Agentic Digital Experience Platform. Covers authentication (sessions, AppTokens, SSO/SAML), content management (upload, search, categories, metadata, captions), playback, AI services (captions, translation, agents, conversational AI), virtual events, user management, and multi-stream. API v3 (form-encoded) and modern JSON APIs with curl examples and tested workflows.
+description: Build applications on Kaltura — The Agentic Digital Experience Platform. Covers authentication (sessions, AppTokens, SSO/SAML), content management (upload, search, categories, metadata, captions), playback, AI services (captions, translation, agents, conversational AI), virtual events, user management, multi-stream, distribution & syndication. API v3 (form-encoded) and modern JSON APIs with curl examples and tested workflows.
 ---
 
 # Kaltura API Integration
@@ -148,6 +148,10 @@ Read the relevant guide when you need to implement a specific capability:
 - **[Analytics Events Collection API](../../../KALTURA_ANALYTICS_EVENTS_COLLECTION_API.md)** — Report playback and engagement events back to Kaltura analytics. `stats.collect` for server-side player events (WIDGET_LOADED, PLAY, quartiles, SEEK, buffer, replay), `analytics.trackEvent` for application-level tracking (PageLoad, ButtonClicked). Supports `appId` KS privilege for per-application segmentation and custom event context fields.
 
 - **[Gamification API](../../../KALTURA_GAMIFICATION_API.md)** — Leaderboards, badges, certificates, lead scoring, and a rules engine via the Game Services (SCM) microservice. Rule types: sum, count, countUnique, countBoolean, external, override. Participation policies (display/do_not_display/do_not_save with email domain or group matching). Sub-leaderboards with filterPaths. Certificate PDF generation with text overlays. External events via CSV import. Scheduled game objects for automated status transitions.
+
+### Distribution & Syndication
+
+- **[Distribution & Syndication API](../../../KALTURA_DISTRIBUTION_AND_SYNDICATION_API.md)** — Push content to external platforms (YouTube, Facebook, FTP, Cross-Kaltura) via distribution connectors, and generate syndication feeds (Google Video Sitemap, Yahoo MRSS, iTunes Podcast, Roku) that external platforms pull via HTTP. Distribution profiles define automation rules (auto-submit on entry ready, moderation-gated, sunrise/sunset scheduling). Entry distributions track per-entry status through a state machine (PENDING → QUEUED → SUBMITTING → READY). Syndication feeds serve XML at public URLs with entry filtering, playlist scoping, and configurable caching. Uses `contentDistribution_*` plugin services for distribution and `syndicationFeed` service for feeds.
 
 ### Integration & Automation
 

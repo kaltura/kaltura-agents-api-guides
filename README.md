@@ -1,8 +1,8 @@
 # Kaltura API Guides
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Guides](https://img.shields.io/badge/Guides-22-green.svg)](#guides)
-[![Tests](https://img.shields.io/badge/Live--Tested-535_tests-brightgreen.svg)](#guides)
+[![Guides](https://img.shields.io/badge/Guides-23-green.svg)](#guides)
+[![Tests](https://img.shields.io/badge/Live--Tested-573_tests-brightgreen.svg)](#guides)
 [![llms.txt](https://img.shields.io/badge/llms.txt-available-purple.svg)](llms.txt)
 [![Agent Skill](https://img.shields.io/badge/Agent_Skill-kaltura--api-orange.svg)](.agents/skills/kaltura-api/SKILL.md)
 [![Docs Site](https://img.shields.io/badge/Docs-GitHub_Pages-blue.svg)](https://zoharbabin.github.io/kaltura-api-guides/)
@@ -51,6 +51,7 @@ These guides are optimized for AI agent consumption through multiple discovery m
 | [Analytics Reports API](KALTURA_ANALYTICS_REPORTS_API.md) | Reports, CSV exports, live analytics, stream health | 35 tests |
 | [Analytics Events Collection API](KALTURA_ANALYTICS_EVENTS_COLLECTION_API.md) | Playback/engagement event collection, stats.collect, trackEvent | 16 tests |
 | [Gamification API](KALTURA_GAMIFICATION_API.md) | Leaderboards, badges, certificates, lead scoring, rules engine | 45 tests |
+| [Distribution & Syndication API](KALTURA_DISTRIBUTION_AND_SYNDICATION_API.md) | Content distribution connectors, syndication feeds (RSS/MRSS/iTunes/Roku) | 38 tests |
 
 ## Quick Start
 

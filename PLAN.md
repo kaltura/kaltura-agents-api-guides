@@ -26,6 +26,7 @@
 | 20 | `KALTURA_ANALYTICS_REPORTS_API.md` | `test_analytics_reports_api.py` (35 tests) | Done |
 | 21 | `KALTURA_ANALYTICS_EVENTS_COLLECTION_API.md` | `test_analytics_events_collection_api.py` (16 tests) | Done |
 | 22 | `KALTURA_GAMIFICATION_API.md` | `test_gamification_api.py` (45 tests) | Done |
+| 23 | `KALTURA_DISTRIBUTION_AND_SYNDICATION_API.md` | `test_distribution_syndication_api.py` (38 tests) | Done |
 
 
 ## Full Kaltura API Landscape
@@ -197,10 +198,7 @@
 
 ---
 
-#### 9. `KALTURA_DISTRIBUTION_API.md`
-**Why:** Multi-platform publishing (YouTube, Facebook, etc.). Valuable for media companies.
-
-**Scope:** `distributionProfile` CRUD, connector configuration, metadata mapping, status tracking.
+#### ~~9. `KALTURA_DISTRIBUTION_API.md`~~ ✓ DONE (as `KALTURA_DISTRIBUTION_AND_SYNDICATION_API.md` — combined distribution + syndication)
 
 ---
 

@@ -30,6 +30,7 @@ Kaltura API Guides/
 ├── KALTURA_ANALYTICS_REPORTS_API.md       # Reports, CSV exports, live analytics, stream health
 ├── KALTURA_ANALYTICS_EVENTS_COLLECTION_API.md  # Playback & engagement event collection
 ├── KALTURA_GAMIFICATION_API.md            # Leaderboards, badges, certificates, lead scoring
+├── KALTURA_DISTRIBUTION_AND_SYNDICATION_API.md  # Content distribution connectors, syndication feeds
 └── tests/                                 # Companion test scripts
 ```
 
@@ -125,6 +126,7 @@ Auth header formats differ by API:
 | User Profile | `Bearer $KALTURA_KS` header | Admin KS with `ADMIN_BASE` permission |
 | Messaging | `Bearer $KALTURA_KS` header | Admin KS (type=2) |
 | Webhooks (Event Notifications) | `-d "ks=$KALTURA_KS"` form param | Admin KS with `disableentitlement` |
+| Distribution & Syndication | `-d "ks=$KALTURA_KS"` form param | Admin KS with `disableentitlement` |
 | Auth Broker | `KS $KALTURA_KS` header | Admin KS |
 | Player embed | KS in URL or JS config | USER KS (type=0) for playback |
 
@@ -176,6 +178,7 @@ Agents building on Kaltura should use platform services rather than reimplementi
 | Content organization | Categories & Access Control (hierarchy, entitlement) | `KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md` |
 | Custom metadata schemas | Custom Metadata API (XSD schemas, appinfo, XSLT) | `KALTURA_CUSTOM_METADATA_API.md` |
 | Captions & transcripts | Captions & Transcripts API (SRT/VTT/DFXP, REACH) | `KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md` |
+| Content distribution | Distribution & Syndication (YouTube, FTP, RSS feeds) | `KALTURA_DISTRIBUTION_AND_SYNDICATION_API.md` |
 
 ## Adding a New Guide
 
