@@ -558,9 +558,9 @@ Store the last record's `updatedAt` timestamp as a watermark and use it as the s
 
 # 14. Related Guides
 
-- [Session Guide](KALTURA_SESSION_GUIDE.md) — KS generation and management
-- [AppTokens API](KALTURA_APPTOKENS_API.md) — Secure server-to-server auth
-- [User Profile API](KALTURA_USER_PROFILE_API.md) — Per-app user profile management (depends on App Registry)
-- [Events Platform API](KALTURA_EVENTS_PLATFORM_API.md) — Virtual events (auto-creates app registrations)
-- [Messaging API](KALTURA_MESSAGING_API.md) — Template-based email messaging (uses appGuid for message context)
-- [Webhooks API](KALTURA_WEBHOOKS_API.md) — Event-driven HTTP callbacks and email notifications
+- **[Session Guide](KALTURA_SESSION_GUIDE.md)** — KS generation and management
+- **[AppTokens API](KALTURA_APPTOKENS_API.md)** — Secure server-to-server auth
+- **[User Profile API](KALTURA_USER_PROFILE_API.md)** — Per-app user profile management (depends on App Registry)
+- **[Events Platform API](KALTURA_EVENTS_PLATFORM_API.md)** — Virtual events (auto-creates app registrations)
+- **[Messaging API](KALTURA_MESSAGING_API.md)** — Template-based email messaging (uses appGuid for message context)
+- **[Webhooks API](KALTURA_WEBHOOKS_API.md)** — Event-driven HTTP callbacks and email notifications
