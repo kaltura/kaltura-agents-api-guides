@@ -2,9 +2,9 @@
 
 The Categories & Access Control API covers content organization and permissions: creating category hierarchies (`KalturaCategory`), managing category membership (`categoryUser`), assigning content to categories (`categoryEntry`), and controlling playback/access via access control profiles (`KalturaAccessControlProfile`). Categories are the foundation for Kaltura's entitlement system, which restricts content visibility based on user membership and KS privileges.
 
-**Base URL:** `https://www.kaltura.com/api_v3` (may differ by region/deployment)
-**Auth:** KS passed as `ks` parameter in POST form data (see [Session Guide](KALTURA_SESSION_GUIDE.md))
-**Format:** Form-encoded POST, `format=1` for JSON responses
+**Base URL:** `https://www.kaltura.com/api_v3` (may differ by region/deployment)  
+**Auth:** KS passed as `ks` parameter in POST form data (see [Session Guide](KALTURA_SESSION_GUIDE.md))  
+**Format:** Form-encoded POST, `format=1` for JSON responses  
 **Services:** `category` (11 actions), `categoryUser` (10 actions), `categoryEntry` (9 actions), `accessControlProfile` (5 actions)
 
 
@@ -951,6 +951,15 @@ curl -X POST "$KALTURA_SERVICE_URL/service/bulk/action/get" \
 - **Use `contributionPolicy=2` for moderated categories.** Combined with `MEMBERS_WITH_CONTRIBUTION_PERMISSION`, this ensures only authorized users can assign content, with moderators approving additions.
 - **Use `categoryUser` for fine-grained permissions.** Permission levels (MANAGER, MODERATOR, CONTRIBUTOR, MEMBER) provide granular control without needing separate access control profiles.
 - **Prefer `enableentitlement` in USER KS.** ADMIN KS has entitlement disabled by default. For production playback, generate USER KS (type=0) with `enableentitlement` and the appropriate `privacycontext`.
+- **32 categories per entry limit.** An entry can be assigned to a maximum of 32 categories. Plan your category hierarchy to avoid exceeding this limit with flat structures.
+- **Entitlement decision flow.** The server evaluates access in this sequence:
+  1. Check for `disableentitlement` KS privilege — if present, skip all entitlement checks
+  2. Check `defaultEntitlementEnforcement` account setting — if disabled, allow access
+  3. Check entry ownership — owners always have access
+  4. Check edit/publish permission — users with these permissions on the category can access
+  5. Check category privacy — `AUTHENTICATED_USERS` allows any logged-in user; `MEMBERS_ONLY` requires explicit `categoryUser` membership
+  6. If no category grants access — deny
+- **Access control profiles are per-action.** Profiles evaluate based on `contextType` — `PLAY` (1) for playback, `DOWNLOAD` (3) for downloads. A profile can allow playback but deny downloads. When creating rules, set `contexts` to specify which actions the rule applies to.
 
 
 # 12. Related Guides
@@ -961,3 +970,6 @@ curl -X POST "$KALTURA_SERVICE_URL/service/bulk/action/get" \
 - **[Agents Manager API](KALTURA_AGENTS_MANAGER_API.md)** — `ENTRY_ADDED_TO_CATEGORY` trigger for AI agent workflows
 - **[Webhooks API](KALTURA_WEBHOOKS_API.md)** — Category event notifications (category created, entry assigned, etc.)
 - **[Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md)** — Access control profiles affect playback; entitlement determines content visibility in player
+- **[Distribution](KALTURA_DISTRIBUTION_API.md)** — Category-based content scoping for distribution profiles
+- **[Syndication](KALTURA_SYNDICATION_API.md)** — Category filters for syndication feed content
+- **[Gamification](KALTURA_GAMIFICATION_API.md)** — Category-based content scoping for gamification rules

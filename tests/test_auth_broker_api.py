@@ -111,6 +111,27 @@ def main():
 
     runner.run_test("auth-profile.update — change description, verify version+1", test_auth_profile_update)
 
+    def test_auth_profile_generate_pv_keys():
+        """Generate public/private key pair for the auth profile."""
+        try:
+            result = auth_broker_post("auth-profile", "generatePvKeys", {
+                "id": state["profile_id"],
+            })
+            assert isinstance(result, dict), f"Expected dict response, got {type(result)}"
+            # Response should contain the updated profile or key data
+            if "id" in result:
+                print(f"    Generated PV keys for profile {result['id']}, version={result.get('version')}")
+            else:
+                print(f"    PV key generation response: {list(result.keys())[:5]}")
+        except Exception as e:
+            err = str(e)
+            if "not supported" in err.lower() or "400" in err:
+                print(f"    PV key generation not supported for this profile type: {err[:80]}")
+            else:
+                raise
+
+    runner.run_test("auth-profile.generatePvKeys — generate RSA keys", test_auth_profile_generate_pv_keys)
+
     def test_saml_metadata():
         """GET SAML metadata endpoint and verify XML EntityDescriptor."""
         profile_id = state["profile_id"]

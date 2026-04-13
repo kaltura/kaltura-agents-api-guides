@@ -2,28 +2,28 @@
 
 Syndication feeds generate RSS/MRSS/XML feeds that external platforms pull via HTTP GET. Create a feed, configure its content scope and format, and share the feed URL — external platforms (Google, Apple Podcasts, Roku, news aggregators) fetch the XML on their own schedule. Feeds are stateless: Kaltura serves the current content each time the URL is requested.
 
-**Base URL:** `https://www.kaltura.com/api_v3` (may differ by region/deployment)
-**Auth:** KS passed as `ks` parameter in POST form data (see [Session Guide](KALTURA_SESSION_GUIDE.md))
-**Format:** Form-encoded POST, `format=1` for JSON responses
+**Base URL:** `https://www.kaltura.com/api_v3` (may differ by region/deployment)  
+**Auth:** KS passed as `ks` parameter in POST form data (see [Session Guide](KALTURA_SESSION_GUIDE.md))  
+**Format:** Form-encoded POST, `format=1` for JSON responses  
 **Service:** `syndicationFeed`
 
 
-# Prerequisites
+# 1. Prerequisites
 
 - A Kaltura account with an ADMIN KS (type=2) with `disableentitlement` privilege
 - Syndication feed creation is available to all accounts — no additional plugin activation required
 
 
-# 1. Core Concepts
+# 2. Core Concepts
 
-## 1.1 How Syndication Feeds Work
+## 2.1 How Syndication Feeds Work
 
 1. **Create a feed** — choose a feed type (Google Video Sitemap, iTunes Podcast, MRSS, Roku) and optionally scope it to specific content
 2. **Get the feed URL** — the API returns a `feedUrl` that serves XML at a public HTTP endpoint
 3. **Share the URL** — register the feed URL with external platforms (Google Search Console, Apple Podcasts Connect, Roku Developer Dashboard)
 4. **External platforms poll** — each platform fetches the feed on its own schedule; Kaltura serves the current content
 
-## 1.2 Feed Types
+## 2.2 Feed Types
 
 | Type | Value | Object Type | Output Format |
 |------|-------|-------------|---------------|
@@ -34,7 +34,7 @@ Syndication feeds generate RSS/MRSS/XML feeds that external platforms pull via H
 | Roku Direct Publisher | 7 | `KalturaRokuSyndicationFeed` | Roku-specific MRSS |
 | Opera TV | 8 | `KalturaOperaSyndicationFeed` | Opera TV format |
 
-## 1.3 Feed Object Fields
+## 2.3 Feed Object Fields
 
 Base fields (all feed types):
 
@@ -65,7 +65,7 @@ Base fields (all feed types):
 | `adultContent` | Explicit content flag |
 
 
-# 2. syndicationFeed.add
+# 3. syndicationFeed.add
 
 Create a syndication feed. The `objectType` must match the desired feed type.
 
@@ -137,7 +137,7 @@ The Generic XSLT feed type requires an `xslt` parameter containing the XSLT styl
 ```json
 {
   "id": "1_abc12345",
-  "feedUrl": "http://www.kaltura.com/api_v3/getFeed.php?partnerId=123456&feedId=1_abc12345",
+  "feedUrl": "https://www.kaltura.com/api_v3/getFeed.php?partnerId={PARTNER_ID}&feedId=1_abc12345",
   "name": "Video Sitemap",
   "type": 1,
   "objectType": "KalturaGoogleVideoSyndicationFeed"
@@ -145,7 +145,7 @@ The Generic XSLT feed type requires an `xslt` parameter containing the XSLT styl
 ```
 
 
-# 3. syndicationFeed.get
+# 4. syndicationFeed.get
 
 Retrieve a syndication feed by ID:
 
@@ -157,7 +157,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/syndicationFeed/action/get" \
 ```
 
 
-# 4. syndicationFeed.list
+# 5. syndicationFeed.list
 
 List syndication feeds:
 
@@ -168,7 +168,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/syndicationFeed/action/list" \
 ```
 
 
-# 5. syndicationFeed.update
+# 6. syndicationFeed.update
 
 Update a syndication feed:
 
@@ -182,7 +182,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/syndicationFeed/action/update" \
 ```
 
 
-# 6. syndicationFeed.delete
+# 7. syndicationFeed.delete
 
 Delete a syndication feed:
 
@@ -194,7 +194,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/syndicationFeed/action/delete" \
 ```
 
 
-# 7. syndicationFeed.getEntryCount
+# 8. syndicationFeed.getEntryCount
 
 Get the number of entries in a syndication feed:
 
@@ -221,13 +221,13 @@ curl -X POST "$KALTURA_SERVICE_URL/service/syndicationFeed/action/getEntryCount"
 - `requireTranscodingCount` — entries needing transcoding before inclusion
 
 
-# 8. Feed URL & XML Output
+# 9. Feed URL & XML Output
 
 All feeds are served at: `https://{service_url}/api_v3/getFeed.php?partnerId={PARTNER_ID}&feedId={FEED_ID}`
 
 Append `&limit=N` to cap the number of entries returned (also reduces cache TTL from 24 hours to 30 minutes).
 
-## 8.1 Roku MRSS Output
+## 9.1 Roku MRSS Output
 
 ```xml
 <rss xmlns:media="http://search.yahoo.com/mrss/" xmlns:atom="http://www.w3.org/2005/Atom"
@@ -247,7 +247,7 @@ Append `&limit=N` to cap the number of entries returned (also reduces cache TTL 
 </rss>
 ```
 
-## 8.2 iTunes Podcast RSS Output
+## 9.2 iTunes Podcast RSS Output
 
 ```xml
 <rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">
@@ -268,7 +268,7 @@ Append `&limit=N` to cap the number of entries returned (also reduces cache TTL 
 </rss>
 ```
 
-## 8.3 Google Video Sitemap Output
+## 9.3 Google Video Sitemap Output
 
 ```xml
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
@@ -285,7 +285,7 @@ Append `&limit=N` to cap the number of entries returned (also reduces cache TTL 
 ```
 
 
-# 9. Entry Filtering
+# 10. Entry Filtering
 
 Scope a syndication feed to specific content using `entryFilter` or `playlistId`.
 
@@ -318,7 +318,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/syndicationFeed/action/add" \
 Feeds without a `playlistId` or `entryFilter` include all account entries.
 
 
-# 10. Feed Caching & Performance
+# 11. Feed Caching & Performance
 
 - Default feed cache TTL: **24 hours**
 - Adding `&limit=N` to the feed URL reduces cache to **30 minutes** and caps at N items
@@ -327,7 +327,7 @@ Feeds without a `playlistId` or `entryFilter` include all account entries.
 - Google Video Sitemap feeds require a valid `landingPage` URL to generate `<loc>` elements
 
 
-# 11. Error Handling
+# 12. Error Handling
 
 | Error Code | Meaning | Resolution |
 |------------|---------|------------|
@@ -340,7 +340,7 @@ Feeds without a `playlistId` or `entryFilter` include all account entries.
 **Retry strategy:** For transient errors (HTTP 5xx, timeouts), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (`INVALID_FEED_ID`, `PROPERTY_VALIDATION_*`), fix the request before retrying.
 
 
-# 12. Best Practices
+# 13. Best Practices
 
 - **Scope feeds with filters.** Use `playlistId` or `entryFilter` to limit feed content — unscoped feeds on large accounts return all entries.
 - **Add `&limit=N` to feed URLs for testing.** This reduces the cache TTL to 30 minutes and caps entries, making iteration faster during development.
@@ -350,9 +350,9 @@ Feeds without a `playlistId` or `entryFilter` include all account entries.
 - **Set a landingPage for Google Video Sitemaps.** The `{entry_id}` placeholder in `landingPage` generates the `<loc>` URLs that Google indexes.
 
 
-# 13. Common Integration Patterns
+# 14. Common Integration Patterns
 
-## 13.1 Google Video Sitemap for SEO
+## 14.1 Google Video Sitemap for SEO
 
 Generate a Google-compatible video sitemap for search engine indexing:
 
@@ -371,7 +371,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/syndicationFeed/action/add" \
 
 Submit the feed URL to Google Search Console as a video sitemap.
 
-## 13.2 Podcast Feed Generation
+## 14.2 Podcast Feed Generation
 
 Create an iTunes-compatible podcast feed:
 
@@ -391,7 +391,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/syndicationFeed/action/add" \
 
 Use `playlistId` to restrict the podcast to a curated playlist of episodes.
 
-## 13.3 Content Syndication for News and Media
+## 14.3 Content Syndication for News and Media
 
 Create multiple feed formats for different distribution channels:
 
@@ -417,12 +417,12 @@ curl -X POST "$KALTURA_SERVICE_URL/service/syndicationFeed/action/add" \
   -d "syndicationFeed[entryFilter][tagsLike]=featured"
 ```
 
-## 13.4 Webhook-Triggered Feed Refresh
+## 14.4 Webhook-Triggered Feed Refresh
 
 Combine syndication with [webhooks](KALTURA_WEBHOOKS_API.md) for proactive cache management. Set up a webhook that fires when new content is published, then programmatically add `&limit=N` to your feed URL to trigger a 30-minute cache window — ensuring external platforms see new content sooner than the default 24-hour cache.
 
 
-# 14. API Actions Reference
+# 15. API Actions Reference
 
 | Service | Action | Description |
 |---------|--------|-------------|
@@ -434,7 +434,7 @@ Combine syndication with [webhooks](KALTURA_WEBHOOKS_API.md) for proactive cache
 | `syndicationFeed` | `getEntryCount` | Count entries in feed |
 
 
-# 15. Related Guides
+# 16. Related Guides
 
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — KS generation and management
 - **[Content Distribution API](KALTURA_DISTRIBUTION_API.md)** — Push content to external platforms via connectors (push model vs syndication's pull model)

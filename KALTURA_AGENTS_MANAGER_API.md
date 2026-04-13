@@ -2,9 +2,9 @@
 
 The Agents Manager lets you create **automated content-processing agents** that watch for events on your content and execute actions automatically — captioning new uploads, generating summaries, adding audio descriptions — without any manual steps. An agent is simple: **When** something happens (a trigger) **Do** something about it (actions).
 
-**Base URL:** `https://agents-manager.nvp1.ovp.kaltura.com` (may differ by region/deployment)
-**Auth:** `Authorization: Bearer <YOUR_KS>` header
-**Format:** JSON request/response bodies, all endpoints use POST
+**Base URL:** `https://agents-manager.nvp1.ovp.kaltura.com` (may differ by region/deployment)  
+**Auth:** `Authorization: Bearer <YOUR_KS>` header  
+**Format:** JSON request/response bodies, all endpoints use POST  
 
 ## Prerequisites
 
@@ -436,7 +436,7 @@ In addition to the API, agents can be configured through Kaltura's management in
 
 - **KMC (Kaltura Management Console)** — Full agent management for administrators.
 - **KMS (Kaltura MediaSpace)** — Agent configuration within the end-user portal.
-- **Custom applications** — Embed the agent management UI into your own applications using Kaltura's [Unisphere framework](https://unisphere.kaltura.com/), which provides embeddable components for Kaltura functionality.
+- **Custom applications** — Embed the agent management UI into your own applications using Kaltura's Unisphere framework, which provides embeddable components for Kaltura functionality.
 
 
 ## Scope
@@ -476,3 +476,5 @@ In addition to the API, agents can be configured through Kaltura's management in
 - **[eSearch](KALTURA_ESEARCH_API.md)** — Search entries to find content for agent processing
 - **[Webhooks](KALTURA_WEBHOOKS_API.md)** — HTTP callbacks for agent execution events
 - **[Categories & Access Control API](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md)** — Category-based agent triggers (filter agents to fire only for entries in specific categories)
+- **[Events Platform](KALTURA_EVENTS_PLATFORM_API.md)** — Agent triggers can respond to event lifecycle changes
+- **[Custom Metadata](KALTURA_CUSTOM_METADATA_API.md)** — Agent actions can update custom metadata fields

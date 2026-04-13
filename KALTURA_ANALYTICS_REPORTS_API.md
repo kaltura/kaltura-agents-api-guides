@@ -2,6 +2,10 @@
 
 Pull analytics data out of Kaltura — content performance, viewer engagement, event attendance, and operational metrics. Multiple report surfaces exist (API v3 `report` service, Reports Microservice, live reports, stream health beacons) and this guide unifies them into a single reference.
 
+**Base URL:** `https://www.kaltura.com/api_v3` (report, liveReports, stats, beacon services)  
+**Auth:** KS passed as `ks` parameter in POST form data  
+**Format:** Form-encoded POST, `format=1` for JSON responses  
+
 **Services covered:**
 
 | Service | Actions | Description |
@@ -32,7 +36,7 @@ Analytics access requires the `ANALYTICS_BASE` permission (ID 1085) on the KS ro
 
 # 2. Report Response Format
 
-All `report` service responses use **pipe-delimited strings**, not JSON arrays.
+All `report` service responses use **pipe-delimited strings** (parsed by splitting on `|` for columns and `;` for rows).
 
 ## 2.1 Table Response
 
@@ -364,7 +368,7 @@ Parameters are semicolon-delimited: `from_date_id`, `to_date_id`, `timezone_offs
 
 A separate async service for generating CSV reports that require cross-service data aggregation (registration data, C&C engagement, enriched analytics).
 
-**Base URL:** `https://reports.{region}.ovp.kaltura.com` (e.g., `reports.nvp1.ovp.kaltura.com` for US production)
+**Base URL:** `https://reports.{region}.ovp.kaltura.com` (e.g., `reports.nvp1.ovp.kaltura.com` for US production)  
 **Auth:** `Authorization: Bearer <KS>`
 
 ## 8.1 Two-Step Generate/Serve Pattern
@@ -575,9 +579,19 @@ The `reportType` parameter uses **integer IDs** (KalturaReportType enum). Pass t
 | `60001` | EP_WEBCAST_HIGHLIGHTS | Events Platform webcast highlights |
 | `60010` | EP_WEBCAST_LIVE_USER_ENGAGEMENT | Combined VOD + live engagement |
 
-## 10.3 VPaaS (Multi-Account) Variants
+**Virtual event report IDs:**
 
-Every VOD report has a VPaaS counterpart with IDs in the 20000 range (e.g., `20001` = CONTENT_DROPOFF_VPAAS, `20005` = PLATFORMS_VPAAS, `20011` = UNIQUE_USERS_PLAY_VPAAS). Multi-account partners use the VPaaS variant to aggregate across child accounts.
+| Report ID | Description |
+|-----------|-------------|
+| 3006 | Add to Calendar (calendar engagement) |
+| 3009 | Session Attendance (per-session attendee tracking) |
+| 3010 | Certificate of Completion (attendance-based certificates) |
+
+## 10.3 Multi-Account Variants
+
+Every VOD report has a multi-account counterpart with IDs in the 20000 range (e.g., `20001` = multi-account Content Dropoff, `20005` = multi-account Platforms, `20011` = multi-account Unique Users Play). Parent accounts use these variants to aggregate analytics across child accounts.
+
+For detailed multi-account analytics workflows (cross-account aggregation, per-account drill-down, `session.impersonate`, full report type enumeration), see the [Multi-Account Management Guide](KALTURA_MULTI_ACCOUNT_MANAGEMENT_API.md).
 
 
 # 11. Filter Fields Reference
@@ -619,7 +633,7 @@ The `KalturaEndUserReportInputFilter` supports these filter fields. Multiple val
 | `ANALYTICS_BASE` | 1085 | Gate for all analytics views |
 | `FEATURE_NEW_ANALYTICS_TAB` | 1125 | New analytics dashboard |
 | `FEATURE_LIVE_ANALYTICS_DASHBOARD` | 1128 | Live analytics dashboard access |
-| `FEATURE_MULTI_ACCOUNT_ANALYTICS` | 1130 | Multi-account (VPaaS/VAR) analytics |
+| `FEATURE_MULTI_ACCOUNT_ANALYTICS` | 1130 | Multi-account (cross-account) analytics |
 | `FEATURE_LIVE_STREAM` | 1104 | Required alongside ANALYTICS_BASE for live |
 | `FEATURE_END_USER_REPORTS` | 1096 | End-user level reporting |
 
@@ -889,9 +903,9 @@ curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getCsvFromStringParams"
   -d "params=from_date_id=$FROM_DATE;to_date_id=$TO_DATE;timezone_offset=-240"
 ```
 
-## 13.6 Multi-Account Analytics (VPaaS)
+## 13.6 Multi-Account Analytics
 
-VPaaS resellers use VPaaS report variants to aggregate analytics across sub-accounts.
+Parent accounts use multi-account report variants to aggregate analytics across child accounts.
 
 ```bash
 # Per-account usage
@@ -1042,7 +1056,7 @@ Universities and government agencies subject to WCAG 2.1 AA requirements need to
 ```bash
 # Step 1: Find entries that already have captions using eSearch
 #   captionAssetItems with an exists condition returns only entries with at least one caption track
-curl -X POST "$KALTURA_SERVICE_URL/service/eSearch/action/searchEntry" \
+curl -X POST "$KALTURA_SERVICE_URL/service/elasticsearch_esearch/action/searchEntry" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "searchParams[objectType]=KalturaESearchEntryParams" \
@@ -1462,18 +1476,21 @@ curl -o crm_lead_export.csv "$CSV_URL"
 
 # 15. Related Guides
 
-| Guide | Analytics Connection |
-|-------|---------------------|
-| [Session Guide](KALTURA_SESSION_GUIDE.md) | `appId:<name>` KS privilege tags analytics per-application; `userId` ties analytics to a user |
-| [AppTokens](KALTURA_APPTOKENS_API.md) | Scoped tokens for analytics-only access |
-| [Player Embed](KALTURA_PLAYER_EMBED_GUIDE.md) | Player v7 fires ~45 playback events that feed analytics automatically |
-| [Events Collection](KALTURA_ANALYTICS_EVENTS_COLLECTION_API.md) | Report custom playback and application events back to analytics |
-| [Events Platform](KALTURA_EVENTS_PLATFORM_API.md) | `virtualEventIdIn` filter scopes reports to a specific event |
-| [User Profile](KALTURA_USER_PROFILE_API.md) | `reports/eventDataStats` for attendance stats; registration reports via Reports Microservice |
-| [Messaging](KALTURA_MESSAGING_API.md) | `message/stats` for delivery statistics |
-| [REACH](KALTURA_REACH_API.md) | `entryVendorTask.list` for task monitoring; `exportToCsv` for batch CSV |
-| [User Management](KALTURA_USER_MANAGEMENT_API.md) | `ANALYTICS_BASE` role permission gates analytics access |
-| [Webhooks](KALTURA_WEBHOOKS_API.md) | Trigger automated reporting on content events |
-| [eSearch](KALTURA_ESEARCH_API.md) | Enrich analytics data with entry metadata, tags, categories |
-| [Categories & Access Control](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md) | `categoriesIdsIn` filter for content library scoping |
-| [Gamification](KALTURA_GAMIFICATION_API.md) | Analytics events feed the gamification rules engine |
+- **[Session Guide](KALTURA_SESSION_GUIDE.md)** — `appId:<name>` KS privilege tags analytics per-application; `userId` ties analytics to a user
+- **[AppTokens](KALTURA_APPTOKENS_API.md)** — Scoped tokens for analytics-only access
+- **[Player Embed](KALTURA_PLAYER_EMBED_GUIDE.md)** — Player v7 fires ~45 playback events that feed analytics automatically
+- **[Events Collection](KALTURA_ANALYTICS_EVENTS_COLLECTION_API.md)** — Report custom playback and application events back to analytics
+- **[Events Platform](KALTURA_EVENTS_PLATFORM_API.md)** — `virtualEventIdIn` filter scopes reports to a specific event
+- **[User Profile](KALTURA_USER_PROFILE_API.md)** — `reports/eventDataStats` for attendance stats; registration reports via Reports Microservice
+- **[Messaging](KALTURA_MESSAGING_API.md)** — `message/stats` for delivery statistics
+- **[REACH](KALTURA_REACH_API.md)** — `entryVendorTask.list` for task monitoring; `exportToCsv` for batch CSV
+- **[Upload & Delivery](KALTURA_UPLOAD_AND_DELIVERY_API.md)** — `baseEntry.exportToCsv` for bulk content export; thumbnail generation for report dashboards
+- **[User Management](KALTURA_USER_MANAGEMENT_API.md)** — `ANALYTICS_BASE` role permission gates analytics access
+- **[Webhooks](KALTURA_WEBHOOKS_API.md)** — Trigger automated reporting on content events
+- **[eSearch](KALTURA_ESEARCH_API.md)** — Enrich analytics data with entry metadata, tags, categories
+- **[Captions & Transcripts](KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md)** — Caption coverage auditing (eSearch + captionAsset.list for accessibility dashboards)
+- **[Categories & Access Control](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md)** — `categoriesIdsIn` filter for content library scoping
+- **[Gamification](KALTURA_GAMIFICATION_API.md)** — Analytics events feed the gamification rules engine
+- **[Multi-Account Management](KALTURA_MULTI_ACCOUNT_MANAGEMENT_API.md)** — Cross-account analytics with multi-account report types (20001+)
+- **[Distribution](KALTURA_DISTRIBUTION_API.md)** — Distribution status tracking via analytics reports
+- **[Experience Components](KALTURA_EXPERIENCE_COMPONENTS_API.md)** — Embeddable analytics dashboard widget

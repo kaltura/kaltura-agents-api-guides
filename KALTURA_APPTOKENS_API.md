@@ -2,9 +2,9 @@
 
 Application Tokens provide secure, scoped API access without exposing admin secrets. Instead of sharing your `adminSecret`, you create an AppToken with specific privileges, distribute it to integrators, and they use an HMAC exchange to obtain a KS. You can revoke access instantly by deleting the token.
 
-**Base URL:** `https://www.kaltura.com/api_v3`
-**Auth:** Admin KS for token management; widget session + HMAC for `startSession`
-**Format:** Form-encoded POST, `format=1` for JSON responses
+**Base URL:** `https://www.kaltura.com/api_v3`  
+**Auth:** Admin KS for token management; widget session + HMAC for `startSession`  
+**Format:** Form-encoded POST, `format=1` for JSON responses  
 
 
 # 1. Why AppTokens Instead of Admin Secrets
@@ -19,13 +19,15 @@ Application Tokens provide secure, scoped API access without exposing admin secr
 
 **Rule of thumb:** Use `session.start` only for internal backend tools where you control the environment. Use AppTokens for everything else — partner integrations, microservices, client apps.
 
+> **API secrets are permanent.** The `adminSecret` and `secret` for a Kaltura account cannot be regenerated, rotated, or revoked. If a secret is compromised, contact Kaltura support. This makes AppTokens essential — they can be revoked and reissued independently without affecting other integrations.
+
 
 # 2. AppToken Object (KalturaAppToken)
 
 | Field | Type | Description |
 |-------|------|-------------|
 | `id` | string | Unique token identifier (used in `startSession`) |
-| `token` | string | The secret value (used for HMAC hashing — never expose to clients) |
+| `token` | string | The secret value (used for HMAC hashing — keep server-side only) |
 | `partnerId` | int | Account partner ID |
 | `status` | int | `1`=DISABLED, `2`=ACTIVE, `3`=DELETED |
 | `sessionType` | int | `0`=USER, `2`=ADMIN |
@@ -86,7 +88,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/appToken/action/add" \
 }
 ```
 
-The response includes `id` (token ID) and `token` (the secret value -- store securely, never expose to clients).
+The response includes `id` (token ID) and `token` (the secret value — store securely on your backend server only).
 
 ## 3.2 appToken.get — Retrieve a Token
 
@@ -345,7 +347,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/appToken/action/delete" \
 - **Set `sessionExpiry`** on AppTokens to limit session duration (e.g., 86400 for 24 hours). Shorter is more secure.
 - **Scope privileges tightly.** Use `sessionPrivileges` to restrict what the generated KS can do: `edit:entryId`, `sview:*`, `setrole:ROLE_ID`, `iprestrict:CIDR`.
 - **Rotate tokens periodically.** Create a new token, migrate integrations, then delete the old one. See section 6 (Token Rotation Pattern).
-- **Store tokens server-side.** Never embed AppToken IDs or token values in client-side code. The HMAC exchange should happen on your backend.
+- **Store tokens server-side only.** Keep AppToken IDs and token values on your backend. The HMAC exchange should happen on your server.
 - **One token per integration.** Create separate AppTokens for each application or service to isolate access and simplify revocation.
 
 # 10. Related Guides
@@ -354,4 +356,11 @@ curl -X POST "$KALTURA_SERVICE_URL/service/appToken/action/delete" \
 - **[Upload & Delivery Guide](KALTURA_UPLOAD_AND_DELIVERY_API.md)** — Use AppToken-generated KS for uploads
 - **[eSearch Guide](KALTURA_ESEARCH_API.md)** — Use AppToken-generated KS for search
 - **[User Management API](KALTURA_USER_MANAGEMENT_API.md)** — User roles and permissions that AppTokens scope to via `setrole` privileges
-- **Reference implementation:** [kal-apptokens-utils](https://github.com/kaltura/kal-apptokens-utils) — Python CLI for AppToken management
+- **[Player Embed](KALTURA_PLAYER_EMBED_GUIDE.md)** — Generate scoped player KS via AppToken flow
+- **[REACH](KALTURA_REACH_API.md)** — Scoped tokens for automated captioning and enrichment workflows
+- **[Events Platform](KALTURA_EVENTS_PLATFORM_API.md)** — Bearer KS for events API calls
+- **[Webhooks](KALTURA_WEBHOOKS_API.md)** — AppToken-based KS for webhook handler authentication
+- **[Analytics Reports](KALTURA_ANALYTICS_REPORTS_API.md)** — Analytics-scoped tokens for reporting dashboards
+- **[Distribution](KALTURA_DISTRIBUTION_API.md)** — Scoped tokens for distribution automation
+- **[Auth Broker](KALTURA_AUTH_BROKER_API.md)** — SSO-integrated token management
+- **[API Getting Started](KALTURA_API_GETTING_STARTED.md)** — Foundation guide covering API structure and authentication

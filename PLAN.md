@@ -10,29 +10,32 @@
 | 4 | `KALTURA_REACH_API.md` (+ AI Clips workflow) | `test_reach_api.py` (32 tests), `test_clips_api.py` (15 tests) | Done |
 | 5 | `KALTURA_AGENTS_MANAGER_API.md` | `test_agents_manager_api.py` (15 tests) | Done |
 | 6 | `KALTURA_AI_GENIE_API.md` | `test_genie_api.py` (17 tests) | Done |
-| 7 | `KALTURA_UPLOAD_AND_DELIVERY_API.md` | `test_upload_delivery_api.py` (25 tests) | Done |
+| 7 | `KALTURA_UPLOAD_AND_DELIVERY_API.md` | `test_upload_delivery_api.py` (34 tests) | Done |
 | 8 | `KALTURA_APPTOKENS_API.md` | `test_apptokens_api.py` (17 tests) | Done |
-| 9 | `KALTURA_EVENTS_PLATFORM_API.md` | `test_events_platform_api.py` (23 tests) | Done |
+| 9 | `KALTURA_EVENTS_PLATFORM_API.md` | `test_events_platform_api.py` (25 tests) | Done |
 | 10 | `KALTURA_MULTI_STREAM_API.md` | `test_multi_stream_api.py` (23 tests) | Done |
 | 11 | `KALTURA_APP_REGISTRY_API.md` | `test_app_registry_api.py` (20 tests) | Done |
 | 12 | `KALTURA_USER_PROFILE_API.md` | `test_user_profile_api.py` (30 tests) | Done |
-| 13 | `KALTURA_MESSAGING_API.md` | `test_messaging_api.py` (21 tests) | Done |
+| 13 | `KALTURA_MESSAGING_API.md` | `test_messaging_api.py` (22 tests) | Done |
 | 14 | `KALTURA_WEBHOOKS_API.md` | `test_webhooks_api.py` (34 tests) | Done |
-| 15 | `KALTURA_USER_MANAGEMENT_API.md` | `test_user_management_api.py` (24 tests) | Done |
-| 16 | `KALTURA_AUTH_BROKER_API.md` | `test_auth_broker_api.py` (12 tests) | Done |
-| 17 | `KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md` | `test_categories_access_control_api.py` (27 tests) | Done |
-| 18 | `KALTURA_CUSTOM_METADATA_API.md` | `test_custom_metadata_api.py` (22 tests) | Done |
+| 15 | `KALTURA_USER_MANAGEMENT_API.md` | `test_user_management_api.py` (25 tests) | Done |
+| 16 | `KALTURA_AUTH_BROKER_API.md` | `test_auth_broker_api.py` (13 tests) | Done |
+| 17 | `KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md` | `test_categories_access_control_api.py` (28 tests) | Done |
+| 18 | `KALTURA_CUSTOM_METADATA_API.md` | `test_custom_metadata_api.py` (24 tests) | Done |
 | 19 | `KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md` | `test_captions_transcripts_api.py` (36 tests) | Done |
 | 20 | `KALTURA_ANALYTICS_REPORTS_API.md` | `test_analytics_reports_api.py` (35 tests) | Done |
 | 21 | `KALTURA_ANALYTICS_EVENTS_COLLECTION_API.md` | `test_analytics_events_collection_api.py` (16 tests) | Done |
-| 22 | `KALTURA_GAMIFICATION_API.md` | `test_gamification_api.py` (45 tests) | Done |
-| 23 | `KALTURA_DISTRIBUTION_API.md` | `test_distribution_api.py` (24 tests) | Done |
+| 22 | `KALTURA_GAMIFICATION_API.md` | `test_gamification_api.py` (47 tests) | Done |
+| 23 | `KALTURA_DISTRIBUTION_API.md` | `test_distribution_api.py` (41 tests), `test_distribution_profiles_e2e.py` (43 tests) | Done |
 | 24 | `KALTURA_SYNDICATION_API.md` | `test_syndication_api.py` (14 tests) | Done |
+| 25 | `KALTURA_API_GETTING_STARTED.md` | `test_getting_started_api.py` (13 tests) | Done |
+| 26 | `KALTURA_EXPERIENCE_COMPONENTS_API.md` | — (UI embed components) | Done |
+| 27 | `KALTURA_MULTI_ACCOUNT_MANAGEMENT_API.md` | `test_multi_account_api.py` (6 tests) | Done |
 
 
 ## Full Kaltura API Landscape
 
-80+ REST API services discovered. Grouped by developer need:
+100+ REST API services discovered. Grouped by developer need:
 
 ### Core Platform (foundation every integration needs)
 - **Upload & Ingest** — `uploadToken`, `media.add`, `media.addContent`, `bulkUpload`, chunked/resumable uploads
@@ -214,6 +217,32 @@
 **Why:** Event scheduling for live sessions, recurring events.
 
 **Scope:** `scheduleEvent`, `scheduleResource`, recurring patterns, resource booking.
+
+---
+
+
+### Tier 4: Advanced / Deferred
+
+#### 12. `KALTURA_FILE_ASSETS_API.md`
+**Why:** Advanced non-media content management — `fileAsset` service, `dataEntry` type, document entries.
+
+**Prerequisite:** Detailed analysis of `kaltura/server` backend flows for fileAsset, KalturaDataEntry, and KalturaDocumentEntry types. Must understand how fileAsset differs from attachmentAsset (permission model, serving, storage).
+
+**Status:** DEFERRED — pending backend analysis.
+
+---
+
+#### 13. Delivery Profiles Guide
+**Why:** CDN configuration, serving rules, custom delivery profiles. Customer-relevant for advanced CDN setups.
+
+**Status:** DEFERRED — highly specialized, planned for later.
+
+---
+
+#### 14. Cue Points / Temporal Metadata API
+**Why:** Chapters, annotations, hotspots, ad cue points — significant standalone guide.
+
+**Status:** DEFERRED — planned for later.
 
 ---
 

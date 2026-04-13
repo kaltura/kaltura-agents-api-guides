@@ -1,10 +1,10 @@
 # Kaltura Upload, Ingest & Content Delivery API
 
-This guide covers the complete lifecycle of getting content into Kaltura and delivering it to viewers: uploading files (including chunked/resumable uploads), creating entries, importing from URLs, and constructing playback and thumbnail URLs.
+This guide covers the complete lifecycle of getting content into Kaltura and delivering it to viewers: uploading files (including chunked/resumable uploads), creating media, document, and data entries, importing from URLs, and constructing playback, thumbnail, and direct-serve URLs.
 
-**Base URL:** `https://www.kaltura.com/api_v3`
-**Auth:** All requests require a valid KS (see [Session Guide](KALTURA_SESSION_GUIDE.md))
-**Format:** Form-encoded POST, `format=1` for JSON responses
+**Base URL:** `https://www.kaltura.com/api_v3`  
+**Auth:** All requests require a valid KS (see [Session Guide](KALTURA_SESSION_GUIDE.md))  
+**Format:** Form-encoded POST, `format=1` for JSON responses  
 
 
 # 1. Upload Lifecycle Overview
@@ -23,6 +23,8 @@ uploadToken.add  -->  uploadToken.upload (one or more chunks)  -->  media.add  -
 Alternative shortcuts:
 - `media.addFromUploadedFile` -- combines steps 3+4 (create entry and attach content in one call)
 - `media.addFromUrl` -- skip upload entirely, import from a URL
+- `document.addFromUploadedFile` -- create and attach document entries (PDF, DOCX, PPTX)
+- `baseEntry.addFromUploadedFile` -- create and attach data entries (any file type, no transcoding)
 
 
 # 2. Upload Token API
@@ -138,7 +140,30 @@ curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/upload" \
 
 Adjust `skip`, `resumeAt`, and `finalChunk` values per chunk. In a real script, loop until all bytes are uploaded.
 
-**Resume after failure:** If a chunk upload fails, call `uploadToken.get` to check `uploadedFileSize`, then resume from that offset.
+**Resume after failure:** If a chunk upload fails, call `uploadToken.get` to check `uploadedFileSize`, then resume from that offset:
+
+```bash
+# Check how many bytes were successfully uploaded
+curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/get" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "uploadTokenId=$UPLOAD_TOKEN_ID"
+# Response includes: "uploadedFileSize": 4194304
+
+# Resume from where upload left off
+RESUME_AT=4194304  # from uploadedFileSize above
+dd if=largefile.mp4 bs=2097152 skip=$((RESUME_AT / 2097152)) 2>/dev/null | \
+curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/upload" \
+  -F "ks=$KALTURA_KS" \
+  -F "format=1" \
+  -F "uploadTokenId=$UPLOAD_TOKEN_ID" \
+  -F "resume=true" \
+  -F "resumeAt=$RESUME_AT" \
+  -F "finalChunk=false" \
+  -F "fileData=@-;filename=chunk_$RESUME_AT"
+```
+
+**Chunk sizing guidance:** Use 2-5 MB chunks for files under 100 MB and 10-50 MB chunks for larger files. Smaller chunks mean more HTTP requests but easier recovery on failure; larger chunks reduce overhead but require re-uploading more data on failure.
 
 ## 2.3 Check Token Status
 
@@ -226,7 +251,36 @@ curl -X POST "$KALTURA_SERVICE_URL/service/media/action/addContent" \
   -d "resource[token]=$UPLOAD_TOKEN_ID"
 ```
 
-## 3.3 media.addFromUrl -- Import from URL (No Upload Needed)
+## 3.3 media.addFromUploadedFile -- Create Entry + Attach in One Call
+
+Combines `media.add` and `media.addContent` into a single request. The entry is created and the upload token is attached in one API call.
+
+```
+POST /api_v3/service/media/action/addFromUploadedFile
+```
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `mediaEntry[objectType]` | string | `KalturaMediaEntry` |
+| `mediaEntry[name]` | string | Display name |
+| `mediaEntry[mediaType]` | int | `1`=Video, `2`=Image, `5`=Audio |
+| `mediaEntry[tags]` | string | Comma-separated tags (optional) |
+| `uploadTokenId` | string | The upload token ID (file must already be uploaded) |
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/media/action/addFromUploadedFile" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "mediaEntry[objectType]=KalturaMediaEntry" \
+  -d "mediaEntry[name]=My Uploaded Video" \
+  -d "mediaEntry[mediaType]=1" \
+  -d "mediaEntry[tags]=api,upload" \
+  -d "uploadTokenId=$UPLOAD_TOKEN_ID"
+```
+
+This triggers transcoding immediately. Use this shortcut when you do not need to set entry metadata before attaching content.
+
+## 3.4 media.addFromUrl -- Import from URL (No Upload Needed)
 
 ```
 POST /api_v3/service/media/action/addFromUrl
@@ -251,7 +305,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/media/action/addFromUrl" \
   -d "url=https://example.com/sample_video.mp4"
 ```
 
-## 3.4 Entry Statuses
+## 3.5 Entry Statuses
 
 | Value | Name | Description |
 |-------|------|-------------|
@@ -262,6 +316,76 @@ curl -X POST "$KALTURA_SERVICE_URL/service/media/action/addFromUrl" \
 | 2 | READY | Fully processed, playable |
 | 4 | CONVERTING | Transcoding in progress |
 | 7 | DELETED | Entry deleted |
+
+## 3.6 Non-Media Entry Types (Documents and Data)
+
+Kaltura supports uploading and managing non-media files as standalone entries. Use the appropriate service based on file type:
+
+| File Type | Service | Entry Object | When to Use |
+|-----------|---------|-------------|-------------|
+| Video, audio, image | `media` | `KalturaMediaEntry` | Standard media content — transcoded and playable |
+| PDF, Word, PowerPoint | `document` | `KalturaDocumentEntry` | Documents that benefit from Kaltura's document conversion (PDF viewer, slide sync) |
+| Any other file | `baseEntry` | `KalturaDataEntry` (type=6) | Arbitrary files — stored and served as-is, no transcoding |
+
+### Document Entries
+
+Upload documents (PDF, DOCX, PPTX) using the `document` service. Documents go through Kaltura's document conversion pipeline.
+
+```bash
+# Create and attach document in one call
+curl -X POST "$KALTURA_SERVICE_URL/service/document/action/addFromUploadedFile" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "documentEntry[objectType]=KalturaDocumentEntry" \
+  -d "documentEntry[name]=Presentation Slides" \
+  -d "documentEntry[documentType]=11" \
+  -d "documentEntry[tags]=slides,training" \
+  -d "uploadTokenId=$UPLOAD_TOKEN_ID"
+```
+
+**Document types (`documentType`):**
+
+| Value | Name | Description |
+|-------|------|-------------|
+| 11 | DOCUMENT | General document (Word, PowerPoint, etc.) |
+| 12 | SWF | Flash document |
+| 13 | PDF | PDF document |
+
+### Data Entries
+
+Upload any file type as a data entry using the `baseEntry` service. Data entries are stored and served as-is without transcoding.
+
+```bash
+# Create a data entry and attach file
+curl -X POST "$KALTURA_SERVICE_URL/service/baseEntry/action/addFromUploadedFile" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "entry[objectType]=KalturaDataEntry" \
+  -d "entry[type]=6" \
+  -d "entry[name]=Configuration File" \
+  -d "entry[tags]=config,json" \
+  -d "entry[conversionProfileId]=-1" \
+  -d "uploadTokenId=$UPLOAD_TOKEN_ID"
+```
+
+Set `conversionProfileId=-1` to skip transcoding for data entries.
+
+### Direct-Serve URL for Non-Media Entries
+
+Non-media entries (documents and data) can be served directly via CDN using the raw serve URL:
+
+```
+https://cdnapisec.kaltura.com/p/{PARTNER_ID}/raw/entry_id/{ENTRY_ID}/direct_serve/1/forceproxy/true/{FILE_NAME}
+```
+
+This returns the original file as-is. Use this URL pattern to serve documents, JSON files, configuration data, or any non-media content stored in Kaltura.
+
+### Choosing the Right Entry Type
+
+- **Media entries** — Use for video, audio, and images. Kaltura transcodes and creates playable renditions (flavors). Delivered via `playManifest` URLs (HLS, DASH).  
+- **Document entries** — Use for PDFs and office documents. Kaltura converts for web viewing. Use when you need document preview or slide synchronization.  
+- **Data entries** — Use for any other file type (JSON, CSV, ZIP, executables, etc.). Stored and served as-is with no processing. Use when Kaltura is your file storage backend.  
+- **Attachment assets** (section 4.4) — Use to attach supplementary files to an existing media entry. The attachment is linked to the parent entry, not a standalone entry.
 
 
 # 4. Content Delivery
@@ -301,34 +425,194 @@ https://cdnapisec.kaltura.com/p/12345/sp/1234500/playManifest/entryId/0_abc123/f
 
 **Download URL from entry object:** Every `KalturaMediaEntry` has a `downloadUrl` property you can use directly.
 
-## 4.2 Thumbnail API
+## 4.2 Dynamic Thumbnail API (URL-Based)
 
-Kaltura provides a dynamic thumbnail API that generates thumbnails on the fly.
+Generate thumbnails on the fly via URL parameters. CDN-cached — use for responsive thumbnails, per-request customization, or video frame extraction.
 
 **URL pattern:**
 ```
-https://cdnapisec.kaltura.com/p/{PARTNER_ID}/thumbnail/entry_id/{ENTRY_ID}/{PARAMS}
+https://cdnapisec.kaltura.com/p/{PARTNER_ID}/thumbnail/entry_id/{ENTRY_ID}/param/value/...
 ```
+
+**Core parameters:**
 
 | Parameter | Description |
 |-----------|-------------|
-| `/width/{W}` | Thumbnail width in pixels |
-| `/height/{H}` | Thumbnail height in pixels |
-| `/vid_sec/{S}` | Capture at specific second of video |
-| `/quality/{Q}` | JPEG quality (1-100) |
-| `/type/{T}` | `1`=JPEG (default), `2`=PNG |
+| `/width/{W}` | Width in pixels |
+| `/height/{H}` | Height in pixels |
+| `/type/{T}` | Crop mode: `1`=resize to fit, `2`=center + pad, `3`=center crop, `4`=top crop, `5`=stretch |
+| `/quality/{Q}` | JPEG quality (0-100) |
+| `/format/{F}` | Output format: `jpg`, `png`, `png8`, `png24`, `png32`, `png48`, `png64`, `bmp`, `gif`, `tif`, `psd`, `pdf` |
+| `/bgcolor/{HEX}` | Background color for padding (hex, e.g., `ff0000`) |
+| `/nearest_aspect_ratio/{0\|1}` | Round to nearest standard aspect ratio |
+
+**Video frame extraction:**
+
+| Parameter | Description |
+|-----------|-------------|
+| `/vid_sec/{S}` | Capture frame at specific second |
+| `/vid_slice/{N}` | Extract slice N from a strip (use with `vid_slices`) |
+| `/vid_slices/{TOTAL}` | Divide video into TOTAL equal segments for sprite strips |
+| `/start_sec/{S}` | Start of time range (with `vid_slices`) |
+| `/end_sec/{S}` | End of time range (with `vid_slices`) |
+
+**Crop region (advanced):**
+
+| Parameter | Description |
+|-----------|-------------|
+| `/src_x/{X}` | Source crop X offset |
+| `/src_y/{Y}` | Source crop Y offset |
+| `/src_w/{W}` | Source crop width |
+| `/src_h/{H}` | Source crop height |
+| `/rel_width/{W}` | Relative coordinate system width |
+| `/rel_height/{H}` | Relative coordinate system height |
+
+**Source and access:**
+
+| Parameter | Description |
+|-----------|-------------|
+| `/flavor_id/{ID}` | Generate from a specific flavor (rendition) |
+| `/upload_token_id/{ID}` | Generate thumbnail from an in-progress upload token |
+| `/version/{V}` | Thumbnail version |
+| `/ks/{KS}` | KS for access-controlled entries |
+| `/referrer/{BASE64}` | Base64-encoded referrer for domain restrictions |
+| `/file_name/{NAME}` | Download filename (must be last parameter) |
 
 **Examples:**
+
 ```
-# Default thumbnail (auto-generated)
+# Default thumbnail
 https://cdnapisec.kaltura.com/p/12345/thumbnail/entry_id/0_abc123
 
-# 640x360 at 30 seconds into the video
-https://cdnapisec.kaltura.com/p/12345/thumbnail/entry_id/0_abc123/width/640/height/360/vid_sec/30
+# Responsive: 640x360, center-cropped, at 30 seconds
+https://cdnapisec.kaltura.com/p/12345/thumbnail/entry_id/0_abc123/width/640/height/360/type/3/vid_sec/30
 
-# High quality PNG
-https://cdnapisec.kaltura.com/p/12345/thumbnail/entry_id/0_abc123/width/1920/height/1080/quality/100/type/2
+# High-quality PNG for downloads
+https://cdnapisec.kaltura.com/p/12345/thumbnail/entry_id/0_abc123/width/1920/height/1080/quality/100/format/png
+
+# CSS sprite strip: 10 slices for hover preview
+https://cdnapisec.kaltura.com/p/12345/thumbnail/entry_id/0_abc123/width/160/height/90/vid_slices/10
+
+# Padded with white background
+https://cdnapisec.kaltura.com/p/12345/thumbnail/entry_id/0_abc123/width/400/height/400/type/2/bgcolor/ffffff
 ```
+
+## 4.3 thumbAsset API (Stored Thumbnails)
+
+The `thumbAsset` service manages persistent, editorial thumbnails attached to entries. Use when you need multiple thumbnails per entry, custom-uploaded images, or saved video frame captures.
+
+**thumbAsset.add — Upload a custom thumbnail:**
+
+```bash
+# Step 1: Create the thumb asset
+curl -X POST "$KALTURA_SERVICE_URL/service/thumbAsset/action/add" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "entryId=$KALTURA_ENTRY_ID" \
+  -d "thumbAsset[objectType]=KalturaThumbAsset"
+
+# Step 2: Upload the image using an upload token
+curl -X POST "$KALTURA_SERVICE_URL/service/thumbAsset/action/setContent" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "id=THUMB_ASSET_ID" \
+  -d "contentResource[objectType]=KalturaUploadedFileTokenResource" \
+  -d "contentResource[token]=$UPLOAD_TOKEN_ID"
+```
+
+**thumbAsset.generate — Capture frame from video:**
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/thumbAsset/action/generate" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "entryId=$KALTURA_ENTRY_ID" \
+  -d "thumbParams[objectType]=KalturaThumbParams" \
+  -d "thumbParams[videoOffset]=30"
+```
+
+**thumbAsset.setAsDefault — Set which thumbnail displays:**
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/thumbAsset/action/setAsDefault" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "thumbAssetId=THUMB_ASSET_ID"
+```
+
+**thumbAsset.list — List all thumbnails for an entry:**
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/thumbAsset/action/list" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "filter[entryIdEqual]=$KALTURA_ENTRY_ID"
+```
+
+**thumbAsset.get — Retrieve a specific thumbnail asset:**
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/thumbAsset/action/get" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "thumbAssetId=THUMB_ASSET_ID"
+```
+
+**thumbAsset.delete — Remove a thumbnail asset:**
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/thumbAsset/action/delete" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "thumbAssetId=THUMB_ASSET_ID"
+```
+
+**When to use which:**
+- **Dynamic Thumbnail API** (section 4.2) — On-the-fly delivery for responsive UIs, hover previews, video frame extraction. CDN-cached, no stored assets created. Best for displaying thumbnails at different sizes.
+- **thumbAsset API** (this section) — Stored editorial thumbnails when you need multiple persistent thumbnails per entry, custom-uploaded images, or specific frame captures saved permanently. Best for managing which thumbnail is the "default" for an entry.
+
+## 4.4 Non-Media File Attachments (attachmentAsset)
+
+Kaltura manages any file type, not just media. The `attachment_attachmentAsset` plugin service attaches non-media files to media entries (shown as "Related Files" in KMC).
+
+```bash
+# Step 1: Create the attachment asset
+curl -X POST "$KALTURA_SERVICE_URL/service/attachment_attachmentAsset/action/add" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "entryId=$KALTURA_ENTRY_ID" \
+  -d "attachmentAsset[objectType]=KalturaAttachmentAsset" \
+  -d "attachmentAsset[title]=Slide Deck" \
+  -d "attachmentAsset[format]=3" \
+  -d "attachmentAsset[fileExt]=pdf"
+
+# Step 2: Upload the file using an upload token (same lifecycle as media)
+curl -X POST "$KALTURA_SERVICE_URL/service/attachment_attachmentAsset/action/setContent" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "id=$ATTACHMENT_ASSET_ID" \
+  -d "contentResource[objectType]=KalturaUploadedFileTokenResource" \
+  -d "contentResource[token]=$UPLOAD_TOKEN_ID"
+
+# List attachments for an entry
+curl -X POST "$KALTURA_SERVICE_URL/service/attachment_attachmentAsset/action/list" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "filter[entryIdEqual]=$KALTURA_ENTRY_ID"
+```
+
+**Attachment format types:**
+
+| Value | Name | Description |
+|-------|------|-------------|
+| 1 | TEXT | Plain text files |
+| 2 | MEDIA | Media files not for transcoding (supplementary media) |
+| 3 | DOCUMENT | Documents (PDF, DOCX, PPTX, etc.) |
+| 4 | JSON | Structured JSON data |
+
+Attachments follow the same `uploadToken` lifecycle as media uploads — create a token, upload the file, then attach it to the asset.
+
+**Content-Type auto-detection:** Kaltura automatically detects MIME types during upload based on file content and extension. You do not need to specify Content-Type headers for the uploaded file — the server inspects the file and assigns the correct type. For media entries, this determines the transcoding pipeline (video vs. audio vs. image). For attachments, it determines the `format` value if not explicitly set.
 
 
 # 5. Flavor Assets (Transcoded Renditions)
@@ -398,7 +682,6 @@ POST /api_v3/service/media/action/bulkUploadAdd
 The `*action` column: `1`=add, `2`=update, `3`=delete.
 
 **Note:** For bulk operations creating more than 5,000 entries, coordinate with your Kaltura representative.
-
 
 # 7. Complete Example -- Chunked Upload
 
@@ -504,6 +787,8 @@ curl -X POST "$KALTURA_SERVICE_URL/service/media/action/addContent" \
 - **Use thumbnail API for previews.** Generate thumbnails dynamically via the thumbnail API rather than storing separate image files.
 - **Use AppTokens for upload services.** Scope the AppToken with `edit:*` privilege for upload-only access.
 - **Set up Agents Manager or REACH automation rules** to auto-process uploaded content (captions, translation, summarization) rather than implementing manual post-upload workflows.
+- **10,000 result limit on list/search.** Kaltura enforces a 10K result cap on list operations (500 results/page x 20 pages max). To traverse a full content library, use `createdAtGreaterThanOrEqual` and `createdAtLessThanOrEqual` date-window filters to page through results in batches. Move the date window forward after each batch.
+- **Use multirequest for browser uploads.** Combine `uploadToken.add` + `media.add` + `media.addContent` in a single HTTP request to reduce round trips. See [API Getting Started](KALTURA_API_GETTING_STARTED.md) for multirequest syntax.
 
 # 11. Related Guides
 
@@ -517,4 +802,6 @@ curl -X POST "$KALTURA_SERVICE_URL/service/media/action/addContent" \
 - **[Events Platform](KALTURA_EVENTS_PLATFORM_API.md)** — Upload logo/banner assets for virtual events
 - **[Multi-Stream](KALTURA_MULTI_STREAM_API.md)** — Create synchronized dual/multi-screen entries using parent-child relationships
 - **[Webhooks API](KALTURA_WEBHOOKS_API.md)** — Get notified when entries finish processing (HTTP callbacks on entry events)
-- **Reference implementation:** [kaltura_uploader](https://github.com/zoharbabin/kaltura_uploader) — Python CLI with adaptive chunked upload
+- **[Distribution](KALTURA_DISTRIBUTION_API.md)** — Distributed content must first be uploaded and transcoded
+- **[Syndication](KALTURA_SYNDICATION_API.md)** — Syndication feeds serve uploaded content via feed URLs
+- **[API Getting Started](KALTURA_API_GETTING_STARTED.md)** — Foundation guide covering content model and API patterns

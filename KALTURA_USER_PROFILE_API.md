@@ -4,9 +4,9 @@ The User Profile service manages per-application user profiles, primarily for th
 
 A user has one profile per app — the same `userId` can have separate profiles across different events, each with its own registration data and attendance status.
 
-**Base URL:** `https://user.nvp1.ovp.kaltura.com/api/v1` (production NVP region)
-**Auth:** `Authorization: Bearer <KS>` header (ADMIN KS, type=2, requires `ADMIN_BASE` permission)
-**Format:** JSON request/response bodies, all endpoints use POST
+**Base URL:** `https://user.nvp1.ovp.kaltura.com/api/v1` (production NVP region)  
+**Auth:** `Authorization: Bearer <KS>` header (ADMIN KS, type=2, requires `ADMIN_BASE` permission)  
+**Format:** JSON request/response bodies, all endpoints use POST  
 **Regions:** NVP (default `nvp1`), EU (`irp2`), DE (`frp2`)
 
 
@@ -828,7 +828,7 @@ fi
 
 For CSV-based registration and engagement reports, the platform provides an async Reports Service. This is separate from the User Profile API's `eventDataStats` endpoint and produces downloadable CSV files.
 
-**Reports Base URL:** `https://reports.nvp1.ovp.kaltura.com/api/v1`
+**Reports Base URL:** `https://reports.nvp1.ovp.kaltura.com/api/v1`  
 **Auth:** `Authorization: Bearer <KS>`
 
 ## 14.1 Generate a Report
@@ -888,6 +888,7 @@ Per-user session engagement data is available via the core Kaltura Reports API u
 # Get per-user session engagement for a virtual event
 curl -s -X POST "$KALTURA_SERVICE_URL/service/report/action/getCsvFromStringParams" \
   -d "ks=$KALTURA_KS" \
+  -d "format=1" \
   -d "id=3037" \
   -d "params=from_date=$FROM_UNIX;to_date=$TO_UNIX;virtual_event_ids=$VIRTUAL_EVENT_ID"
 ```
@@ -911,3 +912,5 @@ curl -s -X POST "$KALTURA_SERVICE_URL/service/report/action/getCsvFromStringPara
 - **[Webhooks API](KALTURA_WEBHOOKS_API.md)** — Event-driven HTTP callbacks for user and content events
 - **[eSearch API](KALTURA_ESEARCH_API.md)** — Search entries and users across your account
 - **[User Management API](KALTURA_USER_MANAGEMENT_API.md)** — Core user CRUD, roles, and groups (the account-level user records that User Profile extends per-app)
+- **[Analytics Reports](KALTURA_ANALYTICS_REPORTS_API.md)** — `reports/eventDataStats` for attendance analytics
+- **[Gamification](KALTURA_GAMIFICATION_API.md)** — User profiles drive gamification scoring

@@ -496,6 +496,198 @@ def main():
     runner.run_test("Cleanup — remove temp files", test_cleanup_temp_files)
 
     # ════════════════════════════════════════════
+    # Phase 6: thumbAsset API (Stored Thumbnails)
+    # ════════════════════════════════════════════
+
+    def test_thumb_asset_generate():
+        """Capture a thumbnail from a video at a specific offset."""
+        entry_id = state.get("ready_entry_id")
+        if not entry_id:
+            raise RuntimeError("No ready entry for thumbAsset tests")
+        result = kaltura_post("thumbAsset", "generate", {
+            "entryId": entry_id,
+            "thumbParams[objectType]": "KalturaThumbParams",
+            "thumbParams[videoOffset]": 3,
+        })
+        assert "id" in result, f"No thumbAsset ID returned: {result}"
+        state["thumb_asset_id"] = result["id"]
+        runner.register_cleanup(f"thumbAsset {result['id']}",
+                                lambda: _delete_thumb_asset(result["id"]))
+        print(f"    ThumbAsset: {result['id']}, entryId={result.get('entryId')}")
+
+    runner.run_test("thumbAsset.generate — capture frame from video", test_thumb_asset_generate)
+
+    def test_thumb_asset_get():
+        """Retrieve a specific thumbnail asset."""
+        thumb_id = state.get("thumb_asset_id")
+        if not thumb_id:
+            raise RuntimeError("No thumbAsset ID")
+        result = kaltura_post("thumbAsset", "get", {
+            "thumbAssetId": thumb_id,
+        })
+        assert result.get("id") == thumb_id, f"Expected {thumb_id}, got {result.get('id')}"
+        assert result.get("objectType") == "KalturaThumbAsset"
+        print(f"    ThumbAsset: {result['id']}, status={result.get('status')}, width={result.get('width')}")
+
+    runner.run_test("thumbAsset.get — retrieve thumbnail asset", test_thumb_asset_get)
+
+    def test_thumb_asset_set_as_default():
+        """Set a thumbnail as the entry's default."""
+        thumb_id = state.get("thumb_asset_id")
+        if not thumb_id:
+            raise RuntimeError("No thumbAsset ID")
+        result = kaltura_post("thumbAsset", "setAsDefault", {
+            "thumbAssetId": thumb_id,
+        })
+        # setAsDefault returns void on success — no error means success
+        print(f"    Set thumbAsset {thumb_id} as default")
+
+    runner.run_test("thumbAsset.setAsDefault — set default thumbnail", test_thumb_asset_set_as_default)
+
+    def test_thumb_asset_list():
+        """List all thumbnails for an entry."""
+        entry_id = state.get("ready_entry_id")
+        if not entry_id:
+            raise RuntimeError("No ready entry for thumbAsset list")
+        result = kaltura_post("thumbAsset", "list", {
+            "filter[entryIdEqual]": entry_id,
+        })
+        assert "objects" in result, f"Expected objects array: {result}"
+        assert result.get("totalCount", 0) > 0, f"Expected at least one thumbAsset, got {result.get('totalCount')}"
+        thumb_ids = [t["id"] for t in result["objects"]]
+        print(f"    Found {result['totalCount']} thumbAssets: {', '.join(thumb_ids)}")
+
+    runner.run_test("thumbAsset.list — list thumbnails for entry", test_thumb_asset_list)
+
+    def test_thumb_asset_add_upload():
+        """Upload a custom thumbnail image via uploadToken."""
+        entry_id = state.get("ready_entry_id")
+        if not entry_id:
+            raise RuntimeError("No ready entry")
+        # Create a minimal 1x1 PNG (67 bytes)
+        import base64
+        png_data = base64.b64decode(
+            "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
+        )
+        # Step 1: Create upload token
+        token = kaltura_post("uploadToken", "add", {
+            "uploadToken[fileName]": "thumb_test.png",
+            "uploadToken[fileSize]": len(png_data),
+        })
+        token_id = token["id"]
+        # Step 2: Upload the PNG
+        import io
+        upload_url = f"{SERVICE_URL}/service/uploadToken/action/upload"
+        resp = requests.post(upload_url, data={
+            "ks": KS, "format": "1", "uploadTokenId": token_id, "resume": "false",
+        }, files={"fileData": ("thumb_test.png", io.BytesIO(png_data), "image/png")})
+        assert resp.status_code == 200
+        # Step 3: Create thumbAsset
+        thumb = kaltura_post("thumbAsset", "add", {
+            "entryId": entry_id,
+            "thumbAsset[objectType]": "KalturaThumbAsset",
+            "thumbAsset[tags]": "test-uploaded",
+        })
+        assert "id" in thumb, f"No thumbAsset ID: {thumb}"
+        state["uploaded_thumb_id"] = thumb["id"]
+        runner.register_cleanup(f"uploaded thumbAsset {thumb['id']}",
+                                lambda: _delete_thumb_asset(thumb["id"]))
+        # Step 4: Attach content
+        kaltura_post("thumbAsset", "setContent", {
+            "id": thumb["id"],
+            "contentResource[objectType]": "KalturaUploadedFileTokenResource",
+            "contentResource[token]": token_id,
+        })
+        print(f"    Uploaded thumbAsset: {thumb['id']} (via token {token_id})")
+
+    runner.run_test("thumbAsset.add + setContent — upload custom thumbnail", test_thumb_asset_add_upload)
+
+    def test_thumb_asset_delete():
+        """Delete a thumbnail asset."""
+        thumb_id = state.get("uploaded_thumb_id")
+        if not thumb_id:
+            raise RuntimeError("No uploaded thumbAsset to delete")
+        kaltura_post("thumbAsset", "delete", {"thumbAssetId": thumb_id})
+        # Verify deletion
+        try:
+            kaltura_post("thumbAsset", "get", {"thumbAssetId": thumb_id})
+            raise AssertionError(f"thumbAsset {thumb_id} still exists after delete")
+        except Exception as e:
+            if "THUMB_ASSET_ID_NOT_FOUND" in str(e) or "not found" in str(e).lower():
+                print(f"    Deleted thumbAsset {thumb_id} (confirmed not found)")
+            else:
+                raise
+
+    runner.run_test("thumbAsset.delete — remove thumbnail asset", test_thumb_asset_delete)
+
+    # ════════════════════════════════════════════
+    # Phase 7: attachmentAsset API
+    # ════════════════════════════════════════════
+
+    def test_attachment_asset_add():
+        """Create an attachment asset on a media entry."""
+        entry_id = state.get("ready_entry_id")
+        if not entry_id:
+            raise RuntimeError("No ready entry for attachmentAsset tests")
+        result = kaltura_post("attachment_attachmentAsset", "add", {
+            "entryId": entry_id,
+            "attachmentAsset[objectType]": "KalturaAttachmentAsset",
+            "attachmentAsset[title]": "Test Document",
+            "attachmentAsset[format]": 3,  # DOCUMENT
+            "attachmentAsset[tags]": "test-attachment",
+        })
+        assert "id" in result, f"No attachmentAsset ID: {result}"
+        state["attachment_id"] = result["id"]
+        runner.register_cleanup(f"attachmentAsset {result['id']}",
+                                lambda: _delete_attachment_asset(result["id"]))
+        print(f"    AttachmentAsset: {result['id']}, format={result.get('format')}")
+
+    runner.run_test("attachmentAsset.add — create attachment", test_attachment_asset_add)
+
+    def test_attachment_asset_set_content():
+        """Upload content to an attachment asset."""
+        att_id = state.get("attachment_id")
+        if not att_id:
+            raise RuntimeError("No attachmentAsset ID")
+        # Create upload token with a small text file
+        token = kaltura_post("uploadToken", "add", {
+            "uploadToken[fileName]": "notes.txt",
+            "uploadToken[fileSize]": 26,
+        })
+        token_id = token["id"]
+        import io
+        upload_url = f"{SERVICE_URL}/service/uploadToken/action/upload"
+        resp = requests.post(upload_url, data={
+            "ks": KS, "format": "1", "uploadTokenId": token_id, "resume": "false",
+        }, files={"fileData": ("notes.txt", io.BytesIO(b"Test attachment content.\n"), "text/plain")})
+        assert resp.status_code == 200
+        # Attach content to asset
+        result = kaltura_post("attachment_attachmentAsset", "setContent", {
+            "id": att_id,
+            "contentResource[objectType]": "KalturaUploadedFileTokenResource",
+            "contentResource[token]": token_id,
+        })
+        assert result.get("id") == att_id
+        print(f"    Set content on attachmentAsset {att_id} (via token {token_id})")
+
+    runner.run_test("attachmentAsset.setContent — upload attachment file", test_attachment_asset_set_content)
+
+    def test_attachment_asset_list():
+        """List attachment assets for an entry."""
+        entry_id = state.get("ready_entry_id")
+        if not entry_id:
+            raise RuntimeError("No ready entry")
+        result = kaltura_post("attachment_attachmentAsset", "list", {
+            "filter[entryIdEqual]": entry_id,
+        })
+        assert "objects" in result, f"Expected objects array: {result}"
+        assert result.get("totalCount", 0) > 0, f"Expected at least one attachment, got {result.get('totalCount')}"
+        att_ids = [a["id"] for a in result["objects"]]
+        print(f"    Found {result['totalCount']} attachments: {', '.join(att_ids)}")
+
+    runner.run_test("attachmentAsset.list — list attachments for entry", test_attachment_asset_list)
+
+    # ════════════════════════════════════════════
     # Cleanup & Summary
     # ════════════════════════════════════════════
 
@@ -524,6 +716,20 @@ def _delete_token(token_id):
 def _delete_entry(entry_id):
     try:
         kaltura_post("media", "delete", {"entryId": entry_id})
+    except Exception:
+        pass
+
+
+def _delete_thumb_asset(thumb_id):
+    try:
+        kaltura_post("thumbAsset", "delete", {"thumbAssetId": thumb_id})
+    except Exception:
+        pass
+
+
+def _delete_attachment_asset(att_id):
+    try:
+        kaltura_post("attachment_attachmentAsset", "delete", {"id": att_id})
     except Exception:
         pass
 

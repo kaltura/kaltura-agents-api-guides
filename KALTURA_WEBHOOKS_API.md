@@ -2,9 +2,9 @@
 
 Kaltura's event notification system sends real-time HTTP webhooks or emails when events occur on your content — entry uploaded, transcoding complete, metadata changed, caption added, and more. Create notification templates that define what triggers a notification, what data to send, and where to send it. Templates fire automatically when matching events occur, or manually via the `dispatch` action. Email notifications are delivered through the Kaltura Messaging microservice, providing SendGrid-based delivery with per-recipient tracking, engagement analytics, and CAN-SPAM compliance.
 
-**Base URL:** `https://www.kaltura.com/api_v3` (may differ by region/deployment)
-**Auth:** KS passed as `ks` parameter in POST form data (see [Session Guide](KALTURA_SESSION_GUIDE.md))
-**Format:** Form-encoded POST, `format=1` for JSON responses
+**Base URL:** `https://www.kaltura.com/api_v3` (may differ by region/deployment)  
+**Auth:** KS passed as `ks` parameter in POST form data (see [Session Guide](KALTURA_SESSION_GUIDE.md))  
+**Format:** Form-encoded POST, `format=1` for JSON responses  
 **Service:** `eventnotification_eventnotificationtemplate` (plugin service — all lowercase with plugin prefix)
 
 
@@ -326,19 +326,12 @@ The signing key is your `signSecret` if configured, otherwise Kaltura uses your 
 
 ## 5.3 Verify on Your Server
 
-The signature is a simple SHA256 hash of the signing secret concatenated with the raw POST body (NOT HMAC):
+The signature is a SHA256 hash of the signing secret concatenated with the raw POST body (not HMAC — plain concatenation):
 
 ```bash
-# Python verification example
-import hashlib
-expected = hashlib.sha256((signing_secret + raw_body).encode('utf-8')).hexdigest()
-if expected == request.headers['X-KALTURA-SIGNATURE']:
-    # Request is authentic
-```
-
-```bash
-# Bash verification
-echo -n "${SIGNING_SECRET}${RAW_BODY}" | sha256sum | cut -d' ' -f1
+# Verify webhook signature
+EXPECTED=$(echo -n "${SIGNING_SECRET}${RAW_BODY}" | sha256sum | cut -d' ' -f1)
+# Compare $EXPECTED with the X-KALTURA-SIGNATURE header value
 ```
 
 
@@ -864,3 +857,8 @@ curl -X POST "$KALTURA_SERVICE_URL/service/eventnotification_eventnotificationte
 - **[Categories & Access Control API](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md)** — Category event notifications (category membership changes, access control updates)
 - **[Custom Metadata API](KALTURA_CUSTOM_METADATA_API.md)** — Metadata change events (OBJECT_ADDED, OBJECT_DATA_CHANGED, OBJECT_DELETED) that trigger webhook notifications
 - **[Captions & Transcripts API](KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md)** — Caption asset events that trigger webhook notifications
+- **[Distribution](KALTURA_DISTRIBUTION_API.md)** — Trigger notifications on distribution status changes
+- **[Events Platform](KALTURA_EVENTS_PLATFORM_API.md)** — Event lifecycle callbacks for virtual events
+- **[Syndication](KALTURA_SYNDICATION_API.md)** — Trigger feed updates on content changes
+- **[Analytics Reports](KALTURA_ANALYTICS_REPORTS_API.md)** — Trigger automated reporting on content events
+- **[Gamification](KALTURA_GAMIFICATION_API.md)** — Event notifications feed gamification rules engine

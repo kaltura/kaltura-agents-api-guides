@@ -2,9 +2,9 @@
 
 The Auth Broker is a standalone microservice for managing SSO authentication via SAML and OAuth2/OIDC identity providers. It handles IdP profile configuration, app-to-profile subscriptions, login flows, and just-in-time user provisioning — separate from the main Kaltura API v3.
 
-**Base URL:** `https://auth.nvp1.ovp.kaltura.com/api/v1` (production NVP region)
-**Auth:** `Authorization: KS <KS>` header (KS prefix, not Bearer)
-**Format:** JSON request/response bodies, all endpoints use POST (except SAML metadata which is GET)
+**Base URL:** `https://auth.nvp1.ovp.kaltura.com/api/v1` (production NVP region)  
+**Auth:** `Authorization: KS <KS>` header (KS prefix, not Bearer)  
+**Format:** JSON request/response bodies, all endpoints use POST (except SAML metadata which is GET)  
 **Regions:** NVP (default `nvp1`), EU (`irp2`), DE (`frp2`)
 
 

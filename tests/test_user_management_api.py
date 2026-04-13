@@ -12,7 +12,7 @@ import os
 import time
 
 sys.path.insert(0, os.path.dirname(__file__))
-from test_helpers import kaltura_post, TestRunner, PARTNER_ID, KS
+from test_helpers import kaltura_post, TestRunner, PARTNER_ID, KS, SERVICE_URL
 
 TS = int(time.time())
 state = {}
@@ -166,6 +166,33 @@ def main():
         print(f"    Login enabled for {result['id']}")
 
     runner.run_test("user.enableLogin — grant login credentials", test_enable_login)
+
+    def test_login_by_login_id():
+        """Login with the enabled credentials to get a user session."""
+        import requests as _req
+        resp = _req.post(
+            f"{kaltura_post.__module__ and SERVICE_URL}/service/user/action/loginByLoginId",
+            data={
+                "loginId": f"api_test_{TS}@example.com",
+                "password": "Kaltura1!",
+                "partnerId": PARTNER_ID,
+                "format": 1,
+            },
+            timeout=30,
+        )
+        resp.raise_for_status()
+        result = resp.json()
+        if isinstance(result, str):
+            # Success — returns a KS string
+            assert len(result) > 20, f"Expected KS string, got: {result[:50]}"
+            state["user_ks"] = result
+            print(f"    Login successful, KS: {result[:30]}...")
+        elif isinstance(result, dict) and result.get("objectType") == "KalturaAPIException":
+            raise Exception(f"Login failed: {result.get('message')}")
+        else:
+            print(f"    Login response: {str(result)[:100]}")
+
+    runner.run_test("user.loginByLoginId — authenticate with credentials", test_login_by_login_id)
 
     def test_enable_login_already_enabled():
         """Enabling login again returns USER_LOGIN_ALREADY_ENABLED."""

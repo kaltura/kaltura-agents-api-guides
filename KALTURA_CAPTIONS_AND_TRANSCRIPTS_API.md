@@ -2,9 +2,9 @@
 
 The Captions & Transcripts API manages subtitle files, closed captions, and transcripts attached to media entries. It supports five caption formats (SRT, DFXP/TTML, WebVTT, CAP, SCC), on-the-fly format conversion, HLS segmented delivery, JSON serving for AI/LLM integrations, caption parameter templates, and multi-language workflows. For automated captioning, translation, and dubbing, see the [REACH API](KALTURA_REACH_API.md).
 
-**Base URL:** `https://www.kaltura.com/api_v3` (may differ by region/deployment)
-**Auth:** KS passed as `ks` parameter in POST form data (see [Session Guide](KALTURA_SESSION_GUIDE.md))
-**Format:** Form-encoded POST, `format=1` for JSON responses
+**Base URL:** `https://www.kaltura.com/api_v3` (may differ by region/deployment)  
+**Auth:** KS passed as `ks` parameter in POST form data (see [Session Guide](KALTURA_SESSION_GUIDE.md))  
+**Format:** Form-encoded POST, `format=1` for JSON responses  
 **Services:** `caption_captionAsset` (12 actions), `caption_captionParams` (5 actions)
 
 **Important:** These are plugin services. The service names use underscore-prefixed compound names: `caption_captionAsset`, `caption_captionParams`.
@@ -971,10 +971,12 @@ Bulk list entries → check caption presence per entry → report gaps → order
 - **Caption every entry for accessibility compliance.** Use REACH auto-rules to ensure all new entries get captioned. Run periodic audits (section 11.5) to catch gaps.
 - **format is insertOnly.** Choose the correct caption format at creation time — it cannot be changed after the asset is created.
 - **Use DFXP/TTML for multi-language single-file uploads.** Upload a single DFXP file with `language="Multilingual"` and the server auto-splits into per-language assets.
+- **Use Captions Studio for interactive editing.** The Captions Studio (Captions Editor) provides a browser-based editor with synchronized video/waveform playback. Create a caption asset first, then pass its ID to the editor. See [Experience Components Guide](KALTURA_EXPERIENCE_COMPONENTS_API.md) for embed details.
 
 
 # 15. Related Guides
 
+- **[Experience Components](KALTURA_EXPERIENCE_COMPONENTS_API.md)** — Captions Studio (interactive caption editor) embed
 - **[REACH API](KALTURA_REACH_API.md)** — AI captioning, translation, dubbing, audio description, automation rules
 - **[eSearch API](KALTURA_ESEARCH_API.md)** — Caption search with `KalturaESearchCaptionItem`, timestamp deep-linking
 - **[Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md)** — Caption display, track selection, transcript plugin
@@ -984,3 +986,4 @@ Bulk list entries → check caption presence per entry → report gaps → order
 - **[Agents Manager API](KALTURA_AGENTS_MANAGER_API.md)** — Automated caption workflows via AI agents
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — KS generation and permission scoping
 - **[AppTokens API](KALTURA_APPTOKENS_API.md)** — Secure auth without admin secrets
+- **[Distribution](KALTURA_DISTRIBUTION_API.md)** — Caption assets included in distribution packages

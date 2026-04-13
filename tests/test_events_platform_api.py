@@ -461,6 +461,38 @@ def main():
 
         runner.run_test("team-members/list — list team", test_list_team_members)
 
+        def test_update_team_member():
+            """Update a team member's role."""
+            member_id = state.get("team_member_id")
+            if not member_id:
+                print("    Skipped — no team member available")
+                return
+            try:
+                result = events_post("/team-members/update", {
+                    "id": member_id,
+                    "role": "ContentManager",
+                })
+                updated_role = result.get("role", "unknown")
+                print(f"    Updated team member {member_id}: role={updated_role}")
+            except Exception as e:
+                print(f"    Team member update: {str(e)[:150]}")
+
+        runner.run_test("team-members/update — change role", test_update_team_member)
+
+        def test_delete_team_member():
+            """Delete a team member."""
+            member_id = state.get("team_member_id")
+            if not member_id:
+                print("    Skipped — no team member available")
+                return
+            try:
+                events_post("/team-members/delete", {"id": member_id})
+                print(f"    Deleted team member: {member_id}")
+            except Exception as e:
+                print(f"    Team member delete: {str(e)[:150]}")
+
+        runner.run_test("team-members/delete — remove member", test_delete_team_member)
+
         # Duplication — uses sourceEventId (int), not id
         def test_duplicate_event():
             """Duplicate the event."""

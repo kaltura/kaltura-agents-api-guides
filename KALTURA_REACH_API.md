@@ -2,9 +2,9 @@
 
 Kaltura REACH is the **captioning, translation, accessibility, and content enrichment** services framework. Order processing tasks — from machine-generated captions to professional human translations — against your media entries. Results (caption files, audio tracks, chapters, metadata) are delivered directly back into Kaltura and attached to the entry automatically.
 
-**Base URL:** `https://www.kaltura.com/api_v3` (may differ by region/deployment)
-**Auth:** KS passed as `ks` parameter in POST form data (see [Session Guide](KALTURA_SESSION_GUIDE.md))
-**Format:** Form-encoded POST, `format=1` for JSON responses
+**Base URL:** `https://www.kaltura.com/api_v3` (may differ by region/deployment)  
+**Auth:** KS passed as `ks` parameter in POST form data (see [Session Guide](KALTURA_SESSION_GUIDE.md))  
+**Format:** Form-encoded POST, `format=1` for JSON responses  
 
 REACH services can be triggered manually via the API, automatically via REACH profile automation rules (using Boolean event notification conditions), via [Kaltura Agents](KALTURA_AGENTS_MANAGER_API.md), or through the KMC/KMS management UIs.
 
@@ -142,11 +142,11 @@ The typical flow: discover available catalog items for your account, then create
 
 ### Output Formats (`outputFormat`)
 
-| Value | Name |
-|---|---|
-| 1 | SRT |
-| 2 | DFXP |
-| 3 | VTT |
+| Value | Name | When to Use |
+|---|---|---|
+| 1 | SRT | Most widely supported format. Use as the default for web players, video editors, and subtitle tools. Simple text-based timing format. |
+| 2 | DFXP | XML-based format (TTML subset). Use when you need styling/positioning metadata or for broadcast/TV workflows that require TTML compliance. |
+| 3 | VTT | WebVTT — the native HTML5 `<track>` format. Use when captions are delivered directly via HTML5 video elements or when you need CSS-based caption styling. |
 
 ### Turn-Around Times (`turnAroundTime`)
 
@@ -449,26 +449,36 @@ ks=<YOUR_KS>
 ### Approve a moderated task
 ```
 POST /api_v3/service/reach_entryVendorTask/action/approve
-ks=<YOUR_KS>&format=1&id=98765
+ks=<YOUR_KS>
+&format=1
+&id=98765
 ```
 
 ### Reject a moderated task
 ```
 POST /api_v3/service/reach_entryVendorTask/action/reject
-ks=<YOUR_KS>&format=1&id=98765&rejectReason=Quality+below+threshold
+ks=<YOUR_KS>
+&format=1
+&id=98765
+&rejectReason=Quality+below+threshold
 ```
 
 ### Cancel a pending task
 ```
 POST /api_v3/service/reach_entryVendorTask/action/abort
-ks=<YOUR_KS>&format=1&id=98765&abortReason=No+longer+needed
+ks=<YOUR_KS>
+&format=1
+&id=98765
+&abortReason=No+longer+needed
 ```
 Works for tasks in PENDING (1) or PENDING_MODERATION (4) status. Aborted tasks are deleted after cancellation; subsequent `get` calls return `ENTRY_VENDOR_TASK_NOT_FOUND`.
 
 ### Export tasks to CSV
 ```
 POST /api_v3/service/reach_entryVendorTask/action/exportToCsv
-ks=<YOUR_KS>&format=1&filter[statusEqual]=2
+ks=<YOUR_KS>
+&format=1
+&filter[statusEqual]=2
 ```
 Creates a batch job that emails a CSV download link with the filtered tasks.
 
@@ -489,11 +499,12 @@ export KALTURA_KS="YOUR_KS"
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/reach_vendorCatalogItem/action/list" \
-  -d "ks=$KALTURA_KS&format=1\
-&filter[serviceTypeEqual]=2\
-&filter[serviceFeatureEqual]=1\
-&filter[sourceLanguageEqual]=English\
-&filter[statusEqual]=2"
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "filter[serviceTypeEqual]=2" \
+  -d "filter[serviceFeatureEqual]=1" \
+  -d "filter[sourceLanguageEqual]=English" \
+  -d "filter[statusEqual]=2"
 ```
 
 From the response, note the `id` of the desired catalog item (e.g., `101`). The `sourceLanguage` filter may not be enforced server-side, so verify the `sourceLanguage` field in the returned objects matches "English".
@@ -502,8 +513,9 @@ From the response, note the `id` of the desired catalog item (e.g., `101`). The 
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/reach_reachProfile/action/list" \
-  -d "ks=$KALTURA_KS&format=1\
-&filter[statusEqual]=2"
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "filter[statusEqual]=2"
 ```
 
 From the response, note the `id` of your active REACH profile (e.g., `1001`).
@@ -512,11 +524,12 @@ From the response, note the `id` of your active REACH profile (e.g., `1001`).
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/reach_entryVendorTask/action/add" \
-  -d "ks=$KALTURA_KS&format=1\
-&entryVendorTask[objectType]=KalturaEntryVendorTask\
-&entryVendorTask[entryId]=1_abc123def\
-&entryVendorTask[reachProfileId]=1001\
-&entryVendorTask[catalogItemId]=101"
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "entryVendorTask[objectType]=KalturaEntryVendorTask" \
+  -d "entryVendorTask[entryId]=1_abc123def" \
+  -d "entryVendorTask[reachProfileId]=1001" \
+  -d "entryVendorTask[catalogItemId]=101"
 ```
 
 From the response, note the task `id` (e.g., `98765`) and `expectedFinishTime`.
@@ -525,8 +538,9 @@ From the response, note the task `id` (e.g., `98765`) and `expectedFinishTime`.
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/reach_entryVendorTask/action/get" \
-  -d "ks=$KALTURA_KS&format=1\
-&id=98765"
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "id=98765"
 ```
 
 Poll every 30 seconds until `status` is `2` (READY) or `6` (ERROR). When READY, the response includes `outputObjectId` (the caption asset ID) and `accuracy` (percentage). If ERROR, check `errDescription` for details.
@@ -689,15 +703,16 @@ export KALTURA_KS="YOUR_KS"
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/reach_entryVendorTask/action/add" \
-  -d "ks=$KALTURA_KS&format=1\
-&entryVendorTask[objectType]=KalturaEntryVendorTask\
-&entryVendorTask[entryId]=1_abc123def\
-&entryVendorTask[reachProfileId]=1001\
-&entryVendorTask[catalogItemId]=34832\
-&entryVendorTask[taskJobData][objectType]=KalturaClipsVendorTaskData\
-&entryVendorTask[taskJobData][outputLanguage]=English\
-&entryVendorTask[taskJobData][clipsDuration]=120\
-&entryVendorTask[taskJobData][instruction]=Generate+highlight+clips"
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "entryVendorTask[objectType]=KalturaEntryVendorTask" \
+  -d "entryVendorTask[entryId]=1_abc123def" \
+  -d "entryVendorTask[reachProfileId]=1001" \
+  -d "entryVendorTask[catalogItemId]=34832" \
+  -d "entryVendorTask[taskJobData][objectType]=KalturaClipsVendorTaskData" \
+  -d "entryVendorTask[taskJobData][outputLanguage]=English" \
+  -d "entryVendorTask[taskJobData][clipsDuration]=120" \
+  -d "entryVendorTask[taskJobData][instruction]=Generate+highlight+clips"
 ```
 
 From the response, note the task `id` (e.g., `98765`).
@@ -706,8 +721,9 @@ From the response, note the task `id` (e.g., `98765`).
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/reach_entryVendorTask/action/get" \
-  -d "ks=$KALTURA_KS&format=1\
-&id=98765"
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "id=98765"
 ```
 
 Poll every 30 seconds until `status` is `2` (READY) or `6` (ERROR). Typical completion time for AI clips is 30-60 seconds.
@@ -716,11 +732,12 @@ Poll every 30 seconds until `status` is `2` (READY) or `6` (ERROR). Typical comp
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/baseEntry/action/list" \
-  -d "ks=$KALTURA_KS&format=1\
-&filter[rootEntryIdIn]=1_abc123def\
-&filter[statusIn]=1,2,4\
-&filter[orderBy]=-createdAt\
-&pager[pageSize]=500"
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "filter[rootEntryIdIn]=1_abc123def" \
+  -d "filter[statusIn]=1,2,4" \
+  -d "filter[orderBy]=-createdAt" \
+  -d "pager[pageSize]=500"
 ```
 
 Each object in the response is a generated clip entry with AI-generated `name`, `description`, `tags`, and `duration`. Note the clip `id`, `duration`, and metadata for the next steps.
@@ -731,8 +748,9 @@ First, get a source flavor ID for trimming:
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/flavorAsset/action/list" \
-  -d "ks=$KALTURA_KS&format=1\
-&filter[entryIdEqual]=1_abc123def"
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "filter[entryIdEqual]=1_abc123def"
 ```
 
 From the response, find a flavor with `status` = `2` (READY) and note its `flavorParamsId` (e.g., `487091`).
@@ -741,11 +759,12 @@ Clone the source entry:
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/baseEntry/action/clone" \
-  -d "ks=$KALTURA_KS&format=1\
-&entryId=1_abc123def\
-&cloneOptions:item1:objectType=KalturaBaseEntryCloneOptionComponent\
-&cloneOptions:item1:itemType=1\
-&cloneOptions:item1:rule=1"
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "entryId=1_abc123def" \
+  -d "cloneOptions:item1:objectType=KalturaBaseEntryCloneOptionComponent" \
+  -d "cloneOptions:item1:itemType=1" \
+  -d "cloneOptions:item1:rule=1"
 ```
 
 From the response, note the cloned entry `id` (e.g., `1_newclone99`).
@@ -754,29 +773,31 @@ Trim the cloned entry to the clip boundaries (offset and duration in **milliseco
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/media/action/updateContent" \
-  -d "ks=$KALTURA_KS&format=1\
-&entryId=1_newclone99\
-&resource[objectType]=KalturaOperationResources\
-&resource[resources][0][objectType]=KalturaOperationResource\
-&resource[resources][0][resource][objectType]=KalturaEntryResource\
-&resource[resources][0][resource][entryId]=1_abc123def\
-&resource[resources][0][resource][flavorParamsId]=487091\
-&resource[resources][0][operationAttributes][0][objectType]=KalturaClipAttributes\
-&resource[resources][0][operationAttributes][0][offset]=0\
-&resource[resources][0][operationAttributes][0][duration]=120000"
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "entryId=1_newclone99" \
+  -d "resource[objectType]=KalturaOperationResources" \
+  -d "resource[resources][0][objectType]=KalturaOperationResource" \
+  -d "resource[resources][0][resource][objectType]=KalturaEntryResource" \
+  -d "resource[resources][0][resource][entryId]=1_abc123def" \
+  -d "resource[resources][0][resource][flavorParamsId]=487091" \
+  -d "resource[resources][0][operationAttributes][0][objectType]=KalturaClipAttributes" \
+  -d "resource[resources][0][operationAttributes][0][offset]=0" \
+  -d "resource[resources][0][operationAttributes][0][duration]=120000"
 ```
 
 Set metadata on the saved clip using the AI-generated values from Step 3:
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/media/action/update" \
-  -d "ks=$KALTURA_KS&format=1\
-&entryId=1_newclone99\
-&mediaEntry[objectType]=KalturaMediaEntry\
-&mediaEntry[name]=Introduction+to+DLI+and+Its+Importance\
-&mediaEntry[description]=Stephen+Wells+introduces+the+session\
-&mediaEntry[tags]=DLI,+Deep+Learning+Institute,+AI+Education\
-&mediaEntry[displayInSearch]=1"
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "entryId=1_newclone99" \
+  -d "mediaEntry[objectType]=KalturaMediaEntry" \
+  -d "mediaEntry[name]=Introduction+to+DLI+and+Its+Importance" \
+  -d "mediaEntry[description]=Stephen+Wells+introduces+the+session" \
+  -d "mediaEntry[tags]=DLI,+Deep+Learning+Institute,+AI+Education" \
+  -d "mediaEntry[displayInSearch]=1"
 ```
 
 The saved clip will go through server-side transcoding (entry status `4` = CONVERTING) and become `READY` (status `2`) when processing completes.
@@ -833,7 +854,7 @@ Each rule has **conditions** (when to trigger) and **actions** (what to order):
 
 ### Configure Rules via Boolean Event Notification Templates
 
-Boolean event notification templates (see [Webhooks API](KALTURA_WEBHOOKS_API.md)) define reusable condition logic — "entry tags match a pattern", "entry status changed to READY", "metadata field contains a value". They evaluate conditions and return true/false, but don't dispatch anything themselves. REACH rules reference them by ID.
+Boolean event notification templates (see [Webhooks API](KALTURA_WEBHOOKS_API.md)) define reusable condition logic — "entry tags match a pattern", "entry status changed to READY", "metadata field contains a value". They evaluate conditions and return true/false only — they serve as filters, not dispatchers. REACH rules reference them by ID.
 
 **Step 1: Discover available Boolean system templates**
 
@@ -988,7 +1009,7 @@ For human captioning, use the `notes` field on the task to provide terminology g
 - **Use Agents Manager for multi-step workflows.** For "caption → translate → summarize" pipelines, use Agents Manager rather than chaining manual REACH task submissions.
 - **Check credit before bulk operations.** Query `reachProfile.get` to compare `credit` vs `usedCredit` before submitting large batches.
 - **Use machine captions (serviceType=2) for speed.** Machine captions complete in minutes; human captions take hours. Use machine for time-sensitive content and human for high-accuracy needs.
-- **Poll task status with backoff.** Use `entryVendorTask.get` with increasing intervals (5s, 10s, 30s) rather than tight polling.
+- **Poll task status with backoff.** Use `entryVendorTask.get` with increasing intervals. For machine captions (serviceType=2), start polling after 30 seconds with 30-second intervals — tasks typically complete in 1-5 minutes. For human captions (serviceType=1), poll every 15-30 minutes — tasks take hours to days depending on the turn-around time. For AI clips, poll every 30 seconds after submission. Use webhooks on `ENTRY_VENDOR_TASK` events instead of polling when possible.
 - **Use `creationModeEqual=2` filter** to distinguish auto-created tasks (from automation rules) from manually submitted tasks in reports.
 - **Use webhooks for task completion notifications.** Set up an HTTP webhook on `ENTRY_VENDOR_TASK` events rather than polling for task status changes.
 - **Configure dictionaries for domain-specific content.** Add custom vocabulary (product names, technical terms) to improve machine captioning accuracy.
@@ -1028,7 +1049,4 @@ For human captioning, use the `notes` field on the task to provide terminology g
 - **[Webhooks API](KALTURA_WEBHOOKS_API.md)** — Boolean templates as REACH automation rule conditions; HTTP callbacks for task completion events
 - **[Captions & Transcripts API](KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md)** — Caption assets created and managed by REACH tasks; format conversion, multi-language workflows
 - **[Custom Metadata API](KALTURA_CUSTOM_METADATA_API.md)** — Custom metadata schemas for content enrichment
-- [REACH Overview](https://corp.kaltura.com/developer-suite/captions-enrichment-services-reach/) — Product and vendor partner details
-- [REACH Administration Guide](https://knowledge.kaltura.com/help/introduction-to-reach-captioning-enrichment) — Service descriptions, ordering, and configuration
-- [REACH Vendor API Integration](https://knowledge.kaltura.com/help/working-with-the-kaltura-api) — Detailed vendor-side integration reference
-- [REACH Integration FAQ](https://knowledge.kaltura.com/help/reach-integration-faq) — Common questions on polling, statuses, formats, and edge cases
+- **[Analytics Reports](KALTURA_ANALYTICS_REPORTS_API.md)** — Monitor REACH task volumes and costs via reports

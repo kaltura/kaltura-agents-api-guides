@@ -205,6 +205,42 @@ def main():
 
     runner.run_test("category.update — change fields, verify unchanged preserved", test_category_update)
 
+    def test_category_move():
+        """Create a second parent and move the child under it, then move back."""
+        # Create a second parent to use as the move target
+        second_parent = _cat_post("category", "add", {
+            "category[objectType]": "KalturaCategory",
+            "category[name]": f"API_Test_MoveTarget_{TS}",
+            "category[description]": "Move target. Safe to delete.",
+            "category[privacy]": 1,
+            "category[appearInList]": 1,
+            "category[contributionPolicy]": 1,
+            "category[inheritanceType]": 2,
+        })
+        state["move_target_id"] = second_parent["id"]
+        runner.register_cleanup(f"move target category {second_parent['id']}",
+                                lambda: _delete_category(state["move_target_id"]))
+
+        # Move the child under the new parent
+        _cat_post("category", "move", {
+            "categoryIds": str(state["child_cat_id"]),
+            "targetCategoryParentId": second_parent["id"],
+        })
+        # Verify the move
+        child = _cat_post("category", "get", {"id": state["child_cat_id"]})
+        assert child.get("parentId") == second_parent["id"], (
+            f"Expected parentId={second_parent['id']}, got {child.get('parentId')}"
+        )
+        print(f"    Moved child {state['child_cat_id']} under {second_parent['id']}")
+        # Move it back for cleanup ordering
+        _cat_post("category", "move", {
+            "categoryIds": str(state["child_cat_id"]),
+            "targetCategoryParentId": state["parent_cat_id"],
+        })
+        print(f"    Moved back under original parent {state['parent_cat_id']}")
+
+    runner.run_test("category.move — reparent child category", test_category_move)
+
     # ════════════════════════════════════════════
     # Phase 2: Category Membership (categoryUser)
     # ════════════════════════════════════════════

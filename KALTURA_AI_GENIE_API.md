@@ -2,9 +2,9 @@
 
 Kaltura AI Genie provides conversational AI search and generative answers over your video content library using RAG (Retrieval-Augmented Generation).
 
-**Base URL:** `https://genie.nvp1.ovp.kaltura.com` (may differ by region/deployment)
-**Auth:** `Authorization: KS <YOUR_KS>` header
-**Format:** JSON request/response bodies, all endpoints use POST
+**Base URL:** `https://genie.nvp1.ovp.kaltura.com` (may differ by region/deployment)  
+**Auth:** `Authorization: KS <YOUR_KS>` header  
+**Format:** JSON request/response bodies, all endpoints use POST  
 
 # Prerequisites
 
@@ -401,7 +401,7 @@ The assistant remembers all prior messages in the thread and will answer in cont
 - **Use the polling alternative** for server-to-server integrations where SSE is impractical.
 - **Reuse `threadId` for multi-turn conversations.** Pass the `threadId` from the previous response to maintain conversation context.
 - **Use `force_experience`** in the request body to target a specific output format (e.g., `"flashcards"`) or a named Genie experience when your account has multiple configurations.
-- **Use AppTokens for production.** Generate scoped KS tokens server-side; never expose admin secrets in client applications.
+- **Use AppTokens for production.** Generate scoped KS tokens server-side and keep admin secrets on the backend only.
 
 # 6. Related Guides
 
@@ -411,4 +411,6 @@ The assistant remembers all prior messages in the thread and will answer in cont
 - **[REACH](KALTURA_REACH_API.md)** — Enrich content with captions/transcripts that Genie indexes for better answers
 - **[Upload & Delivery](KALTURA_UPLOAD_AND_DELIVERY_API.md)** — Upload content that becomes searchable via Genie
 - **[Agents Manager](KALTURA_AGENTS_MANAGER_API.md)** — Automate content enrichment to improve Genie's knowledge base
+- **[Events Platform](KALTURA_EVENTS_PLATFORM_API.md)** — Genie can search event-related content
+- **[Experience Components](KALTURA_EXPERIENCE_COMPONENTS_API.md)** — Avatar SDK integrates with Genie for conversational AI
 

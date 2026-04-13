@@ -2,12 +2,12 @@
 
 The Virtual Events Platform has a dedicated modern REST API (OAS 3.0) for creating and managing virtual events — town halls, webinars, conferences, and training sessions. This is separate from the main Kaltura API v3 and uses a different base URL with JSON request bodies.
 
-**Base URL:** `https://events-api.nvp1.ovp.kaltura.com/api/v1` (production NVP region)
-**Auth:** `Authorization: Bearer <KS>` header (standard Kaltura Session)
-**Format:** JSON request/response bodies, all endpoints use POST
+**Base URL:** `https://events-api.nvp1.ovp.kaltura.com/api/v1` (production NVP region)  
+**Auth:** `Authorization: Bearer <KS>` header (standard Kaltura Session)  
+**Format:** JSON request/response bodies, all endpoints use POST  
 **Regions:** NVP (default), EU (`irp2`), DE (`frp2`)
 
-> **MCP Server:** An official MCP server is available at [kaltura/mcp-events](https://github.com/kaltura/mcp-events) for AI agent integration.
+> **MCP Server:** An official MCP server (`kaltura/mcp-events`, installable via npm) enables AI agents to create, manage, and query events programmatically using the same API documented in this guide.
 
 
 # 1. Authentication
@@ -575,4 +575,4 @@ curl -X POST "$KALTURA_EVENTS_API_URL/events/delete" \
 - **[User Profile API](KALTURA_USER_PROFILE_API.md)** — Per-event attendee profiles and attendance tracking
 - **[Messaging API](KALTURA_MESSAGING_API.md)** — Email invitations, reminders, and follow-ups for event attendees
 - **[Webhooks API](KALTURA_WEBHOOKS_API.md)** — HTTP callbacks for event-related content changes (entry ready, metadata changed)
-- **MCP Server:** [kaltura/mcp-events](https://github.com/kaltura/mcp-events) — AI agent integration
+- **MCP Server** — An official MCP server (`kaltura/mcp-events`, installable via npm) enables AI agents to create, manage, and query events programmatically using the same API documented in this guide

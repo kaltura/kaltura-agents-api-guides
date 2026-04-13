@@ -256,6 +256,71 @@ def main():
 
     runner.run_test("metadataProfile.update — change description", test_profile_update)
 
+    def test_profile_add_from_file():
+        """Create a metadata profile by uploading XSD as a file."""
+        import tempfile
+        xsd_file = tempfile.NamedTemporaryFile(suffix=".xsd", delete=False, mode="w")
+        xsd_file.write(CATEGORY_XSD)
+        xsd_file.close()
+
+        url = f"{SERVICE_URL}/service/metadata_metadataProfile/action/addFromFile"
+        resp = requests.post(url, data={
+            "ks": KS,
+            "format": 1,
+            "metadataProfile[objectType]": "KalturaMetadataProfile",
+            "metadataProfile[name]": f"API_Test_FromFile_{TS}",
+            "metadataProfile[systemName]": f"api_test_fromfile_{TS}",
+            "metadataProfile[metadataObjectType]": 1,
+        }, files={
+            "xsdFile": ("schema.xsd", open(xsd_file.name, "rb"), "application/xml"),
+        }, timeout=30)
+        resp.raise_for_status()
+        result = resp.json()
+        os.unlink(xsd_file.name)
+
+        if isinstance(result, dict) and result.get("objectType") == "KalturaAPIException":
+            raise Exception(f"Kaltura API error: {result.get('message')} (code: {result.get('code')})")
+        assert result.get("objectType") == "KalturaMetadataProfile"
+        state["file_profile_id"] = result["id"]
+        runner.register_cleanup(f"file profile {result['id']}",
+                                lambda: _delete_metadata_profile(state["file_profile_id"]))
+        print(f"    Created profile from file: id={result['id']}")
+
+    runner.run_test("metadataProfile.addFromFile — upload XSD file", test_profile_add_from_file)
+
+    def test_profile_revert():
+        """Update profile XSD to create a new version, then revert to the previous version."""
+        # First get the current version
+        before = kaltura_post("metadata_metadataProfile", "get", {"id": state["profile_id"]})
+        old_version = before.get("version", 1)
+
+        # Update XSD to force a new version (description-only updates may not bump version)
+        updated_xsd = XSD.replace(
+            '<xsd:enumeration value="Critical"/>',
+            '<xsd:enumeration value="Critical"/>\n              <xsd:enumeration value="Urgent"/>',
+        )
+        kaltura_post("metadata_metadataProfile", "update", {
+            "id": state["profile_id"],
+            "metadataProfile[objectType]": "KalturaMetadataProfile",
+            "xsdData": updated_xsd,
+        })
+        after_update = kaltura_post("metadata_metadataProfile", "get", {"id": state["profile_id"]})
+        new_version = after_update.get("version", 0)
+
+        if new_version <= old_version:
+            print(f"    XSD update did not increment version ({old_version} → {new_version}), skipping revert")
+            return
+
+        # Revert to the previous version
+        result = kaltura_post("metadata_metadataProfile", "revert", {
+            "id": state["profile_id"],
+            "toVersion": old_version,
+        })
+        assert result.get("objectType") == "KalturaMetadataProfile"
+        print(f"    Reverted profile from version {new_version} to {old_version}, now version={result.get('version')}")
+
+    runner.run_test("metadataProfile.revert — rollback to previous version", test_profile_revert)
+
     def test_profile_serve():
         """Serve raw XSD content."""
         url = f"{SERVICE_URL}/service/metadata_metadataProfile/action/serve"

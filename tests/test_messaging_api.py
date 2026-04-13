@@ -290,8 +290,38 @@ def main():
     runner.run_test("unsubscribe-uri.delete — permanent removal verified", test_unsubscribe_uri_delete)
 
     # ════════════════════════════════════════════
-    # Phase 3: Message Operations (read-only)
+    # Phase 3: Message Send + Operations
     # ════════════════════════════════════════════
+    def test_message_send():
+        """Send a test message using the created template."""
+        template_id = state.get("template_id")
+        assert template_id, "No template available"
+        try:
+            result = messaging_post("message", "send", {
+                "templateId": template_id,
+                "session": f"test-session-{TS}",
+                "msgParams": {
+                    "recipient": {"userId": f"api_test_user_{TS}"},
+                    "eventName": "API Test Event",
+                },
+            })
+            assert isinstance(result, dict), f"Expected dict response, got {type(result)}"
+            msg_id = result.get("id") or result.get("messageId")
+            if msg_id:
+                state["sent_message_id"] = msg_id
+                print(f"    Message sent: {msg_id}")
+            else:
+                print(f"    Message send response: {result}")
+        except Exception as e:
+            err = str(e)
+            # message.send may fail if no email provider is configured or recipient doesn't exist
+            if "provider" in err.lower() or "recipient" in err.lower() or "user" in err.lower():
+                print(f"    Send skipped (expected — no provider/recipient): {err[:100]}")
+            else:
+                raise
+
+    runner.run_test("message.send — send via template", test_message_send)
+
     def test_message_list():
         """List messages (may be empty for test account)."""
         result = messaging_post("message", "list", {

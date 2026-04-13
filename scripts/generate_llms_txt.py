@@ -12,31 +12,55 @@ import re
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Guide categories — order and grouping for the llms.txt output
+# Follows the Kaltura flywheel: Foundation → Creation → Management → Experiences
 CATEGORIES = {
-    "Authentication": [
+    "Foundation": [
+        "KALTURA_API_GETTING_STARTED.md",
         "KALTURA_SESSION_GUIDE.md",
         "KALTURA_APPTOKENS_API.md",
     ],
-    "Content Management": [
+    "Content Creation": [
         "KALTURA_UPLOAD_AND_DELIVERY_API.md",
-        "KALTURA_ESEARCH_API.md",
-    ],
-    "Playback": [
-        "KALTURA_PLAYER_EMBED_GUIDE.md",
         "KALTURA_MULTI_STREAM_API.md",
+        "KALTURA_EXPERIENCE_COMPONENTS_API.md",
+    ],
+    "Content Management": [
+        "KALTURA_ESEARCH_API.md",
+        "KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md",
+        "KALTURA_CUSTOM_METADATA_API.md",
+        "KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md",
+        "KALTURA_USER_MANAGEMENT_API.md",
     ],
     "AI Services": [
         "KALTURA_REACH_API.md",
         "KALTURA_AGENTS_MANAGER_API.md",
         "KALTURA_AI_GENIE_API.md",
     ],
-    "Events": [
+    "Analytics & Events": [
+        "KALTURA_ANALYTICS_REPORTS_API.md",
+        "KALTURA_ANALYTICS_EVENTS_COLLECTION_API.md",
+        "KALTURA_WEBHOOKS_API.md",
+    ],
+    "Experiences": [
+        "KALTURA_PLAYER_EMBED_GUIDE.md",
         "KALTURA_EVENTS_PLATFORM_API.md",
+        "KALTURA_GAMIFICATION_API.md",
+        "KALTURA_MESSAGING_API.md",
+    ],
+    "Distribution & Syndication": [
+        "KALTURA_DISTRIBUTION_API.md",
+        "KALTURA_SYNDICATION_API.md",
+    ],
+    "Administration": [
+        "KALTURA_MULTI_ACCOUNT_MANAGEMENT_API.md",
+        "KALTURA_AUTH_BROKER_API.md",
+        "KALTURA_APP_REGISTRY_API.md",
+        "KALTURA_USER_PROFILE_API.md",
     ],
 }
 
 OPTIONAL_FILES = {
-    "PLAN.md": "Full Kaltura API landscape (80+ services) and prioritized guide roadmap",
+    "PLAN.md": "Full Kaltura API landscape (100+ services) and prioritized guide roadmap",
     "AGENTS.md": "Project conventions for AI agents contributing to this repo",
 }
 
@@ -98,7 +122,7 @@ def main():
     output.append(
         "The Kaltura platform combines intelligent content creation, "
         "enterprise-grade content management and intelligence, and multimodal "
-        "conversational engagement capabilities — exposed through 80+ REST "
+        "conversational engagement capabilities — exposed through 100+ REST "
         "API services. These are live-tested API guides with curl examples "
         "using shell variables, written for AI agents and developers building "
         "integrations. Every guide has companion test scripts validated "

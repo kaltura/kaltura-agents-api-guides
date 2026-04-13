@@ -2,9 +2,9 @@
 
 Create synchronized multi-stream entries for dual-screen playback — Picture-in-Picture, Side-by-Side, and stream selection. A multi-stream entry consists of a parent entry (primary video with audio and timeline control) and one or more child entries linked via the `parentEntryId` field.
 
-**Base URL:** `https://www.kaltura.com/api_v3` (may differ by region/deployment)
-**Auth:** All requests require a valid KS (see [Session Guide](KALTURA_SESSION_GUIDE.md))
-**Format:** Form-encoded POST, `format=1` for JSON responses
+**Base URL:** `https://www.kaltura.com/api_v3` (may differ by region/deployment)  
+**Auth:** All requests require a valid KS (see [Session Guide](KALTURA_SESSION_GUIDE.md))  
+**Format:** Form-encoded POST, `format=1` for JSON responses  
 
 ## Prerequisites
 

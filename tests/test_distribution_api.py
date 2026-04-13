@@ -2,7 +2,8 @@
 """End-to-end validation of the Content Distribution API.
 Covers: distributionProvider.list, distributionProfile CRUD,
 entryDistribution lifecycle (add, validate, get, list, update, submitAdd, serveSentData,
-serveReturnedData, delete), error handling."""
+serveReturnedData, delete), genericDistributionProvider CRUD,
+genericDistributionProviderAction CRUD (with XSLT/XSD/XPath uploads), error handling."""
 
 import sys
 import os
@@ -112,6 +113,100 @@ def main():
               f"comments={result.get('allowComments')}, embed={result.get('allowEmbedding')}")
 
     runner.run_test("distributionProfile.get — YouTube-specific fields", test_profile_get_fields)
+
+    # Note: distributionProfile.add requires explicit partnerId in the request body.
+    # Unlike most Kaltura services, the distribution plugin uses $this->impersonatedPartnerId
+    # (from request param) rather than deriving it from the KS. Without it, profiles save
+    # with partnerId=null and become invisible to get/list.
+    # KalturaGenericDistributionProfile also requires a configured genericDistributionProvider
+    # (genericDistributionProvider.add is SERVICE_FORBIDDEN for customer accounts).
+    # Using KalturaFtpDistributionProfile for full CRUD tests.
+
+    def test_profile_add():
+        """Create an FTP distribution profile (requires partnerId in request)."""
+        url = f"{SERVICE_URL}/service/contentDistribution_distributionProfile/action/add"
+        resp = requests.post(url, data={
+            "ks": KS,
+            "format": 1,
+            "partnerId": PARTNER_ID,
+            "distributionProfile[objectType]": "KalturaFtpDistributionProfile",
+            "distributionProfile[providerType]": "ftpDistribution.FTP",
+            "distributionProfile[name]": f"API_Test_FTP_{int(time.time())}",
+            "distributionProfile[status]": 1,  # DISABLED
+            "distributionProfile[protocol]": 1,  # FTP
+            "distributionProfile[host]": "ftp.example.com",
+            "distributionProfile[port]": 21,
+            "distributionProfile[basePath]": "/test",
+            "distributionProfile[username]": "testuser",
+            "distributionProfile[password]": "testpass",
+        }, timeout=30)
+        resp.raise_for_status()
+        result = resp.json()
+        if isinstance(result, dict) and result.get("objectType") == "KalturaAPIException":
+            raise Exception(f"Kaltura API error: {result.get('message')} (code: {result.get('code')})")
+        assert "id" in result, f"Expected id in response: {result}"
+        assert result.get("partnerId") == int(PARTNER_ID), (
+            f"Expected partnerId={PARTNER_ID}, got {result.get('partnerId')}"
+        )
+        state["created_profile_id"] = result["id"]
+        runner.register_cleanup(f"created profile {result['id']}",
+                                lambda: _delete_profile(state["created_profile_id"]))
+        print(f"    Created profile: {result['id']}, partnerId={result['partnerId']}")
+
+    runner.run_test("distributionProfile.add — create FTP profile", test_profile_add)
+
+    def test_profile_update():
+        """Update the created distribution profile name."""
+        pid = state.get("created_profile_id")
+        if not pid:
+            print("    Skipped — no created profile")
+            return
+        result = kaltura_post("contentDistribution_distributionProfile", "update", {
+            "id": pid,
+            "distributionProfile[objectType]": "KalturaFtpDistributionProfile",
+            "distributionProfile[name]": f"API_Test_FTP_Updated_{int(time.time())}",
+        })
+        assert "Updated" in result.get("name", ""), f"Expected updated name, got {result.get('name')}"
+        print(f"    Updated: name={result['name']}")
+
+    runner.run_test("distributionProfile.update — change name", test_profile_update)
+
+    def test_profile_update_status():
+        """Enable the created distribution profile."""
+        pid = state.get("created_profile_id")
+        if not pid:
+            print("    Skipped — no created profile")
+            return
+        result = kaltura_post("contentDistribution_distributionProfile", "updateStatus", {
+            "id": pid,
+            "status": 2,  # ENABLED
+        })
+        assert result.get("status") == 2, f"Expected status=2, got {result.get('status')}"
+        print(f"    Enabled: status={result['status']}")
+
+    runner.run_test("distributionProfile.updateStatus — enable profile", test_profile_update_status)
+
+    def test_profile_delete():
+        """Delete the created distribution profile and verify."""
+        pid = state.get("created_profile_id")
+        if not pid:
+            print("    Skipped — no created profile")
+            return
+        kaltura_post("contentDistribution_distributionProfile", "delete", {"id": pid})
+        try:
+            kaltura_post("contentDistribution_distributionProfile", "get", {"id": pid})
+            assert False, "Expected NOT_FOUND after delete"
+        except Exception as e:
+            assert "NOT_FOUND" in str(e).upper() or "not found" in str(e).lower(), (
+                f"Expected not-found error, got: {e}"
+            )
+            print(f"    Deleted and verified: {pid}")
+        runner._cleanup_actions = [
+            (l, fn) for l, fn in runner._cleanup_actions
+            if f"created profile {pid}" not in l
+        ]
+
+    runner.run_test("distributionProfile.delete — remove and verify", test_profile_delete)
 
     # ════════════════════════════════════════════
     # Phase 3: Entry Distribution Lifecycle
@@ -314,7 +409,279 @@ def main():
     runner.run_test("entryDistribution.list — READY distribution has remoteId", test_ready_distribution)
 
     # ════════════════════════════════════════════
-    # Phase 6: Error Handling
+    # Phase 6: Generic Distribution Provider CRUD
+    # ════════════════════════════════════════════
+
+    def test_generic_provider_add():
+        """Create a custom generic distribution provider.
+        The genericDistributionProvider service may require additional account-level
+        permissions beyond the base Content Distribution plugin. If SERVICE_FORBIDDEN
+        is returned, remaining generic provider tests are skipped."""
+        try:
+            result = kaltura_post("contentDistribution_genericDistributionProvider", "add", {
+                "genericDistributionProvider[name]": f"API_Test_Generic_{int(time.time())}",
+                "genericDistributionProvider[isDefault]": "false",
+                "genericDistributionProvider[requiredFlavorParamsIds]": "0",
+            })
+        except Exception as e:
+            if "SERVICE_FORBIDDEN" in str(e):
+                state["generic_provider_forbidden"] = True
+                print("    genericDistributionProvider service not enabled on this account")
+                print("    Contact your Kaltura account manager to enable Generic Distribution")
+                return
+            raise
+        assert "id" in result, f"Expected id in response: {result}"
+        assert result.get("objectType") == "KalturaGenericDistributionProvider", \
+            f"Expected KalturaGenericDistributionProvider, got {result.get('objectType')}"
+        assert result.get("status") == 1, f"Expected status=1 (ACTIVE), got {result.get('status')}"
+        state["generic_provider_id"] = result["id"]
+        runner.register_cleanup(f"generic provider {result['id']}",
+                                lambda: _delete_generic_provider(state["generic_provider_id"]))
+        print(f"    Created generic provider: {result['id']}, name={result['name']}")
+
+    runner.run_test("genericDistributionProvider.add — create custom provider", test_generic_provider_add)
+
+    def test_generic_provider_get():
+        """Retrieve the created generic provider by ID."""
+        pid = state.get("generic_provider_id")
+        if not pid:
+            if state.get("generic_provider_forbidden"):
+                print("    Skipped — service not enabled on this account")
+            else:
+                print("    Skipped — no created provider")
+            return
+        result = kaltura_post("contentDistribution_genericDistributionProvider", "get", {"id": pid})
+        assert result.get("id") == pid, f"Expected id={pid}, got {result.get('id')}"
+        assert result.get("requiredFlavorParamsIds") == "0", \
+            f"Expected requiredFlavorParamsIds='0', got {result.get('requiredFlavorParamsIds')}"
+        assert result.get("partnerId") == int(PARTNER_ID), \
+            f"Expected partnerId={PARTNER_ID}, got {result.get('partnerId')}"
+        print(f"    Got provider: id={result['id']}, name={result['name']}")
+
+    runner.run_test("genericDistributionProvider.get — retrieve by ID", test_generic_provider_get)
+
+    def test_generic_provider_list():
+        """List generic distribution providers."""
+        if state.get("generic_provider_forbidden"):
+            print("    Skipped — service not enabled on this account")
+            return
+        result = kaltura_post("contentDistribution_genericDistributionProvider", "list", {})
+        assert "totalCount" in result, f"Expected totalCount: {result}"
+        pid = state.get("generic_provider_id")
+        if pid:
+            found = any(obj.get("id") == pid for obj in result.get("objects", []))
+            assert found, f"Created provider {pid} not in list"
+        print(f"    Generic providers: {result['totalCount']}")
+
+    runner.run_test("genericDistributionProvider.list — list providers", test_generic_provider_list)
+
+    def test_generic_provider_update():
+        """Update the generic provider name."""
+        pid = state.get("generic_provider_id")
+        if not pid:
+            if state.get("generic_provider_forbidden"):
+                print("    Skipped — service not enabled on this account")
+            else:
+                print("    Skipped — no created provider")
+            return
+        new_name = f"API_Test_Generic_Updated_{int(time.time())}"
+        result = kaltura_post("contentDistribution_genericDistributionProvider", "update", {
+            "id": pid,
+            "genericDistributionProvider[name]": new_name,
+        })
+        assert result.get("name") == new_name, f"Expected name={new_name}, got {result.get('name')}"
+        print(f"    Updated: name={result['name']}")
+
+    runner.run_test("genericDistributionProvider.update — change name", test_generic_provider_update)
+
+    def test_generic_provider_action_add():
+        """Create a SUBMIT action for the generic provider."""
+        pid = state.get("generic_provider_id")
+        if not pid:
+            if state.get("generic_provider_forbidden"):
+                print("    Skipped — service not enabled on this account")
+            else:
+                print("    Skipped — no created provider")
+            return
+        result = kaltura_post("contentDistribution_genericDistributionProviderAction", "add", {
+            "genericDistributionProviderAction[genericDistributionProviderId]": pid,
+            "genericDistributionProviderAction[action]": 1,  # SUBMIT
+            "genericDistributionProviderAction[protocol]": 3,  # SFTP
+            "genericDistributionProviderAction[serverAddress]": "sftp.example.com",
+            "genericDistributionProviderAction[remotePath]": "/ingest/incoming",
+            "genericDistributionProviderAction[remoteUsername]": "testuser",
+            "genericDistributionProviderAction[remotePassword]": "testpass",
+        })
+        assert "id" in result, f"Expected id in response: {result}"
+        assert result.get("action") == 1, f"Expected action=1 (SUBMIT), got {result.get('action')}"
+        assert result.get("protocol") == 3, f"Expected protocol=3 (SFTP), got {result.get('protocol')}"
+        assert result.get("genericDistributionProviderId") == pid, \
+            f"Expected genericDistributionProviderId={pid}, got {result.get('genericDistributionProviderId')}"
+        state["generic_action_id"] = result["id"]
+        runner.register_cleanup(f"generic action {result['id']}",
+                                lambda: _delete_generic_action(state["generic_action_id"]))
+        print(f"    Created SUBMIT action: {result['id']}, protocol=SFTP")
+
+    runner.run_test("genericDistributionProviderAction.add — create SUBMIT action", test_generic_provider_action_add)
+
+    def test_generic_action_add_mrss_transform():
+        """Upload an MRSS transform XSLT to the action."""
+        aid = state.get("generic_action_id")
+        if not aid:
+            print("    Skipped — " + ("service not enabled" if state.get("generic_provider_forbidden") else "no created action"))
+            return
+        xsl = '''<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  <xsl:output method="xml" indent="yes"/>
+  <xsl:template match="/">
+    <item>
+      <title><xsl:value-of select="//item/title"/></title>
+      <description><xsl:value-of select="//item/description"/></description>
+    </item>
+  </xsl:template>
+</xsl:stylesheet>'''
+        result = kaltura_post("contentDistribution_genericDistributionProviderAction", "addMrssTransform", {
+            "id": aid,
+            "xslData": xsl,
+        })
+        assert result.get("id") == aid, f"Expected id={aid}, got {result.get('id')}"
+        assert result.get("mrssTransformer"), "Expected mrssTransformer to be set"
+        print(f"    Uploaded MRSS transform XSLT to action {aid}")
+
+    runner.run_test("genericDistributionProviderAction.addMrssTransform — upload XSLT", test_generic_action_add_mrss_transform)
+
+    def test_generic_action_add_mrss_validate():
+        """Upload an MRSS validation XSD to the action."""
+        aid = state.get("generic_action_id")
+        if not aid:
+            print("    Skipped — " + ("service not enabled" if state.get("generic_provider_forbidden") else "no created action"))
+            return
+        xsd = '''<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="item">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="title" type="xs:string"/>
+        <xs:element name="description" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>'''
+        result = kaltura_post("contentDistribution_genericDistributionProviderAction", "addMrssValidate", {
+            "id": aid,
+            "xsdData": xsd,
+        })
+        assert result.get("id") == aid, f"Expected id={aid}, got {result.get('id')}"
+        assert result.get("mrssValidator"), "Expected mrssValidator to be set"
+        print(f"    Uploaded MRSS validation XSD to action {aid}")
+
+    runner.run_test("genericDistributionProviderAction.addMrssValidate — upload XSD", test_generic_action_add_mrss_validate)
+
+    def test_generic_action_add_results_transform():
+        """Upload a results transform (XPath) to the action."""
+        aid = state.get("generic_action_id")
+        if not aid:
+            print("    Skipped — " + ("service not enabled" if state.get("generic_provider_forbidden") else "no created action"))
+            return
+        result = kaltura_post("contentDistribution_genericDistributionProviderAction", "addResultsTransform", {
+            "id": aid,
+            "transformData": "//response/id",
+        })
+        assert result.get("id") == aid, f"Expected id={aid}, got {result.get('id')}"
+        assert result.get("resultsTransformer"), "Expected resultsTransformer to be set"
+        print(f"    Uploaded results transform (XPath) to action {aid}")
+
+    runner.run_test("genericDistributionProviderAction.addResultsTransform — upload XPath", test_generic_action_add_results_transform)
+
+    def test_generic_action_get():
+        """Retrieve the created action and verify all fields."""
+        aid = state.get("generic_action_id")
+        if not aid:
+            print("    Skipped — " + ("service not enabled" if state.get("generic_provider_forbidden") else "no created action"))
+            return
+        result = kaltura_post("contentDistribution_genericDistributionProviderAction", "get", {"id": aid})
+        assert result.get("id") == aid, f"Expected id={aid}, got {result.get('id')}"
+        assert result.get("serverAddress") == "sftp.example.com", \
+            f"Expected serverAddress=sftp.example.com, got {result.get('serverAddress')}"
+        assert result.get("mrssTransformer"), "Expected mrssTransformer content"
+        assert result.get("mrssValidator"), "Expected mrssValidator content"
+        assert result.get("resultsTransformer"), "Expected resultsTransformer content"
+        print(f"    Verified action {aid}: serverAddress, mrssTransformer, mrssValidator, resultsTransformer")
+
+    runner.run_test("genericDistributionProviderAction.get — verify all transforms attached", test_generic_action_get)
+
+    def test_generic_action_get_by_provider():
+        """Retrieve action by provider ID and action type."""
+        pid = state.get("generic_provider_id")
+        if not pid:
+            if state.get("generic_provider_forbidden"):
+                print("    Skipped — service not enabled on this account")
+            else:
+                print("    Skipped — no created provider")
+            return
+        result = kaltura_post("contentDistribution_genericDistributionProviderAction", "getByProviderId", {
+            "genericDistributionProviderId": pid,
+            "actionType": 1,  # SUBMIT
+        })
+        assert result.get("genericDistributionProviderId") == pid, \
+            f"Expected genericDistributionProviderId={pid}, got {result.get('genericDistributionProviderId')}"
+        assert result.get("action") == 1, f"Expected action=1, got {result.get('action')}"
+        print(f"    Got action by provider {pid} + SUBMIT type: id={result['id']}")
+
+    runner.run_test("genericDistributionProviderAction.getByProviderId — lookup by provider+type", test_generic_action_get_by_provider)
+
+    def test_generic_action_delete():
+        """Delete the generic provider action."""
+        aid = state.get("generic_action_id")
+        if not aid:
+            print("    Skipped — " + ("service not enabled" if state.get("generic_provider_forbidden") else "no created action"))
+            return
+        kaltura_post("contentDistribution_genericDistributionProviderAction", "delete", {"id": aid})
+        runner._cleanup_actions = [
+            (l, fn) for l, fn in runner._cleanup_actions
+            if f"generic action {aid}" not in l
+        ]
+        print(f"    Deleted action: {aid}")
+
+    runner.run_test("genericDistributionProviderAction.delete — remove action", test_generic_action_delete)
+
+    def test_generic_provider_delete():
+        """Delete the generic distribution provider."""
+        pid = state.get("generic_provider_id")
+        if not pid:
+            if state.get("generic_provider_forbidden"):
+                print("    Skipped — service not enabled on this account")
+            else:
+                print("    Skipped — no created provider")
+            return
+        kaltura_post("contentDistribution_genericDistributionProvider", "delete", {"id": pid})
+        runner._cleanup_actions = [
+            (l, fn) for l, fn in runner._cleanup_actions
+            if f"generic provider {pid}" not in l
+        ]
+        print(f"    Deleted provider: {pid}")
+
+    runner.run_test("genericDistributionProvider.delete — remove provider", test_generic_provider_delete)
+
+    def test_generic_provider_delete_verify():
+        """Verify deleted provider returns NOT_FOUND."""
+        pid = state.get("generic_provider_id")
+        if not pid:
+            if state.get("generic_provider_forbidden"):
+                print("    Skipped — service not enabled on this account")
+            else:
+                print("    Skipped — no created provider")
+            return
+        try:
+            kaltura_post("contentDistribution_genericDistributionProvider", "get", {"id": pid})
+            assert False, "Expected NOT_FOUND after delete"
+        except Exception as e:
+            assert "NOT_FOUND" in str(e).upper() or "not found" in str(e).lower(), \
+                f"Expected NOT_FOUND: {e}"
+            print(f"    Confirmed deleted: {e}")
+
+    runner.run_test("genericDistributionProvider.get — verify NOT_FOUND after delete", test_generic_provider_delete_verify)
+
+    # ════════════════════════════════════════════
+    # Phase 7: Error Handling
     # ════════════════════════════════════════════
 
     def test_entry_dist_not_found():
@@ -424,6 +791,30 @@ def _delete_entry_distribution(dist_id):
         kaltura_post("contentDistribution_entryDistribution", "delete", {"id": dist_id})
     except Exception as e:
         print(f"  [WARN] Failed to delete entry distribution {dist_id}: {e}")
+
+
+def _delete_profile(profile_id):
+    """Delete a distribution profile (with error handling)."""
+    try:
+        kaltura_post("contentDistribution_distributionProfile", "delete", {"id": profile_id})
+    except Exception as e:
+        print(f"  [WARN] Failed to delete distribution profile {profile_id}: {e}")
+
+
+def _delete_generic_provider(provider_id):
+    """Delete a generic distribution provider (with error handling)."""
+    try:
+        kaltura_post("contentDistribution_genericDistributionProvider", "delete", {"id": provider_id})
+    except Exception as e:
+        print(f"  [WARN] Failed to delete generic provider {provider_id}: {e}")
+
+
+def _delete_generic_action(action_id):
+    """Delete a generic distribution provider action (with error handling)."""
+    try:
+        kaltura_post("contentDistribution_genericDistributionProviderAction", "delete", {"id": action_id})
+    except Exception as e:
+        print(f"  [WARN] Failed to delete generic action {action_id}: {e}")
 
 
 if __name__ == "__main__":

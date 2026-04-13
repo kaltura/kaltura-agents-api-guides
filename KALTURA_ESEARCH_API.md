@@ -2,9 +2,9 @@
 
 Kaltura's eSearch API, powered by Elasticsearch, provides flexible full-text search across media entries, categories, users, captions, custom metadata, cue points, and more — all in a single API call.
 
-**Base URL:** `https://www.kaltura.com/api_v3`
-**Auth:** KS passed as `ks` parameter in POST form data (see [Session Guide](KALTURA_SESSION_GUIDE.md))
-**Format:** Form-encoded POST (`application/x-www-form-urlencoded`), `format=1` for JSON responses
+**Base URL:** `https://www.kaltura.com/api_v3`  
+**Auth:** KS passed as `ks` parameter in POST form data (see [Session Guide](KALTURA_SESSION_GUIDE.md))  
+**Format:** Form-encoded POST (`application/x-www-form-urlencoded`), `format=1` for JSON responses  
 
 # 1. API Endpoint & Structure
 
@@ -277,9 +277,11 @@ Examples pipe to `jq` for readability.
 
 # 8. Edge Cases & Best Practices
 
+* **10,000 Result Limit:** Elasticsearch enforces a 10K result cap (500/page x 20 pages max). To traverse larger result sets, use `KalturaESearchRange` on `created_at` with scroll-forward pagination — move the date window after each 10K batch.
 * **Large Result Sets:** Always use the `pager` parameter (`pageIndex`, `pageSize`) to retrieve results in manageable chunks. Iterate through pages by incrementing `pageIndex` until the number of returned objects is less than `pageSize` or zero.
 * **Highlighting Context:** Remember that highlights (`<em>` tags) are embedded in the text. You might need to parse or display this HTML carefully. The `itemsData` array provides more context for matches in captions or metadata than the top-level `highlight` array.
 * **Partial vs. Exact Match:** `PARTIAL` (`itemType=2`) is powerful due to synonyms but might return less precise results than `EXACT_MATCH` (`itemType=1`). Choose based on the desired recall vs. precision. Use `ignoreSynonym=true` in `searchParams` to disable synonym expansion if needed.
+* **NOT Operator Shorthand:** Use the `!` prefix in `freeText` (e.g., `searchTerm=!excluded`) to exclude matches. For structured queries, use `KalturaESearchOperatorType` with `NOT_OP` (`3`).
 * **Performance:** Unified searches (`KalturaESearchUnifiedItem`) are convenient but can be slower than targeted searches using specific `fieldName`s (like `NAME` or `CAPTIONS_CONTENT`) because they query more fields. Optimize by specifying fields when possible.
 * **Schema Reference:** The Kaltura API schema (XML) is the definitive source for all object structures, properties, enums, and their exact names. Refer to it frequently.
 
@@ -319,3 +321,5 @@ Examples pipe to `jq` for readability.
 - **[Categories & Access Control API](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md)** — Category-based filtering and entitlements that affect search result visibility
 - **[Custom Metadata API](KALTURA_CUSTOM_METADATA_API.md)** — Custom metadata schemas searchable via `KalturaESearchEntryMetadataItem`
 - **[Captions & Transcripts API](KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md)** — Caption assets searchable via `KalturaESearchCaptionItem`
+- **[API Getting Started](KALTURA_API_GETTING_STARTED.md)** — Foundation guide covering content model and API patterns
+- **[Syndication](KALTURA_SYNDICATION_API.md)** — Search for entries to include in syndication feeds

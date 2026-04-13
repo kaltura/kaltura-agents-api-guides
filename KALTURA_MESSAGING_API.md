@@ -2,9 +2,9 @@
 
 The Messaging API enables sending personalized, template-based email communications to Kaltura users — event invitations, attendance confirmations, reminders, and follow-ups. Templates support dynamic tokens (user profile fields, magic login links, QR codes, unsubscribe links) that are resolved per-recipient at send time. Built-in delivery tracking, engagement analytics, and CAN-SPAM compliant unsubscribe management complete the lifecycle.
 
-**Base URL:** `https://messaging.nvp1.ovp.kaltura.com/api/v1` (production NVP region)
-**Auth:** `Authorization: Bearer <KS>` header (ADMIN KS, type=2)
-**Format:** JSON request/response bodies, all endpoints use POST
+**Base URL:** `https://messaging.nvp1.ovp.kaltura.com/api/v1` (production NVP region)  
+**Auth:** `Authorization: Bearer <KS>` header (ADMIN KS, type=2)  
+**Format:** JSON request/response bodies, all endpoints use POST  
 **Regions:** NVP (default `nvp1`), EU (`irp2`), DE (`frp2`)
 
 
@@ -985,3 +985,5 @@ Users who unsubscribe from the `"event-updates"` group will be automatically exc
 - **[Events Platform API](KALTURA_EVENTS_PLATFORM_API.md)** — Virtual events (messaging for event communications)
 - **[Webhooks API](KALTURA_WEBHOOKS_API.md)** — Event-driven HTTP callbacks; email notifications are delivered via the Messaging Service
 - **[User Management API](KALTURA_USER_MANAGEMENT_API.md)** — Manage recipient users and groups for targeted messaging
+- **[Analytics Reports](KALTURA_ANALYTICS_REPORTS_API.md)** — `message/stats` for delivery statistics
+- **[Gamification](KALTURA_GAMIFICATION_API.md)** — Messaging events can trigger gamification rules

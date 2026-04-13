@@ -2,20 +2,61 @@
 
 Generate, use, and rotate Kaltura Sessions (KS) — the signed, time-limited tokens that authenticate every Kaltura API call and player embed.
 
-**Base URL:** `https://www.kaltura.com/api_v3` (may differ by region/deployment)
-**Auth:** KS passed as `ks` parameter in POST form data, or as embed URL parameter
-**Format:** Form-encoded POST, `format=1` for JSON responses
+**Base URL:** `https://www.kaltura.com/api_v3` (may differ by region/deployment)  
+**Auth:** KS passed as `ks` parameter in POST form data, or as embed URL parameter  
+**Format:** Form-encoded POST, `format=1` for JSON responses  
 
 
 # 1. What is a KS and when to use which flow
 
-A Kaltura Session (KS) is a signed, time-limited token you attach to API calls and player embeds. KS can be USER (type=0) or ADMIN (type=2). Use USER for almost everything where an end-user is interacting with apps or data; use ADMIN only for trusted backend-only workflows with short TTLs and strict configurations (roles, privileges).  ￼
+A Kaltura Session (KS) is a signed, time-limited token you attach to API calls and player embeds. KS can be USER (type=0) or ADMIN (type=2). Use USER for almost everything where an end-user is interacting with apps or data; use ADMIN only for trusted backend-only workflows with short TTLs and strict configurations (roles, privileges).
 
 **Common use-cases and considerations:**
 
-*	Server-to-server or trusted backend: session.start → returns a KS with the privileges and expiry you request. Run this server-side only to keep secrets secure.  ￼
-*	App-to-API with elevated but scoped permissions: use Application Tokens and appToken.startSession. You obtain a basic (unprivileged) KS, compute a hash with the app token, and exchange it for a privileged KS — keeping admin secrets and hashing strictly server-side.  ￼
-*	Widget/player bootstrap (the player will generate this KS by itself if no KS was provided to the player: session.startWidgetSession to get a base KS used in the App Token flow.  ￼
+*	Server-to-server or trusted backend: session.start → returns a KS with the privileges and expiry you request. Run this server-side only to keep secrets secure.
+*	App-to-API with elevated but scoped permissions: use Application Tokens and appToken.startSession. You obtain a basic (unprivileged) KS, compute a hash with the app token, and exchange it for a privileged KS — keeping admin secrets and hashing strictly server-side.
+*	Widget/player bootstrap (the player will generate this KS by itself if no KS was provided to the player: session.startWidgetSession to get a base KS used in the App Token flow.
+
+## KS Internal Structure
+
+A KS is a base64-encoded string containing these components:
+
+| Field | Description |
+|-------|-------------|
+| Partner ID | The Kaltura account that issued the KS |
+| User ID | The user identity bound to this session |
+| Type | 0 = USER, 2 = ADMIN |
+| Expiry | Unix timestamp when the KS becomes invalid |
+| Privileges | Comma-separated privilege strings (e.g., `sview:*,privacycontext:PORTAL`) |
+| Random number | Prevents replay of identical requests |
+| KS data | Additional session context (action limits, session ID) |
+| Signature | SHA-1 hash of all fields above — tamper-proofing |
+
+KS v2 (current default) wraps the payload in AES-CBC encryption before base64 encoding, so the internal fields are not readable by inspecting the string. The server decrypts and validates on every request.
+
+## KS Validation Flow
+
+The server validates the KS on every API request in this sequence:
+
+1. **Signature check** — Verify the SHA-1 signature matches the decrypted payload
+2. **Expiry check** — Reject if the KS has expired (Unix timestamp comparison)
+3. **Action limit** — If `actionslimit:N` is set, decrement and reject if exhausted
+4. **Revocation check** — Check if `session.end` was called for this KS or its `sessionid` group
+5. **Permission check** — Verify the KS type and role grant access to the requested service/action
+6. **Entitlement check** — If entitlements are enabled, verify the user has category membership for the requested content
+7. **Account check** — Verify the partner ID is active and the service is enabled
+8. **Set user context** — Bind the validated userId to the request for ownership, analytics, and audit
+
+If any step fails, the server returns a `KalturaAPIException` with the relevant error code (`INVALID_KS`, `EXPIRED_KS`, `SERVICE_FORBIDDEN`, etc.).
+
+## KS Creation Methods — Comparison
+
+| Method | Credentials Required | Best For | Trade-offs |
+|--------|---------------------|----------|------------|
+| `session.start` | partnerId + adminSecret | Backend tools, server-side automation | HTTP roundtrip; exposes admin secret (keep server-side only) |
+| `session.startWidgetSession` | partnerId only (no secret) | Anonymous player bootstrap, AppToken base KS | Unprivileged — read-only access to public content |
+| `appToken.startSession` | appToken ID + HMAC hash | Production integrations, client-facing apps | **Preferred**: no secrets exposed, revocable, scoped privileges |
+| `user.loginByLoginId` | email + password | End-user self-authentication, mobile apps | User-managed credentials; requires user provisioning first |
 
 
 # 2. Common security practices
@@ -23,8 +64,9 @@ A Kaltura Session (KS) is a signed, time-limited token you attach to API calls a
 *	Least privilege: Prefer USER KS; scope permissions to what the call needs.
 *	Short TTLs: Set per the expected user interaction duration, balancing security with renewal frequency.
 *	Backend only: Keep admin secrets and app token secrets on the server side.
-*	Entitlements over broad privileges: Enforce access via Access Control/Entitlements and privacy context strings in KS. Use specific privileges; use `*` only for controlled internal ADMIN sessions.  ￼
-* Rotate Application Tokens and Sessions regularly. Revoke as needed using `session.end`.  ￼
+*	Entitlements over broad privileges: Enforce access via Access Control/Entitlements and privacy context strings in KS. Use specific privileges; use `*` only for controlled internal ADMIN sessions.
+* Rotate Application Tokens and Sessions regularly. Revoke as needed using `session.end`.
+* **API secrets are permanent.** The `adminSecret` and `secret` for a Kaltura account cannot be regenerated, rotated, or revoked. If a secret is compromised, contact Kaltura support. This is the primary reason to use Application Tokens (AppTokens) instead of embedding secrets — AppTokens can be revoked and reissued independently. See [AppTokens Guide](KALTURA_APPTOKENS_API.md).
 
 # 3. REST API Recipes
 
@@ -54,10 +96,10 @@ curl -X POST "$KALTURA_SERVICE_URL/service/session/action/start" \
 * `expiry` is in seconds (1800 = 30 minutes).
 * The response JSON contains `{ "result": "<KS_STRING>" }`.
 
-> When to use: server-side APIs, signed/secure player embeds, upload/edit tasks that your backend coordinates. Scope privileges to the minimum required for each session.  ￼
+> When to use: server-side APIs, signed/secure player embeds, upload/edit tasks that your backend coordinates. Scope privileges to the minimum required for each session.
 
 
-## 3.2. Bootstrap a base KS with session.startWidgetSession 
+## 3.2. Bootstrap a base KS with session.startWidgetSession
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/session/action/startWidgetSession" \
@@ -68,20 +110,20 @@ curl -X POST "$KALTURA_SERVICE_URL/service/session/action/startWidgetSession" \
 * `widgetId` is `_<partnerId>` (underscore prefix).
 * The response JSON contains `{ "result": { "ks": "<WIDGET_KS_STRING>", ... } }`.
 
-> This will be used as initial session for AppTokens, or for non-authenticated light sessions such as anonymous player embeds (generated by the player itself when a KS is not provided). 
+> This will be used as initial session for AppTokens, or for non-authenticated light sessions such as anonymous player embeds (generated by the player itself when a KS is not provided).
 
 
 ## 3.3. AppTokens → Privileged KS with appToken.startSession
 
 High level flow:
 
-1.	Create & store an Application Token (this action is performed once by the account admin to provide API access to a 3rd party trusted-scope partner. This step basically provisions an application security scope). You can use this tool to create and manage app tokens from CLI: [kal-apptokens-utils](https://github.com/kaltura/kal-apptokens-utils).  
-2.	Get a base KS (e.g., widget session).  
-3.	Compute tokenHash = HASH( baseKS + token ) with the same hash type as the app token.  
-4.	Call appToken.startSession(tokenId, tokenHash, ...) to receive the privileged KS.  
+1.	Create & store an Application Token (this action is performed once by the account admin to provide API access to a 3rd party trusted-scope partner. This step basically provisions an application security scope). See the [AppTokens Guide](KALTURA_APPTOKENS_API.md) for full details.
+2.	Get a base KS (e.g., widget session).
+3.	Compute tokenHash = HASH( baseKS + token ) with the same hash type as the app token.
+4.	Call appToken.startSession(tokenId, tokenHash, ...) to receive the privileged KS.
 
 > Keep the token and hashing strictly server-side.
-> `sessionPrivileges` and `sessionUserId` are locked at token creation and enforced on every session minted from the token. Configure them at creation time.  
+> `sessionPrivileges` and `sessionUserId` are locked at token creation and enforced on every session minted from the token. Configure them at creation time.
 
 **Step 1 -- Get a widget (base) KS:**
 
@@ -119,7 +161,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/apptoken/action/startSession" \
 
 * The response JSON contains the privileged KS in `result`.
 
-> You can disable or delete tokens (`appToken.update` → status, or `appToken.delete`) immediately revoking the app’s ability to mint KS. 
+> You can disable or delete tokens (`appToken.update` → status, or `appToken.delete`) immediately revoking the app’s ability to mint KS.
 
 # 4. Passing the KS to APIs and the Player
 
@@ -130,25 +172,25 @@ curl -X POST "$KALTURA_SERVICE_URL/service/apptoken/action/startSession" \
 
 Keep it tight:
 
-* Playback: sview:* (+ enforce entitlements and access control profiles in your account configuration).  
-* Upload/edit tools: add only what’s required for the desired feature set (e.g., edit specific objects or rely on server APIs that hold ADMIN).  
-* Use privacy context (e.g., privacycontext:EDU_PORTAL) in KS to align with entitlement rules rather than over-permitting the session, and to ensure the session is restricted according to user and content scope.  
-* Reserve `*` for short-lived backend ADMIN sessions that stay server-side.   
+* Playback: sview:* (+ enforce entitlements and access control profiles in your account configuration).
+* Upload/edit tools: add only what’s required for the desired feature set (e.g., edit specific objects or rely on server APIs that hold ADMIN).
+* Use privacy context (e.g., privacycontext:EDU_PORTAL) in KS to align with entitlement rules rather than over-permitting the session, and to ensure the session is restricted according to user and content scope.
+* Reserve `*` for short-lived backend ADMIN sessions that stay server-side.
 
 # 6. Renewal, caching, and fallback
 
-* TTL you control: you set expiry when starting the session; store issued_at + expiry in your app and refresh as needed *before it lapses*.  
-* Client pattern: your frontend should get KS rendered from your backend. The network never sees secrets.  
-* Always pass KS in POST so it is never cached in proxies.  
-* There isn’t a separate public “validate KS” call you need for steady-state. Validation happens implicitly on each API request. The Kaltura API validates the KS on every request and returns an error if it is invalid or expired.  
-* Store KS in memory only; set cache headers to prevent caching.  
+* TTL you control: you set expiry when starting the session; store issued_at + expiry in your app and refresh as needed *before it lapses*.
+* Client pattern: your frontend should get KS rendered from your backend. The network never sees secrets.
+* Always pass KS in POST so it is never cached in proxies.
+* There isn’t a separate public “validate KS” call you need for steady-state. Validation happens implicitly on each API request. The Kaltura API validates the KS on every request and returns an error if it is invalid or expired.
+* Store KS in memory only; set cache headers to prevent caching.
 * Pass KS in POST bodies or PlayKit provider config, keeping it out of URLs where it could appear in referrers, logs, and proxies.
 
 # 7. Error Handling
 
-* Refer to [Kaltura API Documentation > Error Codes](https://developer.kaltura.com/api-docs/Error_Codes) for more details on specific error codes.   
+* Common KS-related error codes: `INVALID_KS` (malformed, expired, or revoked), `MISSING_KS` (no KS provided), `SERVICE_FORBIDDEN` (KS lacks permission), `EXPIRED_KS` (session past TTL), `ACTION_BLOCKED` (action limit reached).
 * On invalid/expired KS or insufficient privileges: re-issue with correct scope.
-* On 5xx / transient: use exponential backoff (e.g., 500ms, 1s, 2s, jitter), and cap retries. Check that your app isn't going wild so it won't be rate throttled.  
+* On 5xx / transient: use exponential backoff (e.g., 500ms, 1s, 2s, jitter), and cap retries. Monitor your request rate to stay within throttling limits.
 * Observability: log who asked for a session, requested TTL & privileges, and the call outcome (success/failure). Keep secrets out of logs and KS masked (leave last 6 chars).
 
 **Retry strategy:** For transient errors (HTTP 5xx, timeouts), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (4xx, `INVALID_KS`, insufficient privileges), fix the request before retrying — these will not resolve on their own.
@@ -157,9 +199,9 @@ Keep it tight:
 
 ## 8.1. Make the client KS playback-only
 
-Lock KS to a minimal playback role: add `setrole:PLAYBACK_BASE_ROLE` so only a white-listed set of read/player calls is allowed (e.g., `baseEntry.get`, `flavorAsset.list`).   ￼
+Lock KS to a minimal playback role: add `setrole:PLAYBACK_BASE_ROLE` so only a white-listed set of read/player calls is allowed (e.g., `baseEntry.get`, `flavorAsset.list`).
 
-If your content is public and unauthenticated, you can use a Widget KS instead (anonymous, READ-only, for publicly available assets). For protected content, issue a USER KS with entitlements (see below).  ￼
+If your content is public and unauthenticated, you can use a Widget KS instead (anonymous, READ-only, for publicly available assets). For protected content, issue a USER KS with entitlements (see below).
 
 ## 8.2. Enforce entitlements with privacy context
 
@@ -167,20 +209,20 @@ If your catalog uses Entitlements, enable server-side checks on the KS and set t
 * `enableentitlement` — tells Kaltura to enforce entitlement checks on this KS.
 * `privacycontext:<LABEL>` — sets the entitlement partition (<LABEL> is free-text label you define in the KMC per category).
 
-> Example: `enableentitlement,privacycontext:PORTAL_A` ensures results are scoped to the category membership of privacy context `PORTAL_A`. Use `enableentitlement` on all client-facing KS.   
+> Example: `enableentitlement,privacycontext:PORTAL_A` ensures results are scoped to the category membership of privacy context `PORTAL_A`. Use `enableentitlement` on all client-facing KS.
 
 ## 8.3. Scope what can be viewed or listed
 
-*	Playback scope: Allow all playback in the entitlement context: `sview:*`. *Or* lock to a single entry: `sview:<ENTRY_ID>` (use with KS-restricted access control to ensure entries are set to never allow anonymous access).  ￼
-*	Listing across owners: `list:*` enables listing entries beyond the session's current user. Use only when your UX requires global search/browse.  ￼
+*	Playback scope: Allow all playback in the entitlement context: `sview:*`. *Or* lock to a single entry: `sview:<ENTRY_ID>` (use with KS-restricted access control to ensure entries are set to never allow anonymous access).
+*	Listing across owners: `list:*` enables listing entries beyond the session's current user. Use only when your UX requires global search/browse.
 
 ## 8.4. Identify the user when you can
 
-If your app requires authentication, set `userId` when you issue the KS. This ties server behavior and visibility to that user (e.g., lists are constrained for USER KS; ownership and visibility derive from the user in the KS, analytics are tied to the session' `userId`).  ￼
+If your app requires authentication, set `userId` when you issue the KS. This ties server behavior and visibility to that user (e.g., lists are constrained for USER KS; ownership and visibility derive from the user in the KS, analytics are tied to the session' `userId`).
 
 ### 8.4.1 Analytics tracking
 
-Specifying an app id (privilege: `appId:<APP_NAME-APP_DOMAIN>`) which contains the name and domain of the app allows you to get specific analytics per application, for cases where you’re running your application across various domains.  
+Specifying an app id (privilege: `appId:<APP_NAME-APP_DOMAIN>`) which contains the name and domain of the app allows you to get specific analytics per application, for cases where you’re running your application across various domains.
 
 ## 8.5. Extra hardening knobs (use sparingly)
 
@@ -190,15 +232,15 @@ Add one or two of these when risk justifies it:
 *	IP lock: `iprestrict:<IPv4>` — restrict KS use to a single IP.
 *	URI lock: `urirestrict:/api_v3/*` — restrict which API paths the KS can call.
 
-> All three reduce blast radius if a KS leaks.  ￼
+> All three reduce blast radius if a KS leaks.
 > NOTE: IP restriction should be set up alongside a delivery profile that enforces CDN IP Tokenization. If this is needed, reach out to your Kaltura Specialist for account setup.
 
 ## 8.6. App-specific scoping (generic pattern)
 
-Some applications read app-specific hints from the KS to route or filter queries (for example, an application ID or category constraints). Keep these server-parsed and namespaced to avoid collisions:  
-For example: `genieid:<AI_GENIE_INSTANCE>`, etc. These can be read and used by the app and Kaltura backend in various contexts.   
+Some applications read app-specific hints from the KS to route or filter queries (for example, an application ID or category constraints). Keep these server-parsed and namespaced to avoid collisions:
+For example: `genieid:<AI_GENIE_INSTANCE>`, etc. These can be read and used by the app and Kaltura backend in various contexts.
 
-> Kaltura platform enforces only its known privileges; your app can parse and honor the custom ones as needed.  ￼
+> Kaltura platform enforces only its known privileges; your app can parse and honor the custom ones as needed.
 
 ## 8.7. Copy/paste privilege sets
 
@@ -206,12 +248,12 @@ For example: `genieid:<AI_GENIE_INSTANCE>`, etc. These can be read and used by t
 * Single-item playback ticket: `setrole:PLAYBACK_BASE_ROLE,enableentitlement,privacycontext:PORTAL_A,sview:1_abcd1234,actionslimit:4`
 * Hardened client KS (adds IP & URI restrictions): `setrole:PLAYBACK_BASE_ROLE,enableentitlement,privacycontext:PORTAL_A,sview:*,iprestrict:203.0.113.7,urirestrict:/api_v3/*`
 
-(All examples assume a USER KS issued server-side and delivered to the client via POST, not URL.)  ￼
+(All examples assume a USER KS issued server-side and delivered to the client via POST, not URL.)
 
-> Use scoped privileges; reserve `disableentitlement` and broad write access for controlled backend ADMIN sessions.   
-> Issue ADMIN sessions server-side with short TTLs, and call `session.end` to revoke when done.  ￼
+> Use scoped privileges; reserve `disableentitlement` and broad write access for controlled backend ADMIN sessions.
+> Issue ADMIN sessions server-side with short TTLs, and call `session.end` to revoke when done.
 
-## 8.8. Bulk logout / revocation via sessionid privilege   
+## 8.8. Bulk logout / revocation via sessionid privilege
 
 Set `sessionid:<GUID>` on the KS privileges and keep that GUID on your backend. If you ever need to kill a whole cohort of sessions (e.g., logout user from all devices), call `session.end` on a KS that has the same `sessionid:<GUID>` and reissue sessions with a new GUID.
 
@@ -226,8 +268,34 @@ Set `sessionid:<GUID>` on the KS privileges and keep that GUID on your backend. 
 - **Call `session.end` to revoke when done.** Use the `sessionid` privilege to enable bulk logout across devices.
 - **Pass KS in POST bodies, not URLs.** URL parameters appear in referrer headers, proxy logs, and browser history.
 
+## Mobile / Client-Side KS Best Practices
+
+Mobile and single-page apps require special care because compiled binaries and client-side JavaScript are accessible to end users:
+
+- **Keep `adminSecret` on your backend server only.** API secrets are permanent and cannot be rotated — a leaked secret compromises the account indefinitely.
+- **Generate KS server-side and pass to the client per-session.** KS tokens expire, so hardcoded tokens cause the app to stop working. Tokens embedded in binaries can also be extracted by users.
+- **Three recommended strategies for client-side KS:**
+  1. **Anonymous access** — Use `session.startWidgetSession` for public, unauthenticated content (player bootstrap, public galleries).
+  2. **Server-generated KS** — Your backend generates a scoped USER KS (via `session.start` or `appToken.startSession`) and passes it to the client per-session. The client never sees secrets.
+  3. **User login** — Use `user.loginByLoginId` for apps where users authenticate with their own credentials. The KS is generated server-side and returned to the client.
+
+## Special Partner IDs
+
+Certain partner IDs are reserved by the Kaltura platform for internal purposes:
+
+| Partner ID | Purpose |
+|-----------|---------|
+| -1 | Batch Manager (internal job processing) |
+| -2 | Admin Console |
+| -3 | Hosted Pages |
+| 0 | Shared/global resources |
+| 99 | Default template partner |
+
+These IDs appear in logs and system metadata. Customer accounts always have positive partner IDs.
+
 # 10. Related Guides
 
+- **[API Getting Started](KALTURA_API_GETTING_STARTED.md)** — API structure, first call, multirequest batching, error handling
 - **[AppTokens API](KALTURA_APPTOKENS_API.md)** — Secure server-to-server auth without sharing admin secrets (HMAC-based KS generation)
 - **[Upload & Delivery](KALTURA_UPLOAD_AND_DELIVERY_API.md)** — Upload content and construct playback URLs (requires KS)
 - **[eSearch](KALTURA_ESEARCH_API.md)** — Search entries, categories, users (requires KS)
@@ -243,3 +311,9 @@ Set `sessionid:<GUID>` on the KS privileges and keep that GUID on your backend. 
 - **[Webhooks](KALTURA_WEBHOOKS_API.md)** — Event-driven HTTP callbacks and email notifications (requires KS)
 - **[User Management API](KALTURA_USER_MANAGEMENT_API.md)** — Provision users and assign roles before creating sessions
 - **[Categories & Access Control API](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md)** — Category entitlements and access control profiles (related to `disableentitlement` / `enableentitlement` KS privileges)
+- **[Analytics Reports](KALTURA_ANALYTICS_REPORTS_API.md)** — `appId` privilege tags analytics per-application
+- **[Custom Metadata](KALTURA_CUSTOM_METADATA_API.md)** — KS required for metadata profile management
+- **[Distribution](KALTURA_DISTRIBUTION_API.md)** — Admin KS required for distribution profile management
+- **[Multi-Account Management](KALTURA_MULTI_ACCOUNT_MANAGEMENT_API.md)** — `session.impersonate` for cross-account operations
+- **[Experience Components](KALTURA_EXPERIENCE_COMPONENTS_API.md)** — KS passed to embedded components via config
+- **[Gamification](KALTURA_GAMIFICATION_API.md)** — KS authentication for gamification microservice

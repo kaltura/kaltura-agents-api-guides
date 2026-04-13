@@ -16,3 +16,11 @@
 | Tests catching errors as "expected" | Test passes but the feature doesn't work for customers. Masks inaccessible actions | Tests must succeed with actual API responses. If a test expects FORBIDDEN/PERMISSION errors, the feature should not be documented |
 | Linking to non-existent guides | Broken references in Related Guides and cross-references | Only link to published guides. Remove or replace references to planned/future guides |
 | Bundling unrelated services in one guide | Guide grows unwieldy, each service gets shallow coverage, hard to find information | One guide per service boundary. Split if services don't share actions, don't depend on each other, and aren't always used together |
+| Metadata XML field order wrong | Validation failure on metadata.add | Match field order exactly to XSD sequence; field names are case-sensitive |
+| Exceeding 4 searchable Date/Integer fields per metadata profile | Fields silently not indexed in eSearch | Use text fields for non-filterable dates/numbers |
+| Listing beyond 10K results | Pager returns empty after page ~20 | Use `createdAtGreaterThanOrEqual` date-range filter to window results |
+| Embedding API secrets in mobile apps | Security vulnerability — secrets are permanent and cannot be rotated | Use server-side KS generation or AppToken flow |
+| KS hardcoded in compiled mobile binary | KS expires, app stops working; users can extract it | Generate KS on server, pass to client per-session |
+| Multirequest without per-result error checking | One failed sub-request silently ignored | Check each array element for `objectType: "KalturaAPIException"` |
+| Assigning more than 32 categories to an entry | `categoryEntry.add` throws `MAX_CATEGORIES_FOR_ENTRY_REACHED` | Default limit is 32; accounts with `FEATURE_DISABLE_CATEGORY_LIMIT` get 1000. Design hierarchies accordingly |
+| Publishing guide without updating GUIDE_MAP.md | AI agents miss the new guide or traverse incorrectly | Update GUIDE_MAP.md when adding or modifying guides |

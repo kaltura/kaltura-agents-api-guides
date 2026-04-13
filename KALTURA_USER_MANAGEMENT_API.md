@@ -2,9 +2,9 @@
 
 The User Management API covers the core user identity layer: creating and managing users (`KalturaUser`), assigning roles for RBAC (`KalturaUserRole`), and managing group membership (`groupUser`). Every Kaltura service that references a userId — User Profile, Messaging, Events Platform, Webhooks — depends on a KalturaUser existing first.
 
-**Base URL:** `https://www.kaltura.com/api_v3` (may differ by region/deployment)
-**Auth:** KS passed as `ks` parameter in POST form data (see [Session Guide](KALTURA_SESSION_GUIDE.md))
-**Format:** Form-encoded POST, `format=1` for JSON responses
+**Base URL:** `https://www.kaltura.com/api_v3` (may differ by region/deployment)  
+**Auth:** KS passed as `ks` parameter in POST form data (see [Session Guide](KALTURA_SESSION_GUIDE.md))  
+**Format:** Form-encoded POST, `format=1` for JSON responses  
 **Services:** `user` (22 actions), `userRole` (6 actions), `group_group` (CRUD), `groupUser` (5 actions)
 
 
@@ -605,3 +605,5 @@ Returns a job ID. Retrieve the CSV file when the job completes using `user.serve
 - **[Webhooks API](KALTURA_WEBHOOKS_API.md)** — Event notifications targeting users and groups
 - **[Events Platform API](KALTURA_EVENTS_PLATFORM_API.md)** — Virtual events with team members (userId in KS required)
 - **[Categories & Access Control API](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md)** — Content organization with user-based category membership and entitlements
+- **[Multi-Account Management](KALTURA_MULTI_ACCOUNT_MANAGEMENT_API.md)** — User management across parent/child accounts
+- **[Analytics Reports](KALTURA_ANALYTICS_REPORTS_API.md)** — `ANALYTICS_BASE` role permission for analytics access

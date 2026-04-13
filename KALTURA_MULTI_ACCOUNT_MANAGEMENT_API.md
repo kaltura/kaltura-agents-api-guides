@@ -1,0 +1,280 @@
+# Kaltura Multi-Account Management API
+
+Kaltura's multi-account model enables organizations to create and manage hierarchies of accounts — a parent account that controls one or more child accounts. Each child account is fully independent (its own content, users, settings, and partner ID) while the parent retains administrative oversight and cross-account analytics.
+
+**Base URL:** `https://www.kaltura.com/api_v3`  
+**Auth:** Admin KS on the parent account for management operations  
+**Format:** Form-encoded POST, `format=1` for JSON responses  
+
+
+# 1. When to Use Multi-Account Management
+
+Multi-account management solves organizational challenges where a single Kaltura account is insufficient:
+
+| Scenario | Why Multi-Account |
+|----------|-------------------|
+| **Enterprise with divisions** | Each division manages its own content library independently, while corporate HQ monitors usage and analytics across all divisions |
+| **Reseller / channel partner** | A Kaltura reseller provisions separate accounts for each customer while maintaining centralized billing and usage reporting |
+| **SaaS platform embedding Kaltura** | Each tenant gets an isolated Kaltura account with its own content, users, and permissions — the platform manages them all from one parent |
+| **Educational institution** | Separate accounts per department or campus with centralized administration |
+
+A multi-account setup consists of:
+
+- **Parent account** — The administrative account that creates and manages child accounts  
+- **Child accounts** — Sub-accounts, each with their own partner ID, content library, users, and configuration  
+
+The parent account can:  
+- Create new child accounts via `partner.register`  
+- Authenticate as any child account via `session.impersonate`  
+- Aggregate analytics across all child accounts using cross-account report variants  
+- Manage child account settings and permissions  
+
+Multi-account analytics require the `FEATURE_MULTI_ACCOUNT_ANALYTICS` permission (ID 1130) on the parent account. Contact your Kaltura account manager to enable this.
+
+
+# 2. Sub-Account Creation
+
+Create a child account linked to the parent using `partner.register`:
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/partner/action/register" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "partner[objectType]=KalturaPartner" \
+  -d "partner[name]=Child Account - Division A" \
+  -d "partner[adminName]=Admin User" \
+  -d "partner[adminEmail]=admin@division-a.example.com" \
+  -d "partner[description]=Division A sub-account" \
+  -d "partner[country]=US"
+```
+
+**Response:**
+
+```json
+{
+  "id": 5678901,
+  "name": "Child Account - Division A",
+  "adminEmail": "admin@division-a.example.com",
+  "status": 1,
+  "partnerParentId": 1234567,
+  "objectType": "KalturaPartner"
+}
+```
+
+The `partnerParentId` field links the child to the parent account. This relationship is set automatically when a parent account creates the child.
+
+
+# 3. Sub-Account Management
+
+## 3.1 List Child Accounts
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/partner/action/list" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "filter[objectType]=KalturaPartnerFilter" \
+  -d "filter[statusIn]=1,2" \
+  -d "pager[pageSize]=50" \
+  -d "pager[pageIndex]=1"
+```
+
+Filter by `statusIn` to find active accounts (status 1 = ACTIVE, 2 = BLOCKED).
+
+## 3.2 Get Child Account Details
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/partner/action/get" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "id=$CHILD_PARTNER_ID"
+```
+
+## 3.3 Update Child Account
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/partner/action/update" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "partner[objectType]=KalturaPartner" \
+  -d "partner[name]=Updated Division Name" \
+  -d "partner[description]=Updated description" \
+  -d "id=$CHILD_PARTNER_ID"
+```
+
+
+# 4. Cross-Account Authentication
+
+## 4.1 session.impersonate
+
+Generate a KS scoped to a child account while authenticated as the parent. This lets the parent operate as if it were the child account — managing content, users, and running reports.
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/session/action/impersonate" \
+  -d "format=1" \
+  -d "secret=$KALTURA_ADMIN_SECRET" \
+  -d "impersonatedPartnerId=$CHILD_PARTNER_ID" \
+  -d "userId=admin" \
+  -d "type=2" \
+  -d "partnerId=$KALTURA_PARTNER_ID" \
+  -d "expiry=1800"
+```
+
+**Response:** Returns a KS string scoped to the child account. Use this KS for any API calls that should execute in the child account context.
+
+**Use cases:**  
+- Admin tools that manage content across all child accounts  
+- Running standard reports scoped to a specific child account  
+- Provisioning users or content in a child account from a centralized system  
+
+> The impersonated KS operates with the same permissions as a native admin KS on the child account. Use short TTLs and scope privileges minimally.  
+> `session.impersonate` only works between parent and child accounts — you cannot impersonate accounts that are not your children.
+
+
+# 5. Cross-Account Analytics
+
+Cross-account analytics let the parent account aggregate data across all child accounts without impersonating each one individually.
+
+## 5.1 Multi-Account Report Types
+
+Every standard VOD report has a multi-account counterpart in the 20000 range. These reports automatically aggregate across all child accounts linked to the parent.
+
+| Multi-Account Report ID | Standard Counterpart | Report Name |
+|-------------------------|---------------------|-------------|
+| 20001 | 1 | Content Dropoff |
+| 20002 | 2 | Content Interactions |
+| 20003 | 3 | Content Contributions |
+| 20005 | 5 | Platforms |
+| 20006 | 6 | Operating Systems |
+| 20007 | 7 | Browsers |
+| 20010 | 10 | Top Content |
+| 20011 | 11 | Unique Users (Play) |
+| 20012 | 12 | Map Overlay (Country) |
+| 20013 | 13 | Map Overlay (Region) |
+| 20014 | 14 | Map Overlay (City) |
+| 20018 | 18 | Top Syndication |
+| 20019 | 19 | Partner Usage |
+| 20020 | 20 | Platforms (Extended) |
+| 20021 | 21 | Operating Systems (Extended) |
+| 20022 | 22 | Browsers (Extended) |
+| 20023 | 23 | Top Playback Context |
+
+## 5.2 Aggregated Reports
+
+Query a multi-account report from the parent account to get data aggregated across all child accounts:
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getTable" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "reportType=20010" \
+  -d "reportInputFilter[objectType]=KalturaEndUserReportInputFilter" \
+  -d "reportInputFilter[fromDate]=$FROM_TIMESTAMP" \
+  -d "reportInputFilter[toDate]=$TO_TIMESTAMP" \
+  -d "pager[pageSize]=100" \
+  -d "pager[pageIndex]=1" \
+  -d "responseOptions[objectType]=KalturaReportResponseOptions" \
+  -d "responseOptions[delimiter]=|"
+```
+
+The `partnerParentId` dimension in the analytics backend links child account data to the parent, enabling aggregation without explicit child account enumeration.
+
+## 5.3 Per-Account Usage Reports
+
+Use cross-partner report types to break down usage by child account:
+
+```bash
+# Partner usage breakdown (report type 201)
+curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getTotal" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "reportType=201" \
+  -d "reportInputFilter[objectType]=KalturaEndUserReportInputFilter" \
+  -d "reportInputFilter[fromDate]=$FROM_TIMESTAMP" \
+  -d "reportInputFilter[toDate]=$TO_TIMESTAMP" \
+  -d "responseOptions[objectType]=KalturaReportResponseOptions" \
+  -d "responseOptions[delimiter]=|"
+```
+
+Filter to specific child accounts using `objectIds`:
+
+```bash
+# Usage for specific child accounts only
+curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getTable" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "reportType=60" \
+  -d "reportInputFilter[objectType]=KalturaEndUserReportInputFilter" \
+  -d "reportInputFilter[fromDate]=$FROM_TIMESTAMP" \
+  -d "reportInputFilter[toDate]=$TO_TIMESTAMP" \
+  -d "objectIds=CHILD_PARTNER_ID_1,CHILD_PARTNER_ID_2" \
+  -d "pager[pageSize]=100" \
+  -d "pager[pageIndex]=1" \
+  -d "responseOptions[objectType]=KalturaReportResponseOptions" \
+  -d "responseOptions[delimiter]=|"
+```
+
+**Cross-partner report types:**
+
+| Report Type | Description |
+|-------------|-------------|
+| 60 | Per-account engagement breakdown |
+| 201 | Bandwidth and storage totals per account |
+| 19 | Partner usage summary |
+| 42 | Top content across accounts |
+
+## 5.4 Drill-Down into a Child Account
+
+To run standard reports for a specific child account, use `session.impersonate` to get a child-scoped KS, then run any standard report:
+
+```bash
+# Step 1: Impersonate the child account
+CHILD_KS=$(curl -s -X POST "$KALTURA_SERVICE_URL/service/session/action/impersonate" \
+  -d "format=1" \
+  -d "secret=$KALTURA_ADMIN_SECRET" \
+  -d "impersonatedPartnerId=$CHILD_PARTNER_ID" \
+  -d "userId=admin" \
+  -d "type=2" \
+  -d "partnerId=$KALTURA_PARTNER_ID" \
+  -d "expiry=900" | python3 -c "import sys,json; print(json.load(sys.stdin))")
+
+# Step 2: Run a standard report scoped to the child
+curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getTable" \
+  -d "ks=$CHILD_KS" \
+  -d "format=1" \
+  -d "reportType=10" \
+  -d "reportInputFilter[objectType]=KalturaEndUserReportInputFilter" \
+  -d "reportInputFilter[fromDate]=$FROM_TIMESTAMP" \
+  -d "reportInputFilter[toDate]=$TO_TIMESTAMP" \
+  -d "pager[pageSize]=50" \
+  -d "pager[pageIndex]=1" \
+  -d "responseOptions[objectType]=KalturaReportResponseOptions" \
+  -d "responseOptions[delimiter]=|"
+```
+
+
+# 6. Error Handling
+
+| Error Code | Context | Meaning |
+|------------|---------|---------|
+| `START_SESSION_ERROR` | `session.impersonate` | The target `impersonatedPartnerId` is not a child of the calling account |
+| `INVALID_KS` | Any API call | The impersonated KS has expired — generate a new one with `session.impersonate` |
+| `SERVICE_FORBIDDEN` | `partner.register` | The calling account lacks permission to create child accounts |
+| Empty `objects` array | Multi-account reports (20001-20023) | The parent account does not have `FEATURE_MULTI_ACCOUNT_ANALYTICS` (ID 1130) enabled |
+
+
+# 7. Best Practices
+
+- **Use `session.impersonate` with short TTLs.** Impersonated sessions should be short-lived (5-15 minutes) and scoped to the specific task.  
+- **Prefer multi-account reports for aggregation.** Use multi-account report variants (20001-20023) to get cross-account data in a single call rather than impersonating each child account individually.  
+- **Track child account IDs.** Maintain a mapping of child partner IDs to your internal organization structure for report filtering with `objectIds`.  
+- **Ensure `FEATURE_MULTI_ACCOUNT_ANALYTICS` is enabled.** This permission (ID 1130) must be active on the parent account. Without it, multi-account reports return empty results.  
+- **Use `objectIds` for targeted reports.** Filter cross-partner reports to specific child accounts rather than pulling data for all accounts when you only need a subset.  
+- **Use AppTokens per child account.** Create separate AppTokens for each child account integration. This enables independent revocation and audit trails per tenant.
+
+
+# 8. Related Guides
+
+- **[Session Guide](KALTURA_SESSION_GUIDE.md)** — KS generation, including `session.impersonate` authentication  
+- **[Analytics Reports](KALTURA_ANALYTICS_REPORTS_API.md)** — Full analytics API reference, report types, and cross-account report variants  
+- **[User Management](KALTURA_USER_MANAGEMENT_API.md)** — User provisioning for child accounts  
+- **[AppTokens](KALTURA_APPTOKENS_API.md)** — Scoped authentication tokens for child account integrations

@@ -1,13 +1,13 @@
 ---
 name: kaltura-api
-description: Build applications on Kaltura — The Agentic Digital Experience Platform. Covers authentication (sessions, AppTokens, SSO/SAML), content management (upload, search, categories, metadata, captions), playback, AI services (captions, translation, agents, conversational AI), virtual events, user management, multi-stream, content distribution, syndication feeds. API v3 (form-encoded) and modern JSON APIs with curl examples and tested workflows.
+description: Build applications on Kaltura — The Agentic Digital Experience Platform. Covers authentication (sessions, AppTokens, SSO/SAML), content management (upload, search, categories, metadata, captions), playback, AI services (captions, translation, agents, conversational AI), virtual events, user management, multi-stream, content distribution, syndication feeds, experience components (Express Recorder, Captions Editor), multi-account management. API v3 (form-encoded) and modern JSON APIs with curl examples and tested workflows.
 ---
 
 # Kaltura API Integration
 
 Kaltura — The Agentic Digital Experience Platform. Kaltura is powering rich, agentic digital experiences across organizational journeys for customers, employees, learners, and audiences. The Kaltura platform combines intelligent content creation, enterprise-grade content management and intelligence, and multimodal conversational engagement capabilities. Kaltura serves leading enterprises, financial institutions, educational institutions, media and telecom providers, and other organizations worldwide.
 
-This skill gives you the knowledge map to build any integration on Kaltura's 80+ REST API services.
+This skill gives you the knowledge map to build any integration on Kaltura's 100+ REST API services.
 
 ## Platform Overview
 
@@ -101,9 +101,13 @@ Shortcuts: `media.addFromUploadedFile` (create + attach in one call), `media.add
 
 Read the relevant guide when you need to implement a specific capability:
 
+### Getting Started
+
+- **[API Getting Started](../../../KALTURA_API_GETTING_STARTED.md)** — API request structure, your first API call, multirequest batching with result chaining, error handling patterns, client libraries. Start here for API fundamentals.
+
 ### Content Management
 
-- **[Upload & Delivery API](../../../KALTURA_UPLOAD_AND_DELIVERY_API.md)** — Chunked/resumable uploads, import-from-URL, playback URLs (HLS/DASH), thumbnail API, flavor assets, download links. Start here for any content ingestion workflow.
+- **[Upload & Delivery API](../../../KALTURA_UPLOAD_AND_DELIVERY_API.md)** — Chunked/resumable uploads, import-from-URL, playback URLs (HLS/DASH), dynamic thumbnail API (27 params), thumbAsset CRUD, attachmentAsset for non-media files, flavor assets, download links, CSV export. Start here for any content ingestion workflow.
 
 - **[eSearch API](../../../KALTURA_ESEARCH_API.md)** — Full-text search across entries, captions, metadata, categories, and users. Supports AND/OR/NOT operators, nested filters, highlighting, facets, and sorting.
 
@@ -148,6 +152,14 @@ Read the relevant guide when you need to implement a specific capability:
 - **[Analytics Events Collection API](../../../KALTURA_ANALYTICS_EVENTS_COLLECTION_API.md)** — Report playback and engagement events back to Kaltura analytics. `stats.collect` for server-side player events (WIDGET_LOADED, PLAY, quartiles, SEEK, buffer, replay), `analytics.trackEvent` for application-level tracking (PageLoad, ButtonClicked). Supports `appId` KS privilege for per-application segmentation and custom event context fields.
 
 - **[Gamification API](../../../KALTURA_GAMIFICATION_API.md)** — Leaderboards, badges, certificates, lead scoring, and a rules engine via the Game Services (SCM) microservice. Rule types: sum, count, countUnique, countBoolean, external, override. Participation policies (display/do_not_display/do_not_save with email domain or group matching). Sub-leaderboards with filterPaths. Certificate PDF generation with text overlays. External events via CSV import. Scheduled game objects for automated status transitions.
+
+### Experience Components
+
+- **[Experience Components API](../../../KALTURA_EXPERIENCE_COMPONENTS_API.md)** — Embeddable UI components: Express Recorder (browser-based WebRTC recording), Captions Editor (interactive caption editing with video/waveform sync), and Embeddable Analytics dashboards. Each component is a standalone widget requiring a KS.
+
+### Multi-Account Management
+
+- **[Multi-Account Management API](../../../KALTURA_MULTI_ACCOUNT_MANAGEMENT_API.md)** — Multi-account management: create child accounts via `partner.register`, cross-account auth via `session.impersonate`, aggregated analytics via multi-account report variants (20001-20023), per-account usage reports.
 
 ### Distribution & Syndication
 

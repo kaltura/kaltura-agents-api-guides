@@ -4,9 +4,9 @@ The App Registry is a centralized service for registering and managing Kaltura a
 
 When you create a virtual event through the Events Platform, an app is automatically registered with `appType: "epmEvent"`. You can also register apps directly for custom integrations.
 
-**Base URL:** `https://app-registry.nvp1.ovp.kaltura.com/api/v1` (production NVP region)
-**Auth:** `Authorization: Bearer <KS>` header (ADMIN KS, type=2, requires `ADMIN_BASE` permission)
-**Format:** JSON request/response bodies, all endpoints use POST
+**Base URL:** `https://app-registry.nvp1.ovp.kaltura.com/api/v1` (production NVP region)  
+**Auth:** `Authorization: Bearer <KS>` header (ADMIN KS, type=2, requires `ADMIN_BASE` permission)  
+**Format:** JSON request/response bodies, all endpoints use POST  
 **Regions:** NVP (default `nvp1`), EU (`irp2`), DE (`frp2`)
 
 
@@ -564,3 +564,4 @@ Store the last record's `updatedAt` timestamp as a watermark and use it as the s
 - **[Events Platform API](KALTURA_EVENTS_PLATFORM_API.md)** — Virtual events (auto-creates app registrations)
 - **[Messaging API](KALTURA_MESSAGING_API.md)** — Template-based email messaging (uses appGuid for message context)
 - **[Webhooks API](KALTURA_WEBHOOKS_API.md)** — Event-driven HTTP callbacks and email notifications
+- **[Auth Broker](KALTURA_AUTH_BROKER_API.md)** — App subscriptions link auth profiles to registered apps

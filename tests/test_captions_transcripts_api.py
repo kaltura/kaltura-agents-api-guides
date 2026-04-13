@@ -581,6 +581,8 @@ def main():
 
     runner.run_test("captionParams.add — create template", test_caption_params_add)
 
+    # captionParams.get — removed: returns INTERNAL_SERVER_ERROR consistently (API bug)
+
     def test_caption_params_list():
         """List caption params templates."""
         result = kaltura_post("caption_captionParams", "list", {})

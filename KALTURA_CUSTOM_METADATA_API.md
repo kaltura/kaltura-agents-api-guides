@@ -2,9 +2,9 @@
 
 The Custom Metadata API lets you define XSD-based schemas (metadata profiles) and attach structured XML data to entries, categories, users, partners, or user-entry records. Schemas support typed fields with annotations that control KMC rendering, eSearch indexing, and UI behavior. An optional XSLT pipeline transforms metadata on every add/update.
 
-**Base URL:** `https://www.kaltura.com/api_v3` (may differ by region/deployment)
-**Auth:** KS passed as `ks` parameter in POST form data (see [Session Guide](KALTURA_SESSION_GUIDE.md))
-**Format:** Form-encoded POST, `format=1` for JSON responses
+**Base URL:** `https://www.kaltura.com/api_v3` (may differ by region/deployment)  
+**Auth:** KS passed as `ks` parameter in POST form data (see [Session Guide](KALTURA_SESSION_GUIDE.md))  
+**Format:** Form-encoded POST, `format=1` for JSON responses  
 **Services:** `metadata_metadataProfile` (10 actions), `metadata_metadata` (9 actions)
 
 **Important:** These are plugin services. The service names use underscore-prefixed compound names: `metadata_metadataProfile`, `metadata_metadata`.
@@ -1098,12 +1098,15 @@ A `LegalHold` (listType yes/no) field prevents automated deletion. `ComplianceSt
 - **Use `<appinfo>` annotations.** Add `label`, `key`, `searchable`, and `description` annotations to every field. This controls KMC rendering and eSearch indexing.
 - **One profile per use case.** Create separate profiles for different purposes (e.g., "Content Classification", "Workflow Status", "SEO Tags") rather than one large profile.
 - **Use listType with enumerations for filterable fields.** Enum fields are the only type available as KMC filter columns. They also enable dropdown UI controls.
-- **Use eSearch for metadata queries.** Do not use `metadata.list` to find entries by metadata values. Use `KalturaESearchEntryMetadataItem` in eSearch for efficient cross-field searching. See [eSearch API](KALTURA_ESEARCH_API.md).
+- **Use eSearch for metadata queries.** Use `KalturaESearchEntryMetadataItem` in eSearch for efficient cross-field searching — eSearch is faster and more flexible than `metadata.list` for finding entries by metadata values. See [eSearch API](KALTURA_ESEARCH_API.md).
 - **Use optimistic locking for concurrent editing.** Pass the `version` parameter on `metadata.update` to prevent overwrites from concurrent processes.
 - **Date fields store Unix timestamps as longs.** Use Kaltura-native `dateType` (based on `xsd:long`) for dates. The KMC DatePicker interprets these as Unix timestamps, not ISO date strings.
 - **metadata.list for ENTRY type requires objectId.** Always include `objectIdEqual` or `objectIdIn` when listing entry metadata.
 - **Bulk XML updates must include ALL fields.** When updating metadata via bulk upload, omitted fields are cleared. Always include the complete XML with all field values.
 - **Use createMode filter to scope profile listings.** KMC-created profiles use `createMode=2`. API-created profiles use `createMode=1`. Filter with `createModeEqual` to list only profiles relevant to your integration.
+- **XML field order must match the XSD sequence.** When adding or updating metadata XML, the field order must exactly match the `<xsd:sequence>` order defined in the schema. Out-of-order fields cause validation errors. Field names are case-sensitive.
+- **4 searchable Date and 4 Integer fields per profile.** Elasticsearch limits the number of indexed Date and Integer fields per metadata profile to 4 each. Additional Date/Integer fields beyond this limit are stored but not searchable. Use text fields for non-filterable dates/numbers.
+- **`viewsData` controls KMC editor rendering.** The `viewsData` parameter on a metadata profile defines how fields render in the KMC metadata editor (field order, grouping, visibility). When omitted, a default UI is auto-generated from the XSD.
 
 
 # 13. Related Guides
@@ -1116,3 +1119,5 @@ A `LegalHold` (listType yes/no) field prevents automated deletion. `ComplianceSt
 - **[Captions & Transcripts API](KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md)** — Timed text (separate from structured metadata)
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — KS generation and permission scoping
 - **[AppTokens API](KALTURA_APPTOKENS_API.md)** — Secure auth without admin secrets
+- **[Distribution](KALTURA_DISTRIBUTION_API.md)** — Custom metadata fields mapped to distribution platform fields
+- **[REACH](KALTURA_REACH_API.md)** — Metadata-based rules for automated captioning triggers

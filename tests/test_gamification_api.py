@@ -500,6 +500,22 @@ def main():
 
     runner.run_test("certificate/get — verify fields", test_certificate_get)
 
+    def test_certificate_list():
+        """certificate/list — paginated listing."""
+        result = scm_post("certificate", "list", {
+            "pager": {"pageSize": 10, "pageIndex": 1},
+        })
+        count = result.get("totalCount", len(result.get("objects", [])))
+        cert_id = state.get("cert_id")
+        if cert_id and result.get("objects"):
+            ids = [o.get("id") for o in result["objects"]]
+            found = cert_id in ids
+            print(f"    Total certificates: {count}, test cert in list: {found}")
+        else:
+            print(f"    Total certificates: {count}")
+
+    runner.run_test("certificate/list — paginated", test_certificate_list)
+
     def test_user_certificate_report():
         """userCertificateReport/list — certificate progress."""
         cert_id = state.get("cert_id")
@@ -544,6 +560,21 @@ def main():
         print(f"    Lead scoring created: {result['id']}")
 
     runner.run_test("leadScoring/create — profile", test_lead_scoring_create)
+
+    def test_lead_scoring_get():
+        """leadScoring/get — retrieve by ID."""
+        ls_id = state.get("lead_scoring_id")
+        assert ls_id, "No lead scoring profile available"
+        result = scm_post("leadScoring", "get", {"id": ls_id})
+        assert result.get("id") == ls_id, f"ID mismatch: {result}"
+        assert result.get("name", "").startswith("TEST_LEAD_SCORING"), (
+            f"Expected test name, got: {result.get('name')}"
+        )
+        score_groups = result.get("scoreGroups", [])
+        assert len(score_groups) == 3, f"Expected 3 score groups, got {len(score_groups)}"
+        print(f"    Lead scoring: {result.get('name')}, status={result.get('status')}, groups={len(score_groups)}")
+
+    runner.run_test("leadScoring/get — retrieve by ID", test_lead_scoring_get)
 
     def test_lead_scoring_rule():
         """Create rule for lead scoring."""

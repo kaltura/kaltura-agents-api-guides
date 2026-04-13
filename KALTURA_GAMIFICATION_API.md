@@ -2,9 +2,9 @@
 
 The Game Services (SCM) API powers engagement mechanics for virtual events and learning platforms — leaderboards, badges, certificates, and lead scoring. A rules engine processes analytics events (playback, quizzes, polls, chat) and triggers scoring, achievement, and certification actions automatically.
 
-**Base URL:** `https://scm.{region}.ovp.kaltura.com/api/v1/`
-**Auth:** `Authorization: Bearer <KS>` header (ADMIN KS, type=2)
-**Format:** JSON request/response bodies, all endpoints use POST
+**Base URL:** `https://scm.{region}.ovp.kaltura.com/api/v1/`  
+**Auth:** `Authorization: Bearer <KS>` header (ADMIN KS, type=2)  
+**Format:** JSON request/response bodies, all endpoints use POST  
 
 | Controller | Key Actions | Description |
 |------------|-------------|-------------|
@@ -1302,7 +1302,7 @@ curl -s -X POST "$KALTURA_SERVICE_URL/service/analytics/action/trackEvent" \
   -d "event[objectType]=KalturaStatsEvent" \
   -d "event[eventType]=10003" \
   -d "event[entryId]=$SPONSOR_ENTRY_ID" \
-  -d "event[partnerId]=$PARTNER_ID"
+  -d "event[partnerId]=$KALTURA_PARTNER_ID"
 
 # 3. Pull per-sponsor engagement data via report.getTable (API v3)
 curl -s -X POST "$KALTURA_SERVICE_URL/service/report/action/getTable" \
@@ -1310,8 +1310,8 @@ curl -s -X POST "$KALTURA_SERVICE_URL/service/report/action/getTable" \
   -d "format=1" \
   -d "reportType=38" \
   -d "reportInputFilter[objectType]=KalturaReportInputFilter" \
-  -d "reportInputFilter[fromDate]=1717200000" \
-  -d "reportInputFilter[toDate]=1717459200" \
+  -d "reportInputFilter[fromDate]=$FROM_TIMESTAMP" \
+  -d "reportInputFilter[toDate]=$TO_TIMESTAMP" \
   -d "reportInputFilter[categoriesIdsIn]=$SPONSOR_CATEGORY_ID" \
   -d "pager[objectType]=KalturaFilterPager" \
   -d "pager[pageSize]=100" \
@@ -1615,14 +1615,13 @@ The `filterPaths: ["company"]` setting on the sub-leaderboard groups users by th
 
 # 15. Related Guides
 
-| Guide | Integration |
-|-------|-------------|
-| [Events Platform](KALTURA_EVENTS_PLATFORM_API.md) | `virtualEventIds` scope game objects to events; category IDs in rule conditions |
-| [User Profile](KALTURA_USER_PROFILE_API.md) | User properties power sub-leaderboards via `filterPaths[]`; user metadata enriches reports |
-| [Analytics Reports](KALTURA_ANALYTICS_REPORTS_API.md) | User Reactions Report (ID 4021) for granular per-user engagement data |
-| [Events Collection](KALTURA_ANALYTICS_EVENTS_COLLECTION_API.md) | Playback events (`viewPeriod`) feed leaderboard and badge rules |
-| [Messaging](KALTURA_MESSAGING_API.md) | Certificate download email delivery; winner notification emails |
-| [Webhooks](KALTURA_WEBHOOKS_API.md) | Event notifications on gamification state changes |
-| [Session Guide](KALTURA_SESSION_GUIDE.md) | Admin KS as Bearer token; `GAME_BASE`/`GAME_MANAGE` permissions |
-| [Custom Metadata](KALTURA_CUSTOM_METADATA_API.md) | `metadataProfileId` on certificates for PDF generation context |
-| [Categories & Access Control](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md) | Category IDs in rule conditions for content scoping |
+- **[Events Platform](KALTURA_EVENTS_PLATFORM_API.md)** — `virtualEventIds` scope game objects to events; category IDs in rule conditions  
+- **[User Profile](KALTURA_USER_PROFILE_API.md)** — User properties power sub-leaderboards via `filterPaths[]`; user metadata enriches reports  
+- **[Analytics Reports](KALTURA_ANALYTICS_REPORTS_API.md)** — User Reactions Report (ID 4021) for granular per-user engagement data  
+- **[Events Collection](KALTURA_ANALYTICS_EVENTS_COLLECTION_API.md)** — Playback events (`viewPeriod`) feed leaderboard and badge rules  
+- **[Messaging](KALTURA_MESSAGING_API.md)** — Certificate download email delivery; winner notification emails  
+- **[Webhooks](KALTURA_WEBHOOKS_API.md)** — Event notifications on gamification state changes  
+- **[Session Guide](KALTURA_SESSION_GUIDE.md)** — Admin KS as Bearer token; `GAME_BASE`/`GAME_MANAGE` permissions  
+- **[Custom Metadata](KALTURA_CUSTOM_METADATA_API.md)** — `metadataProfileId` on certificates for PDF generation context  
+- **[Categories & Access Control](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md)** — Category IDs in rule conditions for content scoping  
+- **[eSearch](KALTURA_ESEARCH_API.md)** — Search entries and users by badge-related metadata
