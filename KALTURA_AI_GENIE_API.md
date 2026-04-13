@@ -9,11 +9,13 @@ Kaltura AI Genie provides conversational AI search and generative answers over y
 # Prerequisites
 
 This guide assumes you already:
-- Know how to generate Kaltura Sessions (KS) in your backend, setting privileges.   
-- Have a Kaltura account setup with an AI Genie configured.   
+- Know how to generate Kaltura Sessions (KS) in your backend, setting privileges.  
+- Have a Kaltura account setup with an AI Genie configured.  
 - Know how to use the Kaltura Player embeds.
 
-Genie streams **structured generative answers** (flashcards, follow-ups, sources) plus “thinking/tool” status events. 
+Genie streams **structured generative answers** (flashcards, follow-ups, sources) plus “thinking/tool” status events.  
+
+> **Client-Side Widget Embed:** To embed the Genie conversational UI directly in a web page (the most common integration pattern), see the [Genie Widget section in the Experience Components Guide](KALTURA_EXPERIENCE_COMPONENTS_API.md#7-genie-widget). This guide covers the server-side HTTP API for building custom integrations and backend workflows.
 
 ## Environments, Auth & Headers
 
@@ -27,20 +29,37 @@ Authorization: KS <YOUR_KS>
 
 ## Minimum KS Privileges (tune to your account)
 
+The KS passed to Genie (whether via the widget or the HTTP API) is typically visible client-side. Generate a **USER session** (type=0) with these privileges:
+
 ```
 setrole:PLAYBACK_BASE_ROLE,
 sview:*,
-enableentitlement,
-privacycontext:<GENIE_ENABLED_CATEGORY_PRIVACY_CONTEXT>,
 appid:<APP_NAME-APP_DOMAIN>,
-sessionid:<GUID>,
-genieid:default
+sessionid:<GUID>
 ```
 
-Notes:
+| Privilege | Purpose |
+|-----------|---------|
+| `setrole:PLAYBACK_BASE_ROLE` | Restricts the KS to playback-only operations — recommended since the KS is exposed client-side |
+| `sview:*` | Lets Genie return playable clips; your **entitlements** still gate access per user and privacy context |
+| `appid:<APP_NAME-APP_DOMAIN>` | Identifies the application in analytics |
+| `sessionid:<GUID>` | Unique session identifier for tracking |
 
-- `sview:*` - lets Genie return playable clips; your **entitlements** still gate access per user and privacy context.
-- `privacycontext` - should match the category privacy context Genie indexes for your account.
+**Entitlement-protected content:** If Genie indexes content protected by entitlements, add the privacy context to the KS privileges:
+
+```
+enableentitlement,privacycontext:<GENIE_ENABLED_CATEGORY_PRIVACY_CONTEXT>
+```
+
+The privacy context should match the category Genie indexes for your account.
+
+**Optional Genie-specific privileges:**
+
+| Privilege | Purpose |
+|-----------|---------|
+| `genieid:<GENIE_ID>` | Select a specific Genie configuration when your account has multiple. Omit to use the account default |
+| `geniecategoryid:<CATEGORY_ID>` | Limit Genie queries to content published in the specified category only |
+| `genieancestorid:<CATEGORY_ID>` | Limit Genie queries to content in the specified category or any of its descendants |
 
 # 1. Stateless RAG Search (no session, quick hits)
 
@@ -189,7 +208,7 @@ The SSE/NDJSON emits one JSON object per line (SSE lines are prefixed with `data
 |---|---|---|---|---|---|
 | `flashcards-tool` | The flashcards + citations to clips. | YAML/Markdown-like block containing a top-level `title`, `summary`, then `keypoints` (each with `title` / `summary`) and `citation.clips` lists. Each clip has `entry_id`, `start_time`, `end_time` (plus indexes/types). | **Hero**: `{title, summary}`; **Clips**: array of `{title, summary, entryId, start, end}` (map keys & normalize). | Card stack + **Clips** panel. | Bind **Play** to Kaltura Player: `loadMedia({ entryId }, { startTime, clipTo })`. |
 | `followups-tool` | **Suggested next questions**. | Lines like: `questions:\n- How do I ...?\n- What types of ...?` | `string[]` follow-ups. | Clickable list (“Follow-ups”). | Clicking a follow-up re-asks the question via the `converse` call. |
-| `sources-tool` | **Reference sources** used. | YAML list like: `- title: ...\n  entry_id: 1_abc...\n  type: video\n  duration: 104` | Array of `{title, entryId, type, duration?}`. | “Sources” list with **entry_id** visible. | Deep-link to video at `start_time` or make assets downloadable when available. | 
+| `sources-tool` | **Reference sources** used. | YAML list like: `- title: ...\n  entry_id: 1_abc...\n  type: video\n  duration: 104` | Array of `{title, entryId, type, duration?}`. | “Sources” list with **entry_id** visible. | Deep-link to video at `start_time` or make assets downloadable when available. |
 
 **Minimal client algorithm**
 
@@ -274,7 +293,7 @@ Content-Type: application/json
 
 ### Response data
 
-**Final response:**   
+**Final response:**  
 
 ```json
 {
@@ -300,9 +319,9 @@ Unlike streaming, polling returns **one final bundle** under `data.elements` —
 - **`flashcards`:**  
   - `cards[]` each has `title`, `description`, optional `subTitle`.  
   - Clip references may appear in **either**:
-    - `cards[].videos[]` with `entryId`, `startTime`, `endTime`, or 
-    - `cards[].chapters[]` with `entry_id`, `start_time`, `end_time`.   
-  - The **first card’s** `title/description` are good “hero” text.   
+    - `cards[].videos[]` with `entryId`, `startTime`, `endTime`, or  
+    - `cards[].chapters[]` with `entry_id`, `start_time`, `end_time`.  
+  - The **first card’s** `title/description` are good “hero” text.  
   - If there is no standalone text element, you can synthesize an answer by joining `cards[].description`.  
 - **`followups`** → `followups: string[]` (sometimes named `questions` in other payloads).  
 - **`sources`** → list of `{ title, type, entryId, duration? }` for display or deep linking.  
@@ -412,5 +431,5 @@ The assistant remembers all prior messages in the thread and will answer in cont
 - **[Upload & Delivery](KALTURA_UPLOAD_AND_DELIVERY_API.md)** — Upload content that becomes searchable via Genie
 - **[Agents Manager](KALTURA_AGENTS_MANAGER_API.md)** — Automate content enrichment to improve Genie's knowledge base
 - **[Events Platform](KALTURA_EVENTS_PLATFORM_API.md)** — Genie can search event-related content
-- **[Experience Components](KALTURA_EXPERIENCE_COMPONENTS_API.md)** — Avatar SDK integrates with Genie for conversational AI
+- **[Experience Components](KALTURA_EXPERIENCE_COMPONENTS_API.md)** — Genie Widget embed (client-side UI), Avatar SDK, and other embeddable components
 

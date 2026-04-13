@@ -1,0 +1,66 @@
+name: Experience Components E2E
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "KALTURA_EXPERIENCE_COMPONENTS_API.md"
+      - "tests/test_experience_components_*.py"
+      - "tests/test_helpers.py"
+      - ".github/workflows/e2e-tests.yml"
+  pull_request:
+    paths:
+      - "KALTURA_EXPERIENCE_COMPONENTS_API.md"
+      - "tests/test_experience_components_*.py"
+      - "tests/test_helpers.py"
+      - ".github/workflows/e2e-tests.yml"
+  workflow_dispatch:
+
+jobs:
+  api-tests:
+    name: API validation (KS + Genie auth)
+    runs-on: ubuntu-latest
+    env:
+      KALTURA_PARTNER_ID: ${{ secrets.KALTURA_PARTNER_ID }}
+      KALTURA_KS: ${{ secrets.KALTURA_KS }}
+      KALTURA_SERVICE_URL: ${{ secrets.KALTURA_SERVICE_URL }}
+      KALTURA_ADMIN_SECRET: ${{ secrets.KALTURA_ADMIN_SECRET }}
+      KALTURA_GENIE_URL: ${{ secrets.KALTURA_GENIE_URL }}
+      KALTURA_PLAYER_ID: ${{ secrets.KALTURA_PLAYER_ID }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run API tests
+        run: python3 tests/test_experience_components_api.py
+
+  browser-e2e:
+    name: Browser E2E (Playwright)
+    runs-on: ubuntu-latest
+    env:
+      KALTURA_PARTNER_ID: ${{ secrets.KALTURA_PARTNER_ID }}
+      KALTURA_KS: ${{ secrets.KALTURA_KS }}
+      KALTURA_SERVICE_URL: ${{ secrets.KALTURA_SERVICE_URL }}
+      KALTURA_ADMIN_SECRET: ${{ secrets.KALTURA_ADMIN_SECRET }}
+      KALTURA_GENIE_URL: ${{ secrets.KALTURA_GENIE_URL }}
+      KALTURA_PLAYER_ID: ${{ secrets.KALTURA_PLAYER_ID }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install requests playwright
+          playwright install --with-deps chromium
+
+      - name: Run browser E2E tests
+        run: python3 tests/test_experience_components_e2e.py
