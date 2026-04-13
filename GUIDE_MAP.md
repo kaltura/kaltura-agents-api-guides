@@ -53,7 +53,13 @@ Guides for delivering content to end users through players, widgets, events, and
 | Guide | Subcategory | What You Learn |
 |-------|-------------|---------------|
 | [Player Embed](KALTURA_PLAYER_EMBED_GUIDE.md) | Playback & Content Hubs | Iframe/JS player embed, 30+ plugins, playback control |
-| [Experience Components](KALTURA_EXPERIENCE_COMPONENTS_API.md) | Playback & Content Hubs | Express Recorder, Captions Editor, Avatar, Genie Widget, CnC, Analytics widgets |
+| [Experience Components](KALTURA_EXPERIENCE_COMPONENTS_API.md) | Playback & Content Hubs | Index of all embeddable components with shared guidelines |
+| [Express Recorder](KALTURA_EXPRESS_RECORDER_API.md) | Playback & Content Hubs | Browser-based WebRTC video/audio/screen recording |
+| [Captions Editor](KALTURA_CAPTIONS_EDITOR_API.md) | Playback & Content Hubs | Interactive caption editing with video/waveform sync |
+| [Conversational Avatar](KALTURA_CONVERSATIONAL_AVATAR_API.md) | Playback & Content Hubs | AI-powered conversational video avatar embed |
+| [Chat & Collaborate](KALTURA_CNC_API.md) | Playback & Content Hubs | Real-time chat, Q&A, polls alongside video |
+| [Genie Widget](KALTURA_GENIE_WIDGET_API.md) | Playback & Content Hubs | Conversational AI search widget over video library |
+| [Embeddable Analytics](KALTURA_ANALYTICS_EMBED_API.md) | Playback & Content Hubs | Analytics dashboards via iframe + postMessage |
 | [Events Platform](KALTURA_EVENTS_PLATFORM_API.md) | Virtual Events & Webinars | Virtual events, webinars, town halls, sessions |
 | [User Profile](KALTURA_USER_PROFILE_API.md) | Virtual Events & Webinars | Per-app user profiles, event attendance tracking |
 | [Gamification](KALTURA_GAMIFICATION_API.md) | Virtual Events & Webinars | Leaderboards, badges, certificates |
@@ -116,6 +122,12 @@ graph TD
     %% Experiences
     PE["Player Embed"]
     EC["Experience Components"]
+    ER["Express Recorder"]
+    CE["Captions Editor"]
+    CA["Conv. Avatar"]
+    CNC["Chat & Collab"]
+    GW["Genie Widget"]
+    EA["Embed Analytics"]
     EP["Events Platform"]
     UP["User Profile"]
     GA["Gamification"]
@@ -125,6 +137,12 @@ graph TD
     KS --> PE
     PE --> AE
     KS --> EC
+    EC --> ER
+    EC --> CE
+    EC --> CA
+    EC --> CNC
+    EC --> GW
+    EC --> EA
     KS --> EP
     APR --> UP
     EP --> GA
@@ -144,7 +162,7 @@ graph TD
     class GS,KS,AT foundation
     class UD,MS,CT,CM,RE,AG,AI creation
     class ES,CA,UM,AB,MA,AR,AE,WH,APR,MSG management
-    class PE,EC,EP,UP,GA,DI,SY experience
+    class PE,EC,ER,CE,CA,CNC,GW,EA,EP,UP,GA,DI,SY experience
 ```
 
 **Legend:**  
@@ -165,9 +183,11 @@ Blue = Foundation | Purple = Creation | Orange = Management | Green = Experience
 | Add captions or transcripts | [Captions & Transcripts](KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md) |
 | Auto-caption with AI | [REACH API](KALTURA_REACH_API.md) |
 | Build a chatbot over video | [AI Genie](KALTURA_AI_GENIE_API.md) |
-| Embed Genie AI search widget | [Experience Components](KALTURA_EXPERIENCE_COMPONENTS_API.md) |
-| Record from browser | [Experience Components](KALTURA_EXPERIENCE_COMPONENTS_API.md) |
-| Embed an AI avatar | [Experience Components](KALTURA_EXPERIENCE_COMPONENTS_API.md) |
+| Embed Genie AI search widget | [Genie Widget](KALTURA_GENIE_WIDGET_API.md) |
+| Record from browser | [Express Recorder](KALTURA_EXPRESS_RECORDER_API.md) |
+| Embed an AI avatar | [Conversational Avatar](KALTURA_CONVERSATIONAL_AVATAR_API.md) |
+| Embed analytics dashboards | [Embeddable Analytics](KALTURA_ANALYTICS_EMBED_API.md) |
+| Edit captions visually | [Captions Editor](KALTURA_CAPTIONS_EDITOR_API.md) |
 | Create a virtual event | [Events Platform](KALTURA_EVENTS_PLATFORM_API.md) |
 | Send email notifications | [Messaging](KALTURA_MESSAGING_API.md) |
 | Get analytics data | [Analytics Reports](KALTURA_ANALYTICS_REPORTS_API.md) |

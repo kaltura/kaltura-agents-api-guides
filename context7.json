@@ -1,6 +1,6 @@
 {
   "name": "Kaltura API Guides",
-  "description": "Live-tested API guides for Kaltura — The Agentic Digital Experience Platform. Covers authentication, content management, search, player embed, AI-powered enrichment (captions, translation, automation rules), conversational AI, virtual events, multi-stream, webhooks, email messaging, user management, SSO/SAML, categories, custom metadata, captions & transcripts, analytics reports, event collection, gamification, content distribution, syndication feeds, experience components, multi-account management, and more. 671 tests validated against live API. For AI agents and developers.",
+  "description": "Live-tested API guides for Kaltura — The Agentic Digital Experience Platform. Covers authentication, content management, search, player embed, AI-powered enrichment (captions, translation, automation rules), conversational AI, virtual events, multi-stream, webhooks, email messaging, user management, SSO/SAML, categories, custom metadata, captions & transcripts, analytics reports, event collection, gamification, content distribution, syndication feeds, experience components (Express Recorder, Captions Editor, Conversational Avatar, Chat & Collaborate, Genie Widget, Embeddable Analytics), multi-account management, and more. 697 tests validated against live API. For AI agents and developers.",
   "focus": [
     "KALTURA_SESSION_GUIDE.md",
     "KALTURA_APPTOKENS_API.md",
@@ -28,6 +28,12 @@
     "KALTURA_SYNDICATION_API.md",
     "KALTURA_API_GETTING_STARTED.md",
     "KALTURA_EXPERIENCE_COMPONENTS_API.md",
+    "KALTURA_EXPRESS_RECORDER_API.md",
+    "KALTURA_CAPTIONS_EDITOR_API.md",
+    "KALTURA_CONVERSATIONAL_AVATAR_API.md",
+    "KALTURA_CNC_API.md",
+    "KALTURA_GENIE_WIDGET_API.md",
+    "KALTURA_ANALYTICS_EMBED_API.md",
     "KALTURA_MULTI_ACCOUNT_MANAGEMENT_API.md",
     "GUIDE_MAP.md",
     "AGENTS.md",

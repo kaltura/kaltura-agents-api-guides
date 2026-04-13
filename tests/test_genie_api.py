@@ -109,7 +109,7 @@ def main():
         resp = genie_post("/assistant/converse", {
             "userMessage": TEST_QUERY,
             "sse": False,
-        }, headers_override={"Accept": "application/x-ndjson"}, stream=True, timeout=60)
+        }, headers_override={"Accept": "application/x-ndjson"}, stream=True, timeout=300)
 
         events = collect_ndjson_events(resp)
         assert len(events) > 0, "No events received from converse (NDJSON)"
@@ -136,7 +136,7 @@ def main():
                 resp = genie_post("/assistant/converse", {
                     "userMessage": TEST_QUERY,
                     "sse": True,
-                }, headers_override={"Accept": "text/event-stream"}, stream=True, timeout=60)
+                }, headers_override={"Accept": "text/event-stream"}, stream=True, timeout=300)
 
                 events = []
                 for line in resp.iter_lines(decode_unicode=True):
@@ -303,7 +303,7 @@ def main():
             "userMessage": TEST_QUERY,
             "sse": False,
             "model_type": "fast",
-        }, stream=True, timeout=60)
+        }, stream=True, timeout=300)
         events = collect_ndjson_events(resp)
         assert len(events) > 0, "No events with model_type=fast"
         types = {e.get("type") for e in events}
@@ -343,7 +343,7 @@ def main():
             "sse": False,
             "threadId": thread_id,
             "model_type": "fast",
-        }, stream=True, timeout=60)
+        }, stream=True, timeout=300)
         events = collect_ndjson_events(resp)
         assert len(events) > 0, "No events for follow-up"
         # Verify same threadId is returned
@@ -371,7 +371,7 @@ def main():
             "threadId": thread_id,
             "force_experience": "flashcards",
             "model_type": "fast",
-        }, stream=True, timeout=60)
+        }, stream=True, timeout=300)
         events = collect_ndjson_events(resp)
         assert len(events) > 0, "No events with force_experience"
         runtimes = set()

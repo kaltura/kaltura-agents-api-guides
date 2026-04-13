@@ -971,12 +971,12 @@ Bulk list entries → check caption presence per entry → report gaps → order
 - **Caption every entry for accessibility compliance.** Use REACH auto-rules to ensure all new entries get captioned. Run periodic audits (section 11.5) to catch gaps.
 - **format is insertOnly.** Choose the correct caption format at creation time — it cannot be changed after the asset is created.
 - **Use DFXP/TTML for multi-language single-file uploads.** Upload a single DFXP file with `language="Multilingual"` and the server auto-splits into per-language assets.
-- **Use Captions Studio for interactive editing.** The Captions Studio (Captions Editor) provides a browser-based editor with synchronized video/waveform playback. Create a caption asset first, then pass its ID to the editor. See [Experience Components Guide](KALTURA_EXPERIENCE_COMPONENTS_API.md) for embed details.
+- **Use Captions Studio for interactive editing.** The Captions Studio (Captions Editor) provides a browser-based editor with synchronized video/waveform playback. Create a caption asset first, then pass its ID to the editor. See [Captions Editor Guide](KALTURA_CAPTIONS_EDITOR_API.md) for embed details.
 
 
 # 15. Related Guides
 
-- **[Experience Components](KALTURA_EXPERIENCE_COMPONENTS_API.md)** — Captions Studio (interactive caption editor) embed
+- **[Captions Editor](KALTURA_CAPTIONS_EDITOR_API.md)** — Captions Studio (interactive caption editor) embed
 - **[REACH API](KALTURA_REACH_API.md)** — AI captioning, translation, dubbing, audio description, automation rules
 - **[eSearch API](KALTURA_ESEARCH_API.md)** — Caption search with `KalturaESearchCaptionItem`, timestamp deep-linking
 - **[Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md)** — Caption display, track selection, transcript plugin

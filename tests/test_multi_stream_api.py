@@ -323,6 +323,8 @@ def main():
 
     def test_parent_playmanifest():
         """Verify playManifest returns a valid HLS manifest for the parent entry."""
+        # Flavor publishing may lag slightly behind READY status — brief settle
+        time.sleep(5)
         manifest_url = (
             f"https://cdnapisec.kaltura.com/p/{PARTNER_ID}/sp/{PARTNER_ID}00"
             f"/playManifest/entryId/{state['parent_id']}/format/applehttp/protocol/https"

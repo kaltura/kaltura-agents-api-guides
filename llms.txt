@@ -14,7 +14,13 @@ The Kaltura platform combines intelligent content creation, enterprise-grade con
 
 - [Kaltura Upload, Ingest & Content Delivery API](KALTURA_UPLOAD_AND_DELIVERY_API.md): This guide covers the complete lifecycle of getting content into Kaltura and delivering it to viewers: uploading files (including...
 - [Kaltura Multi-Stream (Dual/Multi-Screen) Entries API](KALTURA_MULTI_STREAM_API.md): Create synchronized multi-stream entries for dual-screen playback — Picture-in-Picture, Side-by-Side, and stream selection. A multi-stream entry...
-- [Kaltura Experience Components API](KALTURA_EXPERIENCE_COMPONENTS_API.md): Experience Components are front-end embeddable apps and widgets that simplify building rich media agentic applications. Instead of building...
+- [Kaltura Experience Components API](KALTURA_EXPERIENCE_COMPONENTS_API.md): Index of all embeddable experience components with shared best practices for KS scoping, session expiry, and error handling.
+- [Kaltura Express Recorder API](KALTURA_EXPRESS_RECORDER_API.md): Browser-based WebRTC recording — video, audio, and screen sharing. Creates Kaltura entries automatically upon upload. JS embed with events and methods API.
+- [Kaltura Captions Editor API](KALTURA_CAPTIONS_EDITOR_API.md): Interactive caption editing with synchronized video playback and audio waveform visualization. iframe embed with URL parameters.
+- [Kaltura Conversational Avatar Embed](KALTURA_CONVERSATIONAL_AVATAR_API.md): AI-powered video avatars for real-time conversations. Sandboxed iframe embed with Dynamic Page Prompts for persona configuration.
+- [Kaltura Chat & Collaborate (CnC)](KALTURA_CNC_API.md): Real-time chat, Q&A, polls, announcements, and reactions alongside video content. Activated through Events Platform.
+- [Kaltura Genie Widget API](KALTURA_GENIE_WIDGET_API.md): Conversational AI search widget over video library. ES module embed via Unisphere loader with custom theming and 15 languages.
+- [Kaltura Embeddable Analytics API](KALTURA_ANALYTICS_EMBED_API.md): Analytics dashboards via iframe with postMessage protocol. viewsConfig for widget control, navigation paths, date filters, drill-downs.
 
 ## Content Management
 

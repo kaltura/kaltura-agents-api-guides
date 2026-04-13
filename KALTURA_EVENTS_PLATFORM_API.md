@@ -574,5 +574,6 @@ curl -X POST "$KALTURA_EVENTS_API_URL/events/delete" \
 - **[App Registry API](KALTURA_APP_REGISTRY_API.md)** — Application instance registry (events auto-register apps)
 - **[User Profile API](KALTURA_USER_PROFILE_API.md)** — Per-event attendee profiles and attendance tracking
 - **[Messaging API](KALTURA_MESSAGING_API.md)** — Email invitations, reminders, and follow-ups for event attendees
-- **[Webhooks API](KALTURA_WEBHOOKS_API.md)** — HTTP callbacks for event-related content changes (entry ready, metadata changed)
-- **MCP Server** — An official MCP server (`kaltura/mcp-events`, installable via npm) enables AI agents to create, manage, and query events programmatically using the same API documented in this guide
+- **[Webhooks API](KALTURA_WEBHOOKS_API.md)** — HTTP callbacks for event-related content changes (entry ready, metadata changed)  
+- **[Chat & Collaborate](KALTURA_CNC_API.md)** — Real-time chat, Q&A, and polls embedded in event sessions  
+- **[Embeddable Analytics](KALTURA_ANALYTICS_EMBED_API.md)** — Event analytics dashboards via iframe embed

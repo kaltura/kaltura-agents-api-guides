@@ -155,7 +155,13 @@ Read the relevant guide when you need to implement a specific capability:
 
 ### Experience Components
 
-- **[Experience Components API](../../../KALTURA_EXPERIENCE_COMPONENTS_API.md)** — Embeddable UI components: Express Recorder (browser-based WebRTC recording), Captions Editor (interactive caption editing with video/waveform sync), and Embeddable Analytics dashboards. Each component is a standalone widget requiring a KS.
+- **[Experience Components API](../../../KALTURA_EXPERIENCE_COMPONENTS_API.md)** — Index of all embeddable UI components with shared best practices for KS scoping, session expiry, and error handling.
+- **[Express Recorder](../../../KALTURA_EXPRESS_RECORDER_API.md)** — Browser-based WebRTC video/audio/screen recording. Creates Kaltura entries on upload. JS embed with events and methods API.
+- **[Captions Editor](../../../KALTURA_CAPTIONS_EDITOR_API.md)** — Interactive caption editing with video/waveform sync. iframe embed with URL parameters. Requires existing captionAsset.
+- **[Conversational Avatar](../../../KALTURA_CONVERSATIONAL_AVATAR_API.md)** — AI-powered conversational video avatar embed via sandboxed iframe. Dynamic Page Prompts for persona configuration.
+- **[Chat & Collaborate](../../../KALTURA_CNC_API.md)** — Real-time chat, Q&A, polls, reactions alongside video. Activated through Events Platform, not standalone.
+- **[Genie Widget](../../../KALTURA_GENIE_WIDGET_API.md)** — Conversational AI search widget. ES module embed via Unisphere loader. Custom theming, 15 languages, content scoping.
+- **[Embeddable Analytics](../../../KALTURA_ANALYTICS_EMBED_API.md)** — Analytics dashboards via iframe + postMessage. viewsConfig for widget control, 9 dashboard views, 11 entity drill-downs, date filters.
 
 ### Multi-Account Management
 

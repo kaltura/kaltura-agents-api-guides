@@ -15,7 +15,7 @@ This guide assumes you already:
 
 Genie streams **structured generative answers** (flashcards, follow-ups, sources) plus “thinking/tool” status events.  
 
-> **Client-Side Widget Embed:** To embed the Genie conversational UI directly in a web page (the most common integration pattern), see the [Genie Widget section in the Experience Components Guide](KALTURA_EXPERIENCE_COMPONENTS_API.md#7-genie-widget). This guide covers the server-side HTTP API for building custom integrations and backend workflows.
+> **Client-Side Widget Embed:** To embed the Genie conversational UI directly in a web page (the most common integration pattern), see the [Genie Widget Guide](KALTURA_GENIE_WIDGET_API.md). This guide covers the server-side HTTP API for building custom integrations and backend workflows.
 
 ## Environments, Auth & Headers
 
@@ -431,5 +431,6 @@ The assistant remembers all prior messages in the thread and will answer in cont
 - **[Upload & Delivery](KALTURA_UPLOAD_AND_DELIVERY_API.md)** — Upload content that becomes searchable via Genie
 - **[Agents Manager](KALTURA_AGENTS_MANAGER_API.md)** — Automate content enrichment to improve Genie's knowledge base
 - **[Events Platform](KALTURA_EVENTS_PLATFORM_API.md)** — Genie can search event-related content
-- **[Experience Components](KALTURA_EXPERIENCE_COMPONENTS_API.md)** — Genie Widget embed (client-side UI), Avatar SDK, and other embeddable components
+- **[Genie Widget](KALTURA_GENIE_WIDGET_API.md)** — Genie conversational AI widget embed (client-side UI)  
+- **[Experience Components](KALTURA_EXPERIENCE_COMPONENTS_API.md)** — Index of all embeddable components
 

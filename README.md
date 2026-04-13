@@ -1,8 +1,8 @@
 # Kaltura API Guides
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Guides](https://img.shields.io/badge/Guides-27-green.svg)](#guides)
-[![Tests](https://img.shields.io/badge/Live--Tested-690_tests-brightgreen.svg)](#guides)
+[![Guides](https://img.shields.io/badge/Guides-33-green.svg)](#guides)
+[![Tests](https://img.shields.io/badge/Live--Tested-697_tests-brightgreen.svg)](#guides)
 [![llms.txt](https://img.shields.io/badge/llms.txt-available-purple.svg)](llms.txt)
 [![Agent Skill](https://img.shields.io/badge/Agent_Skill-kaltura--api-orange.svg)](.agents/skills/kaltura-api/SKILL.md)
 [![Docs Site](https://img.shields.io/badge/Docs-GitHub_Pages-blue.svg)](https://zoharbabin.github.io/kaltura-api-guides/)
@@ -54,7 +54,13 @@ These guides are optimized for AI agent consumption through multiple discovery m
 | [Gamification API](KALTURA_GAMIFICATION_API.md) | Leaderboards, badges, certificates, lead scoring, rules engine | 47 tests |
 | [Content Distribution API](KALTURA_DISTRIBUTION_API.md) | Push content to YouTube, Facebook, FTP, cross-Kaltura via connectors | 84 tests |
 | [Syndication Feeds API](KALTURA_SYNDICATION_API.md) | RSS/MRSS/iTunes/Roku feeds for external platforms to pull | 14 tests |
-| [Experience Components API](KALTURA_EXPERIENCE_COMPONENTS_API.md) | Express Recorder, Captions Editor, Avatar SDK, Genie Widget, Analytics Widget | 19 tests |
+| [Experience Components API](KALTURA_EXPERIENCE_COMPONENTS_API.md) | Index of all embeddable components with shared guidelines | 26 tests |
+| [Express Recorder API](KALTURA_EXPRESS_RECORDER_API.md) | Browser-based WebRTC video, audio, and screen recording | — |
+| [Captions Editor API](KALTURA_CAPTIONS_EDITOR_API.md) | Interactive caption editing with video/waveform sync | — |
+| [Conversational Avatar Embed](KALTURA_CONVERSATIONAL_AVATAR_API.md) | AI-powered conversational video avatar embed | — |
+| [Chat & Collaborate (CnC)](KALTURA_CNC_API.md) | Real-time chat, Q&A, polls alongside video content | — |
+| [Genie Widget API](KALTURA_GENIE_WIDGET_API.md) | Conversational AI search widget over video library | — |
+| [Embeddable Analytics API](KALTURA_ANALYTICS_EMBED_API.md) | Analytics dashboards via iframe + postMessage | — |
 | [Multi-Account Management API](KALTURA_MULTI_ACCOUNT_MANAGEMENT_API.md) | Sub-accounts, cross-account auth, multi-account analytics | 6 tests |
 
 ## Quick Start

@@ -1,0 +1,338 @@
+# Kaltura Genie Widget API
+
+Kaltura Genie provides a conversational AI search widget that lets users ask natural-language questions about your video library and receive structured answers with video clip citations. The widget is embedded via the Kaltura Unisphere loader as an ES module.
+
+**Base URL:** `https://unisphere.nvp1.ovp.kaltura.com/v1`  
+**Auth:** KS passed via runtime settings  
+**Format:** ES module JavaScript embed  
+
+
+# 1. When to Use
+
+- **Knowledge portals** — Add AI-powered video search to internal portals, help centers, or learning hubs  
+- **Content discovery** — Let users find relevant moments across large video libraries using natural language  
+- **Customer support** — Embed a conversational assistant that answers questions from your video knowledge base  
+- **Training platforms** — Enable employees or students to search training video content conversationally  
+
+
+# 2. Embedding
+
+Load the Unisphere loader as an ES module and call `loader()` with your configuration:
+
+```html
+<div id="class-genie-container"></div>
+<script type="module">
+  import { loader } from "https://unisphere.nvp1.ovp.kaltura.com/v1/loader/index.esm.js";
+
+  const options = {
+    appId: "my-app",
+    appVersion: "1.0.0",
+    serverUrl: "https://unisphere.nvp1.ovp.kaltura.com/v1",
+    ui: {
+      theme: "light",
+      language: "en-US"
+    },
+    runtimes: [{
+      widgetName: "unisphere.widget.genie",
+      runtimeName: "chat",
+      settings: {
+        kalturaServerURI: "https://www.kaltura.com",
+        ks: "$KALTURA_KS",
+        partnerId: "$KALTURA_PARTNER_ID"
+      },
+      visuals: [{
+        type: "page",
+        target: "class-genie-container",
+        settings: {}
+      }]
+    }]
+  };
+  loader(options);
+</script>
+```
+
+The container `<div>` must have an `id` attribute matching the `target` value in the visuals config. The widget renders inside this container and fills the available space.
+
+
+# 3. Configuration
+
+## Top-Level Options
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `appId` | string | yes | Unique identifier for your application instance (e.g., `"my-portal"`) |
+| `appVersion` | string | yes | Your application version (e.g., `"1.0.0"`) — useful for tracking and debugging |
+| `serverUrl` | string | yes | Unisphere server URL: `https://unisphere.nvp1.ovp.kaltura.com/v1` |
+| `ui.theme` | string or object | yes | `"light"`, `"dark"`, or a custom theme object (see section 6) |
+| `ui.language` | string | no | UI language code (e.g., `"en-US"`, `"he-IL"`) — see section 9 for supported languages |
+| `runtimes` | array | yes | Array of runtime configurations (one entry for Genie) |
+
+## Runtime Settings
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `widgetName` | string | yes | Must be `"unisphere.widget.genie"` |
+| `runtimeName` | string | yes | Must be `"chat"` |
+| `settings.kalturaServerURI` | string | yes | Kaltura API endpoint (e.g., `https://www.kaltura.com`). Use your region's endpoint if applicable (e.g., `https://api.irp2.ovp.kaltura.com` for EU) |
+| `settings.ks` | string | yes | Kaltura Session — must be a USER session (type=0). See section 4 |
+| `settings.partnerId` | string | yes | Your Kaltura partner ID. Also accepted as `pid` |
+| `settings.uiConfId` | string | no | UI Configuration ID for advanced customization |
+| `settings.getSourceUrl` | function | no | Callback receiving `{ entryId, startTime }` — return a URL to the entry in your application. Omit or return empty string if your app has no entry page |
+| `settings.shareUrl.queryParam` | string | no | URL query parameter name for conversation sharing (e.g., `"mid"`) |
+| `settings.shareUrl.createUrl` | function | no | Callback receiving `{ messageId }` — return a shareable URL for the conversation |
+
+## Visuals
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `visuals[].type` | string | yes | Currently only `"page"` is supported |
+| `visuals[].target` | string | yes | The `id` attribute of the container `<div>` where the widget renders |
+| `visuals[].settings` | object | yes | Pass an empty object `{}` — reserved for future visual type settings |
+| `visuals[].settings.customization.initialPage.title` | string | no | Title displayed on the initial landing page (e.g., `"Ask Anything"`) |
+| `visuals[].settings.customization.initialPage.initialQuestions` | array | no | Pre-populated question suggestions — see section 7 |
+
+
+# 4. KS Requirements
+
+The KS passed to the Genie widget is visible client-side. Generate it as a **USER session** (type=0) on your backend:
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/session/action/start" \
+  -d "format=1" \
+  -d "secret=$KALTURA_ADMIN_SECRET" \
+  -d "partnerId=$KALTURA_PARTNER_ID" \
+  -d "type=0" \
+  -d "userId=user@example.com" \
+  -d "expiry=86400" \
+  -d "privileges=setrole:PLAYBACK_BASE_ROLE,sview:*,appid:my-app-my-domain.com,sessionid:$(uuidgen)"
+```
+
+**Recommended privileges:**
+
+| Privilege | Purpose |
+|-----------|---------|
+| `setrole:PLAYBACK_BASE_ROLE` | Restricts the KS to playback-only operations — recommended since the KS is exposed client-side |
+| `sview:*` | Allows Genie to return playable clips. Entitlements still gate per-user access |
+| `appid:<APP_NAME-APP_DOMAIN>` | Identifies the application in analytics |
+| `sessionid:<GUID>` | Unique session identifier for tracking |
+
+**Optional Genie-specific privileges:**
+
+| Privilege | Purpose |
+|-----------|---------|
+| `genieid:<GENIE_ID>` | Select a specific Genie configuration when your account has multiple. Omit to use the default |
+| `geniecategoryid:<CATEGORY_ID>` | Limit Genie queries to content published in the specified category only |
+| `genieancestorid:<CATEGORY_ID>` | Limit Genie queries to content in the specified category or any of its descendants |
+
+**Entitlement-protected content:** If Genie indexes content protected by entitlements, add the privacy context to the KS privileges:
+
+```
+enableentitlement,privacycontext:<PRIVACY_CONTEXT>
+```
+
+If only authenticated users access Genie, specify the `userId` when creating the KS to enable per-user entitlement checks.
+
+See the [Session Guide](KALTURA_SESSION_GUIDE.md) for KS generation details and the [AppTokens Guide](KALTURA_APPTOKENS_API.md) for production token management.
+
+
+# 5. Container CSS
+
+The container `<div>` must be sized by your page layout — the widget fills the available space.
+
+**Full-page layout:**
+
+```css
+#class-genie-container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+}
+```
+
+**Fixed-height panel within an existing page:**
+
+```css
+#class-genie-container {
+  display: flex;
+  width: 100%;
+  height: 600px;
+}
+```
+
+
+# 6. Custom Theming
+
+Pass a theme object instead of `"light"` or `"dark"` to fully customize the widget appearance:
+
+```javascript
+const theme = {
+  mode: "dark",
+  palette: {
+    primary: { light: "#2e89ff", main: "#006cfa", dark: "#0056c7", contrastText: "#ffffff" },
+    secondary: { light: "#2e89ff", main: "#006cfa", dark: "#0056c7", contrastText: "#ffffff" },
+    danger: { main: "#E95E6C", light: "#F2A1A9", dark: "#DB1E32", contrastText: "#000000" },
+    success: { main: "#31B551", light: "#4ACE6B", dark: "#268C3F", contrastText: "#000000" },
+    warning: { main: "#F26C0D", light: "#F58A3D", dark: "#C2570A", contrastText: "#000000" },
+    info: { main: "#006EFA", light: "#4798FF", dark: "#004CAD", contrastText: "#FFFFFF" },
+    surfaces: {
+      background: "#06101e",
+      paper: "#0b203c",
+      elevated: "#102e56",
+      protection: "#006cfa"
+    },
+    tone1: "#ffffff", tone2: "#a9c7ef", tone3: "#5390df",
+    tone4: "#205dac", tone5: "#194a8a", tone6: "#11335f",
+    tone7: "#0a1e38", tone8: "#000000"
+  },
+  typography: {
+    fontFamily: "Rubik, Helvetica Neue, Segoe UI, sans-serif",
+    webFontUrl: "https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap",
+    fontSize: 14,
+    fontWeightRegular: 400,
+    fontWeightBold: 700
+  },
+  shape: { roundness1: 8, roundness2: 8, roundness3: 16 },
+  elevations: {
+    low: "none",
+    medium: "0px 0px 0px 1px rgba(0,0,0,0.2), 0px 4px 30px -8px rgba(0,0,0,0.2)",
+    high: "0px 0px 0px 1px rgba(0,0,0,0.2), 0px 8px 60px -16px rgba(0,0,0,0.2)"
+  },
+  breakpoints: { sm: 600, md: 960, lg: 1280, xl: 1600 }
+};
+
+const options = {
+  // ...other options...
+  ui: { theme: theme, language: "en-US" },
+  // ...runtimes...
+};
+```
+
+**Theme properties:**
+
+| Property | Description |
+|----------|-------------|
+| `mode` | `"light"` or `"dark"` — sets the base color scheme |
+| `palette.primary` | Primary brand color with `light`, `main`, `dark`, `contrastText` variants |
+| `palette.secondary` | Secondary brand color with the same variant structure |
+| `palette.surfaces` | `background`, `paper`, `elevated`, `protection` — surface colors for UI layers |
+| `palette.tone1`–`tone8` | Tonal scale from lightest to darkest for text, borders, and subtle UI elements |
+| `palette.danger/success/warning/info` | Semantic colors for status indicators |
+| `palette.translucent` | Translucent overlay colors with `main`, `dark`, `light`, `contrastText`, `commonBlack`, `commonWhite` |
+| `palette.brand` | Custom brand colors (e.g., `brand.yellow.main`) |
+| `typography.fontFamily` | Primary font stack |
+| `typography.webFontUrl` | URL to load a web font (Google Fonts or similar) |
+| `typography.fontSize` | Base font size in pixels |
+| `typography.fontWeightLight/Regular/Medium/Bold` | Font weight values (300, 400, 500, 700) |
+| `typography.heading1`–`heading5` | Heading styles with `fontWeight`, `fontSize`, `lineHeight`, `letterSpacing`, `fontFamily`, `topBottomMargins` |
+| `typography.body1/body2` | Body text styles; `body1Highlight`/`body2Highlight` for bold variants |
+| `typography.buttonLabel1/buttonLabel2` | Button text styles |
+| `typography.formLabel/formError` | Form element text styles |
+| `shape.roundness1/2/3` | Border radius values for small, medium, and large UI elements |
+| `elevations.low/medium/high` | CSS box-shadow values for elevation levels |
+| `breakpoints.sm/md/lg/xl` | Responsive breakpoint widths in pixels |
+
+
+# 7. Initial Questions
+
+Pre-populate the landing page with suggested questions using the `initialQuestions` array in the visuals settings:
+
+```javascript
+visuals: [{
+  type: "page",
+  target: "class-genie-container",
+  settings: {
+    customization: {
+      initialPage: {
+        title: "Ask Anything",
+        initialQuestions: [
+          { text: "How do I set up account alerts?", answerType: "flashcards" },
+          { text: "What security features are available?", answerType: "flashcards" },
+          { text: "How do I manage my profile settings?", answerType: "flashcards" }
+        ]
+      }
+    }
+  }
+}]
+```
+
+Each question object has:  
+- **`text`** — The question displayed to the user as a clickable suggestion  
+- **`answerType`** — Response format hint (e.g., `"flashcards"` for structured card-based answers)
+
+
+# 8. Source URL and Share URL Callbacks
+
+Provide callbacks to integrate Genie with your application's navigation and sharing:
+
+```javascript
+settings: {
+  // Deep-link to video entries in your application
+  getSourceUrl: ({ entryId, startTime }) => {
+    return `https://my-portal.example.com/watch?entry=${entryId}&st=${startTime}`;
+  },
+  // Enable conversation sharing
+  shareUrl: {
+    queryParam: "mid",
+    createUrl: ({ messageId }) => {
+      const url = new URL(window.location.href);
+      url.searchParams.set("mid", messageId);
+      return url.toString();
+    }
+  }
+}
+```
+
+- **`getSourceUrl`** — Called when Genie displays source entry links in answers. Return a URL to the entry page in your application at the specified `startTime`. Return an empty string or omit the callback entirely if your application does not have entry pages.  
+- **`shareUrl`** — Enables conversation sharing. `queryParam` names the URL parameter, and `createUrl` builds the shareable URL from the `messageId`.
+
+
+# 9. Supported Languages
+
+| Code | Language |
+|------|----------|
+| `en-US` | English (US) |
+| `de-DE` | German |
+| `es-ES` | Spanish |
+| `fi-FI` | Finnish |
+| `fr-CA` | French (Canada) |
+| `fr-FR` | French (France) |
+| `he-IL` | Hebrew |
+| `it-IT` | Italian |
+| `ja-JP` | Japanese |
+| `ko-KR` | Korean |
+| `nl-NL` | Dutch |
+| `pt-BR` | Portuguese (Brazil) |
+| `ru-RU` | Russian |
+| `zh-CN` | Chinese (Simplified) |
+| `zh-TW` | Chinese (Traditional) |
+
+Short codes (e.g., `"en"`, `"he"`) are also accepted.
+
+
+# 10. Server-Side API
+
+The Genie widget communicates with the Genie server automatically. For custom integrations that bypass the widget (server-to-server RAG search, streaming conversations, polling sessions), see the [AI Genie API Guide](KALTURA_AI_GENIE_API.md).
+
+
+# 11. Error Handling
+
+- **Blank container** — If the widget container renders empty, verify the `ks` is valid and the `partnerId` matches your account. Check the browser console for CORS errors or ES module import failures. The container `<div>` must have an `id` attribute matching the `target` value in the visuals config.  
+- **ES module import failure** — The Genie widget loads as an ES module (`type="module"`). Verify your page uses HTTPS and the browser supports ES modules. The `import` statement requires a script tag with `type="module"`.  
+- **KS expiry** — The widget does not automatically renew expired sessions. Generate a KS with sufficient expiry for the expected session duration.  
+
+
+# 12. Best Practices
+
+- **Generate the KS server-side.** The Genie widget KS is visible client-side — generate USER sessions (type=0) with `setrole:PLAYBACK_BASE_ROLE` on your backend. Never embed admin secrets in client-side code.  
+- **Scope content with category privileges.** Use `geniecategoryid` or `genieancestorid` KS privileges to limit queries to relevant content rather than exposing the entire library.  
+- **Size the container explicitly.** The widget fills the available space in the container `<div>` — set explicit `width` and `height` via CSS.  
+- **Use HTTPS.** The embed URL and all component URLs must use HTTPS for ES module imports and secure media access.  
+
+
+# 13. Related Guides
+
+- **[Experience Components Overview](KALTURA_EXPERIENCE_COMPONENTS_API.md)** — Index of all embeddable components with shared guidelines  
+- **[AI Genie API](KALTURA_AI_GENIE_API.md)** — Server-side Genie HTTP API for custom integrations (RAG search, streaming conversations, polling)  
+- **[Session Guide](KALTURA_SESSION_GUIDE.md)** — KS generation and privilege management  
+- **[AppTokens API](KALTURA_APPTOKENS_API.md)** — Production token management for secure KS generation

@@ -1493,4 +1493,4 @@ curl -o crm_lead_export.csv "$CSV_URL"
 - **[Gamification](KALTURA_GAMIFICATION_API.md)** — Analytics events feed the gamification rules engine
 - **[Multi-Account Management](KALTURA_MULTI_ACCOUNT_MANAGEMENT_API.md)** — Cross-account analytics with multi-account report types (20001+)
 - **[Distribution](KALTURA_DISTRIBUTION_API.md)** — Distribution status tracking via analytics reports
-- **[Experience Components](KALTURA_EXPERIENCE_COMPONENTS_API.md)** — Embeddable analytics dashboard widget
+- **[Embeddable Analytics](KALTURA_ANALYTICS_EMBED_API.md)** — Analytics dashboards via iframe + postMessage

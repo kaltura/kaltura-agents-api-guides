@@ -82,7 +82,7 @@ def main():
             entry = item.get("object", {})
             if (entry.get("status") == 2 and
                     entry.get("mediaType") == 1 and
-                    entry.get("duration", 0) >= 30):
+                    entry.get("duration", 0) >= 600):
                 if best_entry is None or entry["duration"] < best_entry["duration"]:
                     best_entry = entry
                 if best_entry["duration"] <= 120:
@@ -104,8 +104,8 @@ def main():
 
     def test_clips_task_add():
         """Order AI clip generation using KalturaClipsVendorTaskData."""
-        # Use shortest clip duration (10s) for fastest processing
-        clips_duration = 10
+        # Use 30s clip duration — source must be at least 10 min
+        clips_duration = 30
         result = kaltura_post("reach_entryVendorTask", "add", {
             "entryVendorTask[objectType]": "KalturaEntryVendorTask",
             "entryVendorTask[entryId]": state["source_entry_id"],

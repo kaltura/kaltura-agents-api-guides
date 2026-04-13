@@ -34,7 +34,13 @@ Kaltura API Guides/
 ├── KALTURA_GAMIFICATION_API.md            # Leaderboards, badges, certificates, lead scoring
 ├── KALTURA_DISTRIBUTION_API.md            # Content distribution connectors (push to YouTube/FB/FTP)
 ├── KALTURA_SYNDICATION_API.md             # Syndication feeds (RSS/MRSS/iTunes/Roku pull)
-├── KALTURA_EXPERIENCE_COMPONENTS_API.md   # Express Recorder, Captions Editor, Analytics Widget
+├── KALTURA_EXPERIENCE_COMPONENTS_API.md   # Experience components index (links to standalone guides)
+├── KALTURA_EXPRESS_RECORDER_API.md        # Browser-based WebRTC recording
+├── KALTURA_CAPTIONS_EDITOR_API.md         # Interactive caption editing with video/waveform sync
+├── KALTURA_CONVERSATIONAL_AVATAR_API.md   # AI-powered conversational video avatar embed
+├── KALTURA_CNC_API.md                     # Chat & Collaborate (real-time chat, Q&A, polls)
+├── KALTURA_GENIE_WIDGET_API.md            # Conversational AI search widget
+├── KALTURA_ANALYTICS_EMBED_API.md         # Embeddable analytics dashboards via iframe
 ├── KALTURA_MULTI_ACCOUNT_MANAGEMENT_API.md # Multi-account management, cross-account analytics
 └── tests/                                 # Companion test scripts
 ```
@@ -195,8 +201,12 @@ Agents building on Kaltura should use platform services rather than reimplementi
 | Analytics reports | Reports API (VOD/Live/Webcast metrics, CSV exports) | `KALTURA_ANALYTICS_REPORTS_API.md` |
 | Playback event tracking | Stats collection (quartiles, seeks, buffer events) | `KALTURA_ANALYTICS_EVENTS_COLLECTION_API.md` |
 | Gamification & leaderboards | Game Services (badges, certificates, rules engine) | `KALTURA_GAMIFICATION_API.md` |
-| Browser recording | Express Recorder (WebRTC recording widget) | `KALTURA_EXPERIENCE_COMPONENTS_API.md` |
-| Caption editing | Captions Editor (interactive editing with waveform) | `KALTURA_EXPERIENCE_COMPONENTS_API.md` |
+| Browser recording | Express Recorder (WebRTC recording widget) | `KALTURA_EXPRESS_RECORDER_API.md` |
+| Caption editing | Captions Editor (interactive editing with waveform) | `KALTURA_CAPTIONS_EDITOR_API.md` |
+| AI avatar conversations | Conversational Avatar (iframe embed) | `KALTURA_CONVERSATIONAL_AVATAR_API.md` |
+| Real-time chat & Q&A | Chat & Collaborate (event chat panels) | `KALTURA_CNC_API.md` |
+| AI search widget | Genie Widget (conversational search) | `KALTURA_GENIE_WIDGET_API.md` |
+| Embedded analytics | Embeddable Analytics (iframe dashboards) | `KALTURA_ANALYTICS_EMBED_API.md` |
 | Multi-account management | Parent-child accounts, cross-account analytics | `KALTURA_MULTI_ACCOUNT_MANAGEMENT_API.md` |
 
 ## Adding a New Guide

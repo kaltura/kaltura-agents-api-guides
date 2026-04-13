@@ -96,6 +96,7 @@ def main():
 
     def test_user_list_filter():
         """List users with status filter and verify our user is included."""
+        time.sleep(3)  # Allow indexing to catch up after user.add
         result = kaltura_post("user", "list", {
             "filter[objectType]": "KalturaUserFilter",
             "filter[idIn]": state["user_id"],
