@@ -40,11 +40,11 @@ def main():
             "uploadToken[fileSize]": 1024,
         })
         assert "id" in result, f"No token ID returned: {result}"
-        assert result.get("status") == 0, f"Expected PENDING status (0), got {result.get('status')}"
-        assert result.get("fileName") == "test_upload.bin"
         state["token_id"] = result["id"]
         runner.register_cleanup(f"upload token {result['id']}",
                                 lambda: _delete_token(result["id"]))
+        assert result.get("status") == 0, f"Expected PENDING status (0), got {result.get('status')}"
+        assert result.get("fileName") == "test_upload.bin"
         print(f"    Token: {result['id']}, status={result['status']}")
 
     runner.run_test("uploadToken.add — create upload token", test_upload_token_add)
@@ -575,6 +575,8 @@ def main():
             "uploadToken[fileSize]": len(png_data),
         })
         token_id = token["id"]
+        runner.register_cleanup(f"thumb upload token {token_id}",
+                                lambda: _delete_token(token_id))
         # Step 2: Upload the PNG
         import io
         upload_url = f"{SERVICE_URL}/service/uploadToken/action/upload"

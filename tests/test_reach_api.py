@@ -548,16 +548,17 @@ def main():
             "entryVendorTask[reachProfileId]": state["test_reach_profile_id"],
             "entryVendorTask[catalogItemId]": state["test_catalog_item_id"],
         })
-        required = ["id", "partnerId", "entryId", "status", "reachProfileId",
+        assert "id" in result, f"Task add failed: {result}"
+        state["test_task_id"] = result["id"]
+        state["test_task_status"] = result.get("status")
+        runner.register_cleanup(f"task {result['id']}", lambda: _abort_task(result["id"]))
+        required = ["partnerId", "entryId", "status", "reachProfileId",
                     "catalogItemId", "createdAt", "serviceType", "serviceFeature",
                     "turnAroundTime", "creationMode"]
         for field in required:
             assert field in result, f"Task response missing '{field}'. Keys: {list(result.keys())}"
         assert result["creationMode"] == 1, f"Expected creationMode=1 (MANUAL), got {result['creationMode']}"
         assert result["status"] in (1, 8), f"Expected PENDING(1) or PENDING_ENTRY_READY(8), got {result['status']}"
-        state["test_task_id"] = result["id"]
-        state["test_task_status"] = result["status"]
-        runner.register_cleanup(f"task {result['id']}", lambda: _abort_task(result["id"]))
         print(f"    Created task: {result['id']}, status={result['status']}")
 
     runner.run_test("entryVendorTask.add — create machine captions task", test_task_add)

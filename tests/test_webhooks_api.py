@@ -957,15 +957,16 @@ def main():
             "category[name]": f"Email_Test_{TS}",
             "category[description]": "Temp category for email E2E test. Safe to delete.",
         })
+        state["email_test_category_id"] = cat_result.get("id")
+        if state["email_test_category_id"]:
+            runner.register_cleanup(
+                f"email test category {cat_result['id']}",
+                lambda: kaltura_post("category", "delete", {
+                    "id": state["email_test_category_id"],
+                    "moveEntriesToParentCategory": 1,
+                }),
+            )
         assert "id" in cat_result, f"Expected category id: {cat_result}"
-        state["email_test_category_id"] = cat_result["id"]
-        runner.register_cleanup(
-            f"email test category {cat_result['id']}",
-            lambda: kaltura_post("category", "delete", {
-                "id": state["email_test_category_id"],
-                "moveEntriesToParentCategory": 1,
-            }),
-        )
         print(f"    Category created: {cat_result['id']} — polling Gmail IMAP...")
         # Poll Gmail IMAP for up to 90 seconds
         subject = state.get("email_expected_subject", "")

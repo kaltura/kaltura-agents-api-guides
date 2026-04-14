@@ -118,15 +118,15 @@ def main():
             "entryVendorTask[taskJobData][instruction]": "API doc validation — generate highlight clips",
         })
         assert "id" in result, f"Task add failed: {result}"
+        state["clips_task_id"] = result["id"]
+        state["clips_task_status"] = result["status"]
+        runner.register_cleanup(f"clips task {result['id']}",
+                                lambda: _abort_task(result["id"]))
         assert result["serviceFeature"] == CLIPS_SERVICE_FEATURE
         assert result["status"] in (1, 2, 3, 8), (
             f"Unexpected initial status: {result['status']}"
         )
         assert result.get("catalogItemId") == CLIPS_CATALOG_ITEM_ID
-        state["clips_task_id"] = result["id"]
-        state["clips_task_status"] = result["status"]
-        runner.register_cleanup(f"clips task {result['id']}",
-                                lambda: _abort_task(result["id"]))
         print(f"    Created clips task: {result['id']}, status={result['status']}, "
               f"clipsDuration={clips_duration}s")
 

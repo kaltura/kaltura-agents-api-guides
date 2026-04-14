@@ -126,11 +126,12 @@ def main():
             "category[name]": f"MM-Test-{tag}",
             "category[description]": "Media Manager E2E test category",
         })
+        state["category_id"] = result.get("id")
+        if state["category_id"]:
+            runner.register_cleanup(f"category {result['id']}",
+                                    lambda cid=result["id"]: kaltura_post("category", "delete", {
+                                        "id": cid, "moveEntriesToParentCategory": 1}))
         assert "id" in result, f"Expected category id: {result}"
-        state["category_id"] = result["id"]
-        runner.register_cleanup(f"category {result['id']}",
-                                lambda cid=result["id"]: kaltura_post("category", "delete", {
-                                    "id": cid, "moveEntriesToParentCategory": 1}))
         print(f"    Category: {result['id']} ({result.get('name', '')})")
 
     runner.run_test("category.add — create test category", test_create_category)

@@ -119,9 +119,14 @@ def main():
         assert "id" in result[0], f"Expected id in uploadToken result: {result[0]}"
         token_id = result[0]["id"]
 
-        # Sub-request 2: media.add
+        # Sub-request 2: media.add — register cleanup immediately
         assert "id" in result[1], f"Expected id in media.add result: {result[1]}"
         entry_id = result[1]["id"]
+        state["chained_entry_id"] = entry_id
+        state["chained_token_id"] = token_id
+        runner.register_cleanup(f"multirequest entry {entry_id}",
+                                lambda: _delete_entry(entry_id))
+
         assert result[1].get("name") == f"API_DOC_MULTIREQUEST_TEST_{ts}", \
             f"Expected name match, got {result[1].get('name')}"
 
@@ -129,11 +134,6 @@ def main():
         assert "id" in result[2], f"Expected id in addContent result: {result[2]}"
         assert result[2]["id"] == entry_id, \
             f"Expected chained entryId={entry_id}, got {result[2]['id']}"
-
-        state["chained_entry_id"] = entry_id
-        state["chained_token_id"] = token_id
-        runner.register_cleanup(f"multirequest entry {entry_id}",
-                                lambda: _delete_entry(entry_id))
         print(f"    Token: {token_id}")
         print(f"    Entry: {entry_id} (chained via {{2:result:id}})")
         print(f"    AddContent confirmed chaining: entryId={result[2]['id']}")
@@ -290,6 +290,9 @@ def main():
         resp.raise_for_status()
         result = resp.json()
         assert "id" in result, f"Expected 'id' in response: {result}"
+        state["json_entry_id"] = result["id"]
+        runner.register_cleanup(f"JSON body entry {result['id']}",
+                                lambda: _delete_entry(result["id"]))
         assert result.get("name") == f"JSON_BODY_TEST_{ts}", \
             f"Expected name match, got {result.get('name')}"
         assert result.get("description") == "Testing JSON body with complex object", \
@@ -298,9 +301,6 @@ def main():
         actual_tags = result.get("tags", "")
         assert "json-test" in actual_tags and "api-getting-started" in actual_tags, \
             f"Expected tags to contain json-test and api-getting-started, got {actual_tags}"
-        state["json_entry_id"] = result["id"]
-        runner.register_cleanup(f"JSON body entry {result['id']}",
-                                lambda: _delete_entry(result["id"]))
         print(f"    JSON body (complex object): created entry {result['id']}, "
               f"name={result['name']}, tags={result['tags']}")
 

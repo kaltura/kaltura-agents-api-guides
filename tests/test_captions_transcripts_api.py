@@ -102,13 +102,13 @@ def main():
             "captionAsset[format]": 1,  # SRT
             "captionAsset[isDefault]": 1,
         })
+        state["srt_caption_id"] = result["id"]
+        runner.register_cleanup(f"srt caption {result['id']}",
+                                lambda: _delete_caption(state["srt_caption_id"]))
         assert result.get("objectType") == "KalturaCaptionAsset"
         assert result["entryId"] == state["entry_id"]
         assert result["language"] == "English"
         assert str(result["format"]) == "1", f"Expected format=1 (SRT), got {result['format']}"
-        state["srt_caption_id"] = result["id"]
-        runner.register_cleanup(f"srt caption {result['id']}",
-                                lambda: _delete_caption(state["srt_caption_id"]))
         print(f"    Created SRT caption: id={result['id']}, status={result.get('status')}")
 
     runner.run_test("captionAsset.add — create SRT caption", test_caption_add_srt)
@@ -212,10 +212,10 @@ def main():
             "captionAsset[language]": "English",
             "captionAsset[format]": 3,  # WEBVTT
         })
-        assert str(result["format"]) == "3"
         state["webvtt_caption_id"] = result["id"]
         runner.register_cleanup(f"webvtt caption {result['id']}",
                                 lambda: _delete_caption(state["webvtt_caption_id"]))
+        assert str(result["format"]) == "3"
         print(f"    Created WebVTT caption: id={result['id']}")
 
     runner.run_test("captionAsset.add — create WebVTT caption (format=3)", test_caption_add_webvtt)
@@ -241,10 +241,10 @@ def main():
             "captionAsset[language]": "English",
             "captionAsset[format]": 2,  # DFXP
         })
-        assert str(result["format"]) == "2"
         state["dfxp_caption_id"] = result["id"]
         runner.register_cleanup(f"dfxp caption {result['id']}",
                                 lambda: _delete_caption(state["dfxp_caption_id"]))
+        assert str(result["format"]) == "2"
         print(f"    Created DFXP caption: id={result['id']}")
 
     runner.run_test("captionAsset.add — create DFXP caption (format=2)", test_caption_add_dfxp)
@@ -269,12 +269,12 @@ def main():
             "captionAsset[label]": "Default Format Test",
             "captionAsset[language]": "French",
         })
-        # Default format should be SRT(1) or at least a valid format
-        fmt = result.get("format")
-        assert fmt is not None, "Expected format to be set"
         state["default_fmt_caption_id"] = result["id"]
         runner.register_cleanup(f"default fmt caption {result['id']}",
                                 lambda: _delete_caption(state["default_fmt_caption_id"]))
+        # Default format should be SRT(1) or at least a valid format
+        fmt = result.get("format")
+        assert fmt is not None, "Expected format to be set"
         print(f"    Created caption with default format={fmt}")
 
     runner.run_test("captionAsset.add — default format when unspecified", test_caption_add_default_format)
@@ -292,10 +292,10 @@ def main():
             "captionAsset[language]": "Spanish",
             "captionAsset[format]": 1,
         })
-        assert result["language"] == "Spanish"
         state["spanish_caption_id"] = result["id"]
         runner.register_cleanup(f"spanish caption {result['id']}",
                                 lambda: _delete_caption(state["spanish_caption_id"]))
+        assert result["language"] == "Spanish"
         print(f"    Created Spanish caption: id={result['id']}")
 
     runner.run_test("captionAsset.add — Spanish caption", test_caption_add_spanish)
