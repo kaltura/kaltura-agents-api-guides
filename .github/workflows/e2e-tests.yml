@@ -20,6 +20,7 @@ jobs:
   api-tests:
     name: API validation (KS + Genie auth)
     runs-on: ubuntu-latest
+    if: ${{ secrets.KALTURA_PARTNER_ID != '' }}
     env:
       KALTURA_PARTNER_ID: ${{ secrets.KALTURA_PARTNER_ID }}
       KALTURA_KS: ${{ secrets.KALTURA_KS }}
@@ -43,6 +44,7 @@ jobs:
   browser-e2e:
     name: Browser E2E (Playwright)
     runs-on: ubuntu-latest
+    if: ${{ secrets.KALTURA_PARTNER_ID != '' }}
     env:
       KALTURA_PARTNER_ID: ${{ secrets.KALTURA_PARTNER_ID }}
       KALTURA_KS: ${{ secrets.KALTURA_KS }}
