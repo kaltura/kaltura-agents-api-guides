@@ -65,6 +65,7 @@ Each standalone guide includes component-specific error handling. Common pattern
 - **[Chat & Collaborate](KALTURA_CNC_API.md)** — Real-time chat and collaboration alongside video  
 - **[Genie Widget](KALTURA_GENIE_WIDGET_API.md)** — Conversational AI search widget  
 - **[Embeddable Analytics](KALTURA_ANALYTICS_EMBED_API.md)** — Analytics dashboards via iframe  
+- **[Unisphere Framework](KALTURA_UNISPHERE_FRAMEWORK_API.md)** — The micro-frontend framework powering Genie, Media Manager, and other composable experiences  
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — KS generation and privilege management for component authentication  
 - **[Upload & Delivery](KALTURA_UPLOAD_AND_DELIVERY_API.md)** — Content lifecycle after Express Recorder creates entries  
 - **[Captions & Transcripts](KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md)** — Caption asset CRUD for Captions Editor prerequisites  

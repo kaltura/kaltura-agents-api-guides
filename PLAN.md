@@ -31,6 +31,7 @@
 | 25 | `KALTURA_API_GETTING_STARTED.md` | `test_getting_started_api.py` (13 tests) | Done |
 | 26 | `KALTURA_EXPERIENCE_COMPONENTS_API.md` | — (UI embed components) | Done |
 | 27 | `KALTURA_MULTI_ACCOUNT_MANAGEMENT_API.md` | `test_multi_account_api.py` (6 tests) | Done |
+| 28 | `KALTURA_UNISPHERE_FRAMEWORK_API.md` | `test_unisphere_framework_api.py` (12 tests), `test_unisphere_framework_e2e.py` (9 tests) | Done |
 
 
 ## Full Kaltura API Landscape

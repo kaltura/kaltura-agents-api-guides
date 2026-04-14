@@ -344,5 +344,6 @@ Use quartile tracking for custom engagement analytics, completion-gated content 
 - **[Categories & Access Control API](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md)** — Access control profiles for restricting player playback (geo, domain, IP, scheduling)
 - **[API Getting Started](KALTURA_API_GETTING_STARTED.md)** — Foundation guide covering content model and API patterns
 - **[Captions & Transcripts](KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md)** — Caption assets displayed in the player transcript plugin
-- **[Analytics Reports](KALTURA_ANALYTICS_REPORTS_API.md)** — Player events feed analytics reports
+- **[Analytics Reports](KALTURA_ANALYTICS_REPORTS_API.md)** — Player events feed analytics reports  
+- **[Unisphere Framework](KALTURA_UNISPHERE_FRAMEWORK_API.md)** — Unisphere plugins for player integration (unisphere-service, unisphere, unisphere-genie)
 

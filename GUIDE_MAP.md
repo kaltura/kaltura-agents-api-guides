@@ -60,6 +60,7 @@ Guides for delivering content to end users through players, widgets, events, and
 | [Chat & Collaborate](KALTURA_CNC_API.md) | Playback & Content Hubs | Real-time chat, Q&A, polls alongside video |
 | [Genie Widget](KALTURA_GENIE_WIDGET_API.md) | Playback & Content Hubs | Conversational AI search widget over video library |
 | [Embeddable Analytics](KALTURA_ANALYTICS_EMBED_API.md) | Playback & Content Hubs | Analytics dashboards via iframe + postMessage |
+| [Unisphere Framework](KALTURA_UNISPHERE_FRAMEWORK_API.md) | Playback & Content Hubs | Micro-frontend framework: loader, workspace, services, Media Manager |
 | [Events Platform](KALTURA_EVENTS_PLATFORM_API.md) | Virtual Events & Webinars | Virtual events, webinars, town halls, sessions |
 | [User Profile](KALTURA_USER_PROFILE_API.md) | Virtual Events & Webinars | Per-app user profiles, event attendance tracking |
 | [Gamification](KALTURA_GAMIFICATION_API.md) | Virtual Events & Webinars | Leaderboards, badges, certificates |
@@ -128,6 +129,7 @@ graph TD
     CNC["Chat & Collab"]
     GW["Genie Widget"]
     EA["Embed Analytics"]
+    UF["Unisphere Framework"]
     EP["Events Platform"]
     UP["User Profile"]
     GA["Gamification"]
@@ -143,6 +145,8 @@ graph TD
     EC --> CNC
     EC --> GW
     EC --> EA
+    EC --> UF
+    UF --> GW
     KS --> EP
     APR --> UP
     EP --> GA
@@ -162,7 +166,7 @@ graph TD
     class GS,KS,AT foundation
     class UD,MS,CT,CM,RE,AG,AI creation
     class ES,CA,UM,AB,MA,AR,AE,WH,APR,MSG management
-    class PE,EC,ER,CE,CA,CNC,GW,EA,EP,UP,GA,DI,SY experience
+    class PE,EC,ER,CE,CA,CNC,GW,EA,UF,EP,UP,GA,DI,SY experience
 ```
 
 **Legend:**  
@@ -184,6 +188,7 @@ Blue = Foundation | Purple = Creation | Orange = Management | Green = Experience
 | Auto-caption with AI | [REACH API](KALTURA_REACH_API.md) |
 | Build a chatbot over video | [AI Genie](KALTURA_AI_GENIE_API.md) |
 | Embed Genie AI search widget | [Genie Widget](KALTURA_GENIE_WIDGET_API.md) |
+| Embed composable experiences (Media Manager, multi-runtime) | [Unisphere Framework](KALTURA_UNISPHERE_FRAMEWORK_API.md) |
 | Record from browser | [Express Recorder](KALTURA_EXPRESS_RECORDER_API.md) |
 | Embed an AI avatar | [Conversational Avatar](KALTURA_CONVERSATIONAL_AVATAR_API.md) |
 | Embed analytics dashboards | [Embeddable Analytics](KALTURA_ANALYTICS_EMBED_API.md) |

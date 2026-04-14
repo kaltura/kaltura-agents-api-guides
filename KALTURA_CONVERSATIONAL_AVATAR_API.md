@@ -114,5 +114,6 @@ The **Dynamic Page Prompt (DPP)** is the mechanism for customizing avatar behavi
 # 8. Related Guides
 
 - **[Experience Components Overview](KALTURA_EXPERIENCE_COMPONENTS_API.md)** — Index of all embeddable components with shared guidelines  
+- **[Unisphere Framework](KALTURA_UNISPHERE_FRAMEWORK_API.md)** — The micro-frontend framework that hosts avatar runtimes via `unisphere.widget.vod-avatars`  
 - **[AI Genie API](KALTURA_AI_GENIE_API.md)** — Conversational AI search (text-based, no avatar)  
 - **[Events Platform](KALTURA_EVENTS_PLATFORM_API.md)** — Virtual events where avatars can serve as AI moderators or assistants

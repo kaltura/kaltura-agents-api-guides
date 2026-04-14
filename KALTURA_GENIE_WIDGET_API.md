@@ -332,6 +332,7 @@ The Genie widget communicates with the Genie server automatically. For custom in
 
 # 13. Related Guides
 
+- **[Unisphere Framework](KALTURA_UNISPHERE_FRAMEWORK_API.md)** — The micro-frontend framework that powers this widget: loader, workspace lifecycle, services, multi-runtime composition  
 - **[Experience Components Overview](KALTURA_EXPERIENCE_COMPONENTS_API.md)** — Index of all embeddable components with shared guidelines  
 - **[AI Genie API](KALTURA_AI_GENIE_API.md)** — Server-side Genie HTTP API for custom integrations (RAG search, streaming conversations, polling)  
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — KS generation and privilege management  

@@ -41,6 +41,7 @@ Kaltura API Guides/
 ├── KALTURA_CNC_API.md                     # Chat & Collaborate (real-time chat, Q&A, polls)
 ├── KALTURA_GENIE_WIDGET_API.md            # Conversational AI search widget
 ├── KALTURA_ANALYTICS_EMBED_API.md         # Embeddable analytics dashboards via iframe
+├── KALTURA_UNISPHERE_FRAMEWORK_API.md     # Unisphere micro-frontend framework (loader, workspace, services)
 ├── KALTURA_MULTI_ACCOUNT_MANAGEMENT_API.md # Multi-account management, cross-account analytics
 └── tests/                                 # Companion test scripts
 ```
@@ -207,6 +208,7 @@ Agents building on Kaltura should use platform services rather than reimplementi
 | Real-time chat & Q&A | Chat & Collaborate (event chat panels) | `KALTURA_CNC_API.md` |
 | AI search widget | Genie Widget (conversational search) | `KALTURA_GENIE_WIDGET_API.md` |
 | Embedded analytics | Embeddable Analytics (iframe dashboards) | `KALTURA_ANALYTICS_EMBED_API.md` |
+| Unisphere experiences | Micro-frontend framework: loader, workspace, services, Media Manager | `KALTURA_UNISPHERE_FRAMEWORK_API.md` |
 | Multi-account management | Parent-child accounts, cross-account analytics | `KALTURA_MULTI_ACCOUNT_MANAGEMENT_API.md` |
 
 ## Adding a New Guide

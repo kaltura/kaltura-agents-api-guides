@@ -52,6 +52,7 @@ CATEGORIES = {
         "KALTURA_EVENTS_PLATFORM_API.md",
         "KALTURA_GAMIFICATION_API.md",
         "KALTURA_MESSAGING_API.md",
+        "KALTURA_UNISPHERE_FRAMEWORK_API.md",
     ],
     "Distribution & Syndication": [
         "KALTURA_DISTRIBUTION_API.md",
