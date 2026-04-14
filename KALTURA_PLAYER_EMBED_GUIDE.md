@@ -2,7 +2,7 @@
 
 Embed Kaltura's PlayKit player in web applications using iframe or dynamic JavaScript. Both methods support KS-based access control, clipping, autoplay, and full programmatic control via the player API.
 
-**Embed Base URL:** `https://cdnapisec.kaltura.com/p/{PARTNER_ID}/embedPlaykitJs/uiconf_id/{PLAYER_ID}` (may differ by region)  
+**Base URL:** `https://cdnapisec.kaltura.com/p/{PARTNER_ID}/embedPlaykitJs/uiconf_id/{PLAYER_ID}` (may differ by region)  
 **Auth:** Optional KS for access-controlled content (see [Session Guide](KALTURA_SESSION_GUIDE.md))  
 **Format:** HTML embed (iframe) or JavaScript SDK (PlayKit)  
 

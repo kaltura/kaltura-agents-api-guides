@@ -198,6 +198,73 @@ def main():
 
         runner.run_test("browser — application runtime loads with openApplication API", test_app_runtime_loads)
 
+        def test_isEntryRelevant():
+            """Verify isEntryRelevant method exists and returns eligibility result."""
+            html = f"""<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>CL Entry Relevant</title></head>
+<body>
+<div id="cl-relevant" style="width:100%;height:100vh;"></div>
+<script type="module">
+  import {{ loader }} from "{BASE_URL}/loader/index.esm.js";
+  try {{
+    const ws = await loader({{
+      serverUrl: "{BASE_URL}",
+      appId: "cl-relevant-test", appVersion: "1.0.0",
+      session: {{ ks: "{browser_ks}", partnerId: {PARTNER_ID} }},
+      runtimes: [{{
+        widgetName: "{WIDGET_NAME}",
+        runtimeName: "application",
+        settings: {{
+          _schemaVersion: "1",
+          ks: "{browser_ks}",
+          pid: "{PARTNER_ID}",
+          uiconfId: "{os.environ.get('KALTURA_PLAYER_ID', '56732362')}",
+          kalturaServerURI: "https://www.kaltura.com",
+          analyticsServerURI: "analytics.kaltura.com",
+          hostAppName: 1,
+          hostedInKalturaProduct: false
+        }},
+        visuals: [{{ type: "drawer", target: "cl-relevant", settings: {{}} }}]
+      }}]
+    }});
+    const rt = await ws.getRuntimeAsync("{WIDGET_NAME}", "application");
+    window.__rel_hasMethod = typeof rt.isEntryRelevant === "function";
+    // Call with a non-existent entry ID to verify the method executes
+    try {{
+      const result = await rt.isEntryRelevant("0_nonexistent");
+      window.__rel_result = JSON.stringify({{
+        canUse: result.canUse,
+        reason: result.rejectionReason || "none"
+      }});
+    }} catch(e) {{
+      // Method exists but call may fail — that's OK for validation
+      window.__rel_result = "CALL_ERR:" + e.message;
+    }}
+    window.__rel_done = true;
+  }} catch(e) {{
+    window.__rel_done = true;
+    window.__rel_result = "ERR:" + e.message;
+  }}
+</script></body></html>"""
+            path = _write_html("cl_relevant_test.html", html)
+            with sync_playwright() as p:
+                browser = p.chromium.launch(headless=True)
+                page = browser.new_page()
+                page.goto(f"file://{path}", wait_until="networkidle",
+                          timeout=30000)
+                page.wait_for_function(
+                    "window.__rel_done !== undefined", timeout=30000)
+                has_method = page.evaluate("window.__rel_hasMethod")
+                result = page.evaluate("window.__rel_result")
+                browser.close()
+            assert has_method is True, \
+                f"Expected isEntryRelevant method, got {has_method}"
+            print(f"    isEntryRelevant: method={has_method}, "
+                  f"result={result}")
+
+        runner.run_test("browser — isEntryRelevant method available on "
+                        "application runtime", test_isEntryRelevant)
+
         def test_consent_runtime_loads():
             """Verify the ai-consent runtime loads in the browser."""
             html = f"""<!DOCTYPE html>

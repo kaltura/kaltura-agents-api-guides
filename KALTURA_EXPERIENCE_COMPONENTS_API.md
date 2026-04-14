@@ -2,6 +2,7 @@
 
 Experience Components are front-end embeddable apps and widgets that simplify building rich media agentic applications. Instead of building recording, editing, or collaboration UIs from scratch, embed a Kaltura component and integrate via events and configuration.
 
+**Base URL:** Varies per component — see individual guide for embed URLs  
 **Auth:** KS passed via config object, URL parameter, or SDK constructor  
 **Format:** JavaScript embed, iframe embed, or SDK  
 
