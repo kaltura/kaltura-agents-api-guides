@@ -133,7 +133,8 @@ All contributions that improve accuracy and coverage are appreciated.
 See [PLAN.md](PLAN.md) for the full Kaltura API landscape and prioritized list of upcoming guides, including:
 
 - Live Streaming
-- Virtual Avatar
+- Playlists
+- Scheduling
 
 ## License
 

@@ -22,11 +22,16 @@ All guides follow the conventions in [AGENTS.md](AGENTS.md). Key points:
 ## Adding a New Guide
 
 1. Research the API surface and test calls against the live API
-2. Create `KALTURA_{SERVICE_NAME}_API.md` following the template in AGENTS.md
+2. Create `KALTURA_{SERVICE_NAME}_API.md` following the template in [AGENTS.md](AGENTS.md)
 3. Create `tests/test_{service_name}_api.py` covering every documented endpoint
 4. Run tests: `python3 tests/test_{service_name}_api.py`
 5. Add cross-references to Related Guides sections of existing guides
-6. Update [PLAN.md](PLAN.md) with the new entry
+6. Update project files:
+   - [PLAN.md](PLAN.md) — add row to Completed Guides table
+   - [GUIDE_MAP.md](GUIDE_MAP.md) — add to flywheel tier, dependency graph, and decision tree
+   - [AGENTS.md](AGENTS.md) — add to file tree and capability table
+   - [README.md](README.md) — add to Guides table with test count
+7. Run `python3 scripts/validate_guide_map.py` to verify all cross-references
 
 ## Running Tests
 

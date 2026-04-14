@@ -1,6 +1,6 @@
 ---
 name: kaltura-api
-description: Build applications on Kaltura — The Agentic Digital Experience Platform. Covers authentication (sessions, AppTokens, SSO/SAML), content management (upload, search, categories, metadata, captions), playback, AI services (captions, translation, agents, conversational AI), virtual events, user management, multi-stream, content distribution, syndication feeds, experience components (Express Recorder, Captions Editor), multi-account management. API v3 (form-encoded) and modern JSON APIs with curl examples and tested workflows.
+description: Build applications on Kaltura — The Agentic Digital Experience Platform. 38 guides covering authentication (sessions, AppTokens, SSO/SAML), content management (upload, search, categories, metadata, captions), playback, AI services (captions, translation, agents, conversational AI), virtual events, user management, multi-stream, content distribution, syndication feeds, analytics, gamification, webhooks, messaging, experience components (Player, Express Recorder, Captions Editor, Genie Widget, Media Manager, Content Lab, Agents Widget, VOD Avatar Studio, Conversational Avatar, Chat & Collaborate, Embeddable Analytics), Unisphere framework, multi-account management. 758 tests validated against live API. API v3 (form-encoded) and modern JSON APIs with curl examples.
 ---
 
 # Kaltura API Integration

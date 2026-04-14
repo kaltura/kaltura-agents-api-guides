@@ -29,7 +29,7 @@
 | 23 | `KALTURA_DISTRIBUTION_API.md` | `test_distribution_api.py` (41 tests), `test_distribution_profiles_e2e.py` (43 tests) | Done |
 | 24 | `KALTURA_SYNDICATION_API.md` | `test_syndication_api.py` (14 tests) | Done |
 | 25 | `KALTURA_API_GETTING_STARTED.md` | `test_getting_started_api.py` (13 tests) | Done |
-| 26 | `KALTURA_EXPERIENCE_COMPONENTS_API.md` | — (UI embed components) | Done |
+| 26 | `KALTURA_EXPERIENCE_COMPONENTS_API.md` | `test_experience_components_api.py` (7 tests), `test_experience_components_e2e.py` (19 tests) | Done |
 | 27 | `KALTURA_MULTI_ACCOUNT_MANAGEMENT_API.md` | `test_multi_account_api.py` (6 tests) | Done |
 | 28 | `KALTURA_UNISPHERE_FRAMEWORK_API.md` | `test_unisphere_framework_api.py` (12 tests), `test_unisphere_framework_e2e.py` (9 tests) | Done |
 | 29 | `KALTURA_MEDIA_MANAGER_API.md` | `test_media_manager_api.py` (11 tests) | Done |
@@ -89,152 +89,48 @@
 - **OTT/TV Platform** — Separate API for TVOD/SVOD apps (EPG, device management, channels)
 - **Moderation** — Content flagging, approval workflows (limited dedicated API)
 - **Client SDKs** — Auto-generated: PHP, Java, JavaScript, Python, Go, Ruby, C#
-- **Unisphere** — UI component framework for building Kaltura-embedded experiences (early-stage)
+- **Unisphere** — Micro-frontend framework for composable Kaltura-embedded experiences (15 widgets, 33 runtimes, multi-region CDN)
 
 
 ## Prioritized Roadmap — Next Guides
 
-### Tier 1: High Impact, High Usage (do next)
+### Completed (Tier 1-3)
 
-#### 1. `KALTURA_UPLOAD_AND_DELIVERY_API.md`
-**Why:** Every Kaltura integration starts here. Most universally needed API.
+~~1. `KALTURA_UPLOAD_AND_DELIVERY_API.md`~~ ✓ DONE  
+~~2. `KALTURA_APPTOKENS_API.md`~~ ✓ DONE  
+~~3. `KALTURA_EVENTS_PLATFORM_API.md`~~ ✓ DONE  
+~~4. `KALTURA_AVATAR_API.md`~~ ✓ DONE (split into VOD Avatar Studio + Conversational Avatar)  
+~~5. `KALTURA_WEBHOOKS_API.md`~~ ✓ DONE  
+~~6. `KALTURA_ANALYTICS_API.md`~~ ✓ DONE (split into Analytics Reports + Events Collection)  
+~~7. `KALTURA_CONTENT_MANAGEMENT_API.md`~~ ✓ DONE (split into User Management, Categories & Access Control, Custom Metadata, Captions & Transcripts)  
+~~8. `KALTURA_DISTRIBUTION_API.md`~~ ✓ DONE + ~~`KALTURA_SYNDICATION_API.md`~~ ✓ DONE  
 
-**Scope:**
-- Upload lifecycle: `uploadToken.add` -> chunked `uploadToken.upload` (resume, retry, `resumeAt`) -> `media.add` -> `media.addContent`
-- Import from URL: `media.addFromUrl()`
-- Bulk upload: `media.bulkUploadAdd()` (CSV/XML)
-- Content delivery: `playManifest` (HLS/DASH adaptive streaming)
-- Thumbnail API: `/thumbnail/entry_id/{id}/vid_sec/{s}/width/{w}`
-- Flavor assets: transcoding profiles, listing available flavors
-- Download vs playback URL distinction
-- Full Python example: chunked upload of a video file
+### Remaining — Next Guides
 
-**Test plan:** Upload small file via chunks, verify entry, test import-from-URL, thumbnail extraction, playManifest generation, cleanup.
-
-**Reference:** https://github.com/zoharbabin/kaltura_uploader/
-
----
-
-#### 2. `KALTURA_APPTOKENS_API.md`
-**Why:** Critical security infrastructure. Every production integration should use this. Complements Session Guide.
-
-**Scope:**
-- Why AppTokens vs raw admin secrets
-- `appToken.add` — create with privileges, hash type, expiry
-- `appToken.startSession` — HMAC-based KS generation
-- `appToken.get`, `appToken.list`, `appToken.update`, `appToken.delete`
-- Privilege scoping: `edit:entryId`, `sview:*`, `setrole:ROLE`, `iprestrict`, `urirestrict`
-- Token rotation patterns
-- Full Python example: create token, start session, make API call, rotate
-
-**Test plan:** Create AppToken, start session from it, verify session works, verify privilege restrictions, delete token, verify revocation.
-
-**Reference:** https://github.com/kaltura/kal-apptokens-utils
-
----
-
-#### 3. `KALTURA_EVENTS_PLATFORM_API.md` — Virtual Events
-**Why:** Dedicated modern REST API (OAS 3.0) with high customer demand. Many enterprise customers run virtual events (town halls, webinars, conferences) and want to automate creation/management via API and AI agents. Already has an official MCP server ([kaltura/mcp-events](https://github.com/kaltura/mcp-events)).
-
-**Base URL:** `https://events-api.nvp1.ovp.kaltura.com/api/v1` (prod NVP)
-**Auth:** `Authorization: Bearer <KS>`
-**Regions:** NVP (default), EU (`irp2`), DE (`frp2`)
-
-**Scope — Events:**
-- `POST /events/create` — name, templateId, startDate, endDate, timezone, description
-- `POST /events/list` — filter (idIn, searchTerm, date ranges, labels), pager (offset/limit), orderBy
-- `POST /events/update` — name, description, dates, doorsOpenDate, timezone, labels, logoEntryId, bannerEntryId
-- `POST /events/delete` — by event ID
-- `POST /events/duplicate` — copy event with all config, returns job ID
-- `POST /events/duplicateStatus` — poll duplication job status
-
-**Scope — Sessions:**
-- `POST /sessions/create` — session types: `MeetingEntry` (interactive room), `LiveWebcast`, `SimuLive` (pre-recorded as live), `LiveKME` (DIY live), `VirtualLearningRoom`
-- `POST /sessions/list` — list all sessions for an event
-- `POST /sessions/speakerList` — list speakers for a session
-- Session visibility: `published`, `unlisted`, `private`
-- SimuLive sessions reference a `sourceEntryId` (VOD entry)
-
-**Scope — Team Members:**
-- `POST /team-members/create`, `/update`, `/delete`, `/list`
-
-**Scope — Templates:**
-- Preset templates: `tm0000` (no session), `tm1000` (interactive room), `tm2000` (live webcast), `tm3000` (simulive), `tm4000` (room broadcasting to webcast)
-
-**Test plan:** Create event from template, list events, update event, create sessions of different types, list sessions, list speakers, duplicate event, poll status, delete all. Full lifecycle.
-
-**Reference:** https://github.com/kaltura/mcp-events (MCP server source code with schemas)
-
----
-
-#### 4. `KALTURA_AVATAR_API.md`
-**Why:** Highest novelty. AI-powered photorealistic avatars (eSelf acquisition). Very timely and differentiated.
-
-**Scope:**
-- Architecture: SDK-based vs API-based control
-- Client SDK: `@unisphere/models-sdk-js`
-- Backend session creation (returns JWT for frontend)
-- Avatar capabilities: text-to-speech, audio playback, interruption, screen comprehension
-- Integration with Genie (avatar + conversational AI)
-- Browser support (WebRTC: Chrome 80+, Firefox 75+, Safari 14+)
-- Full example: embed a talking avatar
-
-**Test plan:** Backend session creation if API available. May be more doc-heavy given SDK nature.
-
-**Note:** Early-stage API — document what exists, note evolving areas.
-
----
-
-### Tier 2: High Value, Common Need
-
-#### ~~5. `KALTURA_WEBHOOKS_API.md` — Event Notifications~~ ✓ DONE
-
----
-
----
-
-#### 6. `KALTURA_LIVE_STREAMING_API.md`
+#### `KALTURA_LIVE_STREAMING_API.md`
 **Why:** Live streaming is a core use case. RTMP/SRT ingest, simulive, recording.
 
 **Scope:** `liveStream.add/update/get`, ingest protocols, simulive setup, recording to VOD, live-to-VOD workflow.
 
 ---
 
-#### ~~7. `KALTURA_ANALYTICS_API.md`~~ ✓ DONE (split into Analytics Reports + Events Collection guides)
-
----
-
-### Tier 3: Specialized but Valuable
-
-#### 8. `KALTURA_CONTENT_MANAGEMENT_API.md` — Users, Categories, Metadata, Access Control
-**Why:** Combines several related APIs that together handle "who can see what content and how it's organized."
-
-**Scope:** `user` CRUD, `category` hierarchy, `categoryUser` entitlements, `metadataProfile` custom schemas, `accessControlProfile` rules, `captionAsset` management.
-
----
-
-#### ~~9. `KALTURA_DISTRIBUTION_API.md`~~ ✓ DONE + ~~`KALTURA_SYNDICATION_API.md`~~ ✓ DONE (split into standalone guides)
-
----
-
-#### 10. `KALTURA_PLAYLIST_API.md`
+#### `KALTURA_PLAYLIST_API.md`
 **Why:** Content curation. Manual + dynamic/rule-based playlists.
 
 **Scope:** `playlist` CRUD, static vs dynamic, filter rules, execution.
 
 ---
 
-#### 11. `KALTURA_SCHEDULING_API.md`
+#### `KALTURA_SCHEDULING_API.md`
 **Why:** Event scheduling for live sessions, recurring events.
 
 **Scope:** `scheduleEvent`, `scheduleResource`, recurring patterns, resource booking.
 
 ---
 
+### Deferred
 
-### Tier 4: Advanced / Deferred
-
-#### 12. `KALTURA_FILE_ASSETS_API.md`
+#### `KALTURA_FILE_ASSETS_API.md`
 **Why:** Advanced non-media content management — `fileAsset` service, `dataEntry` type, document entries.
 
 **Prerequisite:** Detailed analysis of `kaltura/server` backend flows for fileAsset, KalturaDataEntry, and KalturaDocumentEntry types. Must understand how fileAsset differs from attachmentAsset (permission model, serving, storage).
@@ -243,14 +139,14 @@
 
 ---
 
-#### 13. Delivery Profiles Guide
+#### Delivery Profiles Guide
 **Why:** CDN configuration, serving rules, custom delivery profiles. Customer-relevant for advanced CDN setups.
 
 **Status:** DEFERRED — highly specialized, planned for later.
 
 ---
 
-#### 14. Cue Points / Temporal Metadata API
+#### Cue Points / Temporal Metadata API
 **Why:** Chapters, annotations, hotspots, ad cue points — significant standalone guide.
 
 **Status:** DEFERRED — planned for later.

@@ -129,7 +129,7 @@ graph TD
     EC["Experience Components"]
     ER["Express Recorder"]
     CE["Captions Editor"]
-    CA["Conv. Avatar"]
+    CVA["Conv. Avatar"]
     CNC["Chat & Collab"]
     GW["Genie Widget"]
     EA["Embed Analytics"]
@@ -149,7 +149,7 @@ graph TD
     KS --> EC
     EC --> ER
     EC --> CE
-    EC --> CA
+    EC --> CVA
     EC --> CNC
     EC --> GW
     EC --> EA
@@ -184,7 +184,7 @@ graph TD
     class GS,KS,AT foundation
     class UD,MS,CT,CM,RE,AG,AI creation
     class ES,CA,UM,AB,MA,AR,AE,WH,APR,MSG management
-    class PE,EC,ER,CE,CA,CNC,GW,EA,UF,MM,CL,AW,VA,EP,UP,GA,DI,SY experience
+    class PE,EC,ER,CE,CVA,CNC,GW,EA,UF,MM,CL,AW,VA,EP,UP,GA,DI,SY experience
 ```
 
 **Legend:**  

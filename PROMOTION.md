@@ -38,9 +38,9 @@ Actionable checklist for getting maximum reach for the Kaltura API Guides.
 
 - [x] **GitHub Pages** — MkDocs Material site deployed at `zoharbabin.github.io/kaltura-api-guides/` with Kaltura branding, dark/light mode, search, and auto-deploy via GitHub Actions.
 
-- [x] **v1.0.0 Release** — Created with release notes summarizing all 10 guides.
+- [x] **v1.0.0 Release** — Created with initial release notes. Project now has 38 guides with 758 live-validated tests.
 
-- [x] **CI/CD Automation** — Deploy workflow (MkDocs + llms.txt auto-generation) and link checker workflow both active on push to main.
+- [x] **CI/CD Automation** — Deploy workflow (MkDocs + llms.txt auto-generation), link checker, and Experience Components E2E workflow all active on push to main.
 
 - [ ] **Social preview image** — Image created at `assets/images/social-preview.png` (1280x640, Kaltura brand flywheel design). Upload via Repo Settings > Social Preview. Shows on every Twitter/LinkedIn/Slack share.
 

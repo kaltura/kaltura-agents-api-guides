@@ -2,9 +2,10 @@ site_name: Kaltura API Guides
 site_url: https://zoharbabin.github.io/kaltura-api-guides/
 site_description: >-
   Kaltura — The Agentic Digital Experience Platform. Live-tested API guides
-  for AI agents and developers. Covers authentication, content management,
-  search, playback, AI-powered enrichment, conversational AI, virtual events,
-  and multi-stream with curl examples and companion test scripts.
+  for AI agents and developers. 38 guides covering authentication, content
+  management, search, playback, AI services, virtual events, experience
+  components, analytics, distribution, and more — with 758 companion tests
+  validated against the live Kaltura API.
 site_author: Zohar Babin
 repo_url: https://github.com/zoharbabin/kaltura-api-guides
 repo_name: zoharbabin/kaltura-api-guides
@@ -66,21 +67,54 @@ markdown_extensions:
 
 nav:
   - Home: README.md
+  - Getting Started:
+      - API Getting Started: KALTURA_API_GETTING_STARTED.md
+      - Guide Map: GUIDE_MAP.md
   - Authentication:
       - Session (KS) Guide: KALTURA_SESSION_GUIDE.md
       - AppTokens API: KALTURA_APPTOKENS_API.md
-  - Content:
+      - Auth Broker (SSO/SAML): KALTURA_AUTH_BROKER_API.md
+  - Content Management:
       - Upload & Delivery: KALTURA_UPLOAD_AND_DELIVERY_API.md
       - eSearch: KALTURA_ESEARCH_API.md
-  - Playback:
-      - Player Embed: KALTURA_PLAYER_EMBED_GUIDE.md
+      - Categories & Access Control: KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md
+      - Custom Metadata: KALTURA_CUSTOM_METADATA_API.md
+      - Captions & Transcripts: KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md
       - Multi-Stream: KALTURA_MULTI_STREAM_API.md
+      - User Management: KALTURA_USER_MANAGEMENT_API.md
   - AI Services:
       - REACH API: KALTURA_REACH_API.md
       - Agents Manager: KALTURA_AGENTS_MANAGER_API.md
       - AI Genie: KALTURA_AI_GENIE_API.md
-  - Events:
+  - Playback & Experiences:
+      - Player Embed: KALTURA_PLAYER_EMBED_GUIDE.md
+      - Experience Components: KALTURA_EXPERIENCE_COMPONENTS_API.md
+      - Unisphere Framework: KALTURA_UNISPHERE_FRAMEWORK_API.md
+      - Genie Widget: KALTURA_GENIE_WIDGET_API.md
+      - Media Manager: KALTURA_MEDIA_MANAGER_API.md
+      - Content Lab: KALTURA_CONTENT_LAB_API.md
+      - Agents Widget: KALTURA_AGENTS_WIDGET_API.md
+      - VOD Avatar Studio: KALTURA_VOD_AVATAR_API.md
+      - Express Recorder: KALTURA_EXPRESS_RECORDER_API.md
+      - Captions Editor: KALTURA_CAPTIONS_EDITOR_API.md
+      - Conversational Avatar: KALTURA_CONVERSATIONAL_AVATAR_API.md
+      - Chat & Collaborate: KALTURA_CNC_API.md
+      - Embeddable Analytics: KALTURA_ANALYTICS_EMBED_API.md
+  - Events & Collaboration:
       - Events Platform: KALTURA_EVENTS_PLATFORM_API.md
+      - App Registry: KALTURA_APP_REGISTRY_API.md
+      - User Profile: KALTURA_USER_PROFILE_API.md
+      - Messaging: KALTURA_MESSAGING_API.md
+      - Gamification: KALTURA_GAMIFICATION_API.md
+  - Analytics:
+      - Analytics Reports: KALTURA_ANALYTICS_REPORTS_API.md
+      - Analytics Events Collection: KALTURA_ANALYTICS_EVENTS_COLLECTION_API.md
+  - Integration & Automation:
+      - Webhooks: KALTURA_WEBHOOKS_API.md
+      - Content Distribution: KALTURA_DISTRIBUTION_API.md
+      - Syndication Feeds: KALTURA_SYNDICATION_API.md
+  - Administration:
+      - Multi-Account Management: KALTURA_MULTI_ACCOUNT_MANAGEMENT_API.md
   - Contributing: CONTRIBUTING.md
   - Roadmap: PLAN.md
 
