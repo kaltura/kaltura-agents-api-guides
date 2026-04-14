@@ -18,7 +18,7 @@ import time
 from datetime import datetime, timedelta
 
 sys.path.insert(0, os.path.dirname(__file__))
-from test_helpers import TestRunner, PARTNER_ID, SERVICE_URL
+from test_helpers import TestRunner, PARTNER_ID, SERVICE_URL, KS, kaltura_post
 
 import requests
 
@@ -608,8 +608,38 @@ def main():
 
 
 def _delete_event(event_id):
+    """Delete an event and its auto-created category tree.
+
+    The Events Platform auto-creates root categories for each event:
+      {eventId}EP{hex}  (main tree with site/channels/playlists/etc.)
+      ep_agenda_{eventId}
+      ep_private_{eventId}
+    events/delete removes the event record but does NOT cascade-delete
+    these categories.
+    """
     try:
         events_post("/events/delete", {"id": event_id})
+    except Exception:
+        pass
+    # Find and delete auto-created root categories by searching parentId=0
+    # and filtering by event ID in the name
+    try:
+        result = kaltura_post("category", "list", {
+            "filter[objectType]": "KalturaCategoryFilter",
+            "filter[parentIdEqual]": 0,
+            "pager[pageSize]": 500,
+        })
+        for cat in result.get("objects", []):
+            name = cat.get("name", "")
+            if name.startswith(f"{event_id}EP") or name == f"ep_agenda_{event_id}" or name == f"ep_private_{event_id}":
+                try:
+                    # Delete root category — Kaltura cascades to children
+                    kaltura_post("category", "delete", {
+                        "id": cat["id"],
+                        "moveEntriesToParentCategory": 1,
+                    })
+                except Exception:
+                    pass
     except Exception:
         pass
 
