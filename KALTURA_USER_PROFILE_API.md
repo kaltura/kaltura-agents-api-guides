@@ -7,7 +7,7 @@ A user has one profile per app — the same `userId` can have separate profiles 
 **Base URL:** `https://user.nvp1.ovp.kaltura.com/api/v1` (production NVP region)  
 **Auth:** `Authorization: Bearer <KS>` header (ADMIN KS, type=2, requires `ADMIN_BASE` permission)  
 **Format:** JSON request/response bodies, all endpoints use POST  
-**Regions:** NVP (default `nvp1`), EU (`irp2`), DE (`frp2`)
+**Regions:** NVP (default `nvp1`), EU (`irp2`), DE (`frp2`)  
 
 
 # 1. Authentication

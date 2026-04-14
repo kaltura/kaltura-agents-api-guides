@@ -6,7 +6,7 @@ Pull analytics data out of Kaltura — content performance, viewer engagement, e
 **Auth:** KS passed as `ks` parameter in POST form data  
 **Format:** Form-encoded POST, `format=1` for JSON responses  
 
-**Services covered:**
+**Services covered:**  
 
 | Service | Actions | Description |
 |---------|---------|-------------|

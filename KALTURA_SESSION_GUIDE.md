@@ -11,7 +11,7 @@ Generate, use, and rotate Kaltura Sessions (KS) — the signed, time-limited tok
 
 A Kaltura Session (KS) is a signed, time-limited token you attach to API calls and player embeds. KS can be USER (type=0) or ADMIN (type=2). Use USER for almost everything where an end-user is interacting with apps or data; use ADMIN only for trusted backend-only workflows with short TTLs and strict configurations (roles, privileges).
 
-**Common use-cases and considerations:**
+**Common use-cases and considerations:**  
 
 *	Server-to-server or trusted backend: session.start → returns a KS with the privileges and expiry you request. Run this server-side only to keep secrets secure.
 *	App-to-API with elevated but scoped permissions: use Application Tokens and appToken.startSession. You obtain a basic (unprivileged) KS, compute a hash with the app token, and exchange it for a privileged KS — keeping admin secrets and hashing strictly server-side.
@@ -182,7 +182,7 @@ Keep it tight:
 * TTL you control: you set expiry when starting the session; store issued_at + expiry in your app and refresh as needed *before it lapses*.
 * Client pattern: your frontend should get KS rendered from your backend. The network never sees secrets.
 * Always pass KS in POST so it is never cached in proxies.
-* There isn’t a separate public “validate KS” call you need for steady-state. Validation happens implicitly on each API request. The Kaltura API validates the KS on every request and returns an error if it is invalid or expired.
+* The Kaltura API validates the KS on every request automatically and returns an error if it is invalid or expired. Validation is implicit — use any API call to confirm a KS is valid.
 * Store KS in memory only; set cache headers to prevent caching.
 * Pass KS in POST bodies or PlayKit provider config, keeping it out of URLs where it could appear in referrers, logs, and proxies.
 
@@ -272,8 +272,8 @@ Set `sessionid:<GUID>` on the KS privileges and keep that GUID on your backend. 
 
 Mobile and single-page apps require special care because compiled binaries and client-side JavaScript are accessible to end users:
 
-- **Keep `adminSecret` on your backend server only.** API secrets are permanent and cannot be rotated — a leaked secret compromises the account indefinitely.
-- **Generate KS server-side and pass to the client per-session.** KS tokens expire, so hardcoded tokens cause the app to stop working. Tokens embedded in binaries can also be extracted by users.
+- **Keep `adminSecret` on your backend server only.** API secrets are permanent — use Application Tokens (AppTokens) for any scenario requiring revocable credentials. See [AppTokens Guide](KALTURA_APPTOKENS_API.md).
+- **Generate KS server-side and pass to the client per-session.** Issue fresh KS tokens per session to ensure continuous access. Tokens embedded in compiled binaries can be extracted by end users.
 - **Three recommended strategies for client-side KS:**
   1. **Anonymous access** — Use `session.startWidgetSession` for public, unauthenticated content (player bootstrap, public galleries).
   2. **Server-generated KS** — Your backend generates a scoped USER KS (via `session.start` or `appToken.startSession`) and passes it to the client per-session. The client never sees secrets.

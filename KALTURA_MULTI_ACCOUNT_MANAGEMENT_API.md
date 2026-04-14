@@ -48,6 +48,16 @@ curl -X POST "$KALTURA_SERVICE_URL/service/partner/action/register" \
   -d "partner[country]=US"
 ```
 
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `partner[objectType]` | string | Yes | Always `KalturaPartner` |
+| `partner[name]` | string | Yes | Display name for the child account |
+| `partner[adminName]` | string | Yes | Name of the account admin user |
+| `partner[adminEmail]` | string | Yes | Admin email — receives account credentials |
+| `partner[description]` | string | No | Description of the child account |
+| `partner[country]` | string | No | Two-letter country code (e.g., `US`, `GB`, `DE`) |
+| `partner[website]` | string | No | Organization website URL |
+
 **Response:**
 
 ```json
@@ -60,6 +70,15 @@ curl -X POST "$KALTURA_SERVICE_URL/service/partner/action/register" \
   "objectType": "KalturaPartner"
 }
 ```
+
+| Response Field | Type | Description |
+|---------------|------|-------------|
+| `id` | integer | Partner ID of the newly created child account |
+| `name` | string | Account display name |
+| `adminEmail` | string | Admin email address |
+| `status` | integer | Account status: 1 = ACTIVE, 2 = BLOCKED |
+| `partnerParentId` | integer | Parent account's partner ID — set automatically |
+| `adminSecret` | string | Admin secret for the child account (returned only on creation) |
 
 The `partnerParentId` field links the child to the parent account. This relationship is set automatically when a parent account creates the child.
 
@@ -78,7 +97,17 @@ curl -X POST "$KALTURA_SERVICE_URL/service/partner/action/list" \
   -d "pager[pageIndex]=1"
 ```
 
-Filter by `statusIn` to find active accounts (status 1 = ACTIVE, 2 = BLOCKED).
+| Filter Parameter | Type | Description |
+|-----------------|------|-------------|
+| `filter[objectType]` | string | Always `KalturaPartnerFilter` |
+| `filter[statusIn]` | string | Comma-separated status values: 1 = ACTIVE, 2 = BLOCKED |
+| `filter[idIn]` | string | Comma-separated partner IDs to filter |
+| `filter[idGreaterThanOrEqual]` | integer | Filter by minimum partner ID |
+| `filter[partnerParentIdEqual]` | integer | Filter children of a specific parent |
+| `pager[pageSize]` | integer | Results per page (max 500) |
+| `pager[pageIndex]` | integer | Page number (1-based) |
+
+**Response:** `{ "objects": [...], "totalCount": N }` — each object is a `KalturaPartner` with `id`, `name`, `status`, `partnerParentId`, `adminEmail`, and configuration fields.
 
 ## 3.2 Get Child Account Details
 
@@ -88,6 +117,12 @@ curl -X POST "$KALTURA_SERVICE_URL/service/partner/action/get" \
   -d "format=1" \
   -d "id=$CHILD_PARTNER_ID"
 ```
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | integer | Yes | Partner ID of the child account to retrieve |
+
+Returns the full `KalturaPartner` object with account configuration, status, features, and parent relationship.
 
 ## 3.3 Update Child Account
 
@@ -100,6 +135,15 @@ curl -X POST "$KALTURA_SERVICE_URL/service/partner/action/update" \
   -d "partner[description]=Updated description" \
   -d "id=$CHILD_PARTNER_ID"
 ```
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | integer | Yes | Partner ID of the child account to update |
+| `partner[objectType]` | string | Yes | Always `KalturaPartner` |
+| `partner[name]` | string | No | Updated display name |
+| `partner[description]` | string | No | Updated description |
+| `partner[adminEmail]` | string | No | Updated admin email |
+| `partner[country]` | string | No | Updated country code |
 
 
 # 4. Cross-Account Authentication
@@ -118,6 +162,16 @@ curl -X POST "$KALTURA_SERVICE_URL/service/session/action/impersonate" \
   -d "partnerId=$KALTURA_PARTNER_ID" \
   -d "expiry=1800"
 ```
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `secret` | string | Yes | Admin secret of the **parent** account |
+| `impersonatedPartnerId` | integer | Yes | Partner ID of the child account to impersonate |
+| `userId` | string | No | User ID for the impersonated session (default: calling user) |
+| `type` | integer | Yes | KS type: 0 = USER, 2 = ADMIN |
+| `partnerId` | integer | Yes | Partner ID of the **parent** account |
+| `expiry` | integer | No | Session TTL in seconds (default: 86400) |
+| `privileges` | string | No | KS privileges (e.g., `disableentitlement`, `edit:*`) |
 
 **Response:** Returns a KS string scoped to the child account. Use this KS for any API calls that should execute in the child account context.
 
@@ -215,12 +269,14 @@ curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getTable" \
 
 **Cross-partner report types:**
 
-| Report Type | Description |
-|-------------|-------------|
-| 60 | Per-account engagement breakdown |
-| 201 | Bandwidth and storage totals per account |
-| 19 | Partner usage summary |
-| 42 | Top content across accounts |
+| Report Type | Description | Key Columns |
+|-------------|-------------|-------------|
+| 60 | Per-account engagement breakdown | `partner_id`, `count_plays`, `sum_time_viewed`, `count_loads` |
+| 201 | Bandwidth and storage totals per account | `partner_id`, `bandwidth_consumption`, `average_storage`, `combined_bandwidth_storage` |
+| 19 | Partner usage summary | `partner_id`, `count_plays`, `count_loads`, `count_contributions` |
+| 42 | Top content across accounts | `entry_id`, `partner_id`, `count_plays`, `sum_time_viewed` |
+
+All report calls use the same parameters: `reportType`, `reportInputFilter` (with `fromDate`/`toDate` as Unix timestamps), `pager`, and `responseOptions`. See [Analytics Reports Guide](KALTURA_ANALYTICS_REPORTS_API.md) for the full `report.getTable`/`report.getTotal` parameter reference.
 
 ## 5.4 Drill-Down into a Child Account
 
@@ -235,7 +291,7 @@ CHILD_KS=$(curl -s -X POST "$KALTURA_SERVICE_URL/service/session/action/imperson
   -d "userId=admin" \
   -d "type=2" \
   -d "partnerId=$KALTURA_PARTNER_ID" \
-  -d "expiry=900" | python3 -c "import sys,json; print(json.load(sys.stdin))")
+  -d "expiry=900" | jq -r '.result // .')
 
 # Step 2: Run a standard report scoped to the child
 curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getTable" \

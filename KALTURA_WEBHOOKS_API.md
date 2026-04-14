@@ -5,7 +5,7 @@ Kaltura's event notification system sends real-time HTTP webhooks or emails when
 **Base URL:** `https://www.kaltura.com/api_v3` (may differ by region/deployment)  
 **Auth:** KS passed as `ks` parameter in POST form data (see [Session Guide](KALTURA_SESSION_GUIDE.md))  
 **Format:** Form-encoded POST, `format=1` for JSON responses  
-**Service:** `eventnotification_eventnotificationtemplate` (plugin service — all lowercase with plugin prefix)
+**Service:** `eventnotification_eventnotificationtemplate` (plugin service — all lowercase with plugin prefix)  
 
 
 # Prerequisites

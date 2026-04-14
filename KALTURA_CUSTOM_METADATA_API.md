@@ -5,9 +5,9 @@ The Custom Metadata API lets you define XSD-based schemas (metadata profiles) an
 **Base URL:** `https://www.kaltura.com/api_v3` (may differ by region/deployment)  
 **Auth:** KS passed as `ks` parameter in POST form data (see [Session Guide](KALTURA_SESSION_GUIDE.md))  
 **Format:** Form-encoded POST, `format=1` for JSON responses  
-**Services:** `metadata_metadataProfile` (10 actions), `metadata_metadata` (9 actions)
+**Services:** `metadata_metadataProfile` (10 actions), `metadata_metadata` (9 actions)  
 
-**Important:** These are plugin services. The service names use underscore-prefixed compound names: `metadata_metadataProfile`, `metadata_metadata`.
+**Important:** These are plugin services. The service names use underscore-prefixed compound names: `metadata_metadataProfile`, `metadata_metadata`.  
 
 
 # 1. Authentication

@@ -5,10 +5,7 @@ The Virtual Events Platform has a dedicated modern REST API (OAS 3.0) for creati
 **Base URL:** `https://events-api.nvp1.ovp.kaltura.com/api/v1` (production NVP region)  
 **Auth:** `Authorization: Bearer <KS>` header (standard Kaltura Session)  
 **Format:** JSON request/response bodies, all endpoints use POST  
-**Regions:** NVP (default), EU (`irp2`), DE (`frp2`)
-
-> **MCP Server:** An official MCP server (`kaltura/mcp-events`, installable via npm) enables AI agents to create, manage, and query events programmatically using the same API documented in this guide.
-
+**Regions:** NVP (default), EU (`irp2`), DE (`frp2`)  
 
 # 1. Authentication
 

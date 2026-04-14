@@ -5,7 +5,7 @@ Syndication feeds generate RSS/MRSS/XML feeds that external platforms pull via H
 **Base URL:** `https://www.kaltura.com/api_v3` (may differ by region/deployment)  
 **Auth:** KS passed as `ks` parameter in POST form data (see [Session Guide](KALTURA_SESSION_GUIDE.md))  
 **Format:** Form-encoded POST, `format=1` for JSON responses  
-**Service:** `syndicationFeed`
+**Service:** `syndicationFeed`  
 
 
 # 1. Prerequisites

@@ -5,7 +5,7 @@ The Categories & Access Control API covers content organization and permissions:
 **Base URL:** `https://www.kaltura.com/api_v3` (may differ by region/deployment)  
 **Auth:** KS passed as `ks` parameter in POST form data (see [Session Guide](KALTURA_SESSION_GUIDE.md))  
 **Format:** Form-encoded POST, `format=1` for JSON responses  
-**Services:** `category` (11 actions), `categoryUser` (10 actions), `categoryEntry` (9 actions), `accessControlProfile` (5 actions)
+**Services:** `category` (11 actions), `categoryUser` (10 actions), `categoryEntry` (9 actions), `accessControlProfile` (5 actions)  
 
 
 # 1. Authentication

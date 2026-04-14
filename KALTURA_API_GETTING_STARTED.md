@@ -111,7 +111,7 @@ AI services (Agents Manager, AI Genie) follow the same microservice pattern: `ag
 | Protocol | Port | Usage |
 |----------|------|-------|
 | HTTPS | 443 | All API and delivery traffic (required) |
-| HTTP | 80 | Legacy fallback (US only, not recommended) |
+| HTTP | 80 | Legacy fallback (US only); use HTTPS for all production traffic |
 | RTMP | 1935 | Live stream ingress |
 | RTMPS | 443 | Encrypted live stream ingress |
 | SRT | 7045 | Low-latency live stream ingress |

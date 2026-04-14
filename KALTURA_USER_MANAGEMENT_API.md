@@ -5,7 +5,7 @@ The User Management API covers the core user identity layer: creating and managi
 **Base URL:** `https://www.kaltura.com/api_v3` (may differ by region/deployment)  
 **Auth:** KS passed as `ks` parameter in POST form data (see [Session Guide](KALTURA_SESSION_GUIDE.md))  
 **Format:** Form-encoded POST, `format=1` for JSON responses  
-**Services:** `user` (22 actions), `userRole` (6 actions), `group_group` (CRUD), `groupUser` (5 actions)
+**Services:** `user` (22 actions), `userRole` (6 actions), `group_group` (CRUD), `groupUser` (5 actions)  
 
 
 # 1. Authentication

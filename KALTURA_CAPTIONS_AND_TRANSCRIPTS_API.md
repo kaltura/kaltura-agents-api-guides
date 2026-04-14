@@ -5,9 +5,9 @@ The Captions & Transcripts API manages subtitle files, closed captions, and tran
 **Base URL:** `https://www.kaltura.com/api_v3` (may differ by region/deployment)  
 **Auth:** KS passed as `ks` parameter in POST form data (see [Session Guide](KALTURA_SESSION_GUIDE.md))  
 **Format:** Form-encoded POST, `format=1` for JSON responses  
-**Services:** `caption_captionAsset` (12 actions), `caption_captionParams` (5 actions)
+**Services:** `caption_captionAsset` (12 actions), `caption_captionParams` (5 actions)  
 
-**Important:** These are plugin services. The service names use underscore-prefixed compound names: `caption_captionAsset`, `caption_captionParams`.
+**Important:** These are plugin services. The service names use underscore-prefixed compound names: `caption_captionAsset`, `caption_captionParams`.  
 
 
 # 1. Authentication

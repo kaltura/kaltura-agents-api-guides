@@ -5,7 +5,7 @@ The Auth Broker is a standalone microservice for managing SSO authentication via
 **Base URL:** `https://auth.nvp1.ovp.kaltura.com/api/v1` (production NVP region)  
 **Auth:** `Authorization: KS <KS>` header (KS prefix, not Bearer)  
 **Format:** JSON request/response bodies, all endpoints use POST (except SAML metadata which is GET)  
-**Regions:** NVP (default `nvp1`), EU (`irp2`), DE (`frp2`)
+**Regions:** NVP (default `nvp1`), EU (`irp2`), DE (`frp2`)  
 
 
 # 1. Authentication

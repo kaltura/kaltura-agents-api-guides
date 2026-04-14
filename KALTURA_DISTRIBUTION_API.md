@@ -5,7 +5,7 @@ Kaltura's content distribution system pushes media to external platforms (YouTub
 **Base URL:** `https://www.kaltura.com/api_v3` (may differ by region/deployment)  
 **Auth:** KS passed as `ks` parameter in POST form data (see [Session Guide](KALTURA_SESSION_GUIDE.md))  
 **Format:** Form-encoded POST, `format=1` for JSON responses  
-**Services:** `contentDistribution_distributionProvider`, `contentDistribution_distributionProfile`, `contentDistribution_entryDistribution`, `contentDistribution_genericDistributionProvider`, `contentDistribution_genericDistributionProviderAction`
+**Services:** `contentDistribution_distributionProvider`, `contentDistribution_distributionProfile`, `contentDistribution_entryDistribution`, `contentDistribution_genericDistributionProvider`, `contentDistribution_genericDistributionProviderAction`  
 
 
 # 1. Prerequisites

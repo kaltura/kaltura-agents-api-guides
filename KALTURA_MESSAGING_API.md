@@ -5,7 +5,7 @@ The Messaging API enables sending personalized, template-based email communicati
 **Base URL:** `https://messaging.nvp1.ovp.kaltura.com/api/v1` (production NVP region)  
 **Auth:** `Authorization: Bearer <KS>` header (ADMIN KS, type=2)  
 **Format:** JSON request/response bodies, all endpoints use POST  
-**Regions:** NVP (default `nvp1`), EU (`irp2`), DE (`frp2`)
+**Regions:** NVP (default `nvp1`), EU (`irp2`), DE (`frp2`)  
 
 
 # 1. Authentication
