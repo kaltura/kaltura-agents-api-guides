@@ -32,6 +32,10 @@
 | 26 | `KALTURA_EXPERIENCE_COMPONENTS_API.md` | — (UI embed components) | Done |
 | 27 | `KALTURA_MULTI_ACCOUNT_MANAGEMENT_API.md` | `test_multi_account_api.py` (6 tests) | Done |
 | 28 | `KALTURA_UNISPHERE_FRAMEWORK_API.md` | `test_unisphere_framework_api.py` (12 tests), `test_unisphere_framework_e2e.py` (9 tests) | Done |
+| 29 | `KALTURA_MEDIA_MANAGER_API.md` | `test_media_manager_api.py` (11 tests) | Done |
+| 30 | `KALTURA_CONTENT_LAB_API.md` | `test_content_lab_api.py` (8 tests) | Done |
+| 31 | `KALTURA_AGENTS_WIDGET_API.md` | `test_agents_widget_api.py` (7 tests) | Done |
+| 32 | `KALTURA_VOD_AVATAR_API.md` | `test_vod_avatar_api.py` (6 tests) | Done |
 
 
 ## Full Kaltura API Landscape

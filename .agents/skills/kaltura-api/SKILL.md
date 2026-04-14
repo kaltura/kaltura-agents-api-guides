@@ -160,7 +160,11 @@ Read the relevant guide when you need to implement a specific capability:
 - **[Captions Editor](../../../KALTURA_CAPTIONS_EDITOR_API.md)** — Interactive caption editing with video/waveform sync. iframe embed with URL parameters. Requires existing captionAsset.
 - **[Conversational Avatar](../../../KALTURA_CONVERSATIONAL_AVATAR_API.md)** — AI-powered conversational video avatar embed via sandboxed iframe. Dynamic Page Prompts for persona configuration.
 - **[Chat & Collaborate](../../../KALTURA_CNC_API.md)** — Real-time chat, Q&A, polls, reactions alongside video. Activated through Events Platform, not standalone.
-- **[Genie Widget](../../../KALTURA_GENIE_WIDGET_API.md)** — Conversational AI search widget. ES module embed via Unisphere loader. Custom theming, 15 languages, content scoping.
+- **[Genie Widget](../../../KALTURA_GENIE_WIDGET_API.md)** — Conversational AI search widget. ES module embed via Unisphere loader. Custom theming, 15 languages, content scoping. Player integration via 3 PlayKit plugins.
+- **[Media Manager](../../../KALTURA_MEDIA_MANAGER_API.md)** — Browsable media library widget. Select/manage modes, inline table or modal dialog visuals, category-scoped, upload flow, entry selection callbacks.
+- **[Content Lab](../../../KALTURA_CONTENT_LAB_API.md)** — AI content repurposing widget. Dual-runtime (application + ai-consent). Generates summaries, chapters, clips, quizzes from video. Entry eligibility checks, consent API.
+- **[Agents Widget](../../../KALTURA_AGENTS_WIDGET_API.md)** — Agent management drawer UI. Create/configure automated content-processing agents with triggers and actions. Connects to Agents Manager backend.
+- **[VOD Avatar Studio](../../../KALTURA_VOD_AVATAR_API.md)** — Pre-recorded avatar video studio. Script-to-video generation with AI avatars. Output saved as Kaltura media entries.
 - **[Embeddable Analytics](../../../KALTURA_ANALYTICS_EMBED_API.md)** — Analytics dashboards via iframe + postMessage. viewsConfig for widget control, 9 dashboard views, 11 entity drill-downs, date filters.
 - **[Unisphere Framework](../../../KALTURA_UNISPHERE_FRAMEWORK_API.md)** — Micro-frontend framework: loader, workspace lifecycle, 9 built-in services (pub-sub, storage, theme, analytics, logger), 15 embeddable widgets (Genie, Media Manager, Content Lab, Notifications, Avatars), player integration plugins, custom runtime development. CDN embedding (no npm needed) and npm build path.
 

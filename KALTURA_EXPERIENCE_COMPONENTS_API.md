@@ -16,6 +16,10 @@ Experience Components are front-end embeddable apps and widgets that simplify bu
 | **Conversational Avatar** | JS (iframe via SDK) | Client ID + Flow ID | [Conversational Avatar](KALTURA_CONVERSATIONAL_AVATAR_API.md) |
 | **Chat & Collaborate** | Managed by Events Platform | Event session context | [Chat & Collaborate](KALTURA_CNC_API.md) |
 | **Genie Widget** | ES module | KS in runtime settings | [Genie Widget](KALTURA_GENIE_WIDGET_API.md) |
+| **Media Manager** | ES module | KS in runtime settings | [Media Manager](KALTURA_MEDIA_MANAGER_API.md) |
+| **Content Lab** | ES module | KS in runtime settings | [Content Lab](KALTURA_CONTENT_LAB_API.md) |
+| **Agents Widget** | ES module | KS in runtime settings | [Agents Widget](KALTURA_AGENTS_WIDGET_API.md) |
+| **VOD Avatar Studio** | ES module | KS in runtime settings | [VOD Avatar Studio](KALTURA_VOD_AVATAR_API.md) |
 | **Embeddable Analytics** | iframe + postMessage | ADMIN KS via postMessage | [Embeddable Analytics](KALTURA_ANALYTICS_EMBED_API.md) |
 
 Each component creates, modifies, or interacts with Kaltura content and services — Express Recorder creates new media entries, Captions Editor modifies caption assets, the Player delivers content, and the Avatar drives AI conversations.
@@ -34,6 +38,14 @@ Each component creates, modifies, or interacts with Kaltura content and services
 **Chat & Collaborate (CnC)** — Real-time chat, Q&A, polls, announcements, and reactions alongside video content. Activated through the Events Platform — not a standalone embed. See [Chat & Collaborate Guide](KALTURA_CNC_API.md).
 
 **Genie Widget** — Conversational AI search over your video library. Users ask natural-language questions and receive structured answers with video clip citations. Loaded as an ES module via the Unisphere loader. See [Genie Widget Guide](KALTURA_GENIE_WIDGET_API.md).
+
+**Media Manager** — Browsable media library for selecting, uploading, and managing Kaltura entries. Supports inline table and modal dialog visual modes with select and manage modes. Scoped to categories for content organization. Loaded as an ES module via the Unisphere loader. See [Media Manager Guide](KALTURA_MEDIA_MANAGER_API.md).
+
+**Content Lab** — AI-powered content repurposing from video entries. Generates summaries, chapters, clips, quizzes, and other derived content. Uses dual runtimes — an application runtime for the main UI and an ai-consent runtime for the AI approval flow. Loaded as an ES module via the Unisphere loader. See [Content Lab Guide](KALTURA_CONTENT_LAB_API.md).
+
+**Agents Widget** — UI for managing automated content-processing agents. Users create and configure agents with triggers (new upload, category assignment) and actions (captions, translation, summary, moderation). Renders as a drawer panel. Loaded as an ES module via the Unisphere loader. See [Agents Widget Guide](KALTURA_AGENTS_WIDGET_API.md).
+
+**VOD Avatar Studio** — Studio for creating pre-recorded avatar video presentations from scripts. Users select an AI avatar, enter a script, and generate a professional video saved as a Kaltura entry. For real-time conversational avatars, see the Conversational Avatar guide instead. See [VOD Avatar Studio Guide](KALTURA_VOD_AVATAR_API.md).
 
 **Embeddable Analytics** — Analytics visualization dashboards embedded via iframe with a `postMessage` protocol. Provides the same views as the KMC — engagement, technology, geo, contributors, live stream health, and entity drill-downs. See [Embeddable Analytics Guide](KALTURA_ANALYTICS_EMBED_API.md).
 
@@ -64,8 +76,12 @@ Each standalone guide includes component-specific error handling. Common pattern
 - **[Conversational Avatar](KALTURA_CONVERSATIONAL_AVATAR_API.md)** — AI-powered conversational video avatar embed  
 - **[Chat & Collaborate](KALTURA_CNC_API.md)** — Real-time chat and collaboration alongside video  
 - **[Genie Widget](KALTURA_GENIE_WIDGET_API.md)** — Conversational AI search widget  
+- **[Media Manager](KALTURA_MEDIA_MANAGER_API.md)** — Browsable media library with select and manage modes  
+- **[Content Lab](KALTURA_CONTENT_LAB_API.md)** — AI-powered content repurposing from video entries  
+- **[Agents Widget](KALTURA_AGENTS_WIDGET_API.md)** — Automated content-processing agent management UI  
+- **[VOD Avatar Studio](KALTURA_VOD_AVATAR_API.md)** — Pre-recorded avatar video generation from scripts  
 - **[Embeddable Analytics](KALTURA_ANALYTICS_EMBED_API.md)** — Analytics dashboards via iframe  
-- **[Unisphere Framework](KALTURA_UNISPHERE_FRAMEWORK_API.md)** — The micro-frontend framework powering Genie, Media Manager, and other composable experiences  
+- **[Unisphere Framework](KALTURA_UNISPHERE_FRAMEWORK_API.md)** — The micro-frontend framework powering Genie, Media Manager, Content Lab, and other composable experiences  
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — KS generation and privilege management for component authentication  
 - **[Upload & Delivery](KALTURA_UPLOAD_AND_DELIVERY_API.md)** — Content lifecycle after Express Recorder creates entries  
 - **[Captions & Transcripts](KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md)** — Caption asset CRUD for Captions Editor prerequisites  

@@ -315,14 +315,79 @@ Short codes (e.g., `"en"`, `"he"`) are also accepted.
 The Genie widget communicates with the Genie server automatically. For custom integrations that bypass the widget (server-to-server RAG search, streaming conversations, polling sessions), see the [AI Genie API Guide](KALTURA_AI_GENIE_API.md).
 
 
-# 11. Error Handling
+# 11. Player Integration
+
+The Genie chat can be embedded as a side panel inside the Kaltura Player v7 using three PlayKit plugins. This enables users to ask AI questions about the video they are watching.
+
+## Plugin Dependencies
+
+Three plugins work together — all three must be included in the player configuration:
+
+| Plugin | Config Key | npm Package | Purpose |
+|--------|-----------|-------------|---------|
+| `@playkit-js/unisphere-service` | `unisphereService` | `@playkit-js/unisphere-service` | Required bridge — syncs player events with Unisphere services |
+| `@playkit-js/unisphere` | `unisphere` | `@playkit-js/unisphere` | Loads Unisphere runtimes inside the player UI (container management) |
+| `@playkit-js/unisphere-genie` | `genie` | `@playkit-js/unisphere-genie` | Loads the Genie AI chat as a player side panel |
+
+## Genie Plugin Configuration
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `ks` | string | — | Explicit KS for Genie authentication |
+| `fallbackToPlayerKS` | boolean | false | Use the player's provider KS when no explicit `ks` is set |
+| `expandOnFirstPlay` | boolean | false | Auto-open the Genie side panel on first play |
+| `position` | string | `"RIGHT"` | Side panel position |
+| `expandMode` | string | `"ALONGSIDE"` | How the panel expands: `"ALONGSIDE"` (shrinks video) or `"OVER"` (overlays video) |
+
+## Events
+
+| Event | Description |
+|-------|-------------|
+| `GENIE_OPEN_AUTO` | Genie panel opened automatically (via `expandOnFirstPlay`) |
+| `GENIE_OPEN_MANUAL` | Genie panel opened by user click |
+| `GENIE_CLOSE` | Genie panel closed |
+| `GENIE_NEW_THREAD` | User started a new conversation thread |
+
+## Player Setup Example
+
+```html
+<div id="player-container" style="width: 800px; height: 450px;"></div>
+<script src="https://cdnapisec.kaltura.com/p/$KALTURA_PARTNER_ID/embedPlaykitJs/uiconf_id/$KALTURA_PLAYER_ID"></script>
+<script>
+  var player = KalturaPlayer.setup({
+    targetId: "player-container",
+    provider: {
+      partnerId: $KALTURA_PARTNER_ID,
+      uiConfId: $KALTURA_PLAYER_ID,
+      ks: "$KALTURA_KS"
+    },
+    plugins: {
+      unisphereService: {},
+      unisphere: {},
+      genie: {
+        fallbackToPlayerKS: true,
+        expandOnFirstPlay: false,
+        position: "RIGHT",
+        expandMode: "ALONGSIDE"
+      }
+    }
+  });
+
+  player.loadMedia({ entryId: "$ENTRY_ID" });
+</script>
+```
+
+The `fallbackToPlayerKS: true` setting uses the player's provider KS for Genie authentication. If you need a separate KS with different privileges (e.g., `setrole:PLAYBACK_BASE_ROLE,sview:*` for Genie), pass it via the `ks` parameter instead.
+
+
+# 12. Error Handling
 
 - **Blank container** — If the widget container renders empty, verify the `ks` is valid and the `partnerId` matches your account. Check the browser console for CORS errors or ES module import failures. The container `<div>` must have an `id` attribute matching the `target` value in the visuals config.  
 - **ES module import failure** — The Genie widget loads as an ES module (`type="module"`). Verify your page uses HTTPS and the browser supports ES modules. The `import` statement requires a script tag with `type="module"`.  
 - **KS expiry** — The widget does not automatically renew expired sessions. Generate a KS with sufficient expiry for the expected session duration.  
 
 
-# 12. Best Practices
+# 13. Best Practices
 
 - **Generate the KS server-side.** The Genie widget KS is visible client-side — generate USER sessions (type=0) with `setrole:PLAYBACK_BASE_ROLE` on your backend. Never embed admin secrets in client-side code.  
 - **Scope content with category privileges.** Use `geniecategoryid` or `genieancestorid` KS privileges to limit queries to relevant content rather than exposing the entire library.  
@@ -330,7 +395,7 @@ The Genie widget communicates with the Genie server automatically. For custom in
 - **Use HTTPS.** The embed URL and all component URLs must use HTTPS for ES module imports and secure media access.  
 
 
-# 13. Related Guides
+# 14. Related Guides
 
 - **[Unisphere Framework](KALTURA_UNISPHERE_FRAMEWORK_API.md)** — The micro-frontend framework that powers this widget: loader, workspace lifecycle, services, multi-runtime composition  
 - **[Experience Components Overview](KALTURA_EXPERIENCE_COMPONENTS_API.md)** — Index of all embeddable components with shared guidelines  

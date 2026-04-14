@@ -468,6 +468,7 @@ In addition to the API, agents can be configured through Kaltura's management in
 
 # 10. Related Guides
 
+- **[Agents Widget](KALTURA_AGENTS_WIDGET_API.md)** — Embeddable UI for managing agents via a Unisphere drawer panel — the visual counterpart to this server-side API  
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — Generate the KS needed for Bearer auth
 - **[AppTokens](KALTURA_APPTOKENS_API.md)** — Secure server-to-server auth for agent automation services
 - **[REACH](KALTURA_REACH_API.md)** — The AI services (captions, translation, clips) that power agent actions

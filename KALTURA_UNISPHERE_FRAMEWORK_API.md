@@ -205,11 +205,12 @@ All widgets use the `unisphere.widget.*` naming convention.
 | Widget | Runtime(s) | Purpose | Guide |
 |--------|-----------|---------|-------|
 | `unisphere.widget.genie` | `chat`, `avatar`, `flashcards-tool`, `followups-tool`, `sources-tool` | AI conversational search + avatar | [Genie Widget](KALTURA_GENIE_WIDGET_API.md) |
-| `unisphere.widget.media-manager` | `kaltura-items-media-manager` | Browse, select, upload entries | Section 6 below |
-| `unisphere.widget.content-lab` | `application`, `ai-consent` | AI content repurposing | — |
+| `unisphere.widget.media-manager` | `kaltura-items-media-manager` | Browse, select, upload entries | [Media Manager](KALTURA_MEDIA_MANAGER_API.md) |
+| `unisphere.widget.content-lab` | `application`, `ai-consent` | AI content repurposing | [Content Lab](KALTURA_CONTENT_LAB_API.md) |
+| `unisphere.widget.agents` | `manager` | Agent management drawer | [Agents Widget](KALTURA_AGENTS_WIDGET_API.md) |
+| `unisphere.widget.vod-avatars` | `studio` | Pre-recorded avatar video studio | [VOD Avatar Studio](KALTURA_VOD_AVATAR_API.md) |
 | `unisphere.widget.notifications` | `notifications` | Toast, alert, and overlay notifications | — |
 | `unisphere.widget.in-app-messaging` | `engine`, `engine-expo`, `engine-modal`, `consent` | In-app messaging system | — |
-| `unisphere.widget.vod-avatars` | `studio` | AI avatar studio | [Conversational Avatar](KALTURA_CONVERSATIONAL_AVATAR_API.md) |
 | `unisphere.widget.reactions` | `showcase` | Live reactions overlay | — |
 
 ## Internal / Admin Widgets
@@ -218,7 +219,6 @@ These widgets are present in the manifest but serve internal or admin purposes:
 
 | Widget | Runtime(s) | Purpose |
 |--------|-----------|---------|
-| `unisphere.widget.agents` | `manager` | Agents Manager UI |
 | `unisphere.widget.video-summary` | `ai-generator-demo`, `content-lab-ai-generator`, `kaltura-player-list` | Video summary tools |
 | `unisphere.widget.streams-insights` | `quality-of-service` | Stream quality monitoring |
 | `unisphere.widget.upgrade-player` | `application` | Player upgrade tool |
@@ -236,90 +236,9 @@ The manifest includes presets that auto-load runtimes:
 
 # 6. Media Manager
 
-The Media Manager widget provides a reusable Unisphere runtime for browsing, selecting, and uploading Kaltura entries. It loads from the CDN like any other Unisphere runtime.
+The Media Manager widget (`unisphere.widget.media-manager`) provides a reusable runtime for browsing, selecting, and uploading Kaltura entries. It supports inline table and modal dialog visual types, select and manage modes, and programmatic control via `showDialog()` / `hideDialog()`.
 
-**Widget:** `unisphere.widget.media-manager`  
-**Runtime:** `kaltura-items-media-manager`  
-
-## Visual Types
-
-- **`table`** — Inline media library that embeds directly in a container element  
-- **`dialog`** — Modal overlay picker, opened and closed programmatically  
-
-## Modes
-
-- **`select`** — User browses and picks an entry. A callback fires with the selected `KalturaBaseEntry`  
-- **`manage`** — Full media management: browse, upload new entries, delete or detach entries from categories  
-
-## Settings
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `contextType` | string | yes | Always `"category"` — scopes entries to a Kaltura category |
-| `contextId` | string/number | no | Category ID to scope the media library to |
-| `ks` | string | no | Override workspace KS for this runtime |
-| `partnerId` | string/number | no | Override workspace partnerId |
-| `supportDocuments` | boolean | no | Enable document upload and viewing |
-
-## Embed as Inline Media Library
-
-```html
-<div id="media-container" style="width: 100%; height: 600px;"></div>
-<script type="module">
-  import { loader } from "https://unisphere.nvp1.ovp.kaltura.com/v1/loader/index.esm.js";
-
-  const workspace = await loader({
-    serverUrl: "https://unisphere.nvp1.ovp.kaltura.com/v1",
-    appId: "my-app", appVersion: "1.0.0",
-    session: { ks: "$KALTURA_KS", partnerId: "$KALTURA_PARTNER_ID" },
-    runtimes: [{
-      widgetName: "unisphere.widget.media-manager",
-      runtimeName: "kaltura-items-media-manager",
-      settings: { contextType: "category", contextId: "$CATEGORY_ID" },
-      visuals: [{ type: "table", target: "media-container", settings: {} }]
-    }]
-  });
-
-  // Listen for entry selection
-  const mm = workspace.getRuntime(
-    "unisphere.widget.media-manager",
-    "kaltura-items-media-manager"
-  );
-  mm.onRowSelected.subscribe(entry => {
-    console.log("Selected:", entry.id, entry.name);
-  });
-</script>
-```
-
-## Open as Modal Picker
-
-Use the dialog visual type or programmatic API to show a modal entry picker:
-
-```javascript
-// Open modal in "select" mode
-mm.showDialog("select", entry => {
-  console.log("User picked:", entry.id, entry.name);
-  mm.hideDialog();
-});
-```
-
-```javascript
-// Open modal in "manage" mode (browse, upload, delete)
-mm.showDialog("manage", entry => {
-  console.log("Entry action:", entry.id);
-});
-```
-
-## Upload Flow
-
-When a user uploads a file through the Media Manager, the widget internally executes a multiRequest with:
-
-1. `baseEntry.add` — Create the entry placeholder  
-2. `uploadToken.add` — Create an upload token  
-3. `baseEntry.updateContent` — Attach the uploaded file to the entry  
-4. `categoryEntry.add` — Assign the new entry to the category context  
-
-The KS used for the Media Manager must have sufficient privileges for these operations. An admin KS (type=2) or a user KS with content creation privileges is required.
+See the **[Media Manager Guide](KALTURA_MEDIA_MANAGER_API.md)** for complete documentation including configuration, visual types, modes, runtime API, upload flow, and KS requirements.
 
 
 # 7. Built-in Services
@@ -685,7 +604,11 @@ Each region serves its own loader, runtime.json manifest, and widget bundles. Pa
 
 # 15. Related Guides
 
-- **[Genie Widget API](KALTURA_GENIE_WIDGET_API.md)** — Detailed configuration for the Genie conversational AI search widget  
+- **[Media Manager API](KALTURA_MEDIA_MANAGER_API.md)** — Browsable media library widget: select, upload, manage entries  
+- **[Content Lab API](KALTURA_CONTENT_LAB_API.md)** — AI content repurposing widget: summaries, chapters, clips, quizzes  
+- **[Agents Widget API](KALTURA_AGENTS_WIDGET_API.md)** — Agent management drawer: create and configure automated content-processing agents  
+- **[VOD Avatar Studio API](KALTURA_VOD_AVATAR_API.md)** — Pre-recorded avatar video generation from scripts  
+- **[Genie Widget API](KALTURA_GENIE_WIDGET_API.md)** — Conversational AI search widget with player integration  
 - **[AI Genie API](KALTURA_AI_GENIE_API.md)** — Server-side Genie HTTP API for custom RAG integrations  
 - **[Conversational Avatar](KALTURA_CONVERSATIONAL_AVATAR_API.md)** — AI-powered conversational video avatar embed  
 - **[Experience Components](KALTURA_EXPERIENCE_COMPONENTS_API.md)** — Index of all embeddable components with shared guidelines  

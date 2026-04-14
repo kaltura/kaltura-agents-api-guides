@@ -59,8 +59,12 @@ Guides for delivering content to end users through players, widgets, events, and
 | [Conversational Avatar](KALTURA_CONVERSATIONAL_AVATAR_API.md) | Playback & Content Hubs | AI-powered conversational video avatar embed |
 | [Chat & Collaborate](KALTURA_CNC_API.md) | Playback & Content Hubs | Real-time chat, Q&A, polls alongside video |
 | [Genie Widget](KALTURA_GENIE_WIDGET_API.md) | Playback & Content Hubs | Conversational AI search widget over video library |
+| [Media Manager](KALTURA_MEDIA_MANAGER_API.md) | Playback & Content Hubs | Browsable media library: select, upload, manage entries |
+| [Content Lab](KALTURA_CONTENT_LAB_API.md) | Playback & Content Hubs | AI content repurposing: summaries, chapters, clips, quizzes |
+| [Agents Widget](KALTURA_AGENTS_WIDGET_API.md) | Playback & Content Hubs | Automated content-processing agent management UI |
+| [VOD Avatar Studio](KALTURA_VOD_AVATAR_API.md) | Playback & Content Hubs | Pre-recorded avatar video generation from scripts |
 | [Embeddable Analytics](KALTURA_ANALYTICS_EMBED_API.md) | Playback & Content Hubs | Analytics dashboards via iframe + postMessage |
-| [Unisphere Framework](KALTURA_UNISPHERE_FRAMEWORK_API.md) | Playback & Content Hubs | Micro-frontend framework: loader, workspace, services, Media Manager |
+| [Unisphere Framework](KALTURA_UNISPHERE_FRAMEWORK_API.md) | Playback & Content Hubs | Micro-frontend framework: loader, workspace, services |
 | [Events Platform](KALTURA_EVENTS_PLATFORM_API.md) | Virtual Events & Webinars | Virtual events, webinars, town halls, sessions |
 | [User Profile](KALTURA_USER_PROFILE_API.md) | Virtual Events & Webinars | Per-app user profiles, event attendance tracking |
 | [Gamification](KALTURA_GAMIFICATION_API.md) | Virtual Events & Webinars | Leaderboards, badges, certificates |
@@ -130,6 +134,10 @@ graph TD
     GW["Genie Widget"]
     EA["Embed Analytics"]
     UF["Unisphere Framework"]
+    MM["Media Manager"]
+    CL["Content Lab"]
+    AW["Agents Widget"]
+    VA["VOD Avatar Studio"]
     EP["Events Platform"]
     UP["User Profile"]
     GA["Gamification"]
@@ -146,7 +154,17 @@ graph TD
     EC --> GW
     EC --> EA
     EC --> UF
+    EC --> MM
+    EC --> CL
+    EC --> AW
+    EC --> VA
     UF --> GW
+    UF --> MM
+    UF --> CL
+    UF --> AW
+    UF --> VA
+    AG --> AW
+    RE --> CL
     KS --> EP
     APR --> UP
     EP --> GA
@@ -166,7 +184,7 @@ graph TD
     class GS,KS,AT foundation
     class UD,MS,CT,CM,RE,AG,AI creation
     class ES,CA,UM,AB,MA,AR,AE,WH,APR,MSG management
-    class PE,EC,ER,CE,CA,CNC,GW,EA,UF,EP,UP,GA,DI,SY experience
+    class PE,EC,ER,CE,CA,CNC,GW,EA,UF,MM,CL,AW,VA,EP,UP,GA,DI,SY experience
 ```
 
 **Legend:**  
@@ -188,9 +206,13 @@ Blue = Foundation | Purple = Creation | Orange = Management | Green = Experience
 | Auto-caption with AI | [REACH API](KALTURA_REACH_API.md) |
 | Build a chatbot over video | [AI Genie](KALTURA_AI_GENIE_API.md) |
 | Embed Genie AI search widget | [Genie Widget](KALTURA_GENIE_WIDGET_API.md) |
-| Embed composable experiences (Media Manager, multi-runtime) | [Unisphere Framework](KALTURA_UNISPHERE_FRAMEWORK_API.md) |
+| Embed composable experiences (multi-runtime) | [Unisphere Framework](KALTURA_UNISPHERE_FRAMEWORK_API.md) |
+| Embed a media library or picker | [Media Manager](KALTURA_MEDIA_MANAGER_API.md) |
+| Repurpose video with AI (summaries, chapters, clips) | [Content Lab](KALTURA_CONTENT_LAB_API.md) |
+| Automate content processing (captions, translation on upload) | [Agents Widget](KALTURA_AGENTS_WIDGET_API.md) or [Agents Manager API](KALTURA_AGENTS_MANAGER_API.md) |
+| Generate avatar videos from scripts | [VOD Avatar Studio](KALTURA_VOD_AVATAR_API.md) |
 | Record from browser | [Express Recorder](KALTURA_EXPRESS_RECORDER_API.md) |
-| Embed an AI avatar | [Conversational Avatar](KALTURA_CONVERSATIONAL_AVATAR_API.md) |
+| Embed a real-time conversational AI avatar | [Conversational Avatar](KALTURA_CONVERSATIONAL_AVATAR_API.md) |
 | Embed analytics dashboards | [Embeddable Analytics](KALTURA_ANALYTICS_EMBED_API.md) |
 | Edit captions visually | [Captions Editor](KALTURA_CAPTIONS_EDITOR_API.md) |
 | Create a virtual event | [Events Platform](KALTURA_EVENTS_PLATFORM_API.md) |

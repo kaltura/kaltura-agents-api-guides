@@ -28,6 +28,10 @@ CATEGORIES = {
         "KALTURA_CONVERSATIONAL_AVATAR_API.md",
         "KALTURA_CNC_API.md",
         "KALTURA_GENIE_WIDGET_API.md",
+        "KALTURA_MEDIA_MANAGER_API.md",
+        "KALTURA_CONTENT_LAB_API.md",
+        "KALTURA_AGENTS_WIDGET_API.md",
+        "KALTURA_VOD_AVATAR_API.md",
         "KALTURA_ANALYTICS_EMBED_API.md",
     ],
     "Content Management": [
