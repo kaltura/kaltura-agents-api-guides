@@ -69,9 +69,10 @@ def main():
     if not ok:
         print(f"\n  SKIP  Event Notification plugin not available: {detail}")
         print(f"         Contact your Kaltura account manager to enable the plugin.\n")
-        runner.results.append(("connectivity — event notification plugin enabled", False, detail))
-        runner.summary()
-        sys.exit(1)
+        print("============================================================")
+        print("  Webhooks API — SKIPPED (plugin not provisioned)")
+        print("============================================================")
+        sys.exit(0)
     print(f"  OK    Event Notification plugin available ({detail})\n")
 
     # ════════════════════════════════════════════

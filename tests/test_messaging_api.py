@@ -60,10 +60,10 @@ def main():
         print(f"         URL: {MESSAGING_URL}")
         print(f"         The messaging service requires partner provisioning.")
         print(f"         Contact your Kaltura account manager to enable messaging.\n")
-        # Still report as a structured result
-        runner.results.append(("connectivity — messaging API reachable", False, detail))
-        runner.summary()
-        sys.exit(1)
+        print("============================================================")
+        print("  Messaging API — SKIPPED (service not provisioned)")
+        print("============================================================")
+        sys.exit(0)
     print(f"  OK    Messaging API reachable ({detail})\n")
 
     # ════════════════════════════════════════════
