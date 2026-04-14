@@ -40,8 +40,52 @@ def _require_env(name):
 
 # === Configuration (from environment) ===
 PARTNER_ID = _require_env("KALTURA_PARTNER_ID")
-KS = _require_env("KALTURA_KS")
 SERVICE_URL = os.environ.get("KALTURA_SERVICE_URL", "https://www.kaltura.com/api_v3")
+
+
+def _ensure_valid_ks():
+    """Return a valid KS — refresh via session.start if the stored one is expired."""
+    ks = os.environ.get("KALTURA_KS", "")
+    if ks:
+        # Quick validation: try a cheap API call
+        resp = requests.post(
+            f"{SERVICE_URL}/service/baseEntry/action/list",
+            data={"ks": ks, "format": 1, "pager[pageSize]": 1},
+            timeout=15,
+        )
+        if resp.ok:
+            result = resp.json()
+            if not (isinstance(result, dict) and result.get("code") == "INVALID_KS"):
+                return ks
+        print("[test_helpers] Stored KS expired — generating fresh one via session.start...")
+    admin_secret = os.environ.get("KALTURA_ADMIN_SECRET", "")
+    user_id = os.environ.get("KALTURA_USER_ID", "")
+    if not admin_secret:
+        print("ERROR: KALTURA_KS is expired and KALTURA_ADMIN_SECRET is not set.")
+        sys.exit(1)
+    resp = requests.post(
+        f"{SERVICE_URL}/service/session/action/start",
+        data={
+            "format": 1,
+            "partnerId": PARTNER_ID,
+            "secret": admin_secret,
+            "type": 2,
+            "userId": user_id,
+            "expiry": 86400,
+            "privileges": "disableentitlement",
+        },
+        timeout=15,
+    )
+    resp.raise_for_status()
+    fresh_ks = resp.json()
+    if isinstance(fresh_ks, dict) and fresh_ks.get("objectType") == "KalturaAPIException":
+        print(f"ERROR: session.start failed: {fresh_ks.get('message')}")
+        sys.exit(1)
+    os.environ["KALTURA_KS"] = fresh_ks
+    return fresh_ks
+
+
+KS = _ensure_valid_ks()
 AGENTS_MANAGER_URL = os.environ.get("KALTURA_AGENTS_MANAGER_URL", "https://agents-manager.nvp1.ovp.kaltura.com")
 GENIE_BASE_URL = os.environ.get("KALTURA_GENIE_URL", "https://genie.nvp1.ovp.kaltura.com")
 APP_REGISTRY_URL = os.environ.get("KALTURA_APP_REGISTRY_URL", "https://app-registry.nvp1.ovp.kaltura.com/api/v1")
@@ -213,12 +257,31 @@ def delete_test_entry(entry_id):
 
 
 class TestRunner:
-    """Collects test results and tracks resources for cleanup."""
+    """Collects test results and tracks resources for cleanup.
+
+    Registers an atexit handler so that cleanup runs even if the test is
+    interrupted (Ctrl-C, unhandled exception, sys.exit).  The handler only
+    fires when cleanup() was NOT already called by the test's normal flow,
+    and it respects the --keep flag.  It ONLY deletes resources that the
+    current test registered via register_cleanup() — it cannot touch
+    pre-existing data.
+    """
 
     def __init__(self, name):
         self.name = name
         self.results = []
         self._cleanup_actions = []
+        self._cleaned_up = False
+        import atexit
+        atexit.register(self._atexit_cleanup)
+
+    def _atexit_cleanup(self):
+        if self._cleaned_up or not self._cleanup_actions:
+            return
+        if "--keep" in sys.argv:
+            return
+        print(f"\n[WARN] Test interrupted — running emergency cleanup for {self.name}...")
+        self.cleanup()
 
     def register_cleanup(self, label, fn):
         self._cleanup_actions.append((label, fn))
@@ -233,6 +296,9 @@ class TestRunner:
             print(f"  FAIL  {test_name}: {e}")
 
     def cleanup(self):
+        if self._cleaned_up:
+            return
+        self._cleaned_up = True
         print(f"\n--- Cleanup ({self.name}) ---")
         for label, fn in reversed(self._cleanup_actions):
             try:
