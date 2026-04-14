@@ -630,7 +630,14 @@ curl -X POST "$KALTURA_SERVICE_URL/service/groupUser/action/sync" \
   -d "groupIds=engineering-team,product-team"
 ```
 
-Sets the user's group membership to exactly the specified groups, removing them from any groups not in the list.
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `userId` | string | Yes | User ID whose group membership to sync |
+| `groupIds` | string | Yes | Comma-separated list of group IDs the user should belong to |
+| `removeFromExistingGroups` | boolean | No | If `true` (default), removes the user from groups not in `groupIds`. If `false`, only adds to the specified groups without removing existing memberships. |
+| `createNewGroups` | boolean | No | If `true`, creates groups from `groupIds` that do not exist yet. Default: `false`. |
+
+Sets the user's group membership to exactly the specified groups, removing them from any groups not in the list (when `removeFromExistingGroups` is true).
 
 
 # 8. Bulk Operations

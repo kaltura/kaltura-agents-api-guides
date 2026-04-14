@@ -204,14 +204,51 @@ const mm = await workspace.getRuntimeAsync(
 
 | Method | Returns | Description |
 |--------|---------|-------------|
-| `showDialog(mode, onRowSelected)` | void | Open the modal picker in `"select"` or `"manage"` mode |
-| `hideDialog()` | void | Close the modal picker |
+| `showDialog(mode, onRowSelected)` | void | Open the modal picker in `"select"` or `"manage"` mode. The `onRowSelected` callback fires when a user selects an entry |
+| `hideDialog()` | void | Close the modal picker programmatically |
+| `updateSettings(settings)` | void | Update runtime settings at runtime (e.g., change `contextId` to switch categories without reloading) |
 
 ## Events
 
 | Event | Data | Description |
 |-------|------|-------------|
-| `onRowSelected` | `KalturaBaseEntry` | Fires when a user selects an entry (subscribe via `.subscribe()`) |
+| `onRowSelected` | `KalturaBaseEntry` | Fires when a user selects an entry. Subscribe via `.subscribe()`. The entry object includes `id`, `name`, `description`, `mediaType`, `createdAt`, `thumbnailUrl`, `duration`, `plays`, and other standard entry fields |
+
+## Entry Object Shape
+
+The `onRowSelected` callback and `showDialog` callback both receive a `KalturaBaseEntry` object:
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `id` | string | Kaltura entry ID (e.g., `"0_abc123"`) |
+| `name` | string | Entry display name |
+| `description` | string | Entry description |
+| `mediaType` | number | `1` = video, `2` = image, `5` = audio, `11` = document |
+| `createdAt` | number | Unix timestamp of creation |
+| `updatedAt` | number | Unix timestamp of last update |
+| `thumbnailUrl` | string | URL to the entry thumbnail |
+| `duration` | number | Duration in seconds (video/audio entries) |
+| `plays` | number | Total play count |
+| `views` | number | Total view count |
+| `status` | number | Entry status: `0` = import, `1` = preconvert, `2` = ready, `7` = deleted |
+
+## Workspace-Level Methods
+
+The `workspace` object returned by `loader()` provides lifecycle and session management:
+
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `getRuntime(widgetName, runtimeName)` | runtime | Get the runtime instance synchronously. Returns `null` if not yet loaded |
+| `getRuntimeAsync(widgetName, runtimeName)` | Promise&lt;runtime&gt; | Get the runtime instance asynchronously. Resolves when the runtime finishes loading |
+| `session.setData(updater)` | void | Update the workspace session. Use to refresh an expired KS without reloading the page |
+| `kill()` | void | Destroy the workspace, release all runtimes, and remove rendered DOM elements. Call when navigating away from the page |
+
+**KS refresh example:**
+
+```javascript
+// Refresh the KS without reloading the workspace
+workspace.session.setData(prev => ({ ...prev, ks: "new-ks-token" }));
+```
 
 ## Modal Picker Example
 
@@ -233,9 +270,24 @@ mm.showDialog("manage", entry => {
 ```
 
 
-# 7. Upload Flow
+# 7. Switching Categories at Runtime
 
-When a user uploads a file through the Media Manager, the widget internally executes a multiRequest with:
+Use `updateSettings` to change the category scope without reloading the workspace:
+
+```javascript
+// Switch to a different category
+mm.updateSettings({
+  contextType: "category",
+  contextId: "67890"
+});
+```
+
+The widget reloads its entry list from the new category.
+
+
+# 8. Upload Flow
+
+When a user uploads a file through the Media Manager in `manage` mode, the widget internally executes a multiRequest with:
 
 1. `baseEntry.add` — Create the entry placeholder  
 2. `uploadToken.add` — Create an upload token  
@@ -244,8 +296,10 @@ When a user uploads a file through the Media Manager, the widget internally exec
 
 The KS used for the Media Manager must have sufficient privileges for these operations. An admin KS (type=2) or a user KS with content creation privileges is required.
 
+After upload completes, the new entry appears in the media grid. The entry goes through transcoding (status=1) before becoming ready (status=2). The upload UI within the widget shows progress during the file transfer.
 
-# 8. KS Requirements
+
+# 9. KS Requirements
 
 The Media Manager accesses multiple Kaltura API services. Generate the KS server-side with appropriate privileges:
 
@@ -266,7 +320,7 @@ For read-only select mode, a USER KS (type=0) with content browsing privileges i
 See the [Session Guide](KALTURA_SESSION_GUIDE.md) for KS generation details and the [AppTokens API](KALTURA_APPTOKENS_API.md) for production token management.
 
 
-# 9. Container CSS
+# 10. Container CSS
 
 The Media Manager fills the available space in its container. Set explicit dimensions:
 
@@ -292,7 +346,7 @@ The Media Manager fills the available space in its container. Set explicit dimen
 ```
 
 
-# 10. Error Handling
+# 11. Error Handling
 
 - **Empty container** — If the widget renders empty, verify the KS is valid and the `partnerId` matches your account. Check the browser console for errors. The container `<div>` must have an `id` attribute matching the `target` value (no `#` prefix).  
 - **No entries displayed** — Verify the `contextId` category exists and contains entries. If omitted, the widget shows all accessible entries.  
@@ -300,17 +354,18 @@ The Media Manager fills the available space in its container. Set explicit dimen
 - **KS expiry** — The widget does not automatically renew expired sessions. Generate a KS with sufficient expiry or update the workspace session reactively: `workspace.session.setData(prev => ({ ...prev, ks: "new-ks" }))`.  
 
 
-# 11. Best Practices
+# 12. Best Practices
 
 - **Generate the KS server-side.** The KS is visible in client-side code — generate it on your backend with minimal privileges for the intended mode.  
 - **Scope with `contextId`.** Always set a `contextId` to limit the media library to a specific category rather than exposing the entire content library.  
 - **Use select mode for pickers.** When users only need to choose an entry (not manage content), use `mode: "select"` to hide upload and delete actions.  
 - **Size the container explicitly.** The widget fills the available space — set explicit `width` and `height` via CSS.  
 - **Use HTTPS.** The Unisphere loader and all widget bundles require HTTPS.  
-- **Clean up on navigation.** Call `workspace.kill()` when the user navigates away to release resources.  
+- **Clean up on navigation.** Call `workspace.kill()` when the user navigates away to release all runtimes and remove rendered DOM elements.  
+- **Refresh KS before expiry.** Call `workspace.session.setData(prev => ({ ...prev, ks: "new-ks" }))` to refresh the KS without reloading the workspace.  
 
 
-# 12. Multi-Region
+# 13. Multi-Region
 
 | Region | Server URL |
 |--------|-----------|
@@ -321,7 +376,7 @@ The Media Manager fills the available space in its container. Set explicit dimen
 Set the `serverUrl` in the workspace configuration to match your Kaltura account region.
 
 
-# 13. Related Guides
+# 14. Related Guides
 
 - **[Unisphere Framework](KALTURA_UNISPHERE_FRAMEWORK_API.md)** — The micro-frontend framework that powers this widget: loader, workspace lifecycle, services, multi-runtime composition  
 - **[Experience Components Overview](KALTURA_EXPERIENCE_COMPONENTS_API.md)** — Index of all embeddable components with shared guidelines  

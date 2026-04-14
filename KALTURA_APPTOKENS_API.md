@@ -51,17 +51,17 @@ Application Tokens provide secure, scoped API access without exposing admin secr
 POST /api_v3/service/appToken/action/add
 ```
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `ks` | string | Admin KS |
-| `appToken[objectType]` | string | `KalturaAppToken` |
-| `appToken[hashType]` | string | `SHA256` (recommended), `SHA1`, `SHA512`, `MD5` |
-| `appToken[sessionType]` | int | `0`=USER (recommended), `2`=ADMIN |
-| `appToken[sessionDuration]` | int | Max session duration in seconds |
-| `appToken[sessionPrivileges]` | string | Privileges to bake in (e.g., `sview:*,list:*`) |
-| `appToken[sessionUserId]` | string | Fixed user ID (optional) |
-| `appToken[description]` | string | Human-readable label |
-| `appToken[expiry]` | int | Unix timestamp when token expires (0 = never) |
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `ks` | string | Yes | Admin KS |
+| `appToken[objectType]` | string | Yes | `KalturaAppToken` |
+| `appToken[hashType]` | string | No | `SHA256` (recommended), `SHA1`, `SHA512`, `MD5`. Default: `SHA1`. Immutable after creation. |
+| `appToken[sessionType]` | int | No | `0`=USER (recommended), `2`=ADMIN |
+| `appToken[sessionDuration]` | int | No | Max session duration in seconds (0 = account default) |
+| `appToken[sessionPrivileges]` | string | No | Privileges to bake in (e.g., `sview:*,list:*`) |
+| `appToken[sessionUserId]` | string | No | Fixed user ID for all sessions created from this token |
+| `appToken[description]` | string | No | Human-readable label |
+| `appToken[expiry]` | int | No | Unix timestamp when token expires (0 = never) |
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/appToken/action/add" \
@@ -78,17 +78,24 @@ curl -X POST "$KALTURA_SERVICE_URL/service/appToken/action/add" \
 **Response:**
 ```json
 {
-  "id": "1_abc123",
-  "token": "a1b2c3d4...",
+  "id": "1_abc123def4",
+  "token": "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2",
   "partnerId": 123456,
   "status": 2,
+  "sessionType": 0,
+  "sessionDuration": 86400,
+  "sessionPrivileges": "sview:*,list:*",
+  "sessionUserId": "",
   "hashType": "SHA256",
-  "sessionPrivileges": "...",
+  "description": "My integration token",
+  "expiry": 0,
+  "createdAt": 1700000000,
+  "updatedAt": 1700000000,
   "objectType": "KalturaAppToken"
 }
 ```
 
-The response includes `id` (token ID) and `token` (the secret value — store securely on your backend server only).
+The response includes `id` (token ID) and `token` (the secret value — store securely on your backend server only). The `token` field is a hex string whose length depends on the hash algorithm (64 characters for SHA256).
 
 ## 3.2 appToken.get — Retrieve a Token
 
@@ -96,9 +103,10 @@ The response includes `id` (token ID) and `token` (the secret value — store se
 POST /api_v3/service/appToken/action/get
 ```
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `id` | string | The AppToken ID |
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `ks` | string | Yes | Admin KS |
+| `id` | string | Yes | The AppToken ID |
 
 Returns the full `KalturaAppToken` object. The `token` field is included only for the account admin.
 
@@ -109,19 +117,41 @@ curl -X POST "$KALTURA_SERVICE_URL/service/appToken/action/get" \
   -d "id=$APP_TOKEN_ID"
 ```
 
+**Response:**
+```json
+{
+  "id": "1_abc123def4",
+  "token": "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2",
+  "partnerId": 123456,
+  "status": 2,
+  "sessionType": 0,
+  "sessionDuration": 86400,
+  "sessionPrivileges": "sview:*,list:*",
+  "sessionUserId": "",
+  "hashType": "SHA256",
+  "description": "My integration token",
+  "expiry": 0,
+  "createdAt": 1700000000,
+  "updatedAt": 1700000000,
+  "objectType": "KalturaAppToken"
+}
+```
+
 ## 3.3 appToken.list — List All Tokens
 
 ```
 POST /api_v3/service/appToken/action/list
 ```
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `filter[statusEqual]` | int | Filter by status (`2`=ACTIVE) |
-| `filter[hashTypeEqual]` | string | Filter by hash type |
-| `filter[sessionTypeEqual]` | int | Filter by session type |
-| `pager[pageSize]` | int | Results per page (default 30) |
-| `pager[pageIndex]` | int | Page number (1-based) |
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `ks` | string | Yes | Admin KS |
+| `filter[statusEqual]` | int | No | Filter by status (`2`=ACTIVE) |
+| `filter[hashTypeEqual]` | string | No | Filter by hash type |
+| `filter[sessionTypeEqual]` | int | No | Filter by session type |
+| `filter[idEqual]` | string | No | Filter by specific token ID |
+| `pager[pageSize]` | int | No | Results per page (default 30) |
+| `pager[pageIndex]` | int | No | Page number (1-based) |
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/appToken/action/list" \
@@ -131,7 +161,31 @@ curl -X POST "$KALTURA_SERVICE_URL/service/appToken/action/list" \
   -d "pager[pageSize]=10"
 ```
 
-The response `objects` array contains each token with `id`, `description`, `hashType`, `expiry`, and other fields.
+**Response:**
+```json
+{
+  "objects": [
+    {
+      "id": "1_abc123def4",
+      "partnerId": 123456,
+      "status": 2,
+      "sessionType": 0,
+      "sessionDuration": 86400,
+      "sessionPrivileges": "sview:*,list:*",
+      "hashType": "SHA256",
+      "description": "My integration token",
+      "expiry": 0,
+      "createdAt": 1700000000,
+      "updatedAt": 1700000000,
+      "objectType": "KalturaAppToken"
+    }
+  ],
+  "totalCount": 1,
+  "objectType": "KalturaAppTokenListResponse"
+}
+```
+
+The `token` field is included in list results only for the account admin.
 
 ## 3.4 appToken.update — Modify a Token
 
@@ -139,15 +193,44 @@ The response `objects` array contains each token with `id`, `description`, `hash
 POST /api_v3/service/appToken/action/update
 ```
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `id` | string | The AppToken ID |
-| `appToken[objectType]` | string | `KalturaAppToken` |
-| `appToken[description]` | string | Updated description |
-| `appToken[sessionDuration]` | int | Updated max session duration |
-| `appToken[sessionPrivileges]` | string | Updated privileges |
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `ks` | string | Yes | Admin KS |
+| `id` | string | Yes | The AppToken ID |
+| `appToken[objectType]` | string | Yes | `KalturaAppToken` |
+| `appToken[description]` | string | No | Updated description |
+| `appToken[sessionDuration]` | int | No | Updated max session duration |
+| `appToken[sessionPrivileges]` | string | No | Updated privileges |
+| `appToken[sessionUserId]` | string | No | Updated fixed user ID |
 
-> `hashType` is set at creation and locked. To use a different hash algorithm, create a new token.
+> `hashType` and `sessionType` are set at creation and locked. To use a different hash algorithm or session type, create a new token.
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/appToken/action/update" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "id=$APP_TOKEN_ID" \
+  -d "appToken[objectType]=KalturaAppToken" \
+  -d "appToken[description]=Updated integration token" \
+  -d "appToken[sessionDuration]=43200"
+```
+
+**Response:** The updated `KalturaAppToken` object:
+```json
+{
+  "id": "1_abc123def4",
+  "partnerId": 123456,
+  "status": 2,
+  "sessionType": 0,
+  "sessionDuration": 43200,
+  "sessionPrivileges": "sview:*,list:*",
+  "hashType": "SHA256",
+  "description": "Updated integration token",
+  "createdAt": 1700000000,
+  "updatedAt": 1700001000,
+  "objectType": "KalturaAppToken"
+}
+```
 
 ## 3.5 appToken.delete — Revoke a Token
 
@@ -155,9 +238,19 @@ POST /api_v3/service/appToken/action/update
 POST /api_v3/service/appToken/action/delete
 ```
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `id` | string | The AppToken ID to delete |
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `ks` | string | Yes | Admin KS |
+| `id` | string | Yes | The AppToken ID to delete |
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/appToken/action/delete" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "id=$APP_TOKEN_ID"
+```
+
+**Response:** Empty response on success. The token's status changes to `3` (DELETED).
 
 Immediately revokes the token. Existing KS sessions already issued from this token remain valid until their TTL expires; revoke those with `session.end` if needed.
 
@@ -182,64 +275,97 @@ session.startWidgetSession  →  HMAC(widget_ks + token_value)  →  appToken.st
 POST /api_v3/service/appToken/action/startSession
 ```
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `ks` | string | The widget session KS (from `startWidgetSession`) |
-| `id` | string | AppToken ID |
-| `tokenHash` | string | `HASH(widget_ks + token_value)` |
-| `userId` | string | User ID for the session (may be overridden by token's `sessionUserId`) |
-| `type` | int | Session type: `0`=USER, `2`=ADMIN (may be overridden by token's `sessionType`) |
-| `expiry` | int | Session TTL in seconds (capped by token's `sessionDuration`) |
-| `sessionPrivileges` | string | Additional privileges (merged with token's `sessionPrivileges`) |
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `ks` | string | Yes | The widget session KS (from `startWidgetSession`) |
+| `id` | string | Yes | AppToken ID |
+| `tokenHash` | string | Yes | `HASH(widget_ks + token_value)` — see section 4.3 for computation |
+| `userId` | string | No | User ID for the session (overridden by token's `sessionUserId` if set) |
+| `type` | int | No | Session type: `0`=USER, `2`=ADMIN (overridden by token's `sessionType`) |
+| `expiry` | int | No | Session TTL in seconds (capped by token's `sessionDuration`) |
+| `sessionPrivileges` | string | No | Additional privileges (merged with token's `sessionPrivileges`) |
 
-**Response:** A KS string (not a JSON object — just the session string).
+**Response:** A JSON object containing the privileged KS string:
+```json
+{
+  "ks": "djJ8MTIzNDU2fHh4eHh4eHh4...",
+  "objectType": "KalturaSessionInfo"
+}
+```
 
-## 4.3 Complete curl Example
+## 4.3 Computing the Token Hash
+
+The `tokenHash` is computed by concatenating the widget KS and the AppToken's `token` value, then hashing the result with the algorithm matching the token's `hashType`.
+
+**Formula:** `tokenHash = HASH_ALGORITHM( WIDGET_KS + APP_TOKEN_VALUE )`
+
+The input is the raw string concatenation (no separator, no encoding) of the widget KS followed by the token value. The output is the lowercase hex digest.
+
+**Shell examples by hash type:**
+
+```bash
+# SHA256 (recommended)
+TOKEN_HASH=$(echo -n "${WIDGET_KS}${APP_TOKEN_VALUE}" | shasum -a 256 | cut -d' ' -f1)
+
+# SHA1
+TOKEN_HASH=$(echo -n "${WIDGET_KS}${APP_TOKEN_VALUE}" | shasum -a 1 | cut -d' ' -f1)
+
+# SHA512
+TOKEN_HASH=$(echo -n "${WIDGET_KS}${APP_TOKEN_VALUE}" | shasum -a 512 | cut -d' ' -f1)
+
+# MD5
+TOKEN_HASH=$(echo -n "${WIDGET_KS}${APP_TOKEN_VALUE}" | md5sum | cut -d' ' -f1)
+```
+
+The `echo -n` flag is critical — it prevents a trailing newline from being included in the hash input.
+
+## 4.4 Complete curl Example
 
 ```bash
 # --- Step 1: Get a widget session (unprivileged) ---
-curl -X POST "$KALTURA_SERVICE_URL/service/session/action/startWidgetSession" \
+WIDGET_RESPONSE=$(curl -s -X POST "$KALTURA_SERVICE_URL/service/session/action/startWidgetSession" \
   -d "widgetId=_$KALTURA_PARTNER_ID" \
-  -d "format=1"
-# Save the "ks" from the response as WIDGET_KS
+  -d "format=1")
+WIDGET_KS=$(echo "$WIDGET_RESPONSE" | jq -r '.ks')
 
-# --- Step 2: Compute the token hash ---
-# Compute: tokenHash = HASH_TYPE(WIDGET_KS + APP_TOKEN_VALUE)
-# where HASH_TYPE matches the token's hashType (e.g., SHA256).
-#
-# Example using shell (SHA256):
-#   TOKEN_HASH=$(echo -n "${WIDGET_KS}${APP_TOKEN_VALUE}" | shasum -a 256 | cut -d' ' -f1)
-#
-# For other hash types, use the corresponding algorithm:
-#   MD5:    echo -n "..." | md5sum | cut -d' ' -f1
-#   SHA1:   echo -n "..." | shasum -a 1 | cut -d' ' -f1
-#   SHA512: echo -n "..." | shasum -a 512 | cut -d' ' -f1
+# --- Step 2: Compute the token hash (SHA256) ---
+TOKEN_HASH=$(echo -n "${WIDGET_KS}${APP_TOKEN_VALUE}" | shasum -a 256 | cut -d' ' -f1)
 
 # --- Step 3: Exchange for a privileged KS ---
-curl -X POST "$KALTURA_SERVICE_URL/service/appToken/action/startSession" \
+SESSION_RESPONSE=$(curl -s -X POST "$KALTURA_SERVICE_URL/service/appToken/action/startSession" \
   -d "ks=$WIDGET_KS" \
   -d "format=1" \
   -d "id=$APP_TOKEN_ID" \
   -d "tokenHash=$TOKEN_HASH" \
   -d "userId=integration-user" \
   -d "type=0" \
-  -d "expiry=86400"
-
-# The response is the privileged KS string. Save it as KS.
+  -d "expiry=86400")
+PRIVILEGED_KS=$(echo "$SESSION_RESPONSE" | jq -r '.ks')
 
 # --- Use the privileged KS for API calls ---
 curl -X POST "$KALTURA_SERVICE_URL/service/media/action/list" \
-  -d "ks=$KALTURA_KS" \
+  -d "ks=$PRIVILEGED_KS" \
   -d "format=1" \
   -d "pager[pageSize]=5"
 ```
 
-**Response (Step 3 — appToken.startSession):**
+**Response (Step 1 — session.startWidgetSession):**
 ```json
-{"ks": "djJ8OTc2NDYx..."}
+{
+  "ks": "djJ8MTIzNDU2fDlhN...",
+  "partnerId": 123456,
+  "userId": "0",
+  "objectType": "KalturaStartWidgetSessionResponse"
+}
 ```
 
-Note: `appToken.startSession` returns the privileged KS string.
+**Response (Step 3 — appToken.startSession):**
+```json
+{
+  "ks": "djJ8MTIzNDU2fHh4eHh4eHh4...",
+  "objectType": "KalturaSessionInfo"
+}
+```
 
 # 5. Privilege Reference
 

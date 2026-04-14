@@ -180,6 +180,16 @@ Save the `id` from the response as `TEMPLATE_ID`.
 
 ## 4.2 Get a Template
 
+```
+POST /api/v1/email-template/get
+Content-Type: application/json
+Authorization: Bearer <KS>
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `id` | string | Yes | Template ID |
+
 ```bash
 curl -X POST "$KALTURA_MESSAGING_URL/email-template/get" \
   -H "Authorization: Bearer $KALTURA_KS" \
@@ -187,9 +197,32 @@ curl -X POST "$KALTURA_MESSAGING_URL/email-template/get" \
   -d "{\"id\": \"$TEMPLATE_ID\"}"
 ```
 
-Returns the full template object.
+**Response:** Full template object (see section 2 for field definitions).
 
 ## 4.3 Update a Template
+
+```
+POST /api/v1/email-template/update
+Content-Type: application/json
+Authorization: Bearer <KS>
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `id` | string | Yes | Template ID to update |
+| `name` | string | No | Updated name |
+| `subject` | string | No | Updated subject |
+| `body` | string | No | Updated HTML body |
+| `description` | string | No | Updated description |
+| `from` | string | No | Updated sender email |
+| `fromName` | string | No | Updated sender display name |
+| `cc` | string | No | Updated CC address |
+| `bcc` | string | No | Updated BCC address |
+| `msgParamsMap` | object | No | Updated token definitions |
+| `unsubscribeGroups` | string[] | No | Updated unsubscribe group IDs |
+| `status` | string | No | `enabled`, `disabled`, or `deleted` |
+| `adminTags` | string | No | Updated admin tags |
+| `customHeaders` | object | No | Updated custom headers |
 
 ```bash
 curl -X POST "$KALTURA_MESSAGING_URL/email-template/update" \
@@ -203,6 +236,8 @@ curl -X POST "$KALTURA_MESSAGING_URL/email-template/update" \
 ```
 
 Fields not included remain unchanged. The `version` increments on each update.
+
+**Response:** Full updated template object with incremented `version`.
 
 ## 4.4 List Templates
 
@@ -248,12 +283,24 @@ curl -X POST "$KALTURA_MESSAGING_URL/email-template/list" \
 
 ## 4.5 Delete a Template
 
+```
+POST /api/v1/email-template/delete
+Content-Type: application/json
+Authorization: Bearer <KS>
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `id` | string | Yes | Template ID to delete |
+
 ```bash
 curl -X POST "$KALTURA_MESSAGING_URL/email-template/delete" \
   -H "Authorization: Bearer $KALTURA_KS" \
   -H "Content-Type: application/json" \
   -d "{\"id\": \"$TEMPLATE_ID\"}"
 ```
+
+Sets the template status to `deleted`. The template is excluded from `list` results filtered by `status: "enabled"`.
 
 
 # 5. Send Messages
@@ -305,7 +352,25 @@ Authorization: Bearer <KS>
 
 The `msgParams` map provides runtime values for each token defined in the template's `msgParamsMap`. For `User` type tokens, set `value` to `"Message.userId"` to auto-resolve from each recipient's Kaltura profile.
 
-**Response:** Bulk message object with `id` and `bulkId`.
+**Response example:**
+
+```json
+{
+  "id": "6621a3f0b2c4d5e6f7890abc",
+  "bulkId": "bulk_6621a3f0",
+  "partnerId": 123456,
+  "appGuid": "app-guid-from-registry",
+  "templateId": "template-id",
+  "type": "email",
+  "receiverType": "user",
+  "status": "sending",
+  "session": "invitation-batch-2025-q4",
+  "createdAt": "2026-04-09T12:00:00.000Z",
+  "updatedAt": "2026-04-09T12:00:00.000Z"
+}
+```
+
+The response returns a bulk message object. The `id` is the internal message ID and `bulkId` is the external tracking identifier used with `message/stats` and `message/list`. The `status` starts as `"sending"` and transitions through the lifecycle described in section 6.
 
 ```bash
 curl -X POST "$KALTURA_MESSAGING_URL/message/send" \
@@ -567,6 +632,8 @@ curl -X POST "$KALTURA_MESSAGING_URL/report/create" \
 
 Provide either `bulkId` or `session` to scope the report.
 
+**Response:** A report object with a download URL for the CSV file. The report generation may be asynchronous; poll the returned report ID if the URL is not immediately available.
+
 
 # 9. Unsubscribe Management
 
@@ -651,27 +718,52 @@ curl -X POST "$KALTURA_MESSAGING_URL/unsubscribe-uri/add" \
 | `uri` | string | Yes | Custom unsubscribe endpoint URL |
 | `status` | string | No | Defaults to `"enabled"` |
 
-### Get / Update / Delete an Unsubscribe URI
+### Get an Unsubscribe URI
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `id` | string | Yes | Unsubscribe URI ID |
 
 ```bash
-# Get
 curl -X POST "$KALTURA_MESSAGING_URL/unsubscribe-uri/get" \
   -H "Authorization: Bearer $KALTURA_KS" \
   -H "Content-Type: application/json" \
   -d "{\"id\": \"$URI_ID\"}"
+```
 
-# Update
+**Response:** Full unsubscribe URI object with `id`, `appGuid`, `uri`, `status`, `version`.
+
+### Update an Unsubscribe URI
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `id` | string | Yes | Unsubscribe URI ID to update |
+| `uri` | string | No | Updated unsubscribe endpoint URL |
+| `status` | string | No | `enabled`, `disabled`, or `deleted` |
+
+```bash
 curl -X POST "$KALTURA_MESSAGING_URL/unsubscribe-uri/update" \
   -H "Authorization: Bearer $KALTURA_KS" \
   -H "Content-Type: application/json" \
   -d "{\"id\": \"$URI_ID\", \"uri\": \"https://events.example.com/unsubscribe-v2\"}"
+```
 
-# Delete
+**Response:** Updated unsubscribe URI object with incremented `version`.
+
+### Delete an Unsubscribe URI
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `id` | string | Yes | Unsubscribe URI ID to delete |
+
+```bash
 curl -X POST "$KALTURA_MESSAGING_URL/unsubscribe-uri/delete" \
   -H "Authorization: Bearer $KALTURA_KS" \
   -H "Content-Type: application/json" \
   -d "{\"id\": \"$URI_ID\"}"
 ```
+
+Permanently deletes the unsubscribe URI. Subsequent `get` calls return a not-found error.
 
 ### List Unsubscribe URIs
 
@@ -721,6 +813,18 @@ Configure a custom email service provider (SendGrid) for your account. By defaul
 
 ## 10.2 Add a Provider
 
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `type` | string | Yes | Provider type: `"sendGrid"` |
+| `apiKey` | string | Yes | SendGrid API key |
+| `sendgridWebhookKey` | string | No | SendGrid webhook verification key |
+| `domains` | string[] | No | Verified sender domains |
+| `defaultSender` | string | No | Default sender email address |
+| `unsubscribeClickTracking` | boolean | No | Enable SendGrid click tracking for unsubscribe links |
+| `overrideResidency` | string | No | Data residency override: `"EU"` or `"GLOBAL"` |
+
+**Response:** Full provider object with generated `id`, `version`, and timestamps.
+
 ```bash
 curl -X POST "$KALTURA_MESSAGING_URL/email-provider/add" \
   -H "Authorization: Bearer $KALTURA_KS" \
@@ -745,7 +849,13 @@ curl -X POST "$KALTURA_MESSAGING_URL/email-provider/list" \
 
 ## 10.4 Provider Lookup
 
-Resolve which email provider will be used for a given app context:
+Resolve which email provider will be used for a given app context.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `appGuid` | string | No | App Registry GUID to check provider resolution for |
+
+**Response:** The resolved provider object. Resolution order: partner + appGuid, then partner, then default (partner 0).
 
 ```bash
 curl -X POST "$KALTURA_MESSAGING_URL/email-provider/lookup" \
@@ -758,7 +868,12 @@ The resolution order is: partner + appGuid → partner → default (partner 0).
 
 ## 10.5 Assign Provider to App
 
-Assign a specific provider to an app context:
+Assign a specific provider to an app context.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `id` | string | Yes | Email provider ID |
+| `appGuid` | string | Yes | App Registry GUID to assign the provider to |
 
 ```bash
 curl -X POST "$KALTURA_MESSAGING_URL/email-provider/emailProviderAssignment" \
@@ -773,6 +888,12 @@ curl -X POST "$KALTURA_MESSAGING_URL/email-provider/emailProviderAssignment" \
 **Response:** EmailProviderAssignmentRule object with `id`, `emailProviderId`, `appGuid`, `version`.
 
 ## 10.6 Enable / Disable a Provider
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `id` | string | Yes | Email provider ID |
+
+**Response:** Updated provider object with new status.
 
 ```bash
 # Enable
@@ -790,6 +911,10 @@ curl -X POST "$KALTURA_MESSAGING_URL/email-provider/disable" \
 
 ## 10.7 Delete a Provider
 
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `id` | string | Yes | Email provider ID to delete |
+
 ```bash
 curl -X POST "$KALTURA_MESSAGING_URL/email-provider/delete" \
   -H "Authorization: Bearer $KALTURA_KS" \
@@ -804,6 +929,11 @@ Verify sender domains with your email provider for improved deliverability.
 
 ## 11.1 Add a Domain
 
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `domain` | string | Yes | The sender domain to verify (e.g., `events.example.com`) |
+| `subdomain` | string | No | Subdomain prefix for DNS records (e.g., `mail`) |
+
 ```bash
 curl -X POST "$KALTURA_MESSAGING_URL/domain/add" \
   -H "Authorization: Bearer $KALTURA_KS" \
@@ -814,11 +944,16 @@ curl -X POST "$KALTURA_MESSAGING_URL/domain/add" \
   }'
 ```
 
-After adding, configure DNS records (CNAME, TXT) as provided in the response.
+**Response:** Contains the DNS records (CNAME, TXT) to configure for domain verification. Add these records to your DNS configuration before activating.
 
 ## 11.2 Activate a Domain
 
-After DNS propagation, activate the domain:
+After DNS propagation, activate the domain.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `domain` | string | Yes | The domain to activate (must match a previously added domain) |
+| `subdomain` | string | No | Subdomain prefix (must match the value used in `domain/add`) |
 
 ```bash
 curl -X POST "$KALTURA_MESSAGING_URL/domain/activate" \
@@ -829,6 +964,8 @@ curl -X POST "$KALTURA_MESSAGING_URL/domain/activate" \
     "subdomain": "mail"
   }'
 ```
+
+**Response:** Confirmation of domain activation. If DNS records are not yet propagated, the activation fails with an error.
 
 
 # 12. Error Handling

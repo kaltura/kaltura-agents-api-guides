@@ -67,7 +67,25 @@ Set `doorsOpenDate` via `events/update` after the event is created.
 
 **Resilience:** If `events/create` returns HTTP 500, the event may still have been created server-side. Verify by calling `events/list` with a `searchTerm` matching your event name.
 
-**Response:** Event object with `id`, `name`, `status`, dates, and nested session/team data.
+**Response example:**
+
+```json
+{
+  "id": 56789,
+  "name": "API Demo Webinar",
+  "status": "draft",
+  "templateId": "tm2000",
+  "startDate": "2024-12-20T15:00:00.000Z",
+  "endDate": "2024-12-20T16:00:00.000Z",
+  "timezone": "America/New_York",
+  "description": "Created via Events Platform API",
+  "labels": [],
+  "createdAt": "2024-11-01T10:00:00.000Z",
+  "updatedAt": "2024-11-01T10:00:00.000Z"
+}
+```
+
+The response contains the full event object. Save the `id` field (integer) for subsequent API calls.
 
 ```bash
 curl -X POST "$KALTURA_EVENTS_API_URL/events/create" \
@@ -126,7 +144,24 @@ POST /api/v1/events/list
 | `+name` | Alphabetical |
 | `-name` | Reverse alphabetical |
 
-**Response keys:** Event lists use the `events` key. Total count is in `totalCount`.
+**Response example:**
+
+```json
+{
+  "events": [
+    {
+      "id": 56789,
+      "name": "Q4 All-Hands Town Hall",
+      "status": "scheduled",
+      "startDate": "2024-12-15T14:00:00.000Z",
+      "endDate": "2024-12-15T16:00:00.000Z",
+      "timezone": "America/New_York",
+      "labels": ["quarterly"]
+    }
+  ],
+  "totalCount": 1
+}
+```
 
 ```bash
 curl -X POST "$KALTURA_EVENTS_API_URL/events/list" \
@@ -175,6 +210,21 @@ POST /api/v1/events/update
 | `logoEntryId` | string | Kaltura entry ID for event logo image |
 | `bannerEntryId` | string | Kaltura entry ID for event banner image |
 
+Only include the fields you want to change. Fields not included remain unchanged.
+
+**Response:** The updated event object.
+
+```bash
+curl -X POST "$KALTURA_EVENTS_API_URL/events/update" \
+  -H "Authorization: Bearer $KALTURA_KS" \
+  -H "Content-Type: application/json" \
+  -d "{
+    \"id\": $EVENT_ID,
+    \"name\": \"Updated Event Name\",
+    \"labels\": [\"updated\", \"quarterly\"]
+  }"
+```
+
 ## 3.4 Delete an Event
 
 ```
@@ -187,7 +237,18 @@ POST /api/v1/events/delete
 }
 ```
 
-Permanently deletes the event and all its sessions.
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `id` | integer | Yes | Event ID to delete |
+
+Permanently deletes the event and all its sessions. Returns an empty response on success (HTTP 200).
+
+```bash
+curl -X POST "$KALTURA_EVENTS_API_URL/events/delete" \
+  -H "Authorization: Bearer $KALTURA_KS" \
+  -H "Content-Type: application/json" \
+  -d "{\"id\": $EVENT_ID}"
+```
 
 ## 3.5 Duplicate an Event
 
@@ -225,6 +286,12 @@ POST /api/v1/events/duplicateStatus
   "jobId": "job_xyz789"
 }
 ```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `jobId` | string | Yes | Job ID returned by `events/duplicate` |
+
+**Response:** Contains `status` (see table below) and, on completion, `eventId` with the new event's integer ID.
 
 | Status | Description |
 |--------|-------------|
@@ -299,7 +366,24 @@ POST /api/v1/sessions/create
 | `session.visibility` | string | No | `published` (default), `unlisted`, or `private` |
 | `session.sourceEntryId` | string | No | VOD entry ID for SimuLive sessions |
 
-**Response:** Returns `{session: {...}, status: "ok"}` — the session object is nested.
+**Response example:**
+
+```json
+{
+  "session": {
+    "id": 67890,
+    "name": "Keynote Presentation",
+    "type": "LiveWebcast",
+    "startDate": "2024-12-15T14:00:00.000Z",
+    "endDate": "2024-12-15T15:00:00.000Z",
+    "description": "Opening keynote by CEO",
+    "visibility": "published"
+  },
+  "status": "ok"
+}
+```
+
+The session object is nested inside the `session` key. Save `session.id` for subsequent calls.
 
 **SimuLive example** (pre-recorded content played as live):
 ```json
@@ -346,7 +430,28 @@ POST /api/v1/sessions/list
 }
 ```
 
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `eventId` | integer | Yes | Parent event ID |
+
 Returns all sessions belonging to the event. Response uses the `sessions` key.
+
+**Response example:**
+
+```json
+{
+  "sessions": [
+    {
+      "id": 67890,
+      "name": "Keynote Presentation",
+      "type": "LiveWebcast",
+      "startDate": "2024-12-15T14:00:00.000Z",
+      "endDate": "2024-12-15T15:00:00.000Z",
+      "visibility": "published"
+    }
+  ]
+}
+```
 
 ```bash
 curl -X POST "$KALTURA_EVENTS_API_URL/sessions/list" \
@@ -370,7 +475,12 @@ POST /api/v1/sessions/speakerList
 }
 ```
 
-Both `eventId` and `sessionId` are required. Returns the list of speakers assigned to the session.
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `eventId` | integer | Yes | Parent event ID |
+| `sessionId` | integer | Yes | Session ID to list speakers for |
+
+Returns the list of speakers assigned to the session.
 
 
 # 5. Team Members API
@@ -417,7 +527,23 @@ POST /api/v1/team-members/list
 {}
 ```
 
-No parameters required. Returns all team members for the account. Response uses the `teamMembers` key.
+No parameters required. Returns all team members for the account.
+
+**Response example:**
+
+```json
+{
+  "teamMembers": [
+    {
+      "id": "abc123",
+      "email": "user@example.com",
+      "role": "Organizer",
+      "firstName": "Jane",
+      "lastName": "Doe"
+    }
+  ]
+}
+```
 
 ## 5.3 Update a Team Member
 
@@ -432,6 +558,15 @@ POST /api/v1/team-members/update
 }
 ```
 
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `teamMemberId` | string | Yes | Team member ID to update |
+| `role` | string | No | Updated role: `Admin`, `Organizer`, or `ContentManager` |
+| `firstName` | string | No | Updated first name |
+| `lastName` | string | No | Updated last name |
+
+Only include the fields you want to change. Returns the updated team member object.
+
 ## 5.4 Delete a Team Member
 
 ```
@@ -443,6 +578,12 @@ POST /api/v1/team-members/delete
   "teamMemberId": "abc123"
 }
 ```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `teamMemberId` | string | Yes | Team member ID to delete |
+
+Permanently removes the team member from the account. Returns an empty response on success (HTTP 200).
 
 
 # 6. Event Templates

@@ -215,6 +215,45 @@ const aiConsent = await workspace.getRuntimeAsync(
 |--------|-----------|-------------|
 | `showAnnouncement(options?)` | `{ onSuccess?: () => void, entryId?: string }` | Show the AI consent announcement modal |
 
+## Processing Completion
+
+Content Lab does not emit events to the host page when AI processing tasks (summarization, chapter generation, clip creation, quiz generation) complete. All processing is handled server-side through Kaltura REACH services.
+
+To detect when a task initiated through Content Lab has completed, poll the `entryVendorTask` API:
+
+```bash
+# List REACH tasks for an entry to check processing status
+curl -X POST "$KALTURA_SERVICE_URL/service/reach_entryVendorTask/action/list" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "filter[objectType]=KalturaEntryVendorTaskFilter" \
+  -d "filter[entryIdEqual]=$ENTRY_ID" \
+  -d "filter[orderBy]=-createdAt"
+```
+
+Task status values relevant to Content Lab:
+
+| Status | Value | Meaning |
+|--------|-------|---------|
+| PENDING | 1 | Task submitted, awaiting processing |
+| PROCESSING | 4 | AI engine is working on the task |
+| READY | 2 | Task completed successfully |
+| ERROR | 5 | Task failed |
+
+Poll at 15-30 second intervals. AI summarization and chapter generation typically complete within 1-5 minutes depending on entry duration. See the [REACH API](KALTURA_REACH_API.md) for the full vendor task lifecycle.
+
+Alternatively, configure a [Webhook](KALTURA_WEBHOOKS_API.md) on the `entryVendorTask` event type to receive real-time HTTP callbacks when REACH tasks complete, instead of polling.
+
+## Workspace Lifecycle
+
+```javascript
+// Refresh the KS when it approaches expiry
+workspace.session.setData(prev => ({ ...prev, ks: "new-ks-value" }));
+
+// Destroy the workspace when the user navigates away
+workspace.kill();
+```
+
 
 # 7. KS Requirements
 

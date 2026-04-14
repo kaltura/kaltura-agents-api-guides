@@ -71,6 +71,12 @@ Retrieve the catalog of actions available for your account. The response include
 
 **POST** `/api/v1/actionDefinition/list`
 
+**Parameters**
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `partnerId` | string | Yes | Your Kaltura partner ID |
+
 ```json
 {
   "partnerId": "12345"
@@ -130,6 +136,14 @@ Define when your agent should run. Triggers use a `systemName` to identify the e
 
 **POST** `/api/v1/trigger/create`
 
+**Parameters**
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `partnerId` | string | Yes | Your Kaltura partner ID |
+| `systemName` | string | Yes | Trigger type identifier. One of: `ENTRY_READY`, `ENTRY_UPDATED`, `ENTRY_ADDED_TO_CATEGORY`, `RUN_ON_DEMAND` (see [Available Triggers](#available-triggers)) |
+| `triggerParameters` | object | No | Additional parameters for the trigger (e.g., category filters). Use `{}` for default behavior |
+
 ```json
 {
   "partnerId": "12345",
@@ -137,9 +151,6 @@ Define when your agent should run. Triggers use a `systemName` to identify the e
   "triggerParameters": {}
 }
 ```
-
-- `systemName` — One of the available trigger types (see [Available Triggers](#available-triggers)).
-- `triggerParameters` — Additional parameters for the trigger (e.g., category filters). Use `{}` for default behavior.
 
 **Response** — The created trigger includes auto-generated `executionParameters`:
 
@@ -161,6 +172,17 @@ Define what your agent should do. Actions reference a `workflowId` and contain o
 
 **POST** `/api/v1/actions/create`
 
+**Parameters**
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `partnerId` | string | Yes | Your Kaltura partner ID |
+| `workflowId` | string | Yes | Workflow template identifier. Use `"publishing_workflow_dag"` for standard content processing workflows |
+| `workflowActions` | array | Yes | Array of action objects to perform. Each element requires the fields below |
+| `workflowActions[].reach_profile_id` | int | Yes | REACH profile ID from the action definitions response (`reachProfiles[].id`) |
+| `workflowActions[].type` | string | Yes | Action type string: `"captions"`, `"translation"`, `"dubbing"`, `"summary"`, `"moderation"`, `"metadata_enrichment"` |
+| `workflowActions[].catalog_item_id` | int | Yes | Vendor catalog item ID from the action definitions response (`vendors[].languages[].catalogItemId`) |
+
 ```json
 {
   "partnerId": "12345",
@@ -174,12 +196,6 @@ Define what your agent should do. Actions reference a `workflowId` and contain o
   ]
 }
 ```
-
-- `workflowId` — The workflow template to use. Use `"publishing_workflow_dag"` for standard content processing workflows.
-- `workflowActions` — Array of actions to perform. Each requires:
-  - `reach_profile_id` — From the action definitions response (`reachProfiles[].id`).
-  - `type` — The action type string (e.g., `"captions"`, `"summary"`).
-  - `catalog_item_id` — From the action definitions response (`vendors[].languages[].catalogItemId`).
 
 **Response**
 
@@ -205,6 +221,17 @@ Define what your agent should do. Actions reference a `workflowId` and contain o
 Tie the trigger and actions together into an agent.
 
 **POST** `/api/v1/agent/create`
+
+**Parameters**
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `partnerId` | string | Yes | Your Kaltura partner ID |
+| `name` | string | Yes | Agent display name |
+| `description` | string | No | Agent description |
+| `triggerId` | string | Yes | ID of the trigger object (from `trigger/create` response) |
+| `actionsId` | string | Yes | ID of the actions object (from `actions/create` response) |
+| `status` | string | Yes | `"Enabled"` or `"Disabled"` |
 
 ```json
 {
@@ -251,6 +278,12 @@ Retrieve all agents configured for your account.
 
 **POST** `/api/v1/agent/list`
 
+**Parameters**
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `partnerId` | string | Yes | Your Kaltura partner ID |
+
 ```json
 {
   "partnerId": "12345"
@@ -280,7 +313,13 @@ Retrieve all agents configured for your account.
 
 Each resource type has its own delete endpoint. **Triggers and actions must be deleted explicitly** — they are not automatically removed when an agent is deleted.
 
-Delete the agent first, then its trigger and actions:
+Delete the agent first, then its trigger and actions.
+
+**Parameters** (same for all three delete endpoints)
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `id` | string | Yes | ID of the resource to delete |
 
 **POST** `/api/v1/agent/delete`
 ```json
@@ -297,7 +336,16 @@ Delete the agent first, then its trigger and actions:
 { "id": "xyz789abc012" }
 ```
 
-Each delete returns the object with `"status": "Deleted"`.
+Each delete returns the deleted object with `"status": "Deleted"`:
+
+```json
+{
+  "id": "agent_001",
+  "partnerId": "12345",
+  "name": "Auto-Caption All New Videos",
+  "status": "Deleted"
+}
+```
 
 
 # 7. Execution Tracking

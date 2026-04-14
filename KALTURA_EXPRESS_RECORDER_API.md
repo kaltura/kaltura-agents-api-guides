@@ -58,8 +58,9 @@ Load the Express Recorder bundle from the Kaltura CDN and create an instance:
 | `allowVideo` | boolean | true | Enable video recording |
 | `allowAudio` | boolean | true | Enable audio recording |
 | `allowScreenShare` | boolean | false | Enable screen capture recording |
-| `maxRecordingTime` | number | unlimited | Maximum recording duration in seconds |
+| `maxRecordingTime` | number | unlimited | Maximum recording duration in seconds. Recording stops automatically when reached |
 | `showUploadUI` | boolean | true | Show the upload progress UI after recording |
+| `allowUpload` | boolean | true | Enable the upload step after recording. Set `false` to only allow local save via `saveCopy()` |
 
 **KS privileges:** The KS must include `editadmintags:*` to allow the recorder to create entries.
 
@@ -76,31 +77,56 @@ component.instance.addEventListener('mediaUploadStarted', function(e) {
 
 | Event | Payload | Description |
 |-------|---------|-------------|
-| `recordingStarted` | — | User started recording |
-| `recordingEnded` | — | User stopped recording |
-| `recordingCancelled` | — | User cancelled the recording |
-| `mediaUploadStarted` | `{ entryId }` | Upload began — returns the new entry ID |
-| `mediaUploadProgress` | `{ loaded, total }` | Upload progress in bytes |
-| `mediaUploadEnded` | `{ entryId }` | Upload completed successfully |
-| `mediaUploadCancelled` | — | User cancelled the upload |
-| `error` | `{ message }` | An error occurred |
+| `recordingStarted` | — | User started recording. Fires when the WebRTC media stream begins capturing |
+| `recordingEnded` | — | User stopped recording. The recorded blob is available for upload or local save |
+| `recordingCancelled` | — | User cancelled the recording. No recorded media is retained |
+| `mediaUploadStarted` | `{ entryId: string }` | Upload began. `entryId` is the Kaltura entry ID created for this recording. Use it to poll `media.get` for transcoding status |
+| `mediaUploadProgress` | `{ loaded: number, total: number }` | Upload progress. `loaded` is bytes transferred, `total` is total bytes. Calculate percentage as `(loaded / total) * 100` |
+| `mediaUploadEnded` | `{ entryId: string }` | Upload completed. The entry exists in Kaltura but may still be transcoding (status=1). Poll `media.get` for `status=2` (READY) before using the entry for playback |
+| `mediaUploadCancelled` | — | User cancelled the upload. The entry may have been created but has no content — clean up with `media.delete` if needed |
+| `error` | `{ message: string, code: string }` | An error occurred. Common codes: `PERMISSION_DENIED` (KS lacks required privileges), `NO_MEDIA_DEVICES` (camera/microphone not found), `BROWSER_NOT_SUPPORTED` (WebRTC unavailable) |
 
 
 # 5. Methods
 
-| Method | Description |
-|--------|-------------|
-| `startRecording()` | Programmatically start recording |
-| `stopRecording()` | Stop the current recording |
-| `upload()` | Upload the recorded media to Kaltura |
-| `cancelUpload()` | Cancel an in-progress upload |
-| `saveCopy()` | Save a local copy of the recording |
+Call methods on the `component.instance` object returned by `Kaltura.ExpressRecorder.create()`:
+
+```javascript
+// Programmatic recording flow
+component.instance.startRecording();
+
+// Later, stop and upload
+component.instance.stopRecording();
+component.instance.upload();
+```
+
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `startRecording()` | void | Programmatically start recording. Requests camera/microphone permissions if not already granted. Fires `recordingStarted` on success |
+| `stopRecording()` | void | Stop the current recording. Fires `recordingEnded`. The recorded blob is held in memory until `upload()` or `saveCopy()` is called |
+| `upload()` | void | Upload the recorded media to Kaltura. Creates a new entry and fires `mediaUploadStarted` with the `entryId`. Progress updates arrive via `mediaUploadProgress`, and `mediaUploadEnded` fires on completion |
+| `cancelUpload()` | void | Cancel an in-progress upload. Fires `mediaUploadCancelled`. The partially uploaded entry may need cleanup via `media.delete` |
+| `saveCopy()` | void | Save a local copy of the recording to the user's downloads folder. Does not upload to Kaltura |
+| `destroy()` | void | Remove the recorder widget from the DOM and release all media streams (camera, microphone, screen). Call this when navigating away or removing the recorder from the page |
 
 
 # 6. Error Handling
 
-- **`error` event** — Listen for `error` events on the component instance. The event payload includes a `message` field with details. Common causes: WebRTC not supported (Safari limitations), microphone/camera permissions denied, upload network failure.  
-- **KS expiry during recording** — The recorder does not automatically renew expired sessions. If a recording session exceeds the KS TTL, uploads will fail silently. Generate a KS with sufficient expiry for the expected session duration.
+Listen for `error` events on the component instance. The event payload includes `message` and `code` fields:
+
+```javascript
+component.instance.addEventListener('error', function(e) {
+  console.error('Recorder error:', e.detail.code, e.detail.message);
+});
+```
+
+**Common error scenarios:**
+
+- **Camera/microphone permissions denied** — The user denied the browser permission prompt. The recorder cannot function without media device access. Prompt the user to grant permissions in their browser settings.  
+- **No media devices found** — The device has no camera or microphone. Common on desktops without a webcam. If `allowAudio` is `true` and `allowVideo` is `false`, a microphone is still required.  
+- **Browser not supported** — WebRTC is unavailable. Safari has limited WebRTC support for recording. Chrome, Firefox, and Opera are recommended.  
+- **KS expiry during recording** — The recorder does not automatically renew expired sessions. If a recording session exceeds the KS TTL, uploads will fail. Generate a KS with sufficient expiry for the expected session duration (recording time + upload time). A 2-hour KS covers most use cases.  
+- **Upload network failure** — Intermittent network issues during upload. The recorder does not auto-retry. Listen for the `error` event and offer the user the option to retry with `upload()` or save locally with `saveCopy()`.
 
 
 # 7. Best Practices

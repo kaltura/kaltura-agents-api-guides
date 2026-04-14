@@ -77,6 +77,22 @@ Leaderboards track user scores and rank users. They are scoped to virtual events
 
 ## 2.2 Create Leaderboard
 
+**Parameters**
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `objectType` | string | Yes | Always `"Leaderboard"` |
+| `name` | string | Yes | Leaderboard display name |
+| `description` | string | No | Description text |
+| `status` | string | Yes | Initial status: `"scheduled"`, `"enabled"`, or `"disabled"` |
+| `startDate` | string | Yes | Scoring window start in ISO 8601 format |
+| `endDate` | string | Yes | Scoring window end in ISO 8601 format |
+| `virtualEventIds` | array | Yes | Array of virtual event ID strings this leaderboard applies to |
+| `participationPolicy` | object | No | Controls user visibility (see section 3). Default: all users visible |
+| `participationPolicy.userDefaultPolicy` | string | No | Default policy: `"display"`, `"do_not_display"`, or `"do_not_save"` |
+| `participationPolicy.policies` | array | No | Array of policy override objects with `policy`, `matchCriteria`, and `values` |
+| `subLeaderboards` | array | No | Segment definitions for team/regional rankings (see section 2.4) |
+
 ```bash
 curl -X POST "$KALTURA_SCM_URL/leaderboard/create" \
   -H "Authorization: Bearer $KALTURA_KS" \
@@ -94,6 +110,26 @@ curl -X POST "$KALTURA_SCM_URL/leaderboard/create" \
     },
     "virtualEventIds": ["$VIRTUAL_EVENT_ID"]
   }'
+```
+
+**Response**
+
+```json
+{
+  "id": "lb_abc123",
+  "name": "Conference Engagement",
+  "description": "Points for session attendance, polls, and chat",
+  "status": "scheduled",
+  "startDate": "2025-06-01T09:00:00.000Z",
+  "endDate": "2025-06-03T18:00:00.000Z",
+  "participationPolicy": {
+    "userDefaultPolicy": "display",
+    "policies": []
+  },
+  "virtualEventIds": ["12345"],
+  "createdAt": "2025-05-20T10:00:00.000Z",
+  "updatedAt": "2025-05-20T10:00:00.000Z"
+}
 ```
 
 ## 2.3 Get, Update, List, Delete
@@ -634,6 +670,13 @@ Reports are exportable to CRM systems as custom objects.
 
 ## 8.1 Get User Score
 
+**Parameters**
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `gameObjectId` | string | Yes | ID of the leaderboard, badge, certificate, or lead scoring profile |
+| `userId` | string | Yes | Kaltura user ID to look up |
+
 ```bash
 curl -X POST "$KALTURA_SCM_URL/userScore/get" \
   -H "Authorization: Bearer $KALTURA_KS" \
@@ -660,6 +703,12 @@ curl -X POST "$KALTURA_SCM_URL/userScore/ruleProgress" \
 ```
 
 ## 8.4 Clear Scores
+
+**Parameters**
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `gameObjectId` | string | Yes | ID of the leaderboard whose scores should be cleared. Removes all user scores for this leaderboard |
 
 ```bash
 curl -X POST "$KALTURA_SCM_URL/userScore/clear" \
@@ -689,6 +738,13 @@ Response: `KalturaUserScorePropertiesResponse` with `rank`, `userId`, `puserId`,
 # 9. External Events & CSV Import
 
 Import scores from external systems (booth scans, external quiz platforms, physical activities) via CSV upload.
+
+**Parameters**
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `eventAction` | string | Yes | `"delta"` (add to existing score) or `"upsert"` (replace existing score) |
+| `csvFile` | file | Yes | CSV file upload. Must include `userId`, `score`, and `eventType` columns, plus any context fields referenced by rule conditions |
 
 ```bash
 # Delta mode — add to existing score
@@ -733,6 +789,13 @@ Generate reports for gamification data export.
 
 ## 10.2 Generate Report
 
+**Parameters**
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `reportType` | string | Yes | One of: `certificate`, `entryCertificate`, `userCertificate`, `entryUserCertificate`, `badge`, `userBadge`, `userScore`, `userLeadScoring` |
+| `gameObjectId` | string | Yes | ID of the game object to generate the report for |
+
 ```bash
 curl -X POST "$KALTURA_SCM_URL/report/generate" \
   -H "Authorization: Bearer $KALTURA_KS" \
@@ -747,6 +810,15 @@ curl -X POST "$KALTURA_SCM_URL/report/generate" \
 # 11. Scheduled Game Objects
 
 Automate status transitions for game objects (e.g., enable a leaderboard at event start, disable at event end).
+
+**Parameters (create)**
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `gameObjectType` | string | Yes | Type of game object: `"leaderboard"`, `"certificate"`, `"badge"`, `"leadScoring"` |
+| `gameObjectId` | string | Yes | ID of the game object to schedule |
+| `scheduledAction` | string | Yes | Action to perform: `"enable"` or `"disable"` |
+| `scheduledDate` | string | Yes | When to execute the action, in ISO 8601 format |
 
 ```bash
 # Schedule leaderboard to enable at event start

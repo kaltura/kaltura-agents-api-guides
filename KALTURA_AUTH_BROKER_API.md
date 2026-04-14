@@ -120,6 +120,119 @@ The `authStrategyConfig` object for SAML profiles:
 | `disableRequestedAuthnContext` | boolean | Omit `RequestedAuthnContext` from SAML request |
 | `requestIdExpirationPeriodMs` | integer | Request ID expiration in milliseconds (default: 28800000 = 8 hours) |
 
+## 3.2b Auth Strategy Config (OAuth2/OIDC)
+
+The `authStrategyConfig` object for OAuth2/OIDC profiles:
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `clientId` | string | Yes | OAuth2 client ID registered with the IdP |
+| `clientSecret` | string | Yes | OAuth2 client secret from the IdP |
+| `authorizationURL` | string | Yes | IdP authorization endpoint URL (where the browser is redirected to authenticate) |
+| `tokenURL` | string | Yes | IdP token endpoint URL (used by the Auth Broker to exchange the authorization code for tokens) |
+| `callbackUrl` | string | Yes | OAuth2/OIDC callback URL — set to `https://auth.{region}.ovp.kaltura.com/api/v1/auth-manager/oidc/ac` |
+| `scope` | string | Yes | OAuth2 scopes to request (e.g., `"openid profile email"`) |
+| `userInfoURL` | string | No | IdP userinfo endpoint URL (for fetching user attributes if not included in the ID token) |
+| `logoutUrl` | string | No | IdP logout endpoint URL for single logout |
+| `logoutCallbackUrl` | string | No | SP logout callback URL |
+| `responseType` | string | No | OAuth2 response type (default: `"code"` for authorization code flow) |
+| `issuer` | string | No | Expected token issuer for validation (e.g., `https://login.microsoftonline.com/{tenant}/v2.0`) |
+
+### Example: Azure AD OAuth2/OIDC Profile
+
+```bash
+curl -X POST "$KALTURA_AUTH_BROKER_URL/auth-profile/add" \
+  -H "Authorization: KS $KALTURA_KS" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Azure AD OIDC - Employees",
+    "description": "OAuth2/OIDC SSO via Azure AD",
+    "providerType": "azure",
+    "authStrategy": "oauth2",
+    "isAdminProfile": false,
+    "createNewUser": true,
+    "createNewGroups": true,
+    "removeFromExistingGroups": false,
+    "userGroupsSyncAll": false,
+    "userIdAttribute": "email",
+    "authStrategyConfig": {
+      "clientId": "YOUR_AZURE_APP_CLIENT_ID",
+      "clientSecret": "YOUR_AZURE_APP_CLIENT_SECRET",
+      "authorizationURL": "https://login.microsoftonline.com/YOUR_TENANT_ID/oauth2/v2.0/authorize",
+      "tokenURL": "https://login.microsoftonline.com/YOUR_TENANT_ID/oauth2/v2.0/token",
+      "callbackUrl": "https://auth.nvp1.ovp.kaltura.com/api/v1/auth-manager/oidc/ac",
+      "scope": "openid profile email",
+      "userInfoURL": "https://graph.microsoft.com/oidc/userinfo",
+      "issuer": "https://login.microsoftonline.com/YOUR_TENANT_ID/v2.0"
+    },
+    "userAttributeMappings": {
+      "firstName": "given_name",
+      "lastName": "family_name",
+      "email": "email"
+    },
+    "userGroupMappings": {},
+    "ksPrivileges": ""
+  }'
+```
+
+### Example: Okta OAuth2/OIDC Profile
+
+```bash
+curl -X POST "$KALTURA_AUTH_BROKER_URL/auth-profile/add" \
+  -H "Authorization: KS $KALTURA_KS" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Okta OIDC - Contractors",
+    "description": "OAuth2/OIDC SSO via Okta",
+    "providerType": "okta",
+    "authStrategy": "oauth2",
+    "createNewUser": true,
+    "userIdAttribute": "email",
+    "authStrategyConfig": {
+      "clientId": "YOUR_OKTA_CLIENT_ID",
+      "clientSecret": "YOUR_OKTA_CLIENT_SECRET",
+      "authorizationURL": "https://YOUR_ORG.okta.com/oauth2/default/v1/authorize",
+      "tokenURL": "https://YOUR_ORG.okta.com/oauth2/default/v1/token",
+      "callbackUrl": "https://auth.nvp1.ovp.kaltura.com/api/v1/auth-manager/oidc/ac",
+      "scope": "openid profile email groups",
+      "userInfoURL": "https://YOUR_ORG.okta.com/oauth2/default/v1/userinfo",
+      "issuer": "https://YOUR_ORG.okta.com/oauth2/default"
+    },
+    "userAttributeMappings": {
+      "firstName": "given_name",
+      "lastName": "family_name",
+      "email": "email"
+    },
+    "userGroupMappings": {},
+    "ksPrivileges": ""
+  }'
+```
+
+### OAuth2/OIDC Attribute Names
+
+When using OAuth2/OIDC, attribute names come from the ID token claims or userinfo endpoint response (standard OIDC claim names):
+
+| Kaltura Field | OIDC Claim |
+|---------------|-----------|
+| `firstName` | `given_name` |
+| `lastName` | `family_name` |
+| `email` | `email` |
+
+The `userIdAttribute` for OIDC profiles is typically `"email"` (the standard OIDC email claim). For Azure AD, `"preferred_username"` or `"email"` can also be used.
+
+### SAML vs OAuth2/OIDC Comparison
+
+| Aspect | SAML | OAuth2/OIDC |
+|--------|------|-------------|
+| Callback URL | `/auth-manager/saml/ac` | `/auth-manager/oidc/ac` |
+| SP Metadata | Available via GET endpoint (section 9) | Not applicable (use client ID/secret registration) |
+| Request Signing | Optional via `enableRequestSign` + `generatePvKeys` | Not applicable (uses client secret) |
+| Assertion Decryption | Optional via `enableAssertsDecryption` | Not applicable (token-based) |
+| IdP Setup | Upload SP metadata XML to IdP | Register callback URL and scopes in IdP OAuth2 app settings |
+| Group Claims | Via SAML attribute assertions | Via OIDC `groups` scope and token claims |
+
+> OAuth2/OIDC profiles require the IdP to support the authorization code flow. The Auth Broker exchanges the authorization code for tokens server-side, keeping the client secret secure. The `callbackUrl` must be registered as a valid redirect URI in the IdP's OAuth2 application configuration.
+
 ## 3.3 Add an Auth Profile
 
 ```
@@ -169,6 +282,26 @@ curl -X POST "$KALTURA_AUTH_BROKER_URL/auth-profile/add" \
   }'
 ```
 
+**Request body parameters:**
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `name` | string | Yes | Display name for the profile |
+| `providerType` | string | Yes | IdP provider: `azure`, `okta`, `aws`, `akamai`, `other` |
+| `authStrategy` | string | Yes | `saml` or `oauth2` |
+| `authStrategyConfig` | object | Yes | IdP connection settings (see section 3.2 for SAML, 3.2b for OAuth2/OIDC) |
+| `userIdAttribute` | string | Yes | IdP attribute used as Kaltura user ID |
+| `userAttributeMappings` | object | Yes | Map IdP attributes to Kaltura user fields (see section 4) |
+| `userGroupMappings` | object | Yes | Map IdP groups to Kaltura groups (required even if empty `{}`) |
+| `description` | string | No | Profile description |
+| `isAdminProfile` | boolean | No | Whether this profile is for admin users (default: `false`) |
+| `createNewUser` | boolean | No | Enable JIT user provisioning (default: `false`) |
+| `createNewGroups` | boolean | No | Auto-create groups from IdP claims (default: `false`) |
+| `removeFromExistingGroups` | boolean | No | Remove user from groups not in IdP claims (default: `false`) |
+| `userGroupsSyncAll` | boolean | No | Sync all groups from IdP (default: `false`) |
+| `ksPrivileges` | string | No | Additional KS privileges for authenticated users |
+| `syncDelayTimeoutMin` | integer | No | Minutes to delay group sync after login |
+
 Save the `id` from the response as `AUTH_PROFILE_ID`.
 
 The `userGroupMappings` field is required even when empty. Omitting it results in a `USER_GROUPS_SYNC_ALL_FALSE_AND_GROUPS_MISSING` error when `userGroupsSyncAll` is `false`.
@@ -187,6 +320,10 @@ curl -X POST "$KALTURA_AUTH_BROKER_URL/auth-profile/get" \
   -H "Content-Type: application/json" \
   -d "{\"id\": \"$AUTH_PROFILE_ID\"}"
 ```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `id` | string | Yes | Auth profile ID (MongoDB ObjectId from the `add` response) |
 
 **Response:** Full auth profile object.
 
@@ -207,6 +344,16 @@ curl -X POST "$KALTURA_AUTH_BROKER_URL/auth-profile/list" \
     "pager": {"offset": 0, "limit": 25}
   }'
 ```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `filter` | object | No | Filter criteria (empty `{}` returns all profiles for the partner) |
+| `filter.providerType` | string | No | Filter by provider type (`azure`, `okta`, `aws`, `akamai`, `other`) |
+| `filter.authStrategy` | string | No | Filter by auth strategy (`saml` or `oauth2`) |
+| `filter.status` | string | No | Filter by status (`enabled` or `disabled`) |
+| `pager` | object | No | Pagination settings |
+| `pager.offset` | integer | No | Number of records to skip (default: 0) |
+| `pager.limit` | integer | No | Maximum records to return (default: 25) |
 
 **Response:** `{ "objects": [...], "totalCount": N }` containing auth profile objects.
 
@@ -229,6 +376,11 @@ curl -X POST "$KALTURA_AUTH_BROKER_URL/auth-profile/update" \
   }"
 ```
 
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `id` | string | Yes | Auth profile ID to update |
+| (any writable field) | varies | No | Any field from the auth profile object (section 3.1) except read-only fields (`objectType`, `partnerId`, `version`, `createdAt`, `updatedAt`) |
+
 Fields not included in the request remain unchanged. The `version` increments on each successful update.
 
 ## 3.7 Delete an Auth Profile
@@ -246,6 +398,10 @@ curl -X POST "$KALTURA_AUTH_BROKER_URL/auth-profile/delete" \
   -d "{\"id\": \"$AUTH_PROFILE_ID\"}"
 ```
 
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `id` | string | Yes | Auth profile ID to delete |
+
 Remove all app subscriptions referencing this profile before deleting it.
 
 ## 3.8 Generate Private/Public Keys
@@ -259,7 +415,11 @@ curl -X POST "$KALTURA_AUTH_BROKER_URL/auth-profile/generatePvKeys" \
   -d "{\"id\": \"$AUTH_PROFILE_ID\"}"
 ```
 
-Use this when `enableRequestSign` or `enableAssertsDecryption` is set to `true`. The generated public key is included in the SP metadata (see section 9).
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `id` | string | Yes | Auth profile ID to generate keys for |
+
+Use this when `enableRequestSign` or `enableAssertsDecryption` is set to `true`. The generated public key is included in the SP metadata (see section 9). This action is only applicable to SAML auth profiles.
 
 
 # 4. Attribute Mapping
@@ -292,13 +452,25 @@ The `userIdAttribute` field (top-level on the auth profile) specifies which IdP 
 | `lastName` | `http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname` |
 | `email` | `http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress` |
 
-### Okta Attribute Names
+### Okta Attribute Names (SAML)
 
 | Kaltura Field | Okta Attribute |
 |---------------|---------------|
 | `firstName` | `Core_User_FirstName` |
 | `lastName` | `Core_User_LastName` |
 | `email` | `Core_User_Email` |
+
+### OAuth2/OIDC Standard Claim Names
+
+When using `authStrategy: "oauth2"`, attribute names come from standard OIDC claims (ID token or userinfo response):
+
+| Kaltura Field | OIDC Claim | Description |
+|---------------|-----------|-------------|
+| `firstName` | `given_name` | User's first name |
+| `lastName` | `family_name` | User's last name |
+| `email` | `email` | User's email address |
+
+These claim names are consistent across Azure AD, Okta, and other OIDC-compliant providers. The `userIdAttribute` for OIDC profiles is typically `"email"` or `"preferred_username"`.
 
 
 # 5. Group Sync
@@ -395,6 +567,22 @@ curl -X POST "$KALTURA_AUTH_BROKER_URL/app-subscription/add" \
   }"
 ```
 
+**Request body parameters:**
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `name` | string | Yes | Subscription display name |
+| `appGuid` | string | Yes | App GUID from the [App Registry](KALTURA_APP_REGISTRY_API.md) |
+| `authProfileIds` | string[] | Yes | Array of auth profile IDs to use for this app |
+| `appLandingPage` | string | Yes | URL to redirect after successful login (receives KS + JWT) |
+| `appErrorPage` | string | Yes | URL to redirect on authentication error |
+| `redirectMethod` | string | No | `HTTP-POST` (default) or `HTTP-GET` — how to deliver credentials to landing page |
+| `ksPrivileges` | string | No | KS privileges for sessions created through this subscription |
+| `permissionList` | array | No | Permission list for fine-grained access control |
+| `permissionListStatus` | string | No | `none` (default), `whitelist`, or `blacklist` |
+| `attributePermissionListStatus` | string | No | `none` (default), `whitelist`, or `blacklist` |
+| `userGroupsSyncAll` | boolean | No | Override profile-level group sync for this subscription |
+
 Save the `id` from the response as `APP_SUBSCRIPTION_ID`. The `appGuid` must reference an existing, enabled app in the [App Registry](KALTURA_APP_REGISTRY_API.md).
 
 ## 6.3 Get an App Subscription
@@ -405,6 +593,12 @@ curl -X POST "$KALTURA_AUTH_BROKER_URL/app-subscription/get" \
   -H "Content-Type: application/json" \
   -d "{\"id\": \"$APP_SUBSCRIPTION_ID\"}"
 ```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `id` | string | Yes | App subscription ID |
+
+**Response:** Full app subscription object.
 
 ## 6.4 List App Subscriptions
 
@@ -417,6 +611,15 @@ curl -X POST "$KALTURA_AUTH_BROKER_URL/app-subscription/list" \
     "pager": {"offset": 0, "limit": 25}
   }'
 ```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `filter` | object | No | Filter criteria (empty `{}` returns all subscriptions for the partner) |
+| `filter.appGuid` | string | No | Filter by app GUID |
+| `filter.status` | string | No | Filter by status (`enabled` or `disabled`) |
+| `pager` | object | No | Pagination settings |
+| `pager.offset` | integer | No | Number of records to skip (default: 0) |
+| `pager.limit` | integer | No | Maximum records to return (default: 25) |
 
 **Response:** `{ "objects": [...], "totalCount": N }` containing app subscription objects.
 
@@ -433,6 +636,13 @@ curl -X POST "$KALTURA_AUTH_BROKER_URL/app-subscription/update" \
   }"
 ```
 
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `id` | string | Yes | App subscription ID to update |
+| (any writable field) | varies | No | Any field from the app subscription object (section 6.1) except read-only fields (`objectType`, `partnerId`, `version`, `createdAt`, `updatedAt`) |
+
+Fields not included in the request remain unchanged. The `version` increments on each successful update.
+
 ## 6.6 Delete an App Subscription
 
 ```bash
@@ -442,6 +652,10 @@ curl -X POST "$KALTURA_AUTH_BROKER_URL/app-subscription/delete" \
   -d "{\"id\": \"$APP_SUBSCRIPTION_ID\"}"
 ```
 
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `id` | string | Yes | App subscription ID to delete |
+
 
 # 7. SSO Login Flow
 
@@ -449,18 +663,37 @@ The complete SSO login sequence involves generating a token, redirecting to the 
 
 ## 7.1 Flow Sequence
 
+**SAML flow:**
+
 ```
 1. App calls generateAuthBrokerToken with {appGuid, authProfileId, origURL}
 2. Auth Broker returns an encrypted token
 3. App POSTs the token to /auth-manager/login
-4. Auth Broker responds with 302 redirect to the IdP
+4. Auth Broker responds with 302 redirect to the IdP SAML SSO URL
 5. User authenticates at the IdP
-6. IdP POSTs SAML assertion to /auth-manager/saml/ac (or redirects to /oidc/ac)
-7. Auth Broker validates the assertion, extracts attributes
+6. IdP POSTs SAML assertion to /auth-manager/saml/ac
+7. Auth Broker validates the SAML assertion, extracts attributes
 8. Auth Broker creates or updates the Kaltura user (JIT provisioning)
 9. Auth Broker syncs group memberships from IdP claims
 10. Auth Broker generates a KS and signs a JWT
 11. Auth Broker redirects to appLandingPage with KS and JWT
+```
+
+**OAuth2/OIDC flow:**
+
+```
+1. App calls generateAuthBrokerToken with {appGuid, authProfileId, origURL}
+2. Auth Broker returns an encrypted token
+3. App POSTs the token to /auth-manager/login
+4. Auth Broker responds with 302 redirect to the IdP authorization URL (with client_id, scope, redirect_uri)
+5. User authenticates at the IdP and grants consent
+6. IdP redirects to /auth-manager/oidc/ac with an authorization code
+7. Auth Broker exchanges the code for access token + ID token at the IdP token URL
+8. Auth Broker extracts user attributes from the ID token (or calls the userinfo endpoint)
+9. Auth Broker creates or updates the Kaltura user (JIT provisioning)
+10. Auth Broker syncs group memberships from token claims
+11. Auth Broker generates a KS and signs a JWT
+12. Auth Broker redirects to appLandingPage with KS and JWT
 ```
 
 ## 7.2 Generate Auth Broker Token

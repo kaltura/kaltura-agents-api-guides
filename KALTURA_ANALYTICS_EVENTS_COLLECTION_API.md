@@ -238,6 +238,15 @@ done
 
 Application-level event tracking for page loads, button clicks, and custom interactions. Uses a separate analytics server endpoint.
 
+**Required Parameters**
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `eventType` | int | Yes | Event type ID: `10002` (ButtonClicked) or `10003` (PageLoad) |
+| `partnerId` | int | Yes | Your Kaltura partner ID |
+| `entryId` | string | No | Kaltura entry ID to associate the event with (recommended for content-scoped tracking) |
+| `kalturaApplication` | string | No | Application identifier for per-app segmentation (e.g., `"events-portal"`, `"mobile-app"`) |
+
 ```bash
 curl -X POST "$KALTURA_ANALYTICS_URL/api_v3/index.php?service=analytics&action=trackEvent" \
   -d "ks=$KALTURA_KS" \

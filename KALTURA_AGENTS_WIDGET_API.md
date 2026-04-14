@@ -121,6 +121,33 @@ agents.closeDrawer();
 
 The drawer opens as a side panel overlaying or alongside the container element. Users can create new agents, edit existing ones, toggle agents on/off, and view execution history within the drawer.
 
+## Events
+
+The Agents Widget does not emit events to the host page. There are no callbacks for agent creation, configuration changes, or agent enable/disable actions. All agent management operations happen within the widget UI and are persisted directly to the Agents Manager backend.
+
+To detect changes made through the widget programmatically, query the Agents Manager API from your server:
+
+```bash
+# List agents for the partner to detect changes
+curl -X GET "https://agents-manager.nvp1.ovp.kaltura.com/api/agents?partnerId=$KALTURA_PARTNER_ID" \
+  -H "Authorization: Bearer $KALTURA_KS" \
+  -H "Content-Type: application/json"
+```
+
+See the [Agents Manager API](KALTURA_AGENTS_MANAGER_API.md) for the full server-side API reference including agent CRUD, trigger configuration, and execution history.
+
+## Workspace Lifecycle
+
+The host page can manage the workspace session and lifecycle:
+
+```javascript
+// Refresh the KS when it approaches expiry
+workspace.session.setData(prev => ({ ...prev, ks: "new-ks-value" }));
+
+// Destroy the workspace when the user navigates away
+workspace.kill();
+```
+
 
 # 6. KS Requirements
 

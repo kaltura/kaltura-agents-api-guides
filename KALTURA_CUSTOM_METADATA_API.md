@@ -159,7 +159,17 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadataProfile/action/addFr
   -F "xsdFile=@schema.xsd"
 ```
 
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `metadataProfile[objectType]` | string | Yes | Always `KalturaMetadataProfile` |
+| `metadataProfile[name]` | string | Yes | Display name for the profile |
+| `metadataProfile[systemName]` | string | No | Machine-friendly identifier for stable lookups |
+| `metadataProfile[metadataObjectType]` | integer | Yes | `1`=ENTRY, `2`=CATEGORY, `3`=USER, `4`=PARTNER, `5`=DYNAMIC_OBJECT, `6`=USER_ENTRY |
+| `xsdFile` | file | Yes | XSD schema file upload (multipart form field) |
+
 Same as `add`, but the XSD is uploaded as a file instead of inline.
+
+**Response:** Full `KalturaMetadataProfile` object with generated `id`, `version=1`, and `status=1` (ACTIVE).
 
 ## 2.6 Get Profile
 
@@ -170,7 +180,31 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadataProfile/action/get" 
   -d "id=$PROFILE_ID"
 ```
 
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | integer | Yes | Profile ID to retrieve |
+
 Returns the full `KalturaMetadataProfile` object including the XSD content. Returns `METADATA_PROFILE_NOT_FOUND` if the profile does not exist.
+
+**Response:**
+
+```json
+{
+  "id": 12345,
+  "partnerId": 123456,
+  "name": "Content Classification",
+  "systemName": "content_classification",
+  "description": "Classify content by department and priority",
+  "status": 1,
+  "metadataObjectType": 1,
+  "version": 1,
+  "createMode": 1,
+  "xsd": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><xsd:schema ...>...</xsd:schema>",
+  "createdAt": 1718409600,
+  "updatedAt": 1718409600,
+  "objectType": "KalturaMetadataProfile"
+}
+```
 
 ## 2.7 List Profiles
 
@@ -184,6 +218,13 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadataProfile/action/list"
   -d "filter[orderBy]=-createdAt" \
   -d "pager[pageSize]=50"
 ```
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `filter[objectType]` | string | Yes | Always `KalturaMetadataProfileFilter` |
+| `filter[...]` | various | No | Filter fields (see table below) |
+| `pager[pageSize]` | integer | No | Results per page (default 30, max 500) |
+| `pager[pageIndex]` | integer | No | Page number, 1-based (default 1) |
 
 **Filter fields (`KalturaMetadataProfileFilter`):**
 
@@ -229,6 +270,10 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadataProfile/action/listF
   -d "format=1" \
   -d "metadataProfileId=$PROFILE_ID"
 ```
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `metadataProfileId` | integer | Yes | Profile ID whose XSD fields to list |
 
 Returns a parsed list of field definitions from the XSD. Useful for dynamically building forms or validating metadata XML without parsing XSD yourself.
 
@@ -276,6 +321,11 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadataProfile/action/updat
   -F "xsdFile=@updated_schema.xsd"
 ```
 
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | integer | Yes | Profile ID to update |
+| `xsdFile` | file | Yes | Updated XSD schema file (multipart form field) |
+
 Updates the profile XSD from a file upload. Triggers re-validation and transformation of all existing metadata instances. The profile `version` is incremented. During transformation, the profile status transitions to `TRANSFORMING` (3) and returns to `ACTIVE` (1) when complete.
 
 ## 2.11 Revert Profile Version
@@ -304,6 +354,10 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadataProfile/action/serve
   -d "id=$PROFILE_ID"
 ```
 
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | integer | Yes | Profile ID whose XSD to serve |
+
 Returns the raw XSD content of the profile. Useful for programmatic schema validation or building dynamic forms from the schema definition.
 
 ## 2.13 Delete Profile
@@ -314,6 +368,10 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadataProfile/action/delet
   -d "format=1" \
   -d "id=$PROFILE_ID"
 ```
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | integer | Yes | Profile ID to delete |
 
 Deletes the profile and cascades to all metadata instances associated with it. This action is irreversible. Profiles of type `DYNAMIC_OBJECT` with active references return `METADATA_PROFILE_REFERENCE_EXISTS`.
 
@@ -623,7 +681,26 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/add" \
 | `objectId` | string | Yes | ID of the object to attach metadata to |
 | `xmlData` | string | Yes | XML data conforming to the profile's XSD |
 
-**Response:** Full `KalturaMetadata` object with generated `id`, `version=1`, and `status=1` (VALID).
+**Important:** XML field order must match the `<xsd:sequence>` order defined in the profile's XSD. Out-of-order fields cause validation errors. Field names are case-sensitive.
+
+**Response:**
+
+```json
+{
+  "id": 67890,
+  "partnerId": 123456,
+  "metadataProfileId": 12345,
+  "metadataProfileVersion": 1,
+  "metadataObjectType": 1,
+  "objectId": "0_abc123",
+  "objectType": "KalturaMetadata",
+  "status": 1,
+  "version": 1,
+  "xml": "<metadata><Department>Engineering</Department><ProjectName>API Guides</ProjectName><DueDate>1718409600</DueDate><Tag>api</Tag><Tag>docs</Tag></metadata>",
+  "createdAt": 1718409600,
+  "updatedAt": 1718409600
+}
+```
 
 Each object can have at most one metadata instance per profile. Adding a duplicate returns `METADATA_ALREADY_EXISTS`.
 
@@ -641,7 +718,14 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/addFromFile"
   -F "xmlFile=@metadata.xml"
 ```
 
-Same as `add`, but the XML is uploaded as a file.
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `metadataProfileId` | integer | Yes | Profile ID defining the schema |
+| `objectType` | integer | Yes | `1`=ENTRY, `2`=CATEGORY, `3`=USER, `4`=PARTNER, `5`=DYNAMIC_OBJECT, `6`=USER_ENTRY |
+| `objectId` | string | Yes | ID of the object to attach metadata to |
+| `xmlFile` | file | Yes | Metadata XML file upload (multipart form field) |
+
+Same as `add`, but the XML is uploaded as a file. XML field order must match the XSD sequence.
 
 ## 4.5 Add from URL
 
@@ -655,6 +739,13 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/addFromUrl" 
   -d "url=https://example.com/metadata/entry_metadata.xml"
 ```
 
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `metadataProfileId` | integer | Yes | Profile ID defining the schema |
+| `objectType` | integer | Yes | `1`=ENTRY, `2`=CATEGORY, `3`=USER, `4`=PARTNER, `5`=DYNAMIC_OBJECT, `6`=USER_ENTRY |
+| `objectId` | string | Yes | ID of the object to attach metadata to |
+| `url` | string | Yes | URL of the XML file to fetch |
+
 The server fetches the XML from the provided URL, validates against the profile's XSD, and stores it. The same one-per-profile constraint applies.
 
 ## 4.6 Get Metadata
@@ -666,7 +757,30 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/get" \
   -d "id=$METADATA_ID"
 ```
 
-Returns the full `KalturaMetadata` object including the XML content.
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | integer | Yes | Metadata instance ID to retrieve |
+
+Returns the full `KalturaMetadata` object including the XML content. Returns `METADATA_NOT_FOUND` if the instance does not exist.
+
+**Response:**
+
+```json
+{
+  "id": 67890,
+  "partnerId": 123456,
+  "metadataProfileId": 12345,
+  "metadataProfileVersion": 1,
+  "metadataObjectType": 1,
+  "objectId": "0_abc123",
+  "objectType": "KalturaMetadata",
+  "status": 1,
+  "version": 1,
+  "xml": "<metadata><Department>Engineering</Department><ProjectName>API Guides</ProjectName></metadata>",
+  "createdAt": 1718409600,
+  "updatedAt": 1718409600
+}
+```
 
 ## 4.7 List Metadata
 
@@ -679,6 +793,15 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/list" \
   -d "filter[objectTypeEqual]=1" \
   -d "filter[metadataProfileIdEqual]=$PROFILE_ID"
 ```
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `filter[objectType]` | string | Yes | Always `KalturaMetadataFilter` |
+| `filter[objectTypeEqual]` | integer | Yes | Object type (`1`=ENTRY, `2`=CATEGORY, etc.). Defaults to ENTRY if null |
+| `filter[objectIdEqual]` | string | Conditional | Object ID. **Required** when `objectTypeEqual=1` (ENTRY) |
+| `filter[...]` | various | No | Additional filter fields (see table below) |
+| `pager[pageSize]` | integer | No | Results per page (default 30, max 500) |
+| `pager[pageIndex]` | integer | No | Page number, 1-based (default 1) |
 
 **Filter fields (`KalturaMetadataFilter`):**
 
@@ -731,7 +854,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/update" \
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `id` | integer | Yes | Metadata instance ID |
-| `xmlData` | string | Yes | Updated XML conforming to the profile's XSD |
+| `xmlData` | string | Yes | Updated XML conforming to the profile's XSD. Field order must match XSD sequence |
 | `version` | integer | No | Optimistic lock — update succeeds only if this matches the current version |
 
 **Optimistic locking:** Pass the `version` parameter to prevent concurrent update conflicts. If the metadata was modified by another process since you read it, the server returns `INVALID_METADATA_VERSION`. Read the latest version, merge changes, and retry.
@@ -758,7 +881,12 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/updateFromFi
   -F "xmlFile=@updated_metadata.xml"
 ```
 
-Same as `update`, but the XML is uploaded as a file.
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | integer | Yes | Metadata instance ID to update |
+| `xmlFile` | file | Yes | Updated metadata XML file (multipart form field) |
+
+Same as `update`, but the XML is uploaded as a file. XML field order must match the XSD sequence.
 
 ## 4.10 Update via XSLT
 
@@ -769,6 +897,11 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/updateFromXS
   -d "id=$METADATA_ID" \
   -F "xslFile=@transform.xsl"
 ```
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | integer | Yes | Metadata instance ID to transform |
+| `xslFile` | file | Yes | XSLT stylesheet file (multipart form field) |
 
 Applies a one-time XSLT transformation to the existing metadata XML. The server reads the current XML, transforms it using the provided XSL file, validates the result against the profile XSD, and saves. Uses locking (`kLock::runLocked`) for concurrency safety. This is different from the profile-level XSLT (section 5) which auto-applies on every add/update.
 
@@ -781,6 +914,10 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/serve" \
   -d "id=$METADATA_ID"
 ```
 
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | integer | Yes | Metadata instance ID whose raw XML to serve |
+
 Returns the raw XML content of the metadata instance. Useful for programmatic XML processing without the surrounding `KalturaMetadata` object fields.
 
 ## 4.12 Delete Metadata
@@ -791,6 +928,10 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/delete" \
   -d "format=1" \
   -d "id=$METADATA_ID"
 ```
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | integer | Yes | Metadata instance ID to delete |
 
 Deletes the metadata instance. Does not affect the metadata profile or the object it was attached to.
 
@@ -810,6 +951,11 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadataProfile/action/updat
   -d "id=$PROFILE_ID" \
   -F "xsltFile=@transform.xslt"
 ```
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | integer | Yes | Profile ID to attach the XSLT to |
+| `xsltFile` | file | Yes | XSLT stylesheet file (multipart form field) |
 
 **How it works:**
 1. Attach XSLT via `metadataProfile.updateTransformationFromFile`
@@ -903,6 +1049,17 @@ curl -X POST "$KALTURA_SERVICE_URL/service/elasticsearch_esearch/action/searchEn
   -d "searchParams[searchOperator][searchItems][0][metadataProfileId]=$PROFILE_ID"
 ```
 
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `searchParams[objectType]` | string | Yes | Always `KalturaESearchEntryParams` |
+| `searchParams[searchOperator][objectType]` | string | Yes | Always `KalturaESearchEntryOperator` |
+| `searchParams[searchOperator][operator]` | integer | Yes | `1`=AND, `2`=OR |
+| `searchParams[searchOperator][searchItems][N][objectType]` | string | Yes | `KalturaESearchEntryMetadataItem` for metadata search |
+| `searchParams[searchOperator][searchItems][N][searchTerm]` | string | Yes | Value to search for |
+| `searchParams[searchOperator][searchItems][N][itemType]` | integer | Yes | `1`=EXACT_MATCH, `2`=PARTIAL, `3`=STARTS_WITH |
+| `searchParams[searchOperator][searchItems][N][metadataProfileId]` | integer | No | Scope search to a specific metadata profile |
+| `searchParams[searchOperator][searchItems][N][xpath]` | string | No | Target a specific field (e.g., `/metadata/Department`) |
+
 Target a specific field using the `xpath` parameter:
 
 ```bash
@@ -914,6 +1071,8 @@ Target a specific field using the `xpath` parameter:
 ## 7.2 Searchable Fields
 
 Only fields with `<searchable>true</searchable>` in their `<appinfo>` annotation are indexed in eSearch. Non-searchable fields are stored but cannot be queried.
+
+**Indexing limit:** Elasticsearch limits each metadata profile to 4 searchable Date fields and 4 searchable Integer fields. Additional Date/Integer fields beyond this limit are stored but silently not indexed in eSearch. Use text fields for non-filterable dates and numbers.
 
 ## 7.3 Cross-Field Search
 

@@ -447,6 +447,13 @@ ks=<YOUR_KS>
 # 6. Manage Tasks
 
 ### Approve a moderated task
+
+**`entryVendorTask.approve`**
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `id` | int | Yes | The vendor task ID to approve |
+
 ```
 POST /api_v3/service/reach_entryVendorTask/action/approve
 ks=<YOUR_KS>
@@ -454,7 +461,17 @@ ks=<YOUR_KS>
 &id=98765
 ```
 
+Moves the task from `PENDING_MODERATION` (4) to `READY` (2), applying the results to the entry.
+
 ### Reject a moderated task
+
+**`entryVendorTask.reject`**
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `id` | int | Yes | The vendor task ID to reject |
+| `rejectReason` | string | No | Reason for rejection (logged for audit) |
+
 ```
 POST /api_v3/service/reach_entryVendorTask/action/reject
 ks=<YOUR_KS>
@@ -463,7 +480,17 @@ ks=<YOUR_KS>
 &rejectReason=Quality+below+threshold
 ```
 
+Moves the task from `PENDING_MODERATION` (4) to `REJECTED` (5). Results are discarded and not applied to the entry.
+
 ### Cancel a pending task
+
+**`entryVendorTask.abort`**
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `id` | int | Yes | The vendor task ID to cancel |
+| `abortReason` | string | No | Reason for cancellation |
+
 ```
 POST /api_v3/service/reach_entryVendorTask/action/abort
 ks=<YOUR_KS>
@@ -473,7 +500,31 @@ ks=<YOUR_KS>
 ```
 Works for tasks in PENDING (1) or PENDING_MODERATION (4) status. Aborted tasks are deleted after cancellation; subsequent `get` calls return `ENTRY_VENDOR_TASK_NOT_FOUND`.
 
+**Response** — The aborted task object with `status: 7` (ABORTED):
+
+```json
+{
+  "id": 98765,
+  "status": 7,
+  "entryId": "1_abc123def",
+  "catalogItemId": 101,
+  "objectType": "KalturaEntryVendorTask"
+}
+```
+
 ### Export tasks to CSV
+
+**`entryVendorTask.exportToCsv`**
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `filter[statusEqual]` | int | No | Filter exported tasks by status (e.g., 2 = READY) |
+| `filter[entryIdEqual]` | string | No | Filter by entry ID |
+| `filter[catalogItemIdEqual]` | int | No | Filter by catalog item |
+| `filter[reachProfileIdEqual]` | int | No | Filter by REACH profile |
+| `filter[createdAtGreaterThanOrEqual]` | int | No | Unix timestamp — tasks created after |
+| `filter[createdAtLessThanOrEqual]` | int | No | Unix timestamp — tasks created before |
+
 ```
 POST /api_v3/service/reach_entryVendorTask/action/exportToCsv
 ks=<YOUR_KS>

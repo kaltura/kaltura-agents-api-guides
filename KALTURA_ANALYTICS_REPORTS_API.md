@@ -202,6 +202,20 @@ curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getTable" \
 
 Retrieves aggregate totals for a report type as a single row.
 
+**Parameters**
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `reportType` | int | Yes | KalturaReportType integer ID (see section 10) |
+| `reportInputFilter[objectType]` | string | Yes | Always `KalturaEndUserReportInputFilter` |
+| `reportInputFilter[fromDate]` | int | Yes | Start date as Unix timestamp in seconds |
+| `reportInputFilter[toDate]` | int | Yes | End date as Unix timestamp in seconds |
+| `reportInputFilter[timeZoneOffset]` | int | No | Timezone offset in minutes. Default: `0` |
+| `reportInputFilter[entryIdIn]` | string | No | Filter by entry IDs (pipe-separated) |
+| `reportInputFilter[virtualEventIdIn]` | string | No | Scope to virtual event(s) |
+| `responseOptions[objectType]` | string | No | `KalturaReportResponseOptions` |
+| `responseOptions[delimiter]` | string | No | Field delimiter. Default: `,` (use `\|` for consistency) |
+
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getTotal" \
   -d "ks=$KALTURA_KS" \
@@ -228,6 +242,21 @@ Response:
 # 5. report.getGraphs
 
 Retrieves time-series data for charting. Returns an array of `KalturaReportGraph` objects, one per metric.
+
+**Parameters**
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `reportType` | int | Yes | KalturaReportType integer ID (see section 10) |
+| `reportInputFilter[objectType]` | string | Yes | Always `KalturaEndUserReportInputFilter` |
+| `reportInputFilter[fromDate]` | int | Yes | Start date as Unix timestamp in seconds |
+| `reportInputFilter[toDate]` | int | Yes | End date as Unix timestamp in seconds |
+| `reportInputFilter[timeZoneOffset]` | int | No | Timezone offset in minutes. Default: `0` |
+| `reportInputFilter[interval]` | string | No | Granularity: `days`, `months`, `hours`, `tenSeconds`, `years`. Default: `days` |
+| `reportInputFilter[entryIdIn]` | string | No | Filter by entry IDs (pipe-separated) |
+| `reportInputFilter[virtualEventIdIn]` | string | No | Scope to virtual event(s) |
+| `responseOptions[objectType]` | string | No | `KalturaReportResponseOptions` |
+| `responseOptions[delimiter]` | string | No | Field delimiter. Default: `,` (use `\|` for consistency) |
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getGraphs" \
@@ -292,6 +321,20 @@ Response is a JSON array with 3 elements: `[KalturaReportTotal, [KalturaReportGr
 
 Generates a downloadable CSV export URL. The URL is valid for a limited time.
 
+**Parameters**
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `reportTitle` | string | Yes | Title included in the CSV header |
+| `reportText` | string | Yes | Description text included in the CSV header |
+| `headers` | string | Yes | Comma-separated column headers for the CSV |
+| `reportType` | int | Yes | KalturaReportType integer ID (see section 10) |
+| `reportInputFilter[objectType]` | string | Yes | Always `KalturaEndUserReportInputFilter` |
+| `reportInputFilter[fromDate]` | int | Yes | Start date as Unix timestamp in seconds |
+| `reportInputFilter[toDate]` | int | Yes | End date as Unix timestamp in seconds |
+| `responseOptions[objectType]` | string | No | `KalturaReportResponseOptions` |
+| `responseOptions[delimiter]` | string | No | Field delimiter. Default: `,` (use `\|` for consistency) |
+
 ```bash
 CSV_URL=$(curl -s -X POST "$KALTURA_SERVICE_URL/service/report/action/getUrlForReportAsCsv" \
   -d "ks=$KALTURA_KS" \
@@ -313,6 +356,14 @@ curl -o report.csv "$CSV_URL"
 ## 7.2 report.getCsvFromStringParams
 
 For specialized reports (IDs 4021, 6000-6002, 3006-3008) that use semicolon-delimited parameters instead of the standard filter object.
+
+**Parameters**
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `id` | int | Yes | Report ID: `4021` (User Reactions), `6000` (KME Room Data), `6001` (Attendee Data), `6002` (Breakout Sessions), `3006` (Added to Calendar), `3007` (Session Viewership), `3008` (Attachment Clicked) |
+| `params` | string | Yes | Semicolon-delimited key=value pairs (format varies by report ID, see examples below) |
+| `excludedFields` | string | No | Comma-separated column names to exclude from output |
 
 ### User Reactions Report (ID 4021)
 
@@ -450,6 +501,17 @@ Real-time analytics for active live streams.
 
 ## 9.1 liveReports.getEvents
 
+**Parameters**
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `reportType` | string | Yes | Report type string. Use `ENTRY_TIME_LINE` for per-entry live viewer timeline |
+| `filter[objectType]` | string | Yes | Always `KalturaLiveReportInputFilter` |
+| `filter[entryIds]` | string | Yes | Live entry ID(s) to monitor |
+| `filter[fromTime]` | int | Yes | Start of time window as Unix timestamp in seconds |
+| `filter[toTime]` | int | Yes | End of time window as Unix timestamp in seconds |
+| `filter[live]` | int | No | Set to `1` to include only live (not DVR) viewers |
+
 ```bash
 # Calculate time window: now - 110s to now - 20s (90-second window)
 FROM_UNIX=$(($(date +%s) - 110))
@@ -469,6 +531,17 @@ curl -X POST "$KALTURA_SERVICE_URL/service/liveReports/action/getEvents" \
 The 20-second offset accounts for data propagation delay. Use the 90-second window for reliable real-time viewer counts.
 
 ## 9.2 Stream Health via beacon.list
+
+**Parameters**
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `filter[objectType]` | string | Yes | Always `KalturaBeaconFilter` |
+| `filter[eventTypeIn]` | string | Yes | Beacon types (comma-separated). Health: `0_healthData,1_healthData`. Diagnostics: `0_staticData,0_dynamicData,1_staticData,1_dynamicData` |
+| `filter[indexTypeEqual]` | string | Yes | `log` for health alerts (time-series), `state` for diagnostics (latest snapshot) |
+| `filter[relatedObjectTypeIn]` | string | Yes | Object type. Use `4` for entry-level beacons |
+| `filter[objectIdIn]` | string | Yes | Entry ID(s) to monitor |
+| `filter[orderBy]` | string | No | Sort order. Use `-updatedAt` for most recent first |
 
 ### Health Beacons (Alerts)
 

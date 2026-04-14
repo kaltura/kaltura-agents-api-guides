@@ -66,8 +66,11 @@ The privacy context should match the category Genie indexes for your account.
 **POST** `/mcp/search`
 
 **Parameters**
-- **query** *(string, required)* – natural-language question or keywords.
-- **include_sources** *(bool, optional, default: false)* – when `true`, returns source entries with entry IDs, timestamps, and per-entry text segments (see response shapes below).
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `query` | string | Yes | Natural-language question or keywords |
+| `include_sources` | bool | No | When `true`, returns source entries with entry IDs, timestamps, and per-entry text segments (see response shapes below). Default: `false` |
 
 ### Text-only response (`include_sources: false` or omitted)
 
@@ -258,6 +261,15 @@ Use this when your client polls rather than holding an SSE stream. You open a se
 
 **Step 1: Start a session**
 
+**POST** `/kmedia/start-smart-search-session`
+
+**Parameters**
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `schemaVersion` | int | Yes | Schema version. Use `1` |
+| `data.question` | string | Yes | The user's natural-language question |
+
 ```
 POST /kmedia/start-smart-search-session
 Authorization: KS <KS>
@@ -274,6 +286,16 @@ Content-Type: application/json
 ```
 
 **Step 2: Poll every X seconds** (send your latest seen `timestamp`)
+
+**POST** `/kmedia/get-smart-search-session`
+
+**Parameters**
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `schemaVersion` | int | Yes | Schema version. Use `1` |
+| `data.sessionId` | string | Yes | Session ID returned from `start-smart-search-session` |
+| `data.timestamp` | int | Yes | The most recent `timestamp` received from the previous response |
 
 ```
 POST /kmedia/get-smart-search-session

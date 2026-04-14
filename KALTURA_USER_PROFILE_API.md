@@ -173,7 +173,37 @@ Authorization: Bearer <KS>
 
 If `eventData.attendanceStatus` is set to `attended`, `participated`, or `participatedPostEvent` at creation time, `firstAttendedStatusTime` is automatically recorded.
 
-**Response:** Full user profile object with generated `id`.
+**Response:** Full user profile object with generated `id`:
+
+```json
+{
+  "id": "6620a1b2c3d4e5f6a7b8c9d0",
+  "partnerId": 123456,
+  "appGuid": "app-guid-from-registry",
+  "userId": "user@example.com",
+  "status": "enabled",
+  "profileData": {
+    "name": "Jane Doe",
+    "company": "Acme Corp",
+    "role": "Speaker"
+  },
+  "loginData": {
+    "lastLoginDate": "2025-06-15T10:30:00Z",
+    "lastLoginType": "sso"
+  },
+  "eventData": {
+    "regOrigin": "registration",
+    "attendanceStatus": "registered",
+    "userRegistrationType": "virtualAttendanceRequest",
+    "isRegistered": false,
+    "statusUpdateTime": "2025-06-15T10:30:00.000Z"
+  },
+  "appData": {},
+  "createdAt": "2025-06-15T10:30:00.000Z",
+  "updatedAt": "2025-06-15T10:30:00.000Z",
+  "objectType": "UserProfile"
+}
+```
 
 ```bash
 curl -X POST "$KALTURA_USER_PROFILE_URL/user-profile/add" \
@@ -228,6 +258,18 @@ Authorization: Bearer <KS>
 ]
 ```
 
+Each array element has the same fields as `user-profile/add`:
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `appGuid` | string | Yes | App Registry GUID (must be the same for all items) |
+| `userId` | string | Yes | Kaltura user ID (must exist in your account) |
+| `profileData` | object | Yes | Custom user attributes (any valid JSON) |
+| `loginData` | object | No | Login tracking |
+| `eventData` | object | No | Event attendance data |
+| `appData` | object | No | App-specific metadata |
+| `status` | string | No | Default: `enabled` |
+
 **Constraints:**
 
 - All items must have the **same `appGuid`** (mixed appGuids return `NOT_YET_SUPPORTED`)
@@ -271,9 +313,42 @@ curl -X POST "$KALTURA_USER_PROFILE_URL/user-profile/get" \
 
 **Response:** Full user profile object. Returns `USER_PROFILE_NOT_FOUND` if the ID does not exist or the profile is deleted.
 
+```json
+{
+  "id": "6620a1b2c3d4e5f6a7b8c9d0",
+  "partnerId": 123456,
+  "appGuid": "app-guid-from-registry",
+  "userId": "user@example.com",
+  "status": "enabled",
+  "profileData": {
+    "name": "Jane Doe",
+    "company": "Acme Corp"
+  },
+  "eventData": {
+    "regOrigin": "registration",
+    "attendanceStatus": "registered",
+    "isRegistered": false,
+    "statusUpdateTime": "2025-06-15T10:30:00.000Z"
+  },
+  "appData": {},
+  "createdAt": "2025-06-15T10:30:00.000Z",
+  "updatedAt": "2025-06-15T10:30:00.000Z",
+  "objectType": "UserProfile"
+}
+```
+
 ## 7.2 Get by Filter
 
-Returns the **first matching** profile (internally calls `list` with `limit: 1`). Use this to look up a user within a specific app:
+Returns the **first matching** profile (internally calls `list` with `limit: 1`). Use this to look up a user within a specific app.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `appGuidIn` | string[] | No | Filter by app GUIDs |
+| `userIdIn` | string[] | No | Filter by user IDs (email addresses matched case-insensitively) |
+| `status` | string | No | `enabled` or `disabled` |
+| `attendanceStatus` | string | No | Filter by current attendance status |
+
+All filter fields from section 9.1 are supported. Returns `null` if no match is found.
 
 ```bash
 curl -X POST "$KALTURA_USER_PROFILE_URL/user-profile/getByFilter" \
@@ -285,8 +360,6 @@ curl -X POST "$KALTURA_USER_PROFILE_URL/user-profile/getByFilter" \
     \"status\": \"enabled\"
   }"
 ```
-
-Filter fields are the same as those used in `list` (see section 9). Returns `null` if no match is found.
 
 
 # 8. Update a User Profile
@@ -320,6 +393,34 @@ Authorization: Bearer <KS>
 | `appData` | object | No | Update app-specific data |
 
 The `partnerId`, `appGuid`, `userId`, and timestamp fields cannot be modified.
+
+**Response:** The updated full user profile object:
+
+```json
+{
+  "id": "6620a1b2c3d4e5f6a7b8c9d0",
+  "partnerId": 123456,
+  "appGuid": "app-guid-from-registry",
+  "userId": "user@example.com",
+  "status": "enabled",
+  "profileData": {
+    "name": "Jane Doe",
+    "company": "Updated Corp"
+  },
+  "eventData": {
+    "regOrigin": "registration",
+    "attendanceStatus": "attended",
+    "previousAttendanceStatus": "confirmed",
+    "statusUpdateTime": "2025-06-16T14:00:00.000Z",
+    "firstAttendedStatusTime": "2025-06-16T14:00:00.000Z",
+    "isRegistered": false
+  },
+  "appData": {},
+  "createdAt": "2025-06-15T10:30:00.000Z",
+  "updatedAt": "2025-06-16T14:00:00.000Z",
+  "objectType": "UserProfile"
+}
+```
 
 ### Merge Behavior
 

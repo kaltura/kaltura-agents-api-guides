@@ -180,6 +180,27 @@ curl -X POST "$KALTURA_SERVICE_URL/service/caption_captionAsset/action/add" \
 
 **Response:** `KalturaCaptionAsset` object with generated `id` and `status=0` (QUEUED). The format defaults to SRT (1) if not specified.
 
+```json
+{
+  "id": "1_abc123de",
+  "entryId": "0_xyz789ab",
+  "partnerId": 1234567,
+  "label": "English",
+  "language": "English",
+  "languageCode": "en",
+  "format": 1,
+  "status": 0,
+  "isDefault": true,
+  "displayOnPlayer": true,
+  "accuracy": 0,
+  "size": 0,
+  "version": 0,
+  "createdAt": 1712620800,
+  "updatedAt": 1712620800,
+  "objectType": "KalturaCaptionAsset"
+}
+```
+
 ## 3.4 Upload Content (Inline String)
 
 After creating the asset, upload the caption content using `KalturaStringResource` for small files (<1 MB):
@@ -199,7 +220,33 @@ Welcome to the presentation.
 Today we cover the Kaltura API.'
 ```
 
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | string | Yes | Caption asset ID (from `captionAsset.add`) |
+| `contentResource[objectType]` | string | Yes | `KalturaStringResource` for inline content |
+| `contentResource[content]` | string | Yes | Caption file content (URL-encode for special characters) |
+
 **Response:** Updated `KalturaCaptionAsset` object. Status transitions to `2` (READY) after processing.
+
+```json
+{
+  "id": "1_abc123de",
+  "entryId": "0_xyz789ab",
+  "partnerId": 1234567,
+  "label": "English",
+  "language": "English",
+  "languageCode": "en",
+  "format": 1,
+  "status": 2,
+  "isDefault": true,
+  "displayOnPlayer": true,
+  "size": 142,
+  "version": 1,
+  "createdAt": 1712620800,
+  "updatedAt": 1712620860,
+  "objectType": "KalturaCaptionAsset"
+}
+```
 
 ## 3.5 Upload Content (Upload Token)
 
@@ -228,6 +275,12 @@ curl -X POST "$KALTURA_SERVICE_URL/service/caption_captionAsset/action/setConten
   -d "contentResource[token]=$UPLOAD_TOKEN_ID"
 ```
 
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | string | Yes | Caption asset ID (from `captionAsset.add`) |
+| `contentResource[objectType]` | string | Yes | `KalturaUploadedFileTokenResource` for upload token |
+| `contentResource[token]` | string | Yes | Upload token ID (from `uploadToken.upload`) |
+
 See [Upload & Delivery API](KALTURA_UPLOAD_AND_DELIVERY_API.md) for upload token details.
 
 ## 3.6 Upload Content (Remote URL)
@@ -243,6 +296,12 @@ curl -X POST "$KALTURA_SERVICE_URL/service/caption_captionAsset/action/setConten
   -d "contentResource[url]=https://example.com/captions/english.srt"
 ```
 
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | string | Yes | Caption asset ID (from `captionAsset.add`) |
+| `contentResource[objectType]` | string | Yes | `KalturaUrlResource` for remote URL import |
+| `contentResource[url]` | string | Yes | Direct URL to the caption file |
+
 Status transitions to `7` (IMPORTING) during fetch, then `2` (READY) on completion.
 
 ## 3.7 Get Caption Asset
@@ -254,7 +313,11 @@ curl -X POST "$KALTURA_SERVICE_URL/service/caption_captionAsset/action/get" \
   -d "captionAssetId=$CAPTION_ASSET_ID"
 ```
 
-Returns the full `KalturaCaptionAsset` object. Use to poll for status after `setContent`.
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `captionAssetId` | string | Yes | Caption asset ID to retrieve |
+
+**Response:** Full `KalturaCaptionAsset` object. Use to poll for status after `setContent`.
 
 ## 3.8 List Caption Assets
 
@@ -265,6 +328,13 @@ curl -X POST "$KALTURA_SERVICE_URL/service/caption_captionAsset/action/list" \
   -d "filter[objectType]=KalturaAssetFilter" \
   -d "filter[entryIdEqual]=$ENTRY_ID"
 ```
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `filter[objectType]` | string | Yes | `KalturaAssetFilter` or `KalturaCaptionAssetFilter` |
+| `filter[entryIdEqual]` | string | Recommended | Filter by entry ID |
+| `pager[pageSize]` | integer | No | Results per page (default 30, max 500) |
+| `pager[pageIndex]` | integer | No | Page number (1-based, default 1) |
 
 **Filter fields (`KalturaCaptionAssetFilter`):**
 
@@ -321,6 +391,28 @@ curl -X POST "$KALTURA_SERVICE_URL/service/caption_captionAsset/action/update" \
 | `captionAsset[language]` | string | No | Updated language |
 | `captionAsset[isDefault]` | boolean | No | Update default status |
 
+**Response:** Updated `KalturaCaptionAsset` object.
+
+```json
+{
+  "id": "1_abc123de",
+  "entryId": "0_xyz789ab",
+  "partnerId": 1234567,
+  "label": "English (Corrected)",
+  "language": "English",
+  "languageCode": "en",
+  "format": 1,
+  "status": 2,
+  "isDefault": true,
+  "displayOnPlayer": true,
+  "size": 142,
+  "version": 2,
+  "createdAt": 1712620800,
+  "updatedAt": 1712621400,
+  "objectType": "KalturaCaptionAsset"
+}
+```
+
 The `format` field is insertOnly and cannot be changed after creation.
 
 ## 3.10 Set as Default Caption
@@ -332,7 +424,11 @@ curl -X POST "$KALTURA_SERVICE_URL/service/caption_captionAsset/action/setAsDefa
   -d "captionAssetId=$CAPTION_ASSET_ID"
 ```
 
-Marks this caption asset as the default for its entry. Automatically unsets the previous default.
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `captionAssetId` | string | Yes | Caption asset ID to set as default |
+
+Marks this caption asset as the default for its entry. Automatically unsets the previous default. Returns no response body on success.
 
 ## 3.11 Delete Caption Asset
 
@@ -342,6 +438,12 @@ curl -X POST "$KALTURA_SERVICE_URL/service/caption_captionAsset/action/delete" \
   -d "format=1" \
   -d "captionAssetId=$CAPTION_ASSET_ID"
 ```
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `captionAssetId` | string | Yes | Caption asset ID to delete |
+
+Returns no response body on success. The caption asset status transitions to `3` (DELETED).
 
 
 # 4. Serving Captions
@@ -353,6 +455,10 @@ Returns the caption content in its original format (SRT, DFXP, etc.):
 ```bash
 curl "$KALTURA_SERVICE_URL/service/caption_captionAsset/action/serve?ks=$KALTURA_KS&captionAssetId=$CAPTION_ASSET_ID"
 ```
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `captionAssetId` | string | Yes | Caption asset ID to serve |
 
 Returns a redirect to the CDN URL. Follow the redirect to get the raw content. The response Content-Type matches the caption format.
 
@@ -390,6 +496,10 @@ curl -X POST "$KALTURA_SERVICE_URL/service/caption_captionAsset/action/serveAsJs
   -d "format=1" \
   -d "captionAssetId=$CAPTION_ASSET_ID"
 ```
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `captionAssetId` | string | Yes | Caption asset ID to serve as JSON |
 
 **Response:**
 
@@ -436,7 +546,18 @@ curl -X POST "$KALTURA_SERVICE_URL/service/caption_captionAsset/action/getUrl" \
   -d "id=$CAPTION_ASSET_ID"
 ```
 
-Returns a direct CDN download URL string. Use `getUrl` + HTTP fetch for server-side consumption — `serve` returns a redirect which requires follow-redirect handling.
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | string | Yes | Caption asset ID |
+| `storageId` | integer | No | Storage profile ID (for multi-CDN setups) |
+
+**Response:** A direct CDN download URL string (JSON-encoded):
+
+```json
+"https://cfvod.kaltura.com/api_v3/service/caption_captionAsset/action/serve/captionAssetId/1_abc123de/ks/..."
+```
+
+Use `getUrl` + HTTP fetch for server-side consumption — `serve` returns a redirect which requires follow-redirect handling.
 
 
 # 5. Caption Parameters (Templates)
@@ -471,6 +592,35 @@ curl -X POST "$KALTURA_SERVICE_URL/service/caption_captionParams/action/add" \
   -d "captionParams[language]=English" \
   -d "captionParams[format]=1" \
   -d "captionParams[isDefault]=1"
+```
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `captionParams[objectType]` | string | Yes | Always `KalturaCaptionParams` |
+| `captionParams[name]` | string | Yes | Template name |
+| `captionParams[systemName]` | string | No | Machine-friendly identifier |
+| `captionParams[language]` | string | No | Default language (insertOnly) |
+| `captionParams[format]` | integer | No | Default caption format: `1`=SRT, `2`=DFXP, `3`=WEBVTT (insertOnly) |
+| `captionParams[label]` | string | No | Default display label |
+| `captionParams[isDefault]` | boolean | No | Set as default template |
+| `captionParams[tags]` | string | No | Tags for filtering |
+| `captionParams[description]` | string | No | Template description |
+| `captionParams[sourceParamsId]` | integer | No | Source params for conversion |
+
+**Response:** `KalturaCaptionParams` object with generated `id`.
+
+```json
+{
+  "id": 12345,
+  "partnerId": 1234567,
+  "name": "English SRT Template",
+  "systemName": "en_srt_template",
+  "language": "English",
+  "format": 1,
+  "label": "English Subtitles",
+  "isDefault": 1,
+  "objectType": "KalturaCaptionParams"
+}
 ```
 
 ## 5.3 Get / List / Update / Delete

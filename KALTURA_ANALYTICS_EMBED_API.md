@@ -199,28 +199,28 @@ Messages **from analytics app to host:**
 
 | messageType | Payload | Description |
 |-------------|---------|-------------|
-| `analyticsInit` | `{ menuConfig, viewsConfig }` | App loaded — sends default menu and viewsConfig for host to merge or override |
+| `analyticsInit` | `{ menuConfig: object, viewsConfig: object }` | App loaded — sends default menu and viewsConfig for host to merge or override before responding with `init` |
 | `analyticsInitComplete` | — | Initialization complete, app ready for `navigate` and `updateFilters` |
-| `updateLayout` | `{ height }` | Request host to resize iframe to the given height in pixels |
-| `scrollTo` | offset string | Request host to scroll the parent window to a pixel offset |
-| `navigateTo` | URL path string | User clicked a drill-down link — host should handle navigation (see section 9) |
+| `updateLayout` | `{ height: number }` | Request host to resize iframe to the given height in pixels. Handle this to avoid scrollbars inside the iframe |
+| `scrollTo` | `string` (pixel offset) | Request host to scroll the parent window to the specified pixel offset |
+| `navigateTo` | `string` (URL path) | User clicked a drill-down link — host should handle navigation (see section 9). Path includes entity type and ID |
 | `navigateBack` | — | User clicked back — host should navigate to the previous view |
 | `modalOpened` | — | A modal dialog opened inside analytics (host can dim its own UI) |
 | `modalClosed` | — | The modal dialog closed |
-| `logout` | — | Request host to log the user out |
+| `logout` | — | Request host to log the user out (handle by destroying the iframe or redirecting) |
 
 Messages **from host to analytics app:**  
 
 | messageType | Payload | Description |
 |-------------|---------|-------------|
-| `init` | Full config object | KS, pid, servers, viewsConfig — see section 4 |
-| `navigate` | `{ url, queryParams, prevRoute }` | Navigate to a specific view. `prevRoute` tracks the previous path for context-aware navigation |
-| `updateFilters` | `{ queryParams }` | Update date range or other filters (see section 7) |
-| `updateConfig` | Partial config object | Update configuration at runtime — use to refresh an expiring KS or change viewsConfig |
-| `setLanguage` | locale string | Change UI language at runtime (e.g., `'fr'`, `'ja'`) |
-| `updateMultiAccount` | `{ multiAccount: boolean }` | Toggle multi-account analytics on or off |
-| `toggleContrastTheme` | — | Toggle high-contrast accessibility theme |
-| `setLogsLevel` | `{ level: string }` | Set logging verbosity for debugging |
+| `init` | Full config object | KS, pid, servers, viewsConfig — see section 4 for the complete payload reference |
+| `navigate` | `{ url: string, queryParams: object, prevRoute: string }` | Navigate to a specific view. `url` is the analytics path (see section 6). `prevRoute` tracks the previous path for context-aware back navigation |
+| `updateFilters` | `{ queryParams: object }` | Update date range or other filters. Pass `dateBy` for presets or `dateFrom`/`dateTo` for custom ranges (see section 7) |
+| `updateConfig` | Partial config object | Update configuration at runtime — use to refresh an expiring KS (`{ ks: 'new-ks' }`) or change viewsConfig without reinitializing |
+| `setLanguage` | `string` (locale code) | Change UI language at runtime (e.g., `'fr'`, `'ja'`). See supported locales in section 4 |
+| `updateMultiAccount` | `{ multiAccount: boolean }` | Toggle multi-account analytics on or off. Requires `FEATURE_MULTI_ACCOUNT_ANALYTICS` permission |
+| `toggleContrastTheme` | — | Toggle high-contrast accessibility theme on or off |
+| `setLogsLevel` | `{ level: string }` | Set logging verbosity for debugging. Levels: `"off"`, `"error"`, `"warn"`, `"info"`, `"debug"`, `"trace"` |
 
 
 # 6. Navigation Paths
@@ -466,18 +466,103 @@ For multi-account analytics, the parent account must have the `FEATURE_MULTI_ACC
 # 12. Best Practices
 
 - **Hide the menu for single-view embeds.** Set `menuConfig.showMenu` to `false` when embedding a specific analytics view (e.g., entry analytics on a content detail page).  
-- **Handle `updateLayout` messages.** The analytics app sends `updateLayout` with the content height — resize the iframe dynamically to avoid scrollbars inside the iframe.  
+- **Handle `updateLayout` messages.** The analytics app sends `updateLayout` with the content height — resize the iframe dynamically to avoid scrollbars inside the iframe:  
+
+```javascript
+window.addEventListener('message', function(e) {
+  if (!e.data || e.data.messageType !== 'updateLayout') return;
+  var iframe = document.getElementById('analytics');
+  iframe.style.height = e.data.payload.height + 'px';
+});
+```
+
 - **Handle `navigateTo` messages.** When users click drill-down links, the analytics app sends navigation requests to the host. Implement routing logic to either re-navigate within the analytics iframe or redirect to your application's pages.  
 - **Refresh the KS proactively.** Send `updateConfig` with a fresh KS before the current one expires. This avoids silent API failures within the analytics dashboard.  
 - **Use `viewsConfig` to scope the UI.** Hide irrelevant widgets, filters, and buttons by setting their `viewsConfig` keys to `null`. This creates a focused, branded analytics experience.  
 
 
-# 13. Programmatic Alternative
+# 13. Complete Integration Example
+
+A full working example that handles the init handshake, dynamic iframe sizing, navigation, and KS refresh:
+
+```html
+<iframe id="analytics" title="analytics-iframe"
+  src="https://kmc.kaltura.com/apps/kmc-analytics/latest/index.html"
+  width="100%" height="800" style="border: none;"
+  allowfullscreen allow="autoplay *; fullscreen *; encrypted-media *">
+</iframe>
+
+<script>
+  var analyticsIframe = document.getElementById('analytics');
+  var currentKs = '$KS';
+
+  window.addEventListener('message', function(e) {
+    if (!e.data || !e.data.messageType) return;
+
+    switch (e.data.messageType) {
+      case 'analyticsInit':
+        // Step 1: Receive defaults, customize, send init
+        var viewsConfig = e.data.payload.viewsConfig;
+        viewsConfig.entry.backBtn = null;  // Hide back button in entry view
+        analyticsIframe.contentWindow.postMessage({
+          messageType: 'init',
+          payload: {
+            kalturaServer: { uri: 'https://www.kaltura.com', previewUIConfV7: 56732362 },
+            cdnServers: { securedServerUri: 'https://cdnapisec.kaltura.com' },
+            ks: currentKs,
+            pid: parseInt('$PARTNER_ID'),
+            locale: 'en',
+            menuConfig: { showMenu: false },
+            viewsConfig: viewsConfig
+          }
+        }, '*');
+        break;
+
+      case 'analyticsInitComplete':
+        // Step 2: App ready — navigate to the desired view
+        analyticsIframe.contentWindow.postMessage({
+          messageType: 'navigate',
+          payload: { url: '/analytics/engagement' }
+        }, '*');
+        break;
+
+      case 'updateLayout':
+        // Step 3: Resize iframe to match content height
+        analyticsIframe.style.height = e.data.payload.height + 'px';
+        break;
+
+      case 'navigateTo':
+        // Step 4: Handle drill-down clicks
+        var url = e.data.payload;
+        var entryMatch = url.match(/entry\/(\w+)/);
+        if (entryMatch) {
+          analyticsIframe.contentWindow.postMessage({
+            messageType: 'navigate',
+            payload: { url: '/analytics/entry', queryParams: { id: entryMatch[1] } }
+          }, '*');
+        }
+        break;
+    }
+  });
+
+  // Refresh KS before expiry
+  function refreshAnalyticsKs(newKs) {
+    currentKs = newKs;
+    analyticsIframe.contentWindow.postMessage({
+      messageType: 'updateConfig',
+      payload: { ks: newKs }
+    }, '*');
+  }
+</script>
+```
+
+
+# 14. Programmatic Alternative
 
 For full programmatic access to analytics data (custom reports, CSV exports, time-series queries), use the [Analytics Reports API](KALTURA_ANALYTICS_REPORTS_API.md) instead. The API provides more granular control over report parameters, date ranges, and output formats without requiring iframe integration.
 
 
-# 14. Related Guides
+# 15. Related Guides
 
 - **[Experience Components Overview](KALTURA_EXPERIENCE_COMPONENTS_API.md)** — Index of all embeddable components with shared guidelines  
 - **[Analytics Reports API](KALTURA_ANALYTICS_REPORTS_API.md)** — Programmatic analytics data access (alternative to iframe embed)  

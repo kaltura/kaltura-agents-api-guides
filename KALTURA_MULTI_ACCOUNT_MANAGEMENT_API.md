@@ -82,6 +82,8 @@ curl -X POST "$KALTURA_SERVICE_URL/service/partner/action/register" \
 
 The `partnerParentId` field links the child to the parent account. This relationship is set automatically when a parent account creates the child.
 
+> **Testing note:** `partner.register` creates a real child account that cannot be deleted via the API. It requires the calling account to have sub-account creation permissions (`SERVICE_FORBIDDEN` is returned otherwise). Test this action only when you intend to create a permanent child account. Verify your account has the necessary permissions before calling this endpoint.
+
 
 # 3. Sub-Account Management
 
@@ -230,6 +232,18 @@ curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getTable" \
   -d "responseOptions[delimiter]=|"
 ```
 
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `reportType` | integer | Yes | Multi-account report ID (20001-20023) or cross-partner report ID |
+| `reportInputFilter[objectType]` | string | Yes | Always `KalturaEndUserReportInputFilter` |
+| `reportInputFilter[fromDate]` | integer | Yes | Start of date range as Unix timestamp |
+| `reportInputFilter[toDate]` | integer | Yes | End of date range as Unix timestamp |
+| `pager[pageSize]` | integer | No | Results per page (default: 25, max: 500) |
+| `pager[pageIndex]` | integer | No | Page number, 1-based (default: 1) |
+| `objectIds` | string | No | Comma-separated partner IDs to filter to specific child accounts |
+| `responseOptions[objectType]` | string | No | Always `KalturaReportResponseOptions` |
+| `responseOptions[delimiter]` | string | No | Column delimiter in response (default: `,`, recommended: `\|`) |
+
 The `partnerParentId` dimension in the analytics backend links child account data to the parent, enabling aggregation without explicit child account enumeration.
 
 ## 5.3 Per-Account Usage Reports
@@ -277,6 +291,96 @@ curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getTable" \
 | 42 | Top content across accounts | `entry_id`, `partner_id`, `count_plays`, `sum_time_viewed` |
 
 All report calls use the same parameters: `reportType`, `reportInputFilter` (with `fromDate`/`toDate` as Unix timestamps), `pager`, and `responseOptions`. See [Analytics Reports Guide](KALTURA_ANALYTICS_REPORTS_API.md) for the full `report.getTable`/`report.getTotal` parameter reference.
+
+## 5.5 Report Response Format
+
+Report responses use **pipe-delimited strings** for both `header` and `data` fields. Rows within `data` are separated by semicolons.
+
+### report.getTable Response Structure
+
+```json
+{
+  "header": "partner_id|count_plays|sum_time_viewed|count_loads",
+  "data": "5678901|150|3600|400;5678902|75|1800|200",
+  "totalCount": 2,
+  "objectType": "KalturaReportTable"
+}
+```
+
+| Field | Format | Description |
+|-------|--------|-------------|
+| `header` | Pipe-delimited string | Column names separated by `\|` |
+| `data` | Semicolon-separated rows, pipe-delimited columns | Each row is separated by `;`, and columns within each row are separated by `\|` |
+| `totalCount` | Integer | Total rows available (for pagination) |
+
+### report.getTotal Response Structure
+
+```json
+{
+  "header": "count_plays|unique_known_users|sum_time_viewed",
+  "data": "1250|340|45600",
+  "objectType": "KalturaReportTotal"
+}
+```
+
+`report.getTotal` returns a single row (no semicolon separators in `data`).
+
+### Parsing Pipe-Delimited Report Data
+
+Parse the `header` and `data` fields by splitting on the delimiter characters:
+
+```bash
+# Example: Parse a multi-account report response
+RESPONSE=$(curl -s -X POST "$KALTURA_SERVICE_URL/service/report/action/getTable" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "reportType=20010" \
+  -d "reportInputFilter[objectType]=KalturaEndUserReportInputFilter" \
+  -d "reportInputFilter[fromDate]=$FROM_TIMESTAMP" \
+  -d "reportInputFilter[toDate]=$TO_TIMESTAMP" \
+  -d "pager[pageSize]=100" \
+  -d "pager[pageIndex]=1" \
+  -d "responseOptions[objectType]=KalturaReportResponseOptions" \
+  -d "responseOptions[delimiter]=|")
+
+# Extract header and data using jq
+HEADER=$(echo "$RESPONSE" | jq -r '.header')
+DATA=$(echo "$RESPONSE" | jq -r '.data')
+TOTAL=$(echo "$RESPONSE" | jq -r '.totalCount')
+
+# Parse header into column names
+IFS='|' read -ra COLUMNS <<< "$HEADER"
+echo "Columns: ${COLUMNS[*]}"
+
+# Parse each row
+IFS=';' read -ra ROWS <<< "$DATA"
+for ROW in "${ROWS[@]}"; do
+  IFS='|' read -ra FIELDS <<< "$ROW"
+  # Map fields to column names
+  for i in "${!COLUMNS[@]}"; do
+    echo "  ${COLUMNS[$i]}: ${FIELDS[$i]}"
+  done
+  echo "---"
+done
+```
+
+Example output for a multi-account Top Content report (20010):
+
+```
+Columns: object_id entry_name count_plays sum_time_viewed
+  object_id: 1_abc123
+  entry_name: Company Overview
+  count_plays: 150
+  sum_time_viewed: 3600
+---
+  object_id: 1_def456
+  entry_name: Product Demo
+  count_plays: 75
+  sum_time_viewed: 1800
+---
+```
+
+> The `responseOptions[delimiter]` parameter controls the column delimiter in the response. Use `|` (pipe) for consistency. If you set a different delimiter (e.g., `,`), adjust your parsing logic accordingly. Semicolons always separate rows regardless of the column delimiter setting.
 
 ## 5.4 Drill-Down into a Child Account
 

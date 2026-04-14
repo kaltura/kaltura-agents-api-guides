@@ -47,7 +47,10 @@ Load the Unisphere loader as an ES module and call `loader()` with your configur
       }]
     }]
   };
-  loader(options);
+  const workspace = await loader(options);
+
+  // Get the runtime instance for programmatic interaction (see section 10)
+  const genie = await workspace.getRuntimeAsync("unisphere.widget.genie", "chat");
 </script>
 ```
 
@@ -310,12 +313,57 @@ settings: {
 Short codes (e.g., `"en"`, `"he"`) are also accepted.
 
 
-# 10. Server-Side API
+# 10. Workspace Lifecycle
+
+The `loader()` function returns a workspace object for managing the Genie runtime:
+
+```javascript
+const workspace = await loader(options);
+```
+
+## Workspace Methods
+
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `getRuntime(widgetName, runtimeName)` | runtime | Get the Genie runtime synchronously. Returns `null` if not yet loaded |
+| `getRuntimeAsync(widgetName, runtimeName)` | Promise&lt;runtime&gt; | Get the Genie runtime asynchronously. Resolves when the runtime finishes loading |
+| `session.setData(updater)` | void | Update the workspace session. Use to refresh an expired KS without reloading the page |
+| `kill()` | void | Destroy the workspace, release the Genie runtime, and remove rendered DOM elements. Call when navigating away from the page |
+
+## Get Runtime Instance
+
+```javascript
+// Synchronous (returns null if not yet loaded)
+const genie = workspace.getRuntime("unisphere.widget.genie", "chat");
+
+// Asynchronous (waits for load)
+const genie = await workspace.getRuntimeAsync("unisphere.widget.genie", "chat");
+```
+
+## KS Refresh
+
+The widget does not automatically renew expired sessions. Refresh the KS without reloading:
+
+```javascript
+workspace.session.setData(prev => ({ ...prev, ks: "new-ks-token" }));
+```
+
+## Cleanup
+
+Call `workspace.kill()` when the user navigates away from the Genie page to release resources:
+
+```javascript
+// On page unload or SPA route change
+workspace.kill();
+```
+
+
+# 11. Server-Side API
 
 The Genie widget communicates with the Genie server automatically. For custom integrations that bypass the widget (server-to-server RAG search, streaming conversations, polling sessions), see the [AI Genie API Guide](KALTURA_AI_GENIE_API.md).
 
 
-# 11. Player Integration
+# 12. Player Integration
 
 The Genie chat can be embedded as a side panel inside the Kaltura Player v7 using three PlayKit plugins. This enables users to ask AI questions about the video they are watching.
 
@@ -341,12 +389,20 @@ Three plugins work together — all three must be included in the player configu
 
 ## Events
 
-| Event | Description |
-|-------|-------------|
-| `GENIE_OPEN_AUTO` | Genie panel opened automatically (via `expandOnFirstPlay`) |
-| `GENIE_OPEN_MANUAL` | Genie panel opened by user click |
-| `GENIE_CLOSE` | Genie panel closed |
-| `GENIE_NEW_THREAD` | User started a new conversation thread |
+Listen for Genie player plugin events via the player's event system:
+
+```javascript
+player.addEventListener('GENIE_OPEN_MANUAL', function(e) {
+  console.log('Genie panel opened by user');
+});
+```
+
+| Event | Payload | Description |
+|-------|---------|-------------|
+| `GENIE_OPEN_AUTO` | — | Genie panel opened automatically (via `expandOnFirstPlay`). Fires once on first play |
+| `GENIE_OPEN_MANUAL` | — | Genie panel opened by user clicking the Genie icon in the player controls |
+| `GENIE_CLOSE` | — | Genie panel closed by user or programmatically |
+| `GENIE_NEW_THREAD` | — | User started a new conversation thread, clearing the previous chat history |
 
 ## Player Setup Example
 
@@ -380,22 +436,26 @@ Three plugins work together — all three must be included in the player configu
 The `fallbackToPlayerKS: true` setting uses the player's provider KS for Genie authentication. If you need a separate KS with different privileges (e.g., `setrole:PLAYBACK_BASE_ROLE,sview:*` for Genie), pass it via the `ks` parameter instead.
 
 
-# 12. Error Handling
+# 13. Error Handling
 
 - **Blank container** — If the widget container renders empty, verify the `ks` is valid and the `partnerId` matches your account. Check the browser console for CORS errors or ES module import failures. The container `<div>` must have an `id` attribute matching the `target` value in the visuals config.  
 - **ES module import failure** — The Genie widget loads as an ES module (`type="module"`). Verify your page uses HTTPS and the browser supports ES modules. The `import` statement requires a script tag with `type="module"`.  
-- **KS expiry** — The widget does not automatically renew expired sessions. Generate a KS with sufficient expiry for the expected session duration.  
+- **KS expiry** — The widget does not automatically renew expired sessions. Use `workspace.session.setData()` to refresh the KS before it expires (see section 10). Generate a KS with sufficient expiry for the expected session duration.  
+- **Genie not configured for account** — If the widget loads but returns no results, verify that Genie (AI Search) is enabled and configured for your Kaltura account. The account must have indexed content for Genie to search.  
+- **Entitlement-protected content not appearing** — If Genie returns fewer results than expected, verify the KS includes `enableentitlement,privacycontext:<PRIVACY_CONTEXT>` for entitlement-protected content (see section 4).  
 
 
-# 13. Best Practices
+# 14. Best Practices
 
 - **Generate the KS server-side.** The Genie widget KS is visible client-side — generate USER sessions (type=0) with `setrole:PLAYBACK_BASE_ROLE` on your backend. Never embed admin secrets in client-side code.  
 - **Scope content with category privileges.** Use `geniecategoryid` or `genieancestorid` KS privileges to limit queries to relevant content rather than exposing the entire library.  
 - **Size the container explicitly.** The widget fills the available space in the container `<div>` — set explicit `width` and `height` via CSS.  
 - **Use HTTPS.** The embed URL and all component URLs must use HTTPS for ES module imports and secure media access.  
+- **Clean up on navigation.** Call `workspace.kill()` when the user navigates away from the Genie page to release all runtimes and remove rendered DOM elements (see section 10).  
+- **Refresh KS before expiry.** Call `workspace.session.setData()` to refresh the KS without reloading the workspace. This avoids interrupting an active conversation.  
 
 
-# 14. Related Guides
+# 15. Related Guides
 
 - **[Unisphere Framework](KALTURA_UNISPHERE_FRAMEWORK_API.md)** — The micro-frontend framework that powers this widget: loader, workspace lifecycle, services, multi-runtime composition  
 - **[Experience Components Overview](KALTURA_EXPERIENCE_COMPONENTS_API.md)** — Index of all embeddable components with shared guidelines  

@@ -103,7 +103,62 @@ The VOD Avatar Studio provides a guided workflow:
 The generated video is stored as a standard Kaltura media entry, accessible through the Kaltura API for playback, embedding, and further processing (captions, chapters, etc.).
 
 
-# 6. KS Requirements
+# 6. Host-Page Integration
+
+The VOD Avatar Studio is a self-contained UI. It does not expose programmatic methods for script input, avatar selection, generation triggering, or real-time progress events to the host page. All interaction happens through the rendered studio interface.
+
+To detect when a video has been generated, poll the Kaltura API for new entries created by the studio. The studio saves generated videos as standard media entries owned by the KS user.
+
+## Detecting Generated Videos
+
+Poll `media.list` with a filter on the KS user and creation date to find newly generated avatar videos:
+
+```bash
+# List recent entries created by the avatar studio user
+curl -X POST "$KALTURA_SERVICE_URL/service/media/action/list" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "filter[objectType]=KalturaMediaEntryFilter" \
+  -d "filter[createdAtGreaterThanOrEqual]=$TIMESTAMP" \
+  -d "filter[orderBy]=-createdAt" \
+  -d "pager[pageSize]=10"
+```
+
+Once you have the entry ID, poll `media.get` to check when rendering is complete:
+
+```bash
+# Check entry status (status=2 means READY)
+curl -X POST "$KALTURA_SERVICE_URL/service/media/action/get" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "entryId=$ENTRY_ID"
+```
+
+Entry status values:
+
+| Status | Value | Meaning |
+|--------|-------|---------|
+| IMPORT | 0 | Entry created, awaiting content |
+| PRECONVERT | 1 | Content uploaded, awaiting transcoding |
+| READY | 2 | Video is ready for playback |
+| ERROR_CONVERTING | -1 | Transcoding failed |
+
+Poll at 10-15 second intervals until `status` equals `2` (READY). Avatar video rendering can take several minutes depending on script length.
+
+## Workspace Lifecycle
+
+The host page can manage the workspace session and lifecycle:
+
+```javascript
+// Refresh the KS when it approaches expiry
+workspace.session.setData(prev => ({ ...prev, ks: "new-ks-value" }));
+
+// Destroy the workspace when the user navigates away
+workspace.kill();
+```
+
+
+# 7. KS Requirements
 
 The VOD Avatar Studio accesses avatar services and creates media entries. Generate the KS server-side with admin privileges:
 
@@ -120,7 +175,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/session/action/start" \
 **Required access:** The KS must have admin privileges (type=2) for avatar service access and media entry creation. The account must have the VOD Avatar feature provisioned.
 
 
-# 7. Error Handling
+# 8. Error Handling
 
 - **Blank studio** — If the studio renders empty, verify the KS is valid and the `partnerId` matches your account. The account must have the VOD Avatar feature enabled. Check the browser console for API errors.  
 - **No avatars available** — Avatar availability depends on your account configuration. Contact your Kaltura account manager to configure available avatar presenters.  
@@ -128,7 +183,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/session/action/start" \
 - **KS expiry** — Update the workspace session reactively: `workspace.session.setData(prev => ({ ...prev, ks: "new-ks" }))`.  
 
 
-# 8. Best Practices
+# 9. Best Practices
 
 - **Generate the KS server-side.** The KS is visible in client-side code — generate it on your backend with admin privileges.  
 - **Set `partnerId` as a number.** Unlike most Unisphere widgets that accept string IDs, the VOD Avatar Studio requires `partnerId` as a number type.  
@@ -137,7 +192,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/session/action/start" \
 - **Process generated videos.** After generation, the resulting Kaltura entry can be processed with other services — add captions via [REACH](KALTURA_REACH_API.md), generate chapters via [Content Lab](KALTURA_CONTENT_LAB_API.md), or set up automated processing via [Agents](KALTURA_AGENTS_MANAGER_API.md).  
 
 
-# 9. Multi-Region
+# 10. Multi-Region
 
 | Region | Server URL |
 |--------|-----------|
@@ -148,7 +203,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/session/action/start" \
 Set the `serverUrl` in the workspace configuration to match your Kaltura account region.
 
 
-# 10. Related Guides
+# 11. Related Guides
 
 - **[Conversational Avatar Embed](KALTURA_CONVERSATIONAL_AVATAR_API.md)** — Real-time AI avatar conversations via iframe SDK or WebRTC — the live counterpart to this pre-recorded studio  
 - **[Unisphere Framework](KALTURA_UNISPHERE_FRAMEWORK_API.md)** — The micro-frontend framework that powers this widget: loader, workspace lifecycle, services  

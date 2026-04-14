@@ -100,6 +100,21 @@ The `status` is always set to `"enabled"` on creation (cannot be overridden). Th
 
 **Response:** Full app object with generated `id`.
 
+```json
+{
+  "id": "6f8a3c12-4b5d-4e9f-a1c7-8d2e3f4a5b6c",
+  "partnerId": 1234567,
+  "appCustomId": "my-events-site-01",
+  "appCustomName": "Annual Conference Portal",
+  "appType": "ep",
+  "status": "enabled",
+  "version": 0,
+  "createdAt": "2026-04-09T04:56:27.940Z",
+  "updatedAt": "2026-04-09T04:56:27.940Z",
+  "objectType": "App"
+}
+```
+
 ```bash
 curl -X POST "$KALTURA_APP_REGISTRY_URL/app-registry/add" \
   -H "Authorization: Bearer $KALTURA_KS" \
@@ -146,6 +161,21 @@ Authorization: Bearer <KS>
 
 **Response:** Full app object.
 
+```json
+{
+  "id": "6f8a3c12-4b5d-4e9f-a1c7-8d2e3f4a5b6c",
+  "partnerId": 1234567,
+  "appCustomId": "my-events-site-01",
+  "appCustomName": "Annual Conference Portal",
+  "appType": "ep",
+  "status": "enabled",
+  "version": 0,
+  "createdAt": "2026-04-09T04:56:27.940Z",
+  "updatedAt": "2026-04-09T04:56:27.940Z",
+  "objectType": "App"
+}
+```
+
 ```bash
 curl -X POST "$KALTURA_APP_REGISTRY_URL/app-registry/get" \
   -H "Authorization: Bearer $KALTURA_KS" \
@@ -183,6 +213,21 @@ Fields not included in the request body (or set to `null`) remain unchanged. The
 
 **Response:** Full app object with `version` incremented by 1 and `updatedAt` refreshed.
 
+```json
+{
+  "id": "6f8a3c12-4b5d-4e9f-a1c7-8d2e3f4a5b6c",
+  "partnerId": 1234567,
+  "appCustomId": "my-events-site-01",
+  "appCustomName": "Updated Conference Portal",
+  "appType": "ep",
+  "status": "enabled",
+  "version": 1,
+  "createdAt": "2026-04-09T04:56:27.940Z",
+  "updatedAt": "2026-04-09T05:12:44.310Z",
+  "objectType": "App"
+}
+```
+
 ```bash
 curl -X POST "$KALTURA_APP_REGISTRY_URL/app-registry/update" \
   -H "Authorization: Bearer $KALTURA_KS" \
@@ -214,7 +259,7 @@ Authorization: Bearer <KS>
 |-------|------|----------|-------------|
 | `id` | string | Yes | App GUID to delete |
 
-**Response:** Empty body on success (HTTP 200).
+**Response:** Empty body on success (HTTP 200). Returns `OBJECT_NOT_FOUND` if the app does not exist for your partner.
 
 ```bash
 curl -X POST "$KALTURA_APP_REGISTRY_URL/app-registry/delete" \
@@ -222,8 +267,6 @@ curl -X POST "$KALTURA_APP_REGISTRY_URL/app-registry/delete" \
   -H "Content-Type: application/json" \
   -d "{\"id\": \"$APP_GUID\"}"
 ```
-
-Returns `OBJECT_NOT_FOUND` if the app does not exist for your partner.
 
 
 # 7. Enable / Disable an App
@@ -248,7 +291,30 @@ curl -X POST "$KALTURA_APP_REGISTRY_URL/app-registry/disable" \
   -d "{\"id\": \"$APP_GUID\"}"
 ```
 
-Both accept `{ "id": "<app-guid>" }` and return the full app object. The `version` increments only if the status actually changed. Enabling an already-enabled app (or disabling an already-disabled one) returns the current state without incrementing `version`.
+Both endpoints accept a single parameter:
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | string | Yes | App GUID to enable or disable |
+
+**Response:** Full app object with updated status.
+
+```json
+{
+  "id": "6f8a3c12-4b5d-4e9f-a1c7-8d2e3f4a5b6c",
+  "partnerId": 1234567,
+  "appCustomId": "my-events-site-01",
+  "appCustomName": "Annual Conference Portal",
+  "appType": "ep",
+  "status": "disabled",
+  "version": 2,
+  "createdAt": "2026-04-09T04:56:27.940Z",
+  "updatedAt": "2026-04-09T05:30:12.880Z",
+  "objectType": "App"
+}
+```
+
+The `version` increments only if the status actually changed. Enabling an already-enabled app (or disabling an already-disabled one) returns the current state without incrementing `version`.
 
 
 # 8. List Apps
@@ -305,14 +371,15 @@ If the pager is omitted entirely, defaults of `offset: 0, limit: 30` are used.
 {
   "objects": [
     {
-      "id": "...",
-      "appCustomId": "...",
-      "appCustomName": "...",
+      "id": "6f8a3c12-4b5d-4e9f-a1c7-8d2e3f4a5b6c",
+      "partnerId": 1234567,
+      "appCustomId": "my-events-site-01",
+      "appCustomName": "Annual Conference Portal",
       "appType": "ep",
       "status": "enabled",
       "version": 0,
-      "createdAt": 1718467200,
-      "updatedAt": 1718467200,
+      "createdAt": "2026-04-09T04:56:27.940Z",
+      "updatedAt": "2026-04-09T04:56:27.940Z",
       "objectType": "App"
     }
   ],
@@ -363,7 +430,31 @@ Authorization: Bearer <KS>
 | `organizationId` | string | No | Organization to filter by |
 | `pager` | object | No | Pagination (offset/limit, same defaults as list) |
 
-**Response:** Same `{ objects, totalCount }` structure as `list`.
+**Response:** Same `{ objects, totalCount }` structure as `list`:
+
+```json
+{
+  "objects": [
+    {
+      "id": "a2b3c4d5-6e7f-8a9b-0c1d-2e3f4a5b6c7d",
+      "partnerId": 1234567,
+      "appCustomId": "kms-main",
+      "appCustomName": "Corporate MediaSpace",
+      "appType": "kms",
+      "status": "enabled",
+      "version": 3,
+      "organizationDomain": {
+        "organizationId": "org-123",
+        "domain": "example.com"
+      },
+      "createdAt": "2026-03-15T10:22:00.000Z",
+      "updatedAt": "2026-04-01T14:30:00.000Z",
+      "objectType": "App"
+    }
+  ],
+  "totalCount": 1
+}
+```
 
 The domain search supports comma-separated domain lists in app records — a search for `example.com` matches apps registered with `example.com`, `example.com,other.com`, etc.
 
@@ -392,12 +483,20 @@ Application-level errors return HTTP 200 with an error object:
 ```json
 {
   "code": "OBJECT_NOT_FOUND",
-  "message": "Description of the error",
+  "message": "Object not found",
   "objectType": "KalturaAPIException"
 }
 ```
 
-Validation errors (missing required fields, invalid enum values) return HTTP 400.
+Validation errors (missing required fields, invalid enum values) return HTTP 400:
+
+```json
+{
+  "code": "VALIDATION_ERROR",
+  "message": "appCustomId is required",
+  "objectType": "KalturaAPIException"
+}
+```
 
 | Error Code | Meaning |
 |------------|---------|

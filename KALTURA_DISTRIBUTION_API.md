@@ -131,6 +131,28 @@ Base fields (all `KalturaDistributionProfile` subtypes):
 
 Create a new distribution profile. The `objectType` and provider-specific fields vary by connector type.
 
+**Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `partnerId` | int | Yes | Your partner ID (must be in the request body, not just the KS) |
+| `distributionProfile[objectType]` | string | Yes | Profile class (e.g., `KalturaYoutubeApiDistributionProfile`, `KalturaFtpDistributionProfile`, `KalturaCrossKalturaDistributionProfile`, `KalturaGenericDistributionProfile`) |
+| `distributionProfile[name]` | string | Yes | Display name |
+| `distributionProfile[status]` | int | No | 1=DISABLED (default), 2=ENABLED |
+| `distributionProfile[submitEnabled]` | int | No | 1=DISABLED, 2=AUTOMATIC, 3=MANUAL |
+| `distributionProfile[updateEnabled]` | int | No | 1=DISABLED, 2=AUTOMATIC, 3=MANUAL |
+| `distributionProfile[deleteEnabled]` | int | No | 1=DISABLED, 2=AUTOMATIC, 3=MANUAL |
+| `distributionProfile[reportEnabled]` | int | No | 1=DISABLED, 2=AUTOMATIC |
+| `distributionProfile[distributeTrigger]` | int | No | 1=ENTRY_READY, 2=MODERATION_APPROVED |
+| `distributionProfile[requiredFlavorParamsIds]` | string | No | Comma-separated required flavor params IDs (e.g., `"0"` for source) |
+| `distributionProfile[optionalFlavorParamsIds]` | string | No | Comma-separated optional flavor params IDs |
+| `distributionProfile[autoCreateFlavors]` | bool | No | Auto-create missing flavors during validation |
+| `distributionProfile[autoCreateThumb]` | bool | No | Auto-create missing thumbnails during validation |
+| `distributionProfile[sunriseDefaultOffset]` | int | No | Default sunrise offset in seconds |
+| `distributionProfile[sunsetDefaultOffset]` | int | No | Default sunset offset in seconds |
+
+Additional provider-specific fields depend on the `objectType` (see section 7 for connector-specific fields).
+
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_distributionProfile/action/add" \
   -d "ks=$KALTURA_KS" \
@@ -156,7 +178,11 @@ Profile creation requires provider-specific configuration (OAuth credentials for
 
 ## 4.3 distributionProfile.get
 
-Retrieve a distribution profile by ID:
+Retrieve a distribution profile by ID.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | int | Yes | Distribution profile ID |
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_distributionProfile/action/get" \
@@ -187,7 +213,20 @@ curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_distributionProfi
 
 ## 4.4 distributionProfile.list
 
-List distribution profiles with optional filters:
+List distribution profiles with optional filters.
+
+**Filter parameters** (all optional, use `filter[objectType]=KalturaDistributionProfileFilter`):
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `filter[statusEqual]` | int | Filter by status: 1=DISABLED, 2=ENABLED |
+| `filter[idEqual]` | int | Filter by specific profile ID |
+| `filter[idIn]` | string | Comma-separated profile IDs |
+| `filter[providerTypeEqual]` | string | Filter by provider type (e.g., `youtubeApiDistribution.YOUTUBE_API`) |
+| `pager[pageSize]` | int | Results per page (default 30) |
+| `pager[pageIndex]` | int | Page number (1-based) |
+
+**Response:** `{objects: [...], totalCount: N, objectType: "KalturaDistributionProfileListResponse"}`
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_distributionProfile/action/list" \
@@ -207,7 +246,19 @@ curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_distributionProfi
 
 ## 4.5 distributionProfile.update
 
-Update distribution profile fields:
+Update distribution profile fields. Only include the fields you want to change.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | int | Yes | Profile ID to update |
+| `distributionProfile[objectType]` | string | Yes | Must match the profile's type |
+| `distributionProfile[name]` | string | No | Updated name |
+| `distributionProfile[submitEnabled]` | int | No | Updated submit mode (1/2/3) |
+| `distributionProfile[updateEnabled]` | int | No | Updated update mode (1/2/3) |
+| `distributionProfile[deleteEnabled]` | int | No | Updated delete mode (1/2/3) |
+| `distributionProfile[distributeTrigger]` | int | No | Updated trigger (1=ENTRY_READY, 2=MODERATION_APPROVED) |
+
+**Response:** Updated profile object with all fields.
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_distributionProfile/action/update" \
@@ -223,7 +274,14 @@ The `protocol` field on FTP profiles is immutable after creation — include it 
 
 ## 4.6 distributionProfile.updateStatus
 
-Enable or disable a distribution profile:
+Enable or disable a distribution profile.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | int | Yes | Profile ID |
+| `status` | int | Yes | 1=DISABLED, 2=ENABLED |
+
+**Response:** Updated profile object.
 
 ```bash
 # Disable
@@ -245,7 +303,11 @@ curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_distributionProfi
 
 ## 4.7 distributionProfile.delete
 
-Delete a distribution profile:
+Delete a distribution profile.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | int | Yes | Profile ID to delete |
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_distributionProfile/action/delete" \
@@ -281,7 +343,19 @@ Entry distributions bind a specific media entry to a distribution profile, track
 
 ## 5.2 entryDistribution.add
 
-Bind an entry to a distribution profile:
+Bind an entry to a distribution profile.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `entryDistribution[objectType]` | string | Yes | Must be `KalturaEntryDistribution` |
+| `entryDistribution[entryId]` | string | Yes | Kaltura entry ID to distribute |
+| `entryDistribution[distributionProfileId]` | int | Yes | Target distribution profile ID |
+| `entryDistribution[thumbAssetIds]` | string | No | Comma-separated thumbnail asset IDs to distribute |
+| `entryDistribution[flavorAssetIds]` | string | No | Comma-separated flavor asset IDs to distribute |
+| `entryDistribution[sunrise]` | int | No | Unix timestamp when content becomes active on remote |
+| `entryDistribution[sunset]` | int | No | Unix timestamp when content expires on remote |
+
+**Response:** Entry distribution object with `id`, `entryId`, `distributionProfileId`, `status` (0=PENDING).
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution/action/add" \
@@ -296,7 +370,11 @@ The new entry distribution starts in PENDING status (0). Optionally set `thumbAs
 
 ## 5.3 entryDistribution.validate
 
-Validate an entry against the distribution profile requirements before submitting:
+Validate an entry against the distribution profile requirements before submitting.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | int | Yes | Entry distribution ID |
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution/action/validate" \
@@ -333,7 +411,12 @@ If `autoCreateFlavors` or `autoCreateThumb` is enabled on the profile, missing a
 
 ## 5.4 entryDistribution.submitAdd
 
-Submit an entry to the remote platform:
+Submit an entry to the remote platform.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | int | Yes | Entry distribution ID |
+| `submitWhenReady` | bool | No | `true` to queue until entry is ready; `false` to submit immediately |
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution/action/submitAdd" \
@@ -342,6 +425,8 @@ curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution
   -d "id=$ENTRY_DISTRIBUTION_ID" \
   -d "submitWhenReady=true"
 ```
+
+**Response:** Updated entry distribution object. Status transitions to QUEUED (1) or SUBMITTING (4). On success, status becomes READY (2) and `remoteId` is populated.
 
 The `submitWhenReady` parameter (boolean):
 - `true` — if the entry is still processing, queue the submission until the entry reaches READY status
@@ -357,7 +442,23 @@ The submission pipeline:
 
 ## 5.5 entryDistribution.list
 
-List entry distributions with filters:
+List entry distributions with filters.
+
+**Filter parameters** (all optional, use `filter[objectType]=KalturaEntryDistributionFilter`):
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `filter[entryIdEqual]` | string | Filter by Kaltura entry ID |
+| `filter[distributionProfileIdEqual]` | int | Filter by distribution profile ID |
+| `filter[statusEqual]` | int | Filter by status (see section 10.1) |
+| `filter[statusIn]` | string | Comma-separated statuses |
+| `filter[dirtyStatusEqual]` | int | Filter by dirty status |
+| `filter[sunriseGreaterThanOrEqual]` | int | Filter by minimum sunrise timestamp |
+| `filter[sunsetLessThanOrEqual]` | int | Filter by maximum sunset timestamp |
+| `pager[pageSize]` | int | Results per page (default 30) |
+| `pager[pageIndex]` | int | Page number (1-based) |
+
+**Response:** `{objects: [...], totalCount: N, objectType: "KalturaEntryDistributionListResponse"}`
 
 ```bash
 # List all entry distributions
@@ -395,7 +496,11 @@ curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution
 
 ## 5.6 entryDistribution.get
 
-Retrieve a specific entry distribution:
+Retrieve a specific entry distribution.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | int | Yes | Entry distribution ID |
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution/action/get" \
@@ -404,9 +509,22 @@ curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution
   -d "id=$ENTRY_DISTRIBUTION_ID"
 ```
 
+**Response:** Full entry distribution object (see section 5.1 for field definitions).
+
 ## 5.7 entryDistribution.update
 
-Update entry distribution fields (sunrise/sunset scheduling, asset selection):
+Update entry distribution fields (sunrise/sunset scheduling, asset selection).
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | int | Yes | Entry distribution ID |
+| `entryDistribution[objectType]` | string | Yes | Must be `KalturaEntryDistribution` |
+| `entryDistribution[sunrise]` | int | No | Updated sunrise Unix timestamp |
+| `entryDistribution[sunset]` | int | No | Updated sunset Unix timestamp |
+| `entryDistribution[thumbAssetIds]` | string | No | Updated thumbnail asset IDs |
+| `entryDistribution[flavorAssetIds]` | string | No | Updated flavor asset IDs |
+
+**Response:** Updated entry distribution object.
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution/action/update" \
@@ -420,7 +538,11 @@ curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution
 
 ## 5.8 entryDistribution.submitUpdate
 
-Push metadata or content updates to the remote platform:
+Push metadata or content updates to the remote platform.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | int | Yes | Entry distribution ID |
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution/action/submitUpdate" \
@@ -429,11 +551,17 @@ curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution
   -d "id=$ENTRY_DISTRIBUTION_ID"
 ```
 
+**Response:** Updated entry distribution object. Status transitions to UPDATING (5).
+
 Valid when current status is READY (2), ERROR_UPDATING (8), ERROR_DELETING (9), or IMPORT_UPDATING (12).
 
 ## 5.9 entryDistribution.submitDelete
 
-Remove the entry from the remote platform:
+Remove the entry from the remote platform.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | int | Yes | Entry distribution ID |
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution/action/submitDelete" \
@@ -442,11 +570,17 @@ curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution
   -d "id=$ENTRY_DISTRIBUTION_ID"
 ```
 
+**Response:** Updated entry distribution object. Status transitions to DELETING (6), then REMOVED (10) on success.
+
 Valid when current status is READY (2), ERROR_DELETING (9), or ERROR_UPDATING (8).
 
 ## 5.10 entryDistribution.submitFetchReport
 
-Request a delivery report from the remote platform:
+Request a delivery report from the remote platform.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | int | Yes | Entry distribution ID |
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution/action/submitFetchReport" \
@@ -459,7 +593,11 @@ Valid only when status is READY (2). The distribution profile must have `reportE
 
 ## 5.11 entryDistribution.retrySubmit
 
-Retry the last failed operation:
+Retry the last failed operation.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | int | Yes | Entry distribution ID (must be in an ERROR_* status) |
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution/action/retrySubmit" \
@@ -468,11 +606,16 @@ curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution
   -d "id=$ENTRY_DISTRIBUTION_ID"
 ```
 
-Use this when an entry distribution is in an ERROR_* status to re-attempt the failed operation.
+Use this when an entry distribution is in an ERROR_* status (7, 8, or 9) to re-attempt the failed operation. The operation retried corresponds to the status: ERROR_SUBMITTING retries submit, ERROR_UPDATING retries update, ERROR_DELETING retries delete.
 
 ## 5.12 entryDistribution.serveSentData / serveReturnedData
 
-Retrieve the raw XML data sent to or received from the remote platform for debugging:
+Retrieve the raw XML data sent to or received from the remote platform for debugging.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | int | Yes | Entry distribution ID |
+| `actionType` | int | Yes | 1=SUBMIT, 2=UPDATE, 3=DELETE |
 
 ```bash
 # Get XML sent to the remote platform (actionType: 1=SUBMIT, 2=UPDATE, 3=DELETE)
@@ -504,7 +647,11 @@ These endpoints return `text/html` with the raw XML payload. The body is empty (
 
 ## 5.13 entryDistribution.delete
 
-Delete the entry distribution record:
+Delete the entry distribution record.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | int | Yes | Entry distribution ID |
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution/action/delete" \
@@ -618,6 +765,35 @@ Key fields:
 | `googleClientSecret` | OAuth 2.0 client secret |
 | `apiAuthorizeUrl` | OAuth authorization URL (auto-generated) |
 
+**YouTube category IDs** (used in `defaultCategory`):
+
+| ID | Category |
+|----|----------|
+| 1 | Film & Animation |
+| 2 | Autos & Vehicles |
+| 10 | Music |
+| 15 | Pets & Animals |
+| 17 | Sports |
+| 19 | Travel & Events |
+| 20 | Gaming |
+| 22 | People & Blogs |
+| 23 | Comedy |
+| 24 | Entertainment |
+| 25 | News & Politics |
+| 26 | Howto & Style |
+| 27 | Education |
+| 28 | Science & Technology |
+| 29 | Nonprofits & Activism |
+
+**YouTube OAuth setup:** The YouTube connector requires OAuth 2.0 authorization to access a YouTube channel. The setup flow is:
+
+1. Configure `googleClientId` and `googleClientSecret` on the distribution profile (obtain these from the Google Cloud Console for your project)
+2. The profile's `apiAuthorizeUrl` field contains the OAuth authorization URL. Open this URL in a browser to grant the Kaltura distribution engine access to the target YouTube channel
+3. Complete the Google OAuth consent flow — the resulting refresh token is stored server-side on the profile
+4. Once authorized, the profile can push content to the YouTube channel via the YouTube Data API
+
+This authorization is typically done once during profile setup through the KMC (Kaltura Management Console). The refresh token is automatically renewed by the distribution engine.
+
 When an entry is successfully distributed to YouTube, the `remoteId` field on the entry distribution is populated with the YouTube video ID.
 
 ## 7.2 Facebook Distribution
@@ -636,6 +812,15 @@ Key fields:
 | `userAccessToken` | User-level access token |
 | `apiAuthorizeUrl` | OAuth authorization URL |
 | `permissions` | Requested Facebook permissions |
+
+**Facebook OAuth setup:** The Facebook connector requires OAuth authorization to post to a Facebook Page. The setup flow is:
+
+1. Configure the distribution profile with your Facebook app credentials
+2. The profile's `apiAuthorizeUrl` field contains the Facebook OAuth authorization URL. Open this URL in a browser to grant the Kaltura distribution engine access to the target Facebook Page
+3. Complete the Facebook OAuth consent flow, granting the required permissions (`pages_manage_posts`, `pages_read_engagement`, etc.)
+4. The resulting `pageAccessToken` and `userAccessToken` are stored on the profile. Facebook page tokens are long-lived but may need re-authorization if permissions change
+
+This authorization is typically done once during profile setup through the KMC (Kaltura Management Console).
 
 ## 7.3 Cross-Kaltura Distribution
 
