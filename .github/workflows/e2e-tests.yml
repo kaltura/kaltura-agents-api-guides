@@ -5,12 +5,24 @@ on:
     branches: [main]
     paths:
       - "KALTURA_EXPERIENCE_COMPONENTS_API.md"
+      - "KALTURA_EXPRESS_RECORDER_API.md"
+      - "KALTURA_CAPTIONS_EDITOR_API.md"
+      - "KALTURA_CONVERSATIONAL_AVATAR_API.md"
+      - "KALTURA_CNC_API.md"
+      - "KALTURA_GENIE_WIDGET_API.md"
+      - "KALTURA_ANALYTICS_EMBED_API.md"
       - "tests/test_experience_components_*.py"
       - "tests/test_helpers.py"
       - ".github/workflows/e2e-tests.yml"
   pull_request:
     paths:
       - "KALTURA_EXPERIENCE_COMPONENTS_API.md"
+      - "KALTURA_EXPRESS_RECORDER_API.md"
+      - "KALTURA_CAPTIONS_EDITOR_API.md"
+      - "KALTURA_CONVERSATIONAL_AVATAR_API.md"
+      - "KALTURA_CNC_API.md"
+      - "KALTURA_GENIE_WIDGET_API.md"
+      - "KALTURA_ANALYTICS_EMBED_API.md"
       - "tests/test_experience_components_*.py"
       - "tests/test_helpers.py"
       - ".github/workflows/e2e-tests.yml"
@@ -20,7 +32,6 @@ jobs:
   api-tests:
     name: API validation (KS + Genie auth)
     runs-on: ubuntu-latest
-    if: ${{ secrets.KALTURA_PARTNER_ID != '' }}
     env:
       KALTURA_PARTNER_ID: ${{ secrets.KALTURA_PARTNER_ID }}
       KALTURA_KS: ${{ secrets.KALTURA_KS }}
@@ -29,22 +40,35 @@ jobs:
       KALTURA_GENIE_URL: ${{ secrets.KALTURA_GENIE_URL }}
       KALTURA_PLAYER_ID: ${{ secrets.KALTURA_PLAYER_ID }}
     steps:
+      - name: Check for API credentials
+        id: check-secrets
+        run: |
+          if [ -z "$KALTURA_PARTNER_ID" ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::Skipping API tests — KALTURA_PARTNER_ID secret not configured"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - uses: actions/checkout@v4
+        if: steps.check-secrets.outputs.skip != 'true'
 
       - uses: actions/setup-python@v5
+        if: steps.check-secrets.outputs.skip != 'true'
         with:
           python-version: "3.12"
 
       - name: Install dependencies
+        if: steps.check-secrets.outputs.skip != 'true'
         run: pip install requests
 
       - name: Run API tests
+        if: steps.check-secrets.outputs.skip != 'true'
         run: python3 tests/test_experience_components_api.py
 
   browser-e2e:
     name: Browser E2E (Playwright)
     runs-on: ubuntu-latest
-    if: ${{ secrets.KALTURA_PARTNER_ID != '' }}
     env:
       KALTURA_PARTNER_ID: ${{ secrets.KALTURA_PARTNER_ID }}
       KALTURA_KS: ${{ secrets.KALTURA_KS }}
@@ -53,16 +77,30 @@ jobs:
       KALTURA_GENIE_URL: ${{ secrets.KALTURA_GENIE_URL }}
       KALTURA_PLAYER_ID: ${{ secrets.KALTURA_PLAYER_ID }}
     steps:
+      - name: Check for API credentials
+        id: check-secrets
+        run: |
+          if [ -z "$KALTURA_PARTNER_ID" ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::Skipping browser E2E tests — KALTURA_PARTNER_ID secret not configured"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - uses: actions/checkout@v4
+        if: steps.check-secrets.outputs.skip != 'true'
 
       - uses: actions/setup-python@v5
+        if: steps.check-secrets.outputs.skip != 'true'
         with:
           python-version: "3.12"
 
       - name: Install dependencies
+        if: steps.check-secrets.outputs.skip != 'true'
         run: |
           pip install requests playwright
           playwright install --with-deps chromium
 
       - name: Run browser E2E tests
+        if: steps.check-secrets.outputs.skip != 'true'
         run: python3 tests/test_experience_components_e2e.py
