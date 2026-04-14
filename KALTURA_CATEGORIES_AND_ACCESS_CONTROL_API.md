@@ -120,7 +120,29 @@ curl -X POST "$KALTURA_SERVICE_URL/service/category/action/add" \
 | `category[appearInList]` | integer | No | Visibility in listings (1=PARTNER_ONLY, 3=CATEGORY_MEMBERS_ONLY) |
 | `category[contributionPolicy]` | integer | No | Who can assign content (1=ALL, 2=MEMBERS_WITH_CONTRIBUTION_PERMISSION) |
 
-**Response:** Full `KalturaCategory` object with generated `id` and `status=2` (ACTIVE).
+**Response:**
+
+```json
+{
+  "id": 12345,
+  "name": "Training",
+  "fullName": "Training",
+  "fullIds": "12345",
+  "parentId": 0,
+  "depth": 0,
+  "status": 2,
+  "privacy": 1,
+  "entriesCount": 0,
+  "directEntriesCount": 0,
+  "directSubCategoriesCount": 0,
+  "membersCount": 0,
+  "description": "Training materials",
+  "tags": "training,onboarding",
+  "createdAt": 1718467200,
+  "updatedAt": 1718467200,
+  "objectType": "KalturaCategory"
+}
+```
 
 ### Creating a Child Category
 

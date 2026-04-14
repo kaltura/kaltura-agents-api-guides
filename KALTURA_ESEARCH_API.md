@@ -270,7 +270,51 @@ Examples pipe to `jq` for readability.
     * **Response:** The `aggregations` array in the response will contain buckets with counts for each media type found.
 * **Searching Different Object Types:**
     * **Use Case:** Find categories tagged "Education" or users named "John Doe".
-    * **How:** Use the appropriate action (`searchCategory`, `searchUser`) and the corresponding `searchParams` type (`KalturaESearchCategoryParams`, `KalturaESearchUserParams`). The structure of `searchOperator` and `searchItems` remains similar, but you use object-specific field names (e.g., `KalturaESearchCategoryFieldName::TAGS`, `KalturaESearchUserFieldName::FULL_NAME`).
+    * **How:** Use the appropriate action (`searchCategory`, `searchUser`, `searchGroup`) and the corresponding `searchParams` type (`KalturaESearchCategoryParams`, `KalturaESearchUserParams`, `KalturaESearchGroupParams`). The structure of `searchOperator` and `searchItems` remains similar, but you use object-specific field names (e.g., `KalturaESearchCategoryFieldName::TAGS`, `KalturaESearchUserFieldName::FULL_NAME`).
+
+    **searchCategory example:**
+    ```bash
+    curl -X POST "$KALTURA_SERVICE_URL/service/elasticsearch_esearch/action/searchCategory" \
+      -d "ks=$KALTURA_KS" \
+      -d "format=1" \
+      -d "searchParams[objectType]=KalturaESearchCategoryParams" \
+      -d "searchParams[searchOperator][objectType]=KalturaESearchCategoryOperator" \
+      -d "searchParams[searchOperator][operator]=1" \
+      -d "searchParams[searchOperator][searchItems][0][objectType]=KalturaESearchCategoryItem" \
+      -d "searchParams[searchOperator][searchItems][0][fieldName]=name" \
+      -d "searchParams[searchOperator][searchItems][0][itemType]=2" \
+      -d "searchParams[searchOperator][searchItems][0][searchTerm]=Education"
+    ```
+
+    **searchUser example:**
+    ```bash
+    curl -X POST "$KALTURA_SERVICE_URL/service/elasticsearch_esearch/action/searchUser" \
+      -d "ks=$KALTURA_KS" \
+      -d "format=1" \
+      -d "searchParams[objectType]=KalturaESearchUserParams" \
+      -d "searchParams[searchOperator][objectType]=KalturaESearchUserOperator" \
+      -d "searchParams[searchOperator][operator]=1" \
+      -d "searchParams[searchOperator][searchItems][0][objectType]=KalturaESearchUserItem" \
+      -d "searchParams[searchOperator][searchItems][0][fieldName]=full_name" \
+      -d "searchParams[searchOperator][searchItems][0][itemType]=2" \
+      -d "searchParams[searchOperator][searchItems][0][searchTerm]=John"
+    ```
+
+    **searchGroup example:**
+    ```bash
+    curl -X POST "$KALTURA_SERVICE_URL/service/elasticsearch_esearch/action/searchGroup" \
+      -d "ks=$KALTURA_KS" \
+      -d "format=1" \
+      -d "searchParams[objectType]=KalturaESearchGroupParams" \
+      -d "searchParams[searchOperator][objectType]=KalturaESearchGroupOperator" \
+      -d "searchParams[searchOperator][operator]=1" \
+      -d "searchParams[searchOperator][searchItems][0][objectType]=KalturaESearchGroupItem" \
+      -d "searchParams[searchOperator][searchItems][0][fieldName]=screen_name" \
+      -d "searchParams[searchOperator][searchItems][0][itemType]=2" \
+      -d "searchParams[searchOperator][searchItems][0][searchTerm]=Engineering"
+    ```
+
+    All four actions (`searchEntry`, `searchCategory`, `searchUser`, `searchGroup`) return the same response structure: `{ objects: [...], totalCount, objectType }`. Each object is wrapped in `{ object, itemsData, highlight }`.
 * **Nested Queries:**
     * **Use Case:** Combining complex AND/OR/NOT logic as shown in Scenario E.
     * **How:** Place a `KalturaESearchEntryOperator` (or similar) within the `searchItems` array of another operator. This allows nesting conditions (e.g., `A AND (B OR (NOT C))`).

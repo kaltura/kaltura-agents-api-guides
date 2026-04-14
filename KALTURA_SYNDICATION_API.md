@@ -132,6 +132,39 @@ curl -X POST "$KALTURA_SERVICE_URL/service/syndicationFeed/action/add" \
 
 The Generic XSLT feed type requires an `xslt` parameter containing the XSLT stylesheet that transforms Kaltura's internal MRSS into the desired output format.
 
+**Common parameters (all feed types):**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `syndicationFeed[objectType]` | string | Yes | Must match the feed type: `KalturaGoogleVideoSyndicationFeed`, `KalturaYahooSyndicationFeed`, `KalturaITunesSyndicationFeed`, `KalturaGenericXsltSyndicationFeed`, `KalturaRokuSyndicationFeed`, `KalturaOperaSyndicationFeed` |
+| `syndicationFeed[name]` | string | Yes | Feed display name |
+| `syndicationFeed[type]` | integer | Yes | Feed type enum: 1=Google Video Sitemap, 2=Yahoo MRSS, 3=iTunes, 6=Generic XSLT, 7=Roku, 8=Opera TV |
+| `syndicationFeed[landingPage]` | string | No | Template URL for video links — use `{entry_id}` placeholder (required for Google Video Sitemap to generate `<loc>` elements) |
+| `syndicationFeed[playlistId]` | string | No | Restrict feed to entries in this playlist |
+| `syndicationFeed[allowEmbed]` | boolean | No | Include embed URLs in feed entries |
+| `syndicationFeed[enforceEntitlement]` | boolean | No | Apply access control to feed entries |
+| `syndicationFeed[entryFilter][objectType]` | string | No | `KalturaMediaEntryFilter` — required if using entry filter fields |
+| `syndicationFeed[entryFilter][tagsLike]` | string | No | Filter entries by tags |
+| `syndicationFeed[feedContentTypeHeader]` | string | No | Response Content-Type header (default: `text/xml; charset=utf-8`) |
+
+**iTunes-specific parameters** (type=3, `KalturaITunesSyndicationFeed`):
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `syndicationFeed[feedDescription]` | string | No | Podcast channel description |
+| `syndicationFeed[language]` | string | No | Feed language code (e.g., `EN`) |
+| `syndicationFeed[ownerName]` | string | No | Podcast owner name |
+| `syndicationFeed[ownerEmail]` | string | No | Podcast owner email |
+| `syndicationFeed[feedImageUrl]` | string | No | Album art / channel logo URL |
+| `syndicationFeed[feedAuthor]` | string | No | Podcast author |
+| `syndicationFeed[adultContent]` | string | No | Explicit content flag |
+
+**Generic XSLT-specific parameters** (type=6, `KalturaGenericXsltSyndicationFeed`):
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `syndicationFeed[xslt]` | string | Yes | XSLT stylesheet that transforms Kaltura's internal MRSS into the desired output format |
+
 **Response** includes the `feedUrl` for accessing the generated XML:
 
 ```json
@@ -156,6 +189,10 @@ curl -X POST "$KALTURA_SERVICE_URL/service/syndicationFeed/action/get" \
   -d "id=$FEED_ID"
 ```
 
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | string | Yes | Syndication feed ID (e.g., `1_abc12345`) |
+
 
 # 5. syndicationFeed.list
 
@@ -166,6 +203,16 @@ curl -X POST "$KALTURA_SERVICE_URL/service/syndicationFeed/action/list" \
   -d "ks=$KALTURA_KS" \
   -d "format=1"
 ```
+
+All filter and pager parameters are optional. Omitting them returns all feeds on the account.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `filter[objectType]` | string | No | `KalturaBaseSyndicationFeedFilter` or `KalturaSyndicationFeedFilter` |
+| `filter[typeEqual]` | integer | No | Filter by feed type: 1=Google, 2=Yahoo, 3=iTunes, 6=Generic XSLT, 7=Roku, 8=Opera TV |
+| `filter[orderBy]` | string | No | Sort field: `+createdAt`, `-createdAt`, `+name`, `-name` |
+| `pager[pageSize]` | integer | No | Results per page (default 30, max 500) |
+| `pager[pageIndex]` | integer | No | Page number, 1-based (default 1) |
 
 
 # 6. syndicationFeed.update
@@ -181,6 +228,20 @@ curl -X POST "$KALTURA_SERVICE_URL/service/syndicationFeed/action/update" \
   -d "syndicationFeed[name]=Updated Feed Name"
 ```
 
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | string | Yes | Syndication feed ID to update |
+| `syndicationFeed[objectType]` | string | Yes | Must match the feed's original type (e.g., `KalturaRokuSyndicationFeed`) |
+| `syndicationFeed[name]` | string | No | Updated feed name |
+| `syndicationFeed[landingPage]` | string | No | Updated landing page URL template |
+| `syndicationFeed[playlistId]` | string | No | Updated playlist scope |
+| `syndicationFeed[allowEmbed]` | boolean | No | Updated embed URL inclusion |
+| `syndicationFeed[enforceEntitlement]` | boolean | No | Updated entitlement enforcement |
+| `syndicationFeed[entryFilter][objectType]` | string | No | `KalturaMediaEntryFilter` — required if updating entry filter |
+| `syndicationFeed[entryFilter][tagsLike]` | string | No | Updated tag filter |
+
+Pass only the fields to change. Fields not included remain unchanged. The `type` field is immutable and cannot be updated.
+
 
 # 7. syndicationFeed.delete
 
@@ -193,6 +254,10 @@ curl -X POST "$KALTURA_SERVICE_URL/service/syndicationFeed/action/delete" \
   -d "id=$FEED_ID"
 ```
 
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | string | Yes | Syndication feed ID to delete |
+
 
 # 8. syndicationFeed.getEntryCount
 
@@ -204,6 +269,10 @@ curl -X POST "$KALTURA_SERVICE_URL/service/syndicationFeed/action/getEntryCount"
   -d "format=1" \
   -d "feedId=$FEED_ID"
 ```
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `feedId` | string | Yes | Syndication feed ID to count entries for |
 
 **Response:**
 

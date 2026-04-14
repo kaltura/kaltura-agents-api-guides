@@ -190,6 +190,24 @@ curl -X POST "$KALTURA_SERVICE_URL/service/eventnotification_eventnotificationte
 | `eventNotificationTemplate[method]` | integer | No | HTTP method: 1=GET, 2=POST |
 | `eventNotificationTemplate[status]` | integer | No | 1=disabled, 2=active |
 
+**Response (clone):**
+```json
+{
+  "id": 26970301,
+  "partnerId": 123456,
+  "name": "My Entry Ready Webhook",
+  "systemName": "ENTRY_READY",
+  "description": "Fires when an entry changes status",
+  "type": "httpNotification.Http",
+  "status": 2,
+  "createdAt": 1718400000,
+  "updatedAt": 1718400000,
+  "eventType": 2,
+  "eventObjectType": "1",
+  "objectType": "KalturaHttpNotificationTemplate"
+}
+```
+
 The cloned template gets a new `id` owned by your partner account. The original system template remains unchanged.
 
 
@@ -211,6 +229,24 @@ curl -X POST "$KALTURA_SERVICE_URL/service/eventnotification_eventnotificationte
   -d "eventNotificationTemplate[contentType]=2" \
   -d "eventNotificationTemplate[status]=2"
 ```
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `eventNotificationTemplate[objectType]` | string | Yes | `KalturaHttpNotificationTemplate` |
+| `eventNotificationTemplate[name]` | string | Yes | Template display name |
+| `eventNotificationTemplate[eventType]` | integer | Yes | Event type ID (see section 1.2) |
+| `eventNotificationTemplate[eventObjectType]` | integer/string | Yes | Object type that triggers the event (see section 1.3) |
+| `eventNotificationTemplate[url]` | string | Yes | HTTPS endpoint URL to receive webhook POSTs |
+| `eventNotificationTemplate[method]` | integer | Yes | HTTP method: 1=GET, 2=POST |
+| `eventNotificationTemplate[description]` | string | No | Human-readable template description |
+| `eventNotificationTemplate[contentType]` | integer | No | Body content type: 1=form-encoded, 2=JSON, 3=XML, 4=text (default: 1) |
+| `eventNotificationTemplate[status]` | integer | No | 1=disabled, 2=active (default: 1 disabled) |
+| `eventNotificationTemplate[signSecret]` | string | No | HMAC signing secret for webhook verification (see section 5) |
+| `eventNotificationTemplate[secureHashingAlgo]` | integer | No | Hash algorithm: 1=SHA1, 2=SHA256, 3=SHA384, 4=SHA512, 5=MD5 |
+| `eventNotificationTemplate[authUsername]` | string | No | HTTP Basic Auth username |
+| `eventNotificationTemplate[authPassword]` | string | No | HTTP Basic Auth password |
+| `eventNotificationTemplate[customHeaders]` | array | No | Custom HTTP headers (see section 4.4) |
+| `eventNotificationTemplate[eventConditions]` | array | No | Conditions to filter when the template fires (see section 4.3) |
 
 ## 4.1 HTTP Template Fields
 
@@ -428,7 +464,7 @@ Sends specific fields as key-value pairs:
 | Source IPs | Kaltura server IPs (e.g., 192.58.252.101) |
 | Default body (no data config) | Empty POST, `application/x-www-form-urlencoded` |
 | With ObjectData config | JSON body, `application/json` |
-| Retry behavior | Automatic retries on delivery failure |
+| Retry behavior | Up to 10 retries with exponential backoff over ~24 hours on HTTP 5xx or timeout |
 
 
 # 7. Email Notifications via the Messaging Service
@@ -467,6 +503,23 @@ curl -X POST "$KALTURA_SERVICE_URL/service/eventnotification_eventnotificationte
   -d "eventNotificationTemplate[to][emailRecipients][0][name][value]=Admin" \
   -d "eventNotificationTemplate[status]=2"
 ```
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `eventNotificationTemplate[objectType]` | string | Yes | `KalturaEmailNotificationTemplate` |
+| `eventNotificationTemplate[name]` | string | Yes | Template display name |
+| `eventNotificationTemplate[eventType]` | integer | Yes | Event type ID (see section 1.2) |
+| `eventNotificationTemplate[eventObjectType]` | integer/string | Yes | Object type that triggers the event (see section 1.3) |
+| `eventNotificationTemplate[subject]` | string | Yes | Email subject line (supports content parameters — see section 7.5) |
+| `eventNotificationTemplate[body]` | string | Yes | Email body (supports content parameters and HTML when `format=1`) |
+| `eventNotificationTemplate[to]` | object | Yes | Recipient provider — static, entry owner, category, or group (see section 7.4) |
+| `eventNotificationTemplate[format]` | integer | No | Email format: 1=HTML, 2=plain text, 3=both (default: 1) |
+| `eventNotificationTemplate[fromEmail]` | string | No | Sender email address (default: partner-configured sender) |
+| `eventNotificationTemplate[fromName]` | string | No | Sender display name |
+| `eventNotificationTemplate[cc]` | object | No | CC recipient provider (same structure as `to`) |
+| `eventNotificationTemplate[bcc]` | object | No | BCC recipient provider (same structure as `to`) |
+| `eventNotificationTemplate[status]` | integer | No | 1=disabled, 2=active (default: 1 disabled) |
+| `eventNotificationTemplate[eventConditions]` | array | No | Conditions to filter when the template fires (see section 4.3) |
 
 ## 7.3 Email Template Fields
 
@@ -643,7 +696,21 @@ curl -X POST "$KALTURA_SERVICE_URL/service/eventnotification_eventnotificationte
   -d "eventNotificationTemplate[url]=https://example.com/webhooks/v2"
 ```
 
-Fields not included remain unchanged.
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | integer | Yes | Template ID to update |
+| `eventNotificationTemplate[objectType]` | string | Yes | `KalturaHttpNotificationTemplate` or `KalturaEmailNotificationTemplate` |
+| `eventNotificationTemplate[name]` | string | No | Updated template name |
+| `eventNotificationTemplate[description]` | string | No | Updated description |
+| `eventNotificationTemplate[url]` | string | No | Updated webhook URL (HTTP templates only) |
+| `eventNotificationTemplate[method]` | integer | No | Updated HTTP method: 1=GET, 2=POST (HTTP templates only) |
+| `eventNotificationTemplate[contentType]` | integer | No | Updated content type (HTTP templates only) |
+| `eventNotificationTemplate[subject]` | string | No | Updated email subject (email templates only) |
+| `eventNotificationTemplate[body]` | string | No | Updated email body (email templates only) |
+| `eventNotificationTemplate[signSecret]` | string | No | Updated HMAC signing secret (HTTP templates only) |
+| `eventNotificationTemplate[eventConditions]` | array | No | Updated event conditions |
+
+Fields not included remain unchanged. The `status` field cannot be changed via `update` — use the `updateStatus` action instead (section 8.4).
 
 ## 8.3 List Your Templates
 
@@ -689,6 +756,13 @@ curl -X POST "$KALTURA_SERVICE_URL/service/eventnotification_eventnotificationte
   -d "id=$TEMPLATE_ID" \
   -d "status=1"
 ```
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | integer | Yes | Template ID to update |
+| `status` | integer | Yes | New status: 1=DISABLED, 2=ACTIVE |
+
+Returns the updated template object. This is the only way to change a template's status — the `update` action rejects changes to the `status` field.
 
 ## 8.5 Delete a Template
 
@@ -843,6 +917,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/eventnotification_eventnotificationte
 - **Use Boolean templates as conditions for REACH automation rules.** Boolean templates evaluate without dispatching; pair them with `KalturaReachProfile.rules` for conditional auto-processing.
 - **Use the Messaging Service for user-facing emails.** Email dispatch templates use the Messaging Service (SendGrid) infrastructure — configure domain authentication for deliverability.
 - **Test with manual dispatch before enabling auto-fire.** Use `dispatch` to verify your endpoint handles the payload correctly before relying on live events.
+- **Design for Kaltura's retry policy.** Kaltura retries failed webhook deliveries (HTTP 5xx or timeout) up to 10 times with exponential backoff over approximately 24 hours. Your endpoint should return HTTP 200 promptly to acknowledge receipt, then process the payload asynchronously. If your endpoint is down for an extended period, notifications will be lost after the retry window expires. Implement idempotency on your receiver — the same notification may be delivered more than once if your endpoint returns a non-200 status before Kaltura registers the acknowledgment.
 - **Use AppTokens for production webhook receivers.** Webhook receivers that call back into the Kaltura API should use AppTokens, not hardcoded admin secrets.
 
 # 14. Related Guides

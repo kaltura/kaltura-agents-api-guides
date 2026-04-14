@@ -429,7 +429,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/media/action/delete" \
 |------------|---------|------------|
 | `ENTRY_ID_NOT_FOUND` | Entry ID does not exist | Verify the entry ID; entry may have been deleted |
 | `INVALID_ENTRY_TYPE` | Operation not supported for this entry type | Multi-stream requires `mediaType=1` (VIDEO) entries |
-| `PROPERTY_VALIDATION_NOT_UPDATABLE` | Attempted to change a read-only property | `parentEntryId` can only be set once; to re-parent, clone the entry |
+| `PROPERTY_VALIDATION_NOT_UPDATABLE` | Attempted to change a read-only property | Some entry fields are immutable after creation; check the field name in the error details |
 | `MAX_ENTRIES_REACHED` | Partner entry limit reached | Delete unused entries or contact account manager |
 
 **Retry strategy:** For transient errors (HTTP 5xx, timeouts), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (`ENTRY_ID_NOT_FOUND`, `INVALID_ENTRY_TYPE`, `PROPERTY_VALIDATION_NOT_UPDATABLE`), fix the request before retrying — these will not resolve on their own.

@@ -317,7 +317,160 @@ curl -X POST "$KALTURA_SERVICE_URL/service/media/action/addFromUrl" \
 | 4 | CONVERTING | Transcoding in progress |
 | 7 | DELETED | Entry deleted |
 
-## 3.6 Non-Media Entry Types (Documents and Data)
+## 3.6 media.get -- Retrieve Entry Details and Poll for READY
+
+```
+POST /api_v3/service/media/action/get
+```
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `entryId` | string | Yes | The entry ID to retrieve |
+| `version` | integer | No | Specific version to retrieve (default: latest) |
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/media/action/get" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "entryId=$KALTURA_ENTRY_ID"
+```
+
+**Response:**
+
+```json
+{
+  "id": "1_xyz789",
+  "name": "My Video",
+  "status": 2,
+  "mediaType": 1,
+  "duration": 120,
+  "plays": 0,
+  "views": 0,
+  "createdAt": 1718467200,
+  "updatedAt": 1718467260,
+  "thumbnailUrl": "https://cfvod.kaltura.com/p/12345/sp/1234500/thumbnail/entry_id/1_xyz789/version/100001",
+  "downloadUrl": "https://cdnapisec.kaltura.com/p/12345/sp/1234500/playManifest/entryId/1_xyz789/format/download/protocol/https",
+  "userId": "admin",
+  "tags": "api,upload",
+  "description": "Uploaded via API",
+  "objectType": "KalturaMediaEntry"
+}
+```
+
+**Poll for READY status after upload:** After calling `media.addContent` or `media.addFromUrl`, the entry goes through transcoding. Poll `media.get` until `status` reaches `2` (READY):
+
+```bash
+# Poll every 5 seconds until READY
+while true; do
+  STATUS=$(curl -s -X POST "$KALTURA_SERVICE_URL/service/media/action/get" \
+    -d "ks=$KALTURA_KS" \
+    -d "format=1" \
+    -d "entryId=$KALTURA_ENTRY_ID" | jq -r '.status')
+  echo "Status: $STATUS"
+  [ "$STATUS" = "2" ] && break
+  [ "$STATUS" = "-1" ] && echo "Transcoding failed" && break
+  sleep 5
+done
+```
+
+## 3.7 media.list -- Search and Filter Entries
+
+```
+POST /api_v3/service/media/action/list
+```
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `filter[objectType]` | string | `KalturaMediaEntryFilter` |
+| `filter[nameLike]` | string | Partial name match |
+| `filter[tagsMultiLikeOr]` | string | Match any of these comma-separated tags |
+| `filter[mediaTypeEqual]` | integer | `1`=Video, `2`=Image, `5`=Audio |
+| `filter[statusEqual]` | integer | Filter by entry status (e.g., `2` for READY) |
+| `filter[createdAtGreaterThanOrEqual]` | integer | Unix timestamp — entries created after this time |
+| `filter[createdAtLessThanOrEqual]` | integer | Unix timestamp — entries created before this time |
+| `pager[pageSize]` | integer | Results per page (max 500) |
+| `pager[pageIndex]` | integer | Page number (1-based) |
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/media/action/list" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "filter[objectType]=KalturaMediaEntryFilter" \
+  -d "filter[tagsMultiLikeOr]=api,upload" \
+  -d "filter[statusEqual]=2" \
+  -d "pager[pageSize]=30" \
+  -d "pager[pageIndex]=1"
+```
+
+**Response:**
+
+```json
+{
+  "objects": [
+    {
+      "id": "1_xyz789",
+      "name": "My Video",
+      "status": 2,
+      "mediaType": 1,
+      "duration": 120,
+      "createdAt": 1718467200,
+      "objectType": "KalturaMediaEntry"
+    }
+  ],
+  "totalCount": 1,
+  "objectType": "KalturaMediaListResponse"
+}
+```
+
+Results beyond 10,000 total are not pageable. Use `createdAtGreaterThanOrEqual` date windowing to iterate large datasets.
+
+## 3.8 media.update -- Update Entry Metadata
+
+```
+POST /api_v3/service/media/action/update
+```
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `entryId` | string | Yes | Entry ID to update |
+| `mediaEntry[objectType]` | string | Yes | `KalturaMediaEntry` |
+| `mediaEntry[name]` | string | No | Updated name |
+| `mediaEntry[description]` | string | No | Updated description |
+| `mediaEntry[tags]` | string | No | Updated comma-separated tags |
+| `mediaEntry[referenceId]` | string | No | External reference ID |
+
+Only include the fields you want to change — omitted fields remain unchanged (partial update).
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/media/action/update" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "entryId=$KALTURA_ENTRY_ID" \
+  -d "mediaEntry[objectType]=KalturaMediaEntry" \
+  -d "mediaEntry[name]=Updated Title" \
+  -d "mediaEntry[tags]=updated,production"
+```
+
+## 3.9 media.delete -- Delete an Entry
+
+```
+POST /api_v3/service/media/action/delete
+```
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `entryId` | string | Yes | Entry ID to delete |
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/media/action/delete" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "entryId=$KALTURA_ENTRY_ID"
+```
+
+Deletion is soft-delete (status changes to 7). The entry can be recovered from the Kaltura trash for a limited time.
+
+## 3.10 Non-Media Entry Types (Documents and Data)
 
 Kaltura supports uploading and managing non-media files as standalone entries. Use the appropriate service based on file type:
 

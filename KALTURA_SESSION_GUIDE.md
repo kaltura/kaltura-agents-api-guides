@@ -87,14 +87,23 @@ curl -X POST "$KALTURA_SERVICE_URL/service/session/action/start" \
   -d "format=1"
 ```
 
-**Response:**
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `secret` | string | Yes | Admin secret (`type=2`) or user secret (`type=0`) |
+| `partnerId` | integer | Yes | Your Kaltura partner ID |
+| `type` | integer | Yes | `0` = USER, `2` = ADMIN |
+| `userId` | string | No | User ID for the session (default: empty) |
+| `expiry` | integer | No | TTL in seconds (default: 86400 = 24 hours) |
+| `privileges` | string | No | Comma-separated privilege strings (e.g., `sview:*,edit:*`) |
+
+**Response:** The KS string (with `format=1`, wrapped as `"djJ8OTc2NDYx..."`).
+
 ```json
-{"ks": "djJ8OTc2NDYx..."}
+"djJ8OTc2NDYx..."
 ```
 
 * `type=0` is USER, `type=2` is ADMIN.
 * `expiry` is in seconds (1800 = 30 minutes).
-* The response JSON contains `{ "result": "<KS_STRING>" }`.
 
 > When to use: server-side APIs, signed/secure player embeds, upload/edit tasks that your backend coordinates. Scope privileges to the minimum required for each session.
 
@@ -185,6 +194,15 @@ Keep it tight:
 * The Kaltura API validates the KS on every request automatically and returns an error if it is invalid or expired. Validation is implicit — use any API call to confirm a KS is valid.
 * Store KS in memory only; set cache headers to prevent caching.
 * Pass KS in POST bodies or PlayKit provider config, keeping it out of URLs where it could appear in referrers, logs, and proxies.
+* Revoke a session immediately with `session.end`:
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/session/action/end" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1"
+```
+
+After `session.end`, the KS is immediately rejected by all subsequent API calls. Use this for logout flows, session revocation, and security incident response.
 
 # 7. Error Handling
 

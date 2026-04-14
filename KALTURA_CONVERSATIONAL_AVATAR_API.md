@@ -19,11 +19,11 @@ Kaltura also offers a full Avatar SDK (`@unisphere/models-sdk-js`) for direct We
 
 # 2. Embedding
 
-Load the Avatar SDK and initialize with your client and flow IDs:
+Load the Avatar SDK and initialize with your client and flow IDs. The SDK is hosted on Kaltura's Avatar CDN:
 
 ```html
 <div id="avatar-container" style="width: 800px; height: 600px;"></div>
-<script src="kaltura-avatar-sdk.min.js"></script>
+<script src="https://static.avatar.us.kaltura.ai/sdk/kaltura-avatar-sdk.min.js"></script>
 <script>
   var sdk = new KalturaAvatarSDK({
     clientId: 'YOUR_CLIENT_ID',
@@ -61,8 +61,8 @@ The SDK creates a sandboxed iframe inside the container element. All communicati
 
 | Parameter | Required | Description |
 |-----------|----------|-------------|
-| `clientId` | yes | Kaltura avatar client identifier |
-| `flowId` | yes | Identifies which avatar/flow to load |
+| `clientId` | yes | Kaltura avatar client identifier — obtain from the Kaltura Avatar management console (provided as part of your Kaltura Events or Enterprise subscription) |
+| `flowId` | yes | Identifies which avatar/flow to load — each flow defines the avatar appearance, AI model, and conversation logic; created in the Avatar management console |
 | `container` | no | CSS selector string or HTMLElement for the iframe |
 | `config.debug` | no | Enable console logging |
 | `config.apiBaseUrl` | no | Override API URL (default: `https://api.avatar.us.kaltura.ai`) |

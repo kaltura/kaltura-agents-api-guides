@@ -127,7 +127,29 @@ curl -X POST "$KALTURA_SERVICE_URL/service/user/action/add" \
 | `user[roleIds]` | string | No | Comma-separated role IDs to assign |
 | `user[tags]` | string | No | Comma-separated tags |
 
-**Response:** Full `KalturaUser` object with `status=1` (ACTIVE).
+**Response:** Full `KalturaUser` object with `status=1` (ACTIVE):
+
+```json
+{
+  "id": "jane.doe@example.com",
+  "partnerId": 976461,
+  "screenName": "Jane Doe",
+  "fullName": "Jane Doe",
+  "firstName": "Jane",
+  "lastName": "Doe",
+  "email": "jane.doe@example.com",
+  "type": 0,
+  "status": 1,
+  "isAdmin": false,
+  "roleIds": "",
+  "roleNames": "",
+  "loginEnabled": false,
+  "tags": "",
+  "createdAt": 1718467200,
+  "updatedAt": 1718467200,
+  "objectType": "KalturaUser"
+}
+```
 
 ## 4.2 Get a User
 
@@ -137,6 +159,10 @@ curl -X POST "$KALTURA_SERVICE_URL/service/user/action/get" \
   -d "format=1" \
   -d "userId=jane.doe@example.com"
 ```
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `userId` | string | Yes | User ID to retrieve |
 
 Returns the full `KalturaUser` object. Returns `INVALID_USER_ID` if the user does not exist.
 
@@ -228,6 +254,10 @@ curl -X POST "$KALTURA_SERVICE_URL/service/user/action/delete" \
   -d "userId=jane.doe@example.com"
 ```
 
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `userId` | string | Yes | User ID to delete |
+
 Soft-deletes the user (`status` changes to `2`). The user object is returned with the updated status.
 
 **Cascade behavior:** Deleting a KalturaUser soft-deletes all associated [User Profiles](KALTURA_USER_PROFILE_API.md) across all app instances. Delete user profiles explicitly first if you need to control the order.
@@ -277,7 +307,18 @@ curl -X POST "$KALTURA_SERVICE_URL/service/user/action/loginByLoginId" \
   -d "partnerId=$KALTURA_PARTNER_ID"
 ```
 
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `loginId` | string | Yes | Login identifier (typically email) |
+| `password` | string | Yes | User password |
+| `partnerId` | integer | Yes | Partner ID to log in to |
+| `expiry` | integer | No | KS expiry in seconds (default: 86400) |
+| `privileges` | string | No | Comma-separated KS privileges |
+| `otp` | string | No | One-time password for accounts with 2FA enabled |
+
 Returns a KS string on success. This action does not require an existing KS.
+
+**Password complexity requirements:** Passwords must meet the account's configured policy. The default requires at least 8 characters, including uppercase, lowercase, digits, and special characters. If the password is invalid, the API returns `PASSWORD_STRUCTURE_INVALID`.
 
 ## 5.4 Reset Password
 
@@ -287,7 +328,11 @@ curl -X POST "$KALTURA_SERVICE_URL/service/user/action/resetPassword" \
   -d "email=jane.doe@example.com"
 ```
 
-Sends a password reset email. Does not require a KS.
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `email` | string | Yes | Email address of the user whose password should be reset |
+
+Sends a password reset email. Does not require a KS. The email contains a hash key used with `setInitialPassword` (section 5.5).
 
 ## 5.5 Set Initial Password
 
@@ -298,7 +343,12 @@ curl -X POST "$KALTURA_SERVICE_URL/service/user/action/setInitialPassword" \
   -d "newPassword=NewSecureP@ss456"
 ```
 
-Sets a password using a hash key received via email (from `resetPassword` or invitation). Does not require a KS.
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `hashKey` | string | Yes | Hash key from the password reset or invitation email |
+| `newPassword` | string | Yes | New password (must meet account password complexity requirements) |
+
+Sets a password using a hash key received via email (from `resetPassword` or invitation). Does not require a KS. The new password must meet the account's configured complexity policy (see section 5.3 for password requirements).
 
 
 # 6. User Roles (RBAC)
@@ -353,7 +403,23 @@ curl -X POST "$KALTURA_SERVICE_URL/service/userRole/action/add" \
 | `ADMIN_BASE` | Admin panel access |
 | `ANALYTICS_BASE` | View analytics |
 
-**Response:** Full `KalturaUserRole` object with generated `id`.
+**Response:** Full `KalturaUserRole` object with generated `id`:
+
+```json
+{
+  "id": 12345,
+  "name": "Content Viewer",
+  "systemName": "",
+  "description": "Read-only access to content",
+  "status": 1,
+  "partnerId": 976461,
+  "permissionNames": "BASE_USER_SESSION_PERMISSION,PLAYBACK_BASE_PERMISSION",
+  "tags": "",
+  "createdAt": 1718467200,
+  "updatedAt": 1718467200,
+  "objectType": "KalturaUserRole"
+}
+```
 
 ## 6.3 Get a Role
 
@@ -363,6 +429,12 @@ curl -X POST "$KALTURA_SERVICE_URL/service/userRole/action/get" \
   -d "format=1" \
   -d "userRoleId=12345"
 ```
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `userRoleId` | integer | Yes | Role ID to retrieve |
+
+Returns the full `KalturaUserRole` object. Returns `USER_ROLE_NOT_FOUND` if the role does not exist.
 
 ## 6.4 List Roles
 
@@ -400,6 +472,17 @@ curl -X POST "$KALTURA_SERVICE_URL/service/userRole/action/update" \
   -d "userRole[permissionNames]=BASE_USER_SESSION_PERMISSION,PLAYBACK_BASE_PERMISSION,CONTENT_MANAGE_BASE"
 ```
 
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `userRoleId` | integer | Yes | Role ID to update |
+| `userRole[objectType]` | string | Yes | Always `KalturaUserRole` |
+| `userRole[name]` | string | No | Updated role name |
+| `userRole[description]` | string | No | Updated description |
+| `userRole[permissionNames]` | string | No | Updated comma-separated permission names (replaces all existing permissions) |
+| `userRole[tags]` | string | No | Updated tags |
+
+Fields not included remain unchanged. **Response:** Full updated `KalturaUserRole` object.
+
 ## 6.6 Clone a Role
 
 ```bash
@@ -409,7 +492,11 @@ curl -X POST "$KALTURA_SERVICE_URL/service/userRole/action/clone" \
   -d "userRoleId=12345"
 ```
 
-Creates a copy of an existing role. Useful for customizing built-in system roles without modifying the originals.
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `userRoleId` | integer | Yes | Role ID to clone |
+
+Creates a copy of an existing role. Useful for customizing built-in system roles without modifying the originals. **Response:** Full `KalturaUserRole` object for the new clone with a new `id`.
 
 ## 6.7 Delete a Role
 
@@ -419,6 +506,10 @@ curl -X POST "$KALTURA_SERVICE_URL/service/userRole/action/delete" \
   -d "format=1" \
   -d "userRoleId=12345"
 ```
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `userRoleId` | integer | Yes | Role ID to delete |
 
 Sets `status=3` (DELETED). Users currently assigned this role retain it until their `roleIds` are updated.
 
@@ -519,6 +610,13 @@ curl -X POST "$KALTURA_SERVICE_URL/service/groupUser/action/delete" \
   -d "userId=jane.doe@example.com" \
   -d "groupId=engineering-team"
 ```
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `userId` | string | Yes | User ID to remove from the group |
+| `groupId` | string | Yes | Group ID to remove the user from |
+
+Removes the user from the specified group. Returns nothing on success. Returns `INVALID_USER_ID` if the user is not a member of the group.
 
 ## 7.5 Sync Group Membership
 
