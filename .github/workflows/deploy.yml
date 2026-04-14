@@ -9,6 +9,7 @@ on:
       - "CONTRIBUTING.md"
       - "PLAN.md"
       - "AGENTS.md"
+      - "GUIDE_MAP.md"
       - "LICENSE"
       - "CODE_OF_CONDUCT.md"
       - "mkdocs.yml"
