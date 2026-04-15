@@ -363,7 +363,7 @@ Roles define what permissions a user has. Each role is a set of named permission
 | `name` | string | Role display name |
 | `systemName` | string | System-level name (for built-in roles) |
 | `description` | string | Role description |
-| `status` | integer | `1` = ACTIVE, `3` = DELETED |
+| `status` | integer | `1` = ACTIVE, `2` = BLOCKED, `3` = DELETED |
 | `partnerId` | integer | `0` for system roles, your partner ID for custom roles |
 | `permissionNames` | string | Comma-separated permission names |
 | `tags` | string | Comma-separated tags |
@@ -454,7 +454,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/userRole/action/list" \
 |-------|-------------|
 | `idEqual` | Exact role ID |
 | `idIn` | Comma-separated role IDs |
-| `statusEqual` | `1` = ACTIVE, `3` = DELETED |
+| `statusEqual` | `1` = ACTIVE, `2` = BLOCKED, `3` = DELETED |
 | `nameEqual` | Exact name match |
 | `systemNameEqual` | Exact system name match |
 | `tagsMultiLikeOr` | Tags (OR match) |

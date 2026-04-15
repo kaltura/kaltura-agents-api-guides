@@ -738,7 +738,7 @@ ks=<YOUR_KS>
 &mediaEntry[displayInSearch]=1
 ```
 
-The saved clip will go through server-side transcoding (status `4` = CONVERTING) and become `READY` (2) when processing completes.
+The saved clip will go through server-side transcoding (status `4` = PENDING) and become `READY` (2) when processing completes.
 
 ### Step-by-Step curl Example: Full AI Clips Workflow
 
@@ -851,7 +851,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/media/action/update" \
   -d "mediaEntry[displayInSearch]=1"
 ```
 
-The saved clip will go through server-side transcoding (entry status `4` = CONVERTING) and become `READY` (status `2`) when processing completes.
+The saved clip will go through server-side transcoding (entry status `4` = PENDING) and become `READY` (status `2`) when processing completes.
 
 
 ## Output Types by Service

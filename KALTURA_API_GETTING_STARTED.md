@@ -160,11 +160,11 @@ The relationship is one-to-many: one entry has many assets. Each asset has an `e
 A media entry progresses through these states:
 
 ```
-media.add (creates empty entry, status=-2 NO_CONTENT)
+media.add (creates empty entry, status=7 NO_CONTENT)
     ↓
 media.addContent (attaches uploaded file to entry)
     ↓
-Transcoding (status=4 CONVERTING — conversion profile creates flavors)
+Transcoding (status=4 PENDING — conversion profile creates flavors)
     ↓
 Entry Ready (status=2 READY — all required flavors transcoded)
 ```

@@ -230,7 +230,7 @@ The `onRowSelected` callback and `showDialog` callback both receive a `KalturaBa
 | `duration` | number | Duration in seconds (video/audio entries) |
 | `plays` | number | Total play count |
 | `views` | number | Total view count |
-| `status` | number | Entry status: `0` = import, `1` = preconvert, `2` = ready, `7` = deleted |
+| `status` | number | Entry status: `0` = import, `1` = preconvert, `2` = ready, `3` = deleted, `7` = no content |
 
 ## Workspace-Level Methods
 

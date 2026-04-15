@@ -730,7 +730,7 @@ Returns templates owned by your partner. Use filter fields to narrow results:
 | Filter Field | Description |
 |-------------|-------------|
 | `typeEqual` | Template type string (e.g., `httpNotification.Http`, `emailNotification.Email`) |
-| `statusEqual` | Template status (1=disabled, 2=active) |
+| `statusEqual` | Template status (1=DISABLED, 2=ACTIVE, 3=DELETED) |
 | `eventTypeEqual` | Event type ID |
 | `idEqual` | Exact template ID |
 | `partnerIdEqual` | Partner ID |

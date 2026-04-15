@@ -154,7 +154,7 @@ Auth header formats differ by API:
 
 ## Common Kaltura API Patterns
 
-- **Entry statuses:** -2 (NO_CONTENT), 0 (IMPORT), 1 (PRECONVERT), 2 (READY), 4 (CONVERTING), 7 (DELETED)
+- **Entry statuses:** -2 (ERROR_IMPORTING), -1 (ERROR_CONVERTING), 0 (IMPORT), 1 (PRECONVERT), 2 (READY), 3 (DELETED), 4 (PENDING), 5 (MODERATE), 6 (BLOCKED), 7 (NO_CONTENT)
 - **Upload lifecycle:** `uploadToken.add` → `uploadToken.upload` → `media.add` → `media.addContent`
 - **Polling pattern:** Check `baseEntry.get` for `status=2` with interval/timeout
 - **Cascade behavior:** Deleting a parent entry cascades to children — use `baseEntry.list` with `parentEntryIdEqual` to discover children first

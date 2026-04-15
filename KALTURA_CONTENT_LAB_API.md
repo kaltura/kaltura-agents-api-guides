@@ -236,9 +236,11 @@ Task status values relevant to Content Lab:
 | Status | Value | Meaning |
 |--------|-------|---------|
 | PENDING | 1 | Task submitted, awaiting processing |
-| PROCESSING | 4 | AI engine is working on the task |
 | READY | 2 | Task completed successfully |
-| ERROR | 5 | Task failed |
+| PROCESSING | 3 | AI engine is working on the task |
+| PENDING_MODERATION | 4 | Awaiting human review |
+| REJECTED | 5 | Task rejected during moderation |
+| ERROR | 6 | Task failed |
 
 Poll at 15-30 second intervals. AI summarization and chapter generation typically complete within 1-5 minutes depending on entry duration. See the [REACH API](KALTURA_REACH_API.md) for the full vendor task lifecycle.
 

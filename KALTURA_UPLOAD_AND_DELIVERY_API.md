@@ -50,6 +50,8 @@ POST /api_v3/service/uploadToken/action/add
 | 1 | PARTIAL_UPLOAD | Some chunks received |
 | 2 | FULL_UPLOAD | All data received |
 | 3 | CLOSED | Token consumed by addContent |
+| 4 | TIMED_OUT | Token expired before upload completed |
+| 5 | DELETED | Token deleted |
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/add" \
@@ -202,7 +204,7 @@ POST /api_v3/service/media/action/add
 | `entry[description]` | string | Description (optional) |
 | `entry[tags]` | string | Comma-separated tags (optional) |
 
-**Response:** `KalturaMediaEntry` with `id`, `status` (-2 = NO_CONTENT until file attached)
+**Response:** `KalturaMediaEntry` with `id`, `status` (7 = NO_CONTENT until file attached)
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/media/action/add" \
@@ -220,7 +222,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/media/action/add" \
 {
   "id": "1_xyz789",
   "name": "My Video",
-  "status": -2,
+  "status": 7,
   "mediaType": 1,
   "objectType": "KalturaMediaEntry"
 }
@@ -240,7 +242,7 @@ POST /api_v3/service/media/action/addContent
 | `resource[objectType]` | string | `KalturaUploadedFileTokenResource` |
 | `resource[token]` | string | The upload token ID |
 
-This triggers transcoding. Entry status changes to `IMPORT (1)` or `CONVERTING (4)`.
+This triggers transcoding. Entry status changes to `IMPORT (0)` or `PENDING (4)`.
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/media/action/addContent" \
@@ -293,7 +295,7 @@ POST /api_v3/service/media/action/addFromUrl
 | `mediaEntry[mediaType]` | int | `1`=Video, `2`=Image, `5`=Audio |
 | `url` | string | Publicly accessible URL of the file |
 
-Kaltura fetches the file server-side. Entry starts in `IMPORT (1)` status.
+Kaltura fetches the file server-side. Entry starts in `IMPORT (0)` status.
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/media/action/addFromUrl" \
@@ -309,13 +311,16 @@ curl -X POST "$KALTURA_SERVICE_URL/service/media/action/addFromUrl" \
 
 | Value | Name | Description |
 |-------|------|-------------|
-| -2 | NO_CONTENT | Entry created, no file attached |
+| -2 | ERROR_IMPORTING | Import failed |
 | -1 | ERROR_CONVERTING | Transcoding failed |
 | 0 | IMPORT | File being fetched/imported |
 | 1 | PRECONVERT | Preparing for transcoding |
 | 2 | READY | Fully processed, playable |
-| 4 | CONVERTING | Transcoding in progress |
-| 7 | DELETED | Entry deleted |
+| 3 | DELETED | Entry deleted |
+| 4 | PENDING | Pending processing |
+| 5 | MODERATE | Awaiting moderation |
+| 6 | BLOCKED | Blocked by admin |
+| 7 | NO_CONTENT | Entry created, no file attached |
 
 ## 3.6 media.get -- Retrieve Entry Details and Poll for READY
 

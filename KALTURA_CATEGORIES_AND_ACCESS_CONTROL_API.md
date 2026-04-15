@@ -501,7 +501,7 @@ Assign media entries to categories to organize content and enforce entitlement r
 |-------|------|-------------|
 | `categoryId` | integer | Category ID |
 | `entryId` | string | Entry ID |
-| `status` | integer | `1` = ACTIVE, `2` = PENDING, `3` = DELETED, `4` = REJECTED |
+| `status` | integer | `1` = PENDING, `2` = ACTIVE, `3` = DELETED, `4` = REJECTED |
 | `createdAt` | integer | Unix timestamp (read-only) |
 | `objectType` | string | Always `"KalturaCategoryEntry"` (read-only) |
 
@@ -522,7 +522,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/categoryEntry/action/add" \
 | `categoryEntry[categoryId]` | integer | Yes | Target category ID |
 | `categoryEntry[entryId]` | string | Yes | Entry ID to assign |
 
-**Response:** Full `KalturaCategoryEntry` object with `status=1` (ACTIVE).
+**Response:** Full `KalturaCategoryEntry` object with `status=2` (ACTIVE).
 
 ## 6.3 List Category Entries
 
@@ -542,7 +542,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/categoryEntry/action/list" \
 | `categoryIdEqual` | Entries in a specific category |
 | `categoryIdIn` | Entries in multiple categories |
 | `entryIdEqual` | Categories for a specific entry |
-| `statusEqual` | Filter by status (1=ACTIVE, 2=PENDING, 3=DELETED, 4=REJECTED) |
+| `statusEqual` | Filter by status (1=PENDING, 2=ACTIVE, 3=DELETED, 4=REJECTED) |
 | `orderBy` | `+createdAt`, `-createdAt` |
 
 ## 6.4 Delete a Category Entry

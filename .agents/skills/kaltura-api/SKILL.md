@@ -82,12 +82,16 @@ Some newer services use JSON bodies with auth headers:
 
 | Status | Value | Meaning |
 |--------|-------|---------|
-| NO_CONTENT | -2 | Entry created, no media attached |
-| IMPORT | 0 | Importing from URL |
+| ERROR_IMPORTING | -2 | Import failed |
+| ERROR_CONVERTING | -1 | Transcoding failed |
+| IMPORT | 0 | File being fetched/imported |
 | PRECONVERT | 1 | Queued for transcoding |
-| READY | 2 | Playable |
-| CONVERTING | 4 | Transcoding in progress |
-| DELETED | 7 | Soft-deleted |
+| READY | 2 | Fully processed, playable |
+| DELETED | 3 | Entry deleted |
+| PENDING | 4 | Pending processing |
+| MODERATE | 5 | Awaiting moderation |
+| BLOCKED | 6 | Blocked by admin |
+| NO_CONTENT | 7 | Entry created, no media attached |
 
 ### Upload Lifecycle
 

@@ -355,7 +355,7 @@ def main():
                 print(f"    Saved clip READY: {result['id']}, "
                       f"duration={result.get('duration', '?')}s")
                 return
-            if status in (7, -1):  # DELETED or ERROR
+            if status in (7, -1):  # NO_CONTENT or ERROR_CONVERTING
                 print(f"    Saved clip status={status} — entry may have been "
                       f"cleaned up or failed processing")
                 return  # soft pass — clone/clip workflow was demonstrated
