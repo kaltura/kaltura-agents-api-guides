@@ -190,7 +190,7 @@ Read the relevant guide when you need to implement a specific capability:
 
 When building on Kaltura, follow these principles for production-quality integrations:
 
-- **Use AppTokens for production auth.** Never expose `adminSecret` in client code. Create scoped AppTokens with minimal privileges and rotate periodically. See [AppTokens API](../../../KALTURA_APPTOKENS_API.md).
+- **Use AppTokens for production auth.** Generate KS server-side via AppTokens; keep `adminSecret` on the server only. Create scoped tokens with minimal privileges and rotate periodically. See [AppTokens API](../../../KALTURA_APPTOKENS_API.md).
 - **Prefer USER KS (type=0)** for end-user operations. Reserve ADMIN KS (type=2) for backend-only management. Scope privileges with `edit:`, `sview:`, `setrole:`, `iprestrict:`.
 - **Verify webhook signatures.** Validate `SHA256(signing_secret + body)` on all incoming HTTP webhooks before processing.
 - **Use Kaltura's built-in services** rather than reimplementing. REACH for transcription/translation, Agents Manager for automated processing, Messaging for email delivery, eSearch for search, Access Control for content protection.

@@ -52,7 +52,7 @@ if __name__ == "__main__":
 
 - **Phased structure.** Group related tests under phase comments (`# Phase 1: Create`, etc.)
 - **State dictionary.** Store created resource IDs in `state = {}` for use across tests.
-- **Register cleanup BEFORE assertions.** After creating any resource and saving its ID to `state`, call `runner.register_cleanup()` BEFORE any `assert` statements. If an assertion fails, cleanup never runs and the resource leaks. Pattern: create → save ID → register cleanup → assert.
+- **Register cleanup BEFORE assertions.** After creating any resource and saving its ID to `state`, call `runner.register_cleanup()` before any `assert` statements. This guarantees cleanup runs regardless of assertion outcome. Pattern: create → save ID → register cleanup → assert.
 - **Test naming.** `runner.run_test("service.action — what it validates", fn)` — name matches the API call.
 - **Assertions with context.** Always include actual value: `f"Expected X, got {actual}"`.
 - **Print progress.** Each test prints key details: `print(f"    Entry: {id}, status={status}")`.
@@ -60,14 +60,14 @@ if __name__ == "__main__":
 - **Interactive cleanup.** Check `sys.stdin.isatty()` before `input()` — non-interactive shells get EOF immediately.
 - **Polling for async operations.** Use `_wait_for_ready()` with configurable `POLL_INTERVAL` and `POLL_TIMEOUT` when waiting for entry processing (status=2 READY).
 - **Direct MP4 URLs for imports.** Use direct MP4 download URLs with `addFromUrl`, not playManifest redirect URLs.
-- **Entry status reference.** `-2`=ERROR_IMPORTING, `-1`=ERROR_CONVERTING, `0`=IMPORT, `1`=PRECONVERT, `2`=READY, `3`=DELETED, `4`=PENDING, `5`=MODERATE, `6`=BLOCKED, `7`=NO_CONTENT. Never confuse 7 (NO_CONTENT) with DELETED (3).
+- **Entry status reference.** `-2`=ERROR_IMPORTING, `-1`=ERROR_CONVERTING, `0`=IMPORT, `1`=PRECONVERT, `2`=READY, `3`=DELETED, `4`=PENDING, `5`=MODERATE, `6`=BLOCKED, `7`=NO_CONTENT. Note: 7 is NO_CONTENT (draft/empty), 3 is DELETED.
 
 ## Accessibility Validation
 
-- **Every test must succeed with an actual API response.** A test that catches `SERVICE_FORBIDDEN`, `PERMISSION_DENIED`, or similar errors and marks itself as passing is invalid. If the action isn't accessible to customers, remove both the test and the corresponding guide section.
-- **Test with a standard customer admin KS.** The `disableentitlement` KS privilege bypasses content entitlement checks but does NOT override partner-level service restrictions (`SERVICE_FORBIDDEN`). An action that fails with `SERVICE_FORBIDDEN` even with `disableentitlement` is not customer-accessible.
-- **Flag suspicious patterns.** If you find yourself writing `if "FORBIDDEN" in err: print("expected")`, stop — the feature should be removed from the guide, not excused in the test.
-- **Verify before documenting.** Test every action you plan to document before writing the guide section. Discovering inaccessible actions after the guide is written creates rework and risks publishing inaccurate documentation.
+- **Every test must succeed with an actual API response.** Tests that catch `SERVICE_FORBIDDEN` or `PERMISSION_DENIED` and mark themselves as passing are invalid — remove both the test and the corresponding guide section for inaccessible actions.
+- **Test with a standard customer admin KS.** `disableentitlement` bypasses content entitlement checks; partner-level service restrictions (`SERVICE_FORBIDDEN`) remain in force regardless. Actions that return `SERVICE_FORBIDDEN` with `disableentitlement` are internal-only.
+- **Flag suspicious patterns.** Writing `if "FORBIDDEN" in err: print("expected")` means the feature is inaccessible — remove it from the guide rather than excusing it in the test.
+- **Verify before documenting.** Test every action you plan to document before writing the guide section. Verify accessibility first, then write — this avoids rework from discovering inaccessible actions after the guide is written.
 
 ## Environment Configuration
 

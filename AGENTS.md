@@ -63,13 +63,13 @@ All tests must pass against the live Kaltura API before a guide is considered do
 
 ## Philosophy
 
-1. **Positive framing only.** Document what works and how to use it. Never note what won't work or what to avoid — agents get confused by negative instructions.
+1. **Positive framing only.** Document what works and how to use it. State the correct approach directly — agents follow positive instructions more reliably than prohibitions.
 2. **Language-agnostic.** All API examples use `curl` with shell variables. Agents choose their own language.
 3. **Live-tested.** Every guide has a companion test script that validates documented behavior against the real API.
 4. **Agent-first.** Write for an AI agent that reads top-to-bottom and executes. Clear structure, explicit parameters, no ambiguity.
-5. **Customer-accessible only.** Document only API actions and features that are accessible to customer accounts. Verify every action against the live API with a standard customer KS. If an action returns `SERVICE_FORBIDDEN`, it is an internal/system action and must not be documented. The `disableentitlement` KS privilege bypasses content entitlement checks but does NOT override partner-level service restrictions.
+5. **Customer-accessible only.** Document only API actions accessible to customer accounts. Verify every action against the live API with a standard customer KS. Exclude actions that return `SERVICE_FORBIDDEN` — these are internal/system actions. The `disableentitlement` KS privilege bypasses content entitlement checks; partner-level service restrictions remain in force regardless.
 6. **One guide per service boundary.** Each guide covers one cohesive API service or tightly-coupled service cluster. Two services belong in the same guide only if they share API actions, one depends on the other at the API level, or a developer using one always needs the other. Services that merely "relate to entries" (e.g., metadata and captions) are separate guides. When in doubt, split — standalone guides can cross-reference each other, but a bundled guide cannot be unbundled without losing coverage depth.
-7. **Self-contained.** Every guide must contain all the information an agent needs to build integrations. Agents must never need to visit external websites, GitHub repositories, knowledge base articles, or other online resources to understand or use an API. If information from an external source is relevant, inline it in the guide. External links used during research are references for the guide author — they do not belong in the published guide.
+7. **Self-contained.** Every guide must contain all the information an agent needs to build integrations. Inline all relevant external information directly in the guide. External links used during research are references for the guide author — keep them out of published guides.
 
 ## Guide File Structure
 
@@ -125,15 +125,15 @@ Auth header formats differ by API:
 
 ## Writing Style
 
-- **No negative framing.** Write "Use UTC format for dates" not "Non-UTC dates are rejected."
-- **No language-specific code.** curl only in guides. **Exception:** Guides for front-end components (Player embed, editor, Unisphere widgets) include JavaScript/HTML examples where the component's API is inherently browser-based. These guides still use curl for any server-side API calls.
+- **Positive framing.** Write "Use UTC format for dates" instead of describing what fails. State what to do, then optionally state why.
+- **Language-agnostic examples.** Use curl for all server-side API calls. **Exception:** Guides for front-end components (Player embed, editor, Unisphere widgets) include JavaScript/HTML where the component's API is inherently browser-based.
 - **Minimal commentary.** Let API parameters and examples speak. Prose only when behavior is non-obvious.
 - **Tables for structured data.** Parameter lists, status codes, enum values.
 - **Inline code for identifiers.** Backticks for parameter names, values, IDs, env vars.
-- **No emojis** unless explicitly requested.
-- **No external links.** Guides must not link to GitHub repositories, knowledge base articles, external documentation, or any other website. The only acceptable URLs in guides are: (a) Kaltura API/CDN endpoint URLs used in curl examples and configuration, (b) `example.com` placeholder URLs in code samples, and (c) cross-references to other guides in this project using `[Name](FILENAME.md)` format. If external information is needed, inline it. Source code repositories, reference implementations, and "learn more" links are research aids for the author — they do not belong in the published guide.
+- **Emojis:** Only when explicitly requested.
+- **Acceptable URLs in guides:** (a) Kaltura API/CDN endpoint URLs in curl examples and configuration, (b) `example.com` placeholder URLs in code samples, (c) cross-references to other guides using `[Name](FILENAME.md)` format. Inline all other external information directly. Source code repositories, reference implementations, and "learn more" links are research aids for the author — keep them out of published guides.
 - **Trailing double spaces for line breaks.** Lines within a paragraph that should render as separate visual lines must end with `  ` (two trailing spaces). Especially important in header blocks (Base URL / Auth / Format) and multi-line list items. Without them, GitHub and other renderers join lines into one paragraph.
-- **No "VPaaS" terminology.** Use "multi-account" or "parent-child account" when describing Kaltura's multi-account model. Explain concepts directly rather than using internal product names.
+- **Use "multi-account" terminology.** Write "multi-account" or "parent-child account" when describing Kaltura's multi-account model. Explain concepts directly rather than using internal product names like "VPaaS."
 - **Platform scale.** Refer to the platform as having "100+ API services" and "a dozen client libraries" — not "80+" or other approximations.
 
 ## Auth Patterns
@@ -165,10 +165,10 @@ Auth header formats differ by API:
 
 Every guide must steer agents toward production-quality, secure integrations:
 
-1. **Use AppTokens in production.** Never embed `adminSecret` in client-facing code. API secrets are permanent — they cannot be regenerated, rotated, or revoked. Create scoped AppTokens with minimal privileges and rotate them periodically. See `KALTURA_APPTOKENS_API.md`.
+1. **Use AppTokens in production.** Generate KS server-side via AppTokens with minimal privileges; rotate periodically. API secrets are permanent and cannot be regenerated or revoked — keep `adminSecret` on the server only. See `KALTURA_APPTOKENS_API.md`.
 2. **Scope KS privileges.** Use `edit:entryId`, `sview:*`, `setrole:ROLE`, `iprestrict`, `urirestrict` to limit what a session can access. Prefer USER KS (type=0) over ADMIN KS (type=2) whenever possible.
 3. **Set KS expiry.** Default to short-lived sessions (1-4 hours). Use AppToken session start for renewal rather than long-lived admin sessions.
-4. **Never embed secrets or KS in mobile/client apps.** API secrets are permanent and cannot be rotated if compromised. KS tokens expire, breaking hardcoded binaries, and users can extract them. Generate KS server-side and pass to client per-session.
+4. **Generate KS server-side for mobile/client apps.** Pass tokens to clients per-session at runtime. API secrets are permanent and unrevocable; KS tokens expire, breaking hardcoded binaries; and users can extract embedded credentials.
 5. **Verify webhook signatures.** Always validate HMAC signatures on incoming webhooks using `SHA256(signing_secret + body)`. See `KALTURA_WEBHOOKS_API.md` section 5.
 6. **Validate inputs at boundaries.** Sanitize user-provided entry IDs, search terms, and metadata before passing to API calls.
 7. **Use Kaltura's built-in capabilities.** Prefer Kaltura REACH for transcription/translation, Agents Manager for automation, Messaging for emails, eSearch for content discovery, and Access Control for content protection — rather than building custom implementations.
@@ -218,11 +218,11 @@ Agents building on Kaltura should use platform services rather than reimplementi
 ## Adding a New Guide
 
 1. **Research.** Explore the API surface — endpoints, params, response schemas, auth. Test calls live.
-2. **Verify accessibility.** Test every action you plan to document with a customer account KS. If any action returns `SERVICE_FORBIDDEN` or requires partner-level permissions beyond standard KS privileges, exclude it from the guide. `disableentitlement` bypasses content entitlement checks but does NOT unlock partner-level service restrictions.
+2. **Verify accessibility.** Test every action you plan to document with a customer account KS. Exclude actions that return `SERVICE_FORBIDDEN` or require partner-level permissions beyond standard KS privileges. `disableentitlement` bypasses content entitlement checks; partner-level service restrictions remain in force regardless.
 3. **Write the guide.** Follow the header block, numbered sections, curl examples, Related Guides structure.
 4. **Create the test file.** `tests/test_{name}.py` — cover every documented endpoint with real API calls.
 5. **Run tests.** All tests must pass against the live API. Tests must succeed with actual successful API responses — not by catching expected errors.
-6. **Cross-reference.** Add to Related Guides sections of existing guides where relevant. Only link to published guides — never reference planned or future guides.
+6. **Cross-reference.** Add to Related Guides sections of existing guides where relevant. Link only to published guides in this repository.
 7. **Update GUIDE_MAP.md.** Add the new guide to the reading order tiers, dependency graph, and decision tree. Run `python3 scripts/validate_guide_map.py` to verify all cross-references are valid.
 8. **Update PLAN.md.** Add a row to the Completed Guides table.
 9. **Iterate.** If tests reveal undocumented behavior, update the guide to match reality.

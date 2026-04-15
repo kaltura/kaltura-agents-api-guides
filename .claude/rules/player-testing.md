@@ -11,7 +11,7 @@ For guides involving player features (Multi-Stream, Player Embed):
 
 ## Player v7 Runtime API
 
-`player.configure()` only sets initial config — it does **not** trigger runtime changes for plugins like Dual Screen. To control plugins at runtime:
+`player.configure()` sets initial config only. To change plugin state at runtime, use the service-based approach:
 
 ```javascript
 var svc = player.getService('dualScreen');
