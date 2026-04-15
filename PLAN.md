@@ -42,6 +42,7 @@
 | 36 | `KALTURA_CNC_API.md` | — (Events Platform component) | Done |
 | 37 | `KALTURA_GENIE_WIDGET_API.md` | `test_genie_widget_api.py` (7 tests) | Done |
 | 38 | `KALTURA_ANALYTICS_EMBED_API.md` | — (iframe embed) | Done |
+| 39 | `KALTURA_MODERATION_API.md` | `test_moderation_api.py` (13 tests) | Done |
 
 
 ## Full Kaltura API Landscape
@@ -87,7 +88,7 @@
 
 ### Platform & Admin
 - **OTT/TV Platform** — Separate API for TVOD/SVOD apps (EPG, device management, channels)
-- **Moderation** — Content flagging, approval workflows (limited dedicated API)
+- **Moderation** — Content flagging, approval workflows, AI moderation via REACH (serviceFeature=15) (DONE)
 - **Client SDKs** — Auto-generated: PHP, Java, JavaScript, Python, Go, Ruby, C#
 - **Unisphere** — Micro-frontend framework for composable Kaltura-embedded experiences (15 widgets, 33 runtimes, multi-region CDN)
 

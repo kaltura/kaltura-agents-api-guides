@@ -40,6 +40,7 @@ CATEGORIES = {
         "KALTURA_CUSTOM_METADATA_API.md",
         "KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md",
         "KALTURA_USER_MANAGEMENT_API.md",
+        "KALTURA_MODERATION_API.md",
     ],
     "AI Services": [
         "KALTURA_REACH_API.md",

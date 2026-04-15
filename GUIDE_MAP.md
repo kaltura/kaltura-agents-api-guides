@@ -42,6 +42,7 @@ Guides for organizing content, managing users, controlling access, and connectin
 | [Multi-Account Management](KALTURA_MULTI_ACCOUNT_MANAGEMENT_API.md) | Administration | Sub-accounts, cross-account auth, aggregated analytics |
 | [Analytics Reports](KALTURA_ANALYTICS_REPORTS_API.md) | Intelligence | Pull reports: content, engagement, cross-account |
 | [Analytics Events Collection](KALTURA_ANALYTICS_EVENTS_COLLECTION_API.md) | Intelligence | Push playback and engagement events |
+| [Moderation](KALTURA_MODERATION_API.md) | Content Management | Content flagging, approve/reject queue, AI moderation via REACH |
 | [Webhooks](KALTURA_WEBHOOKS_API.md) | Orchestration | Real-time HTTP callbacks on content events |
 | [App Registry](KALTURA_APP_REGISTRY_API.md) | Orchestration | Application instance registration and configuration |
 | [Messaging](KALTURA_MESSAGING_API.md) | Orchestration | Template-based email communications |
@@ -120,6 +121,9 @@ graph TD
     KS --> MA
     AR --> MA
     KS --> AR
+    MO["Moderation"]
+    KS --> MO
+    RE --> MO
     KS --> WH
     KS --> APR
     KS --> MSG
@@ -183,7 +187,7 @@ graph TD
 
     class GS,KS,AT foundation
     class UD,MS,CT,CM,RE,AG,AI creation
-    class ES,CA,UM,AB,MA,AR,AE,WH,APR,MSG management
+    class ES,CA,UM,AB,MA,AR,AE,WH,APR,MSG,MO management
     class PE,EC,ER,CE,CVA,CNC,GW,EA,UF,MM,CL,AW,VA,EP,UP,GA,DI,SY experience
 ```
 
@@ -224,5 +228,7 @@ Blue = Foundation | Purple = Creation | Orange = Management | Green = Experience
 | Set up SSO/SAML | [Auth Broker](KALTURA_AUTH_BROKER_API.md) |
 | Add custom fields to entries | [Custom Metadata](KALTURA_CUSTOM_METADATA_API.md) |
 | Control who sees what | [Categories & Access Control](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md) |
+| Moderate content (flag, approve, reject) | [Moderation](KALTURA_MODERATION_API.md) |
+| Screen content with AI for policy violations | [Moderation](KALTURA_MODERATION_API.md) |
 | Generate thumbnails | [Upload & Delivery](KALTURA_UPLOAD_AND_DELIVERY_API.md) (section 4) |
 | Add gamification | [Gamification](KALTURA_GAMIFICATION_API.md) |

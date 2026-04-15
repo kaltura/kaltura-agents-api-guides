@@ -1,6 +1,6 @@
 ---
 name: kaltura-api
-description: Build applications on Kaltura — The Agentic Digital Experience Platform. 38 guides covering authentication (sessions, AppTokens, SSO/SAML), content management (upload, search, categories, metadata, captions), playback, AI services (captions, translation, agents, conversational AI), virtual events, user management, multi-stream, content distribution, syndication feeds, analytics, gamification, webhooks, messaging, experience components (Player, Express Recorder, Captions Editor, Genie Widget, Media Manager, Content Lab, Agents Widget, VOD Avatar Studio, Conversational Avatar, Chat & Collaborate, Embeddable Analytics), Unisphere framework, multi-account management. 758 tests validated against live API. API v3 (form-encoded) and modern JSON APIs with curl examples.
+description: Build applications on Kaltura — The Agentic Digital Experience Platform. 39 guides covering authentication (sessions, AppTokens, SSO/SAML), content management (upload, search, categories, metadata, captions), playback, AI services (captions, translation, agents, conversational AI), virtual events, user management, multi-stream, content distribution, syndication feeds, analytics, gamification, webhooks, messaging, content moderation (flagging, AI-powered via REACH), experience components (Player, Express Recorder, Captions Editor, Genie Widget, Media Manager, Content Lab, Agents Widget, VOD Avatar Studio, Conversational Avatar, Chat & Collaborate, Embeddable Analytics), Unisphere framework, multi-account management. 771 tests validated against live API. API v3 (form-encoded) and modern JSON APIs with curl examples.
 ---
 
 # Kaltura API Integration
@@ -120,6 +120,8 @@ Read the relevant guide when you need to implement a specific capability:
 - **[Custom Metadata API](../../../KALTURA_CUSTOM_METADATA_API.md)** — XSD-based metadata schemas via `metadata_metadataProfile` plugin service with Kaltura-native types (textType, dateType, objectType, listType) and `<appinfo>` annotations for KMC rendering. Per-object structured metadata CRUD via `metadata_metadata` with optimistic locking, XSLT transformation pipeline, and eSearch integration via `KalturaESearchEntryMetadataItem`.
 
 - **[Captions & Transcripts API](../../../KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md)** — Caption asset management (SRT/WebVTT/DFXP/SCC) via `caption_captionAsset` with two-step creation (add → setContent), on-the-fly WebVTT conversion, HLS segmented delivery, JSON serving for AI/LLM integrations, caption parameter templates via `caption_captionParams`, multi-language workflows, REACH integration for ASR/translation, and eSearch caption search via `KalturaESearchCaptionItem`.
+
+- **[Moderation API](../../../KALTURA_MODERATION_API.md)** — Content moderation with two systems: legacy queue (`baseEntry.flag/approve/reject/listFlags` with `KalturaEntryModerationStatus` 1-6) and AI-powered moderation via REACH (`entryVendorTask` with `serviceFeature=15`, LLM-based text analysis and AWS Rekognition visual moderation). Configurable policies with weighted rules, critical-rule overrides, and category auto-activation. Player plugin `playkit-js-moderation` for viewer content flagging.
 
 ### Playback
 

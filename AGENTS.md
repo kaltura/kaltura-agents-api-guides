@@ -47,6 +47,7 @@ Kaltura API Guides/
 ├── KALTURA_ANALYTICS_EMBED_API.md         # Embeddable analytics dashboards via iframe
 ├── KALTURA_UNISPHERE_FRAMEWORK_API.md     # Unisphere micro-frontend framework (loader, workspace, services)
 ├── KALTURA_MULTI_ACCOUNT_MANAGEMENT_API.md # Multi-account management, cross-account analytics
+├── KALTURA_MODERATION_API.md              # Content moderation: flagging, approve/reject, AI moderation via REACH
 └── tests/                                 # Companion test scripts
 ```
 

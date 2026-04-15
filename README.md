@@ -1,8 +1,8 @@
 # Kaltura API Guides
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Guides](https://img.shields.io/badge/Guides-38-green.svg)](#guides)
-[![Tests](https://img.shields.io/badge/Live--Tested-758_tests-brightgreen.svg)](#guides)
+[![Guides](https://img.shields.io/badge/Guides-39-green.svg)](#guides)
+[![Tests](https://img.shields.io/badge/Live--Tested-771_tests-brightgreen.svg)](#guides)
 [![llms.txt](https://img.shields.io/badge/llms.txt-available-purple.svg)](llms.txt)
 [![Agent Skill](https://img.shields.io/badge/Agent_Skill-kaltura--api-orange.svg)](.agents/skills/kaltura-api/SKILL.md)
 [![Docs Site](https://img.shields.io/badge/Docs-GitHub_Pages-blue.svg)](https://zoharbabin.github.io/kaltura-api-guides/)
@@ -67,6 +67,7 @@ These guides are optimized for AI agent consumption through multiple discovery m
 | [Embeddable Analytics API](KALTURA_ANALYTICS_EMBED_API.md) | Analytics dashboards via iframe + postMessage | — |
 | [Unisphere Framework API](KALTURA_UNISPHERE_FRAMEWORK_API.md) | Micro-frontend framework: loader, workspace, services | 21 tests |
 | [Multi-Account Management API](KALTURA_MULTI_ACCOUNT_MANAGEMENT_API.md) | Sub-accounts, cross-account auth, multi-account analytics | 6 tests |
+| [Moderation API](KALTURA_MODERATION_API.md) | Content flagging, approve/reject queue, AI moderation via REACH | 13 tests |
 
 ## Quick Start
 
