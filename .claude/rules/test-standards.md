@@ -52,7 +52,7 @@ if __name__ == "__main__":
 
 - **Phased structure.** Group related tests under phase comments (`# Phase 1: Create`, etc.)
 - **State dictionary.** Store created resource IDs in `state = {}` for use across tests.
-- **Register cleanup immediately.** After creating any resource, call `runner.register_cleanup()` so it gets deleted even if later tests fail.
+- **Register cleanup BEFORE assertions.** After creating any resource and saving its ID to `state`, call `runner.register_cleanup()` BEFORE any `assert` statements. If an assertion fails, cleanup never runs and the resource leaks. Pattern: create → save ID → register cleanup → assert.
 - **Test naming.** `runner.run_test("service.action — what it validates", fn)` — name matches the API call.
 - **Assertions with context.** Always include actual value: `f"Expected X, got {actual}"`.
 - **Print progress.** Each test prints key details: `print(f"    Entry: {id}, status={status}")`.
@@ -60,6 +60,7 @@ if __name__ == "__main__":
 - **Interactive cleanup.** Check `sys.stdin.isatty()` before `input()` — non-interactive shells get EOF immediately.
 - **Polling for async operations.** Use `_wait_for_ready()` with configurable `POLL_INTERVAL` and `POLL_TIMEOUT` when waiting for entry processing (status=2 READY).
 - **Direct MP4 URLs for imports.** Use direct MP4 download URLs with `addFromUrl`, not playManifest redirect URLs.
+- **Entry status reference.** `-2`=ERROR_IMPORTING, `-1`=ERROR_CONVERTING, `0`=IMPORT, `1`=PRECONVERT, `2`=READY, `3`=DELETED, `4`=PENDING, `5`=MODERATE, `6`=BLOCKED, `7`=NO_CONTENT. Never confuse 7 (NO_CONTENT) with DELETED (3).
 
 ## Accessibility Validation
 

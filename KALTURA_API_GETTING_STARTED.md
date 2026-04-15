@@ -27,8 +27,9 @@ curl -X POST "$KALTURA_SERVICE_URL/service/media/action/list" \
 
 - **HTTP method:** Always POST (even for read operations)  
 - **Content-Type:** `application/x-www-form-urlencoded` (default) or `application/json` — the API v3 backend accepts both formats  
-- **Response format:** Add `format=1` to get JSON. Without it, responses return as XML.  
+- **Response format:** Add `format=1` to get JSON (`format` values: `1`=JSON, `2`=XML, `3`=PHP, `9`=JSONP).  
 - **Authentication:** Pass `ks=` as a form parameter or JSON field in every request  
+- **Boolean parameters:** Many filter fields use `KalturaNullableBoolean`: `-1`=null/ignore, `0`=false, `1`=true. Pass integers, not string `"true"`/`"false"`.  
 
 **Form-encoded parameters** use bracket notation for nested fields:
 
@@ -136,7 +137,7 @@ An **entry** is a logical container that represents a single piece of content. I
 |-------------|-----------|---------|-------------|
 | `KalturaMediaEntry` | 1 | `media` | Video, audio, or image — transcoded into playable renditions (flavors) |
 | `KalturaLiveStreamEntry` | 7 | `liveStream` | Live broadcast entry with streaming endpoints |
-| `KalturaPlaylist` | 5 | `playlist` | Ordered collection of entries (static list or dynamic filter) |
+| `KalturaPlaylist` | 5 | `playlist` | Ordered collection of entries (playlistType: `3`=static list, `10`=dynamic filter) |
 | `KalturaDataEntry` | 6 | `baseEntry` | Arbitrary file storage — served as-is, no transcoding |
 | `KalturaDocumentEntry` | 10 | `document` | PDF, DOCX, PPTX — document conversion for web viewing |
 

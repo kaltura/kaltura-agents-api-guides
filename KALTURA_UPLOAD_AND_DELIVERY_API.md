@@ -322,7 +322,38 @@ curl -X POST "$KALTURA_SERVICE_URL/service/media/action/addFromUrl" \
 | 6 | BLOCKED | Blocked by admin |
 | 7 | NO_CONTENT | Entry created, no file attached |
 
-## 3.6 media.get -- Retrieve Entry Details and Poll for READY
+## 3.6 Flavor Asset Statuses
+
+When polling flavor assets during transcoding (`flavorAsset.list` with `entryIdEqual`):
+
+| Value | Name | Description |
+|-------|------|-------------|
+| -1 | ERROR | Transcoding failed for this flavor |
+| 0 | QUEUED | Waiting in transcoding queue |
+| 1 | CONVERTING | Transcoding in progress |
+| 2 | READY | Transcoded and playable |
+| 3 | DELETED | Flavor deleted |
+| 4 | NOT_APPLICABLE | Flavor params exist but don't apply to this entry |
+| 5 | TEMP | Temporary intermediate flavor |
+| 6 | WAIT_FOR_CONVERT | Waiting for a dependency flavor to finish |
+| 7 | IMPORTING | Source file being imported |
+| 8 | VALIDATING | File validation in progress |
+| 9 | EXPORTING | Being exported to external storage |
+
+## 3.7 Entry Moderation Statuses
+
+When content moderation is enabled on the account, entries have a `moderationStatus` field:
+
+| Value | Name | Description |
+|-------|------|-------------|
+| 1 | PENDING_MODERATION | Awaiting moderator review |
+| 2 | APPROVED | Approved for publishing |
+| 3 | REJECTED | Rejected by moderator |
+| 4 | DELETED | Deleted |
+| 5 | FLAGGED_FOR_REVIEW | Flagged by user for review |
+| 6 | AUTO_APPROVED | Automatically approved by rules |
+
+## 3.8 media.get -- Retrieve Entry Details and Poll for READY
 
 ```
 POST /api_v3/service/media/action/get
@@ -378,7 +409,7 @@ while true; do
 done
 ```
 
-## 3.7 media.list -- Search and Filter Entries
+## 3.9 media.list -- Search and Filter Entries
 
 ```
 POST /api_v3/service/media/action/list
@@ -429,7 +460,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/media/action/list" \
 
 Results beyond 10,000 total are not pageable. Use `createdAtGreaterThanOrEqual` date windowing to iterate large datasets.
 
-## 3.8 media.update -- Update Entry Metadata
+## 3.10 media.update -- Update Entry Metadata
 
 ```
 POST /api_v3/service/media/action/update
@@ -456,7 +487,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/media/action/update" \
   -d "mediaEntry[tags]=updated,production"
 ```
 
-## 3.9 media.delete -- Delete an Entry
+## 3.11 media.delete -- Delete an Entry
 
 ```
 POST /api_v3/service/media/action/delete
@@ -473,9 +504,9 @@ curl -X POST "$KALTURA_SERVICE_URL/service/media/action/delete" \
   -d "entryId=$KALTURA_ENTRY_ID"
 ```
 
-Deletion is soft-delete (status changes to 7). The entry can be recovered from the Kaltura trash for a limited time.
+Deletion is soft-delete (status changes to 3 = DELETED). The entry can be recovered from the Kaltura trash for a limited time.
 
-## 3.10 Non-Media Entry Types (Documents and Data)
+## 3.12 Non-Media Entry Types (Documents and Data)
 
 Kaltura supports uploading and managing non-media files as standalone entries. Use the appropriate service based on file type:
 

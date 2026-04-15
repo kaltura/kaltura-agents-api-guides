@@ -24,3 +24,7 @@
 | Multirequest without per-result error checking | One failed sub-request silently ignored | Check each array element for `objectType: "KalturaAPIException"` |
 | Assigning more than 32 categories to an entry | `categoryEntry.add` throws `MAX_CATEGORIES_FOR_ENTRY_REACHED` | Default limit is 32; accounts with `FEATURE_DISABLE_CATEGORY_LIMIT` get 1000. Design hierarchies accordingly |
 | Publishing guide without updating GUIDE_MAP.md | AI agents miss the new guide or traverse incorrectly | Update GUIDE_MAP.md when adding or modifying guides |
+| Entry status 7 confused with DELETED | Agent treats NO_CONTENT entries as deleted, or deletes the wrong entries | 7=NO_CONTENT (draft/empty), 3=DELETED. Full enum: -2=ERROR_IMPORTING, -1=ERROR_CONVERTING, 0=IMPORT, 1=PRECONVERT, 2=READY, 3=DELETED, 4=PENDING, 5=MODERATE, 6=BLOCKED, 7=NO_CONTENT |
+| CategoryEntryStatus 1/2 swapped | Agent filters for ACTIVE entries but gets PENDING, or vice versa | 1=PENDING, 2=ACTIVE (not the reverse). Verify all status enums against `api_v3/api_schema.php` |
+| Passing string booleans to filter parameters | `"true"` silently ignored — API expects `KalturaNullableBoolean` integers | Use `-1`=null, `0`=false, `1`=true for boolean filter fields |
+| Cleanup registered after assertions in tests | If assertion fails, cleanup never runs — resources leak | Register cleanup immediately after resource creation, BEFORE any assertions |

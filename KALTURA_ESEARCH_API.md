@@ -334,8 +334,82 @@ Examples pipe to `jq` for readability.
 * **Params:** `KalturaESearchEntryParams`, `KalturaESearchCategoryParams`, `KalturaESearchUserParams`
 * **Operator:** `KalturaESearchEntryOperator` (and variants)
 * **Items:** `KalturaESearchUnifiedItem`, `KalturaESearchEntryItem`, `KalturaESearchCaptionItem`, `KalturaESearchEntryMetadataItem`, `KalturaESearchCuePointItem`
-* **Enums:** `KalturaESearchItemType`, `KalturaESearchOperatorType`, `KalturaESearchEntryFieldName` (and variants for other objects), `KalturaESearchEntryOrderByFieldName`, `KalturaESearchSortOrder`, `KalturaESearchLanguage`
 * **Response:** `KalturaESearchEntryResponse` (and variants), `KalturaESearchEntryResult` (and variants), `KalturaESearchHighlight`, `KalturaESearchItemDataResult`, `KalturaESearchAggregationResponse`
+
+## Entry Field Names (`KalturaESearchEntryFieldName`)
+
+Use these values in the `fieldName` property of `KalturaESearchEntryItem`:
+
+| Value | Description |
+|-------|-------------|
+| `id` | Entry ID |
+| `name` | Entry display name |
+| `description` | Entry description |
+| `tags` | Entry tags |
+| `admin_tags` | Admin-only tags |
+| `reference_id` | External reference ID |
+| `credit` | Credit/attribution text |
+| `site_url` | Associated site URL |
+| `created_at` | Creation timestamp (use RANGE itemType) |
+| `updated_at` | Last update timestamp (use RANGE itemType) |
+| `last_played_at` | Last playback timestamp (use RANGE itemType) |
+| `start_date` | Scheduling start date |
+| `end_date` | Scheduling end date |
+| `media_type` | Media type (1=video, 2=image, 5=audio) |
+| `entry_type` | Entry type (1=media, 7=live, etc.) |
+| `moderation_status` | Moderation status value |
+| `creator_kuser_id` | Creator user ID |
+| `kuser_id` | Owner user ID |
+| `plays` | Total play count (use RANGE for numeric filtering) |
+| `votes` | Vote count |
+| `display_in_search` | Search visibility (0=none, 1=partner, 2=network) |
+| `parent_id` | Parent entry ID (for clips/children) |
+| `root_id` | Root entry ID |
+| `captions_content` | Full-text search within caption content |
+| `conversion_profile_id` | Conversion profile ID |
+| `access_control_id` | Access control profile ID |
+| `redirect_entry_id` | Redirect target entry ID |
+| `recorded_entry_id` | Associated recording entry ID |
+| `template_entry_id` | Template entry ID |
+| `is_live` | Whether entry is currently live |
+| `is_quiz` | Whether entry is a quiz |
+| `entitled_kusers_edit` | Users entitled to edit |
+| `entitled_kusers_publish` | Users entitled to publish |
+| `entitled_kusers_view` | Users entitled to view |
+
+## Caption Field Names (`KalturaESearchCaptionFieldName`)
+
+Use these values in the `fieldName` property of `KalturaESearchCaptionItem`:
+
+| Value | Description |
+|-------|-------------|
+| `content` | Caption/transcript text content |
+| `caption_asset_id` | Caption asset ID |
+| `label` | Caption label/display name |
+| `language` | Caption language code |
+| `start_time` | Caption line start time (use RANGE) |
+| `end_time` | Caption line end time (use RANGE) |
+
+## Order-By Field Names (`KalturaESearchEntryOrderByFieldName`)
+
+Use these values in the `sortField` property of `KalturaESearchOrderByItem`:
+
+| Value | Description |
+|-------|-------------|
+| `created_at` | Creation date |
+| `updated_at` | Last update date |
+| `name` | Alphabetical by name |
+| `plays` | Total play count |
+| `plays_last_1_day` | Plays in last 24 hours |
+| `plays_last_7_days` | Plays in last 7 days |
+| `plays_last_30_days` | Plays in last 30 days |
+| `views` | Total view count |
+| `views_last_1_day` | Views in last 24 hours |
+| `views_last_30_days` | Views in last 30 days |
+| `rank` | Relevance/ranking score |
+| `start_date` | Scheduling start date |
+| `end_date` | Scheduling end date |
+| `last_played_at` | Last playback date |
 
 # 10. Error Handling
 
