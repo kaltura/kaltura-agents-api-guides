@@ -192,6 +192,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/category/action/list" \
 | `idIn` | Comma-separated category IDs |
 | `parentIdEqual` | Filter by parent category (`0` for root categories) |
 | `parentIdIn` | Comma-separated parent IDs |
+| `nameEqual` | Exact category name match (case-sensitive, returns first match when duplicates exist) |
 | `fullNameStartsWithIn` | Full path prefix match (e.g., `"Training>"`) |
 | `ancestorIdIn` | Categories under any of these ancestor IDs |
 | `freeText` | Free-text search across name, description, tags |

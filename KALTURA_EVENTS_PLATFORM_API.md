@@ -243,6 +243,8 @@ POST /api/v1/events/delete
 
 Permanently deletes the event and all its sessions. Returns an empty response on success (HTTP 200).
 
+**Category cleanup:** The Events Platform auto-creates root categories for each event (e.g., `{eventId}EP{hex}`, `ep_agenda_{eventId}`, `ep_private_{eventId}`). Deleting an event removes the event record and its sessions, but does **not** cascade-delete these categories. Clean them up separately via `category.delete` using the category IDs, or list root categories filtered by the event ID pattern.
+
 ```bash
 curl -X POST "$KALTURA_EVENTS_API_URL/events/delete" \
   -H "Authorization: Bearer $KALTURA_KS" \
