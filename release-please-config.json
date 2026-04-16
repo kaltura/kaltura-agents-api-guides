@@ -1,0 +1,23 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "release-type": "simple",
+  "include-component-in-tag": false,
+  "include-v-in-tag": true,
+  "packages": {
+    ".": {
+      "release-type": "simple",
+      "changelog-path": "CHANGELOG.md",
+      "skip-github-release": false,
+      "draft": false,
+      "changelog-sections": [
+        { "type": "feat", "section": "New Guides & Features" },
+        { "type": "fix", "section": "Fixes & Corrections" },
+        { "type": "test", "section": "Tests", "hidden": false },
+        { "type": "docs", "section": "Documentation", "hidden": true },
+        { "type": "chore", "section": "Maintenance", "hidden": true },
+        { "type": "ci", "section": "CI/CD", "hidden": true },
+        { "type": "refactor", "section": "Refactoring", "hidden": true }
+      ]
+    }
+  }
+}

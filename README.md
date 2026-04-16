@@ -1,6 +1,7 @@
 # Kaltura API Guides
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Release](https://img.shields.io/github/v/release/zoharbabin/kaltura-api-guides?label=Release)](https://github.com/zoharbabin/kaltura-api-guides/releases/latest)
 [![Guides](https://img.shields.io/badge/Guides-39-green.svg)](#guides)
 [![Tests](https://img.shields.io/badge/Live--Tested-774_tests-brightgreen.svg)](#guides)
 [![llms.txt](https://img.shields.io/badge/llms.txt-available-purple.svg)](llms.txt)

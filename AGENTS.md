@@ -48,6 +48,9 @@ Kaltura API Guides/
 ├── KALTURA_UNISPHERE_FRAMEWORK_API.md     # Unisphere micro-frontend framework (loader, workspace, services)
 ├── KALTURA_MULTI_ACCOUNT_MANAGEMENT_API.md # Multi-account management, cross-account analytics
 ├── KALTURA_MODERATION_API.md              # Content moderation: flagging, approve/reject, AI moderation via REACH
+├── version.txt                            # Current version (managed by release-please)
+├── release-please-config.json             # Release automation config
+├── .release-please-manifest.json          # Version tracking for release-please
 └── tests/                                 # Companion test scripts
 ```
 
@@ -216,6 +219,39 @@ Agents building on Kaltura should use platform services rather than reimplementi
 | Unisphere experiences | Micro-frontend framework: loader, workspace, services, Media Manager | `KALTURA_UNISPHERE_FRAMEWORK_API.md` |
 | Multi-account management | Parent-child accounts, cross-account analytics | `KALTURA_MULTI_ACCOUNT_MANAGEMENT_API.md` |
 
+## Commit Messages & Versioning
+
+This repository uses [Conventional Commits](https://www.conventionalcommits.org/). Every commit must follow this format:
+
+```
+<type>(<scope>): <description>
+```
+
+| Type | When | Version bump |
+|------|------|-------------|
+| `feat` | New guide, new major section | **Minor** (6.2 → 6.3) |
+| `fix` | Correct wrong docs, fix tests | **Patch** (6.2.0 → 6.2.1) |
+| `test` | Test-only changes | None |
+| `docs` | Non-guide prose (README, CONTRIBUTING) | None |
+| `chore` | Meta files, formatting | None |
+| `ci` | Workflows, CI config | None |
+| `refactor` | Restructure without content change | None |
+
+**Scope** is optional — use the guide name or area: `feat(moderation)`, `fix(reach)`, `test(esearch)`.
+
+**Breaking changes** use `!`: `feat!: restructure guide format` → major bump.
+
+**Examples:**
+```
+feat(distribution): add Distribution API guide with 18 E2E tests
+fix(reach): correct serviceFeature enum values for Immersive Agent
+test(moderation): add reject side-effects verification
+chore: update GUIDE_MAP.md and README test counts
+ci: add commitlint and release-please workflows
+```
+
+Releases are automated via release-please. Push conventional commits → release-please opens a release PR → merge it to cut a release with auto-generated notes.
+
 ## Adding a New Guide
 
 1. **Research.** Explore the API surface — endpoints, params, response schemas, auth. Test calls live.
@@ -226,7 +262,8 @@ Agents building on Kaltura should use platform services rather than reimplementi
 6. **Cross-reference.** Add to Related Guides sections of existing guides where relevant. Link only to published guides in this repository.
 7. **Update GUIDE_MAP.md.** Add the new guide to the reading order tiers, dependency graph, and decision tree. Run `python3 scripts/validate_guide_map.py` to verify all cross-references are valid.
 8. **Update PLAN.md.** Add a row to the Completed Guides table.
-9. **Iterate.** If tests reveal undocumented behavior, update the guide to match reality.
+9. **Commit with conventional format.** Use `feat(service-name): add Service Name API guide with N E2E tests`. See Commit Messages & Versioning above.
+10. **Iterate.** If tests reveal undocumented behavior, update the guide to match reality.
 
 ### Naming Convention
 
