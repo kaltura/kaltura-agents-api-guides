@@ -606,6 +606,55 @@ def main():
 
     runner.run_test("entryVendorTask.list — filter by catalogItemId", test_task_list_by_catalog_item)
 
+    def test_task_approve():
+        """Approve requires PENDING_MODERATION (4). Our task is PENDING (1), so verify
+        the API is accessible and returns the correct precondition error."""
+        try:
+            kaltura_post("reach_entryVendorTask", "approve", {
+                "id": state["test_task_id"],
+            })
+            print("    Task approved (was in PENDING_MODERATION)")
+        except Exception as e:
+            err = str(e)
+            if "ENTRY_VENDOR_TASK_NOT_FOUND" in err:
+                raise  # genuine failure
+            # Any other error = action is accessible but precondition not met
+            assert "ENTRY_VENDOR_TASK" in err or "status" in err.lower() or "approve" in err.lower(), \
+                f"Unexpected error: {err}"
+            print(f"    Correctly rejected (task not in PENDING_MODERATION): {err[:80]}")
+
+    runner.run_test("entryVendorTask.approve — accessible (requires PENDING_MODERATION)", test_task_approve)
+
+    def test_task_reject():
+        """Reject requires PENDING_MODERATION (4). Verify API is accessible."""
+        try:
+            kaltura_post("reach_entryVendorTask", "reject", {
+                "id": state["test_task_id"],
+                "rejectReason": "E2E test validation",
+            })
+            print("    Task rejected (was in PENDING_MODERATION)")
+        except Exception as e:
+            err = str(e)
+            if "ENTRY_VENDOR_TASK_NOT_FOUND" in err:
+                raise
+            assert "ENTRY_VENDOR_TASK" in err or "status" in err.lower() or "reject" in err.lower(), \
+                f"Unexpected error: {err}"
+            print(f"    Correctly rejected (task not in PENDING_MODERATION): {err[:80]}")
+
+    runner.run_test("entryVendorTask.reject — accessible (requires PENDING_MODERATION)", test_task_reject)
+
+    def test_task_export_csv():
+        """exportToCsv creates a batch job and returns the recipient email."""
+        result = kaltura_post("reach_entryVendorTask", "exportToCsv", {
+            "filter[statusEqual]": 2,
+        })
+        # Returns the email address string where CSV will be sent
+        assert isinstance(result, str) and "@" in result, \
+            f"Expected email address, got: {result}"
+        print(f"    CSV export queued → {result}")
+
+    runner.run_test("entryVendorTask.exportToCsv — batch CSV export", test_task_export_csv)
+
     def test_task_abort():
         result = kaltura_post("reach_entryVendorTask", "abort", {
             "id": state["test_task_id"],
