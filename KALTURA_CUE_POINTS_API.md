@@ -261,7 +261,7 @@ Returns a CDN URL that serves the slide image directly.
 
 **Listing timedThumbAssets:** Use `thumbAsset.list` with `filter[entryIdEqual]` — both `KalturaThumbAsset` (entry thumbnails) and `KalturaTimedThumbAsset` (slide images) appear in the results.
 
-**Cascade delete:** Deleting a slide cue point automatically deletes its linked `KalturaTimedThumbAsset`.
+**Deleting thumb assets:** Use `thumbAsset.delete` with the asset ID to remove a slide image directly. Deleting a slide cue point automatically cascade-deletes its linked `KalturaTimedThumbAsset`.
 
 ## 3.5 How Slides Are Created
 
@@ -566,7 +566,9 @@ curl -X POST "$KALTURA_SERVICE_URL/service/quiz_quiz/action/add" \
 | `update` | Update quiz settings (increments version) |
 | `list` | List quiz entries |
 | `serve` | Download quiz as PDF |
-| `getUrl` | Get PDF download URL |
+| `getUrl` | Get PDF download URL (`quizOutputType`: 1=PDF) |
+
+**Deleting quiz attempts:** Use `userEntry.delete` with the user entry ID to remove a quiz attempt.
 
 ## 9.4 Add Quiz Questions
 
