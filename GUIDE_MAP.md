@@ -25,6 +25,7 @@ Guides for getting content into the platform and enriching it with AI.
 | [Multi-Stream](KALTURA_MULTI_STREAM_API.md) | Editing & Personalization | Dual-screen / PIP multi-camera entries |
 | [Captions & Transcripts](KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md) | Editing & Personalization | Caption asset CRUD, formats, serving, search |
 | [Custom Metadata](KALTURA_CUSTOM_METADATA_API.md) | Editing & Personalization | XSD schemas, structured XML metadata on entries |
+| [Cue Points & Interactive Video](KALTURA_CUE_POINTS_API.md) | Editing & Personalization | Chapters, slides, ads, annotations, quizzes, hotspots, player integration |
 | [REACH API](KALTURA_REACH_API.md) | AI Enrichment | Governed enrichment services marketplace: captions, translation, moderation, AI analysis, 22+ services |
 | [Agents Manager](KALTURA_AGENTS_MANAGER_API.md) | AI Enrichment | Automated content-processing rules and workflows |
 | [AI Genie](KALTURA_AI_GENIE_API.md) | AI Enrichment | Conversational AI / RAG over video library |
@@ -101,6 +102,9 @@ graph TD
     RE --> AG
     RE --> CT
     KS --> AI
+    CP["Cue Points"]
+    KS --> CP
+    UD --> CP
 
     %% Management
     ES["eSearch"]
@@ -186,7 +190,7 @@ graph TD
     classDef experience fill:#50C878,color:#fff,stroke:#3A9A5A
 
     class GS,KS,AT foundation
-    class UD,MS,CT,CM,RE,AG,AI creation
+    class UD,MS,CT,CM,RE,AG,AI,CP creation
     class ES,CA,UM,AB,MA,AR,AE,WH,APR,MSG,MO management
     class PE,EC,ER,CE,CVA,CNC,GW,EA,UF,MM,CL,AW,VA,EP,UP,GA,DI,SY experience
 ```
@@ -230,5 +234,9 @@ Blue = Foundation | Purple = Creation | Orange = Management | Green = Experience
 | Control who sees what | [Categories & Access Control](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md) |
 | Moderate content (flag, approve, reject) | [Moderation](KALTURA_MODERATION_API.md) |
 | Screen content with AI for policy violations | [Moderation](KALTURA_MODERATION_API.md) |
+| Add chapters, quizzes, or annotations to video | [Cue Points](KALTURA_CUE_POINTS_API.md) |
+| Insert ads (VAST/VPAID) at specific times | [Cue Points](KALTURA_CUE_POINTS_API.md) |
+| Build interactive video quizzes | [Cue Points](KALTURA_CUE_POINTS_API.md) |
+| Sync slides with video playback | [Cue Points](KALTURA_CUE_POINTS_API.md) |
 | Generate thumbnails | [Upload & Delivery](KALTURA_UPLOAD_AND_DELIVERY_API.md) (section 4) |
 | Add gamification | [Gamification](KALTURA_GAMIFICATION_API.md) |

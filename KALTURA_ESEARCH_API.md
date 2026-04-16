@@ -441,3 +441,4 @@ Use these values in the `sortField` property of `KalturaESearchOrderByItem`:
 - **[Captions & Transcripts API](KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md)** — Caption assets searchable via `KalturaESearchCaptionItem`
 - **[API Getting Started](KALTURA_API_GETTING_STARTED.md)** — Foundation guide covering content model and API patterns
 - **[Syndication](KALTURA_SYNDICATION_API.md)** — Search for entries to include in syndication feeds
+- **[Cue Points & Interactive Video](KALTURA_CUE_POINTS_API.md)** — Cue point search with `KalturaESearchCuePointItem` (12 searchable fields: text, tags, question, answers, type)

@@ -718,4 +718,5 @@ Use quartile tracking for custom engagement analytics, completion-gated content 
 - **[Captions & Transcripts](KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md)** — Caption assets displayed in the player transcript plugin
 - **[Analytics Reports](KALTURA_ANALYTICS_REPORTS_API.md)** — Player events feed analytics reports  
 - **[Unisphere Framework](KALTURA_UNISPHERE_FRAMEWORK_API.md)** — Unisphere plugins for player integration (unisphere-service, unisphere, unisphere-genie)
+- **[Cue Points & Interactive Video](KALTURA_CUE_POINTS_API.md)** — Chapters, slides, annotations, ads, quizzes, hotspots — data behind player timeline, navigation, and IVQ plugins
 

@@ -16,7 +16,9 @@ on:
       - "KALTURA_AGENTS_WIDGET_API.md"
       - "KALTURA_VOD_AVATAR_API.md"
       - "KALTURA_UNISPHERE_FRAMEWORK_API.md"
+      - "KALTURA_CUE_POINTS_API.md"
       - "tests/test_experience_components_*.py"
+      - "tests/test_cue_points_api.py"
       - "tests/test_helpers.py"
       - ".github/workflows/test.yml"
   pull_request:
@@ -33,7 +35,9 @@ on:
       - "KALTURA_AGENTS_WIDGET_API.md"
       - "KALTURA_VOD_AVATAR_API.md"
       - "KALTURA_UNISPHERE_FRAMEWORK_API.md"
+      - "KALTURA_CUE_POINTS_API.md"
       - "tests/test_experience_components_*.py"
+      - "tests/test_cue_points_api.py"
       - "tests/test_helpers.py"
       - ".github/workflows/test.yml"
   workflow_dispatch:

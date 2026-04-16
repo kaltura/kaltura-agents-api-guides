@@ -1,6 +1,6 @@
 # Kaltura API Guides — Roadmap
 
-**Current state:** 39 guides, 777 live-tested assertions, 4-tier flywheel structure.  
+**Current state:** 40 guides, 809 live-tested assertions, 4-tier flywheel structure.  
 Completed guide details are in [README.md](README.md). Test inventory is in each `tests/test_*.py` file.
 
 
@@ -91,16 +91,6 @@ Completed guide details are in [README.md](README.md). Test inventory is in each
 ## Deferred
 
 These require specialized research or have limited customer-facing API surface.
-
-### Cue Points / Temporal Metadata API
-
-**Why:** Chapters, annotations, ad cue points, hotspots — temporal markers within video timeline. Used by player plugins for chapter navigation, mid-roll ads, and interactive overlays.
-
-**Services:** `cuePoint.add` / `update` / `list`, subtypes: `KalturaAdCuePoint`, `KalturaCodeCuePoint`, `KalturaThumbCuePoint`, `KalturaAnnotation`
-
-**Status:** DEFERRED — significant API surface, requires investigation of which cue point types are customer-accessible vs internal-only. Player v7 plugin integration (chapters, hotspots) needs browser testing.
-
----
 
 ### Delivery Profiles Guide
 

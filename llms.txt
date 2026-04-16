@@ -25,6 +25,7 @@ The Kaltura platform combines intelligent content creation, enterprise-grade con
 - [Kaltura Agents Widget API](KALTURA_AGENTS_WIDGET_API.md): The Agents Widget is a Unisphere component that provides a UI for managing automated content-processing agents. It renders as a drawer panel where...
 - [Kaltura VOD Avatar Studio API](KALTURA_VOD_AVATAR_API.md): The VOD Avatar Studio is a Unisphere widget for creating pre-recorded avatar video presentations. Users select an AI avatar, write or paste a...
 - [Kaltura Embeddable Analytics API](KALTURA_ANALYTICS_EMBED_API.md): The Embeddable Analytics widget provides analytics visualization dashboards that can be embedded in third-party applications via iframe. The...
+- [Kaltura Cue Points & Interactive Video API](KALTURA_CUE_POINTS_API.md): Cue points are temporal markers on video entries — chapters, slides, ads, annotations, quizzes, broadcast events, session boundaries, and custom...
 
 ## Content Management
 
@@ -69,5 +70,5 @@ The Kaltura platform combines intelligent content creation, enterprise-grade con
 
 ## Optional
 
-- [Kaltura API Guides — Master Plan & Roadmap](PLAN.md): Full Kaltura API landscape (100+ services) and prioritized guide roadmap
+- [Kaltura API Guides — Roadmap](PLAN.md): Full Kaltura API landscape (100+ services) and prioritized guide roadmap
 - [Kaltura API Guides — Project Standards](AGENTS.md): Project conventions for AI agents contributing to this repo

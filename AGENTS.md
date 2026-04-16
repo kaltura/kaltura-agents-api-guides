@@ -48,6 +48,7 @@ Kaltura API Guides/
 ├── KALTURA_UNISPHERE_FRAMEWORK_API.md     # Unisphere micro-frontend framework (loader, workspace, services)
 ├── KALTURA_MULTI_ACCOUNT_MANAGEMENT_API.md # Multi-account management, cross-account analytics
 ├── KALTURA_MODERATION_API.md              # Content moderation: flagging, approve/reject, AI moderation via REACH
+├── KALTURA_CUE_POINTS_API.md             # Cue points: chapters, slides, annotations, ads, quizzes, hotspots, eSearch
 ├── version.txt                            # Current version (managed by release-please)
 ├── release-please-config.json             # Release automation config
 ├── .release-please-manifest.json          # Version tracking for release-please
@@ -164,6 +165,7 @@ Auth header formats differ by API:
 - **Cascade behavior:** Deleting a parent entry cascades to children — use `baseEntry.list` with `parentEntryIdEqual` to discover children first
 - **Search for child entries:** Use `parentEntryIdEqual` filter to retrieve child entries (multi-stream, clip children). Default search returns root entries only.
 - **Event IDs are integers** (Events Platform) — pass as `12345`, not `"evt_abc123"`
+- **Cue point filter constraint:** Every `cuePoint.list` / `cuePoint.count` call must include `entryIdEqual`, `entryIdIn`, `idEqual`, or `idIn` — calls without these return an error
 
 ## Security & Compliance Guidance
 
@@ -218,6 +220,7 @@ Agents building on Kaltura should use platform services rather than reimplementi
 | Embedded analytics | Embeddable Analytics (iframe dashboards) | `KALTURA_ANALYTICS_EMBED_API.md` |
 | Unisphere experiences | Micro-frontend framework: loader, workspace, services, Media Manager | `KALTURA_UNISPHERE_FRAMEWORK_API.md` |
 | Multi-account management | Parent-child accounts, cross-account analytics | `KALTURA_MULTI_ACCOUNT_MANAGEMENT_API.md` |
+| Cue points & interactive video | Chapters, slides, annotations, ads, quizzes, hotspots, eSearch, player plugins | `KALTURA_CUE_POINTS_API.md` |
 
 ## Commit Messages & Versioning
 
