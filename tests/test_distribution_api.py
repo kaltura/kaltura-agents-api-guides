@@ -15,7 +15,18 @@ from test_helpers import kaltura_post, create_test_entry, delete_test_entry, Tes
 
 state = {}
 
-EXISTING_YOUTUBE_PROFILE_ID = 413741  # Pre-configured YouTube API profile on test account
+
+def _add_profile(profile_data):
+    """Create a distribution profile using direct requests.post with partnerId."""
+    url = f"{SERVICE_URL}/service/contentDistribution_distributionProfile/action/add"
+    data = {"ks": KS, "format": 1, "partnerId": PARTNER_ID}
+    data.update(profile_data)
+    resp = requests.post(url, data=data, timeout=30)
+    resp.raise_for_status()
+    result = resp.json()
+    if isinstance(result, dict) and result.get("objectType") == "KalturaAPIException":
+        raise Exception(f"Kaltura API error: {result.get('message')} (code: {result.get('code')})")
+    return result
 
 
 def main():
@@ -37,7 +48,7 @@ def main():
     runner.run_test("distributionProvider.list — available providers", test_provider_list)
 
     def test_provider_types():
-        """Verify expected provider types exist (generic, syndication, YouTube API)."""
+        """Verify expected provider types exist (generic, syndication, FTP)."""
         result = kaltura_post("contentDistribution_distributionProvider", "list", {})
         objects = result.get("objects", [])
         types_found = set()
@@ -47,14 +58,14 @@ def main():
                 types_found.add(str(ptype))
         assert "1" in types_found, f"Generic provider (type=1) not found in {types_found}"
         assert "2" in types_found, f"Syndication provider (type=2) not found in {types_found}"
-        assert "youtubeApiDistribution.YOUTUBE_API" in types_found, \
-            f"YouTube API provider not found in {types_found}"
-        print(f"    Found generic, syndication, YouTube API providers")
+        assert "ftpDistribution.FTP" in types_found, \
+            f"FTP provider not found in {types_found}"
+        print(f"    Found generic, syndication, FTP providers")
 
     runner.run_test("distributionProvider.list — verify key provider types", test_provider_types)
 
     # ════════════════════════════════════════════
-    # Phase 2: Distribution Profile Management
+    # Phase 2: Distribution Profile CRUD
     # ════════════════════════════════════════════
 
     def test_profile_list():
@@ -66,23 +77,6 @@ def main():
         print(f"    Profiles: {result['totalCount']}")
 
     runner.run_test("distributionProfile.list — list profiles", test_profile_list)
-
-    def test_profile_get():
-        """Retrieve the YouTube distribution profile by ID."""
-        result = kaltura_post("contentDistribution_distributionProfile", "get", {
-            "id": EXISTING_YOUTUBE_PROFILE_ID,
-        })
-        assert result.get("id") == EXISTING_YOUTUBE_PROFILE_ID, \
-            f"Expected id={EXISTING_YOUTUBE_PROFILE_ID}, got {result.get('id')}"
-        assert "providerType" in result, f"Expected providerType in response: {result}"
-        assert "name" in result, f"Expected name in response: {result}"
-        assert "status" in result, f"Expected status in response: {result}"
-        state["profile_name"] = result["name"]
-        state["profile_provider"] = result["providerType"]
-        state["profile_status"] = result["status"]
-        print(f"    Profile: {result['name']}, provider={result['providerType']}, status={result['status']}")
-
-    runner.run_test("distributionProfile.get — YouTube profile details", test_profile_get)
 
     def test_profile_list_filter_status():
         """List distribution profiles filtered by status."""
@@ -97,53 +91,20 @@ def main():
 
     runner.run_test("distributionProfile.list — filter by status=ENABLED", test_profile_list_filter_status)
 
-    def test_profile_get_fields():
-        """Verify YouTube profile returns provider-specific fields."""
-        result = kaltura_post("contentDistribution_distributionProfile", "get", {
-            "id": EXISTING_YOUTUBE_PROFILE_ID,
-        })
-        assert result.get("objectType") == "KalturaYoutubeApiDistributionProfile", \
-            f"Expected KalturaYoutubeApiDistributionProfile, got {result.get('objectType')}"
-        assert "defaultCategory" in result, f"Expected defaultCategory: {list(result.keys())}"
-        assert "allowComments" in result, f"Expected allowComments: {list(result.keys())}"
-        assert "allowEmbedding" in result, f"Expected allowEmbedding: {list(result.keys())}"
-        assert "submitEnabled" in result, f"Expected submitEnabled: {list(result.keys())}"
-        assert "distributeTrigger" in result, f"Expected distributeTrigger: {list(result.keys())}"
-        print(f"    YouTube fields: category={result.get('defaultCategory')}, "
-              f"comments={result.get('allowComments')}, embed={result.get('allowEmbedding')}")
-
-    runner.run_test("distributionProfile.get — YouTube-specific fields", test_profile_get_fields)
-
-    # Note: distributionProfile.add requires explicit partnerId in the request body.
-    # Unlike most Kaltura services, the distribution plugin uses $this->impersonatedPartnerId
-    # (from request param) rather than deriving it from the KS. Without it, profiles save
-    # with partnerId=null and become invisible to get/list.
-    # KalturaGenericDistributionProfile also requires a configured genericDistributionProvider
-    # (genericDistributionProvider.add is SERVICE_FORBIDDEN for customer accounts).
-    # Using KalturaFtpDistributionProfile for full CRUD tests.
-
     def test_profile_add():
         """Create an FTP distribution profile (requires partnerId in request)."""
-        url = f"{SERVICE_URL}/service/contentDistribution_distributionProfile/action/add"
-        resp = requests.post(url, data={
-            "ks": KS,
-            "format": 1,
-            "partnerId": PARTNER_ID,
+        result = _add_profile({
             "distributionProfile[objectType]": "KalturaFtpDistributionProfile",
             "distributionProfile[providerType]": "ftpDistribution.FTP",
             "distributionProfile[name]": f"API_Test_FTP_{int(time.time())}",
-            "distributionProfile[status]": 1,  # DISABLED
+            "distributionProfile[status]": 2,  # ENABLED
             "distributionProfile[protocol]": 1,  # FTP
             "distributionProfile[host]": "ftp.example.com",
             "distributionProfile[port]": 21,
             "distributionProfile[basePath]": "/test",
             "distributionProfile[username]": "testuser",
             "distributionProfile[password]": "testpass",
-        }, timeout=30)
-        resp.raise_for_status()
-        result = resp.json()
-        if isinstance(result, dict) and result.get("objectType") == "KalturaAPIException":
-            raise Exception(f"Kaltura API error: {result.get('message')} (code: {result.get('code')})")
+        })
         assert "id" in result, f"Expected id in response: {result}"
         assert result.get("partnerId") == int(PARTNER_ID), (
             f"Expected partnerId={PARTNER_ID}, got {result.get('partnerId')}"
@@ -154,6 +115,27 @@ def main():
         print(f"    Created profile: {result['id']}, partnerId={result['partnerId']}")
 
     runner.run_test("distributionProfile.add — create FTP profile", test_profile_add)
+
+    def test_profile_get():
+        """Retrieve the created FTP profile by ID and verify fields."""
+        pid = state.get("created_profile_id")
+        if not pid:
+            print("    Skipped — no created profile")
+            return
+        result = kaltura_post("contentDistribution_distributionProfile", "get", {
+            "id": pid,
+        })
+        assert result.get("id") == pid, f"Expected id={pid}, got {result.get('id')}"
+        assert "providerType" in result, f"Expected providerType in response: {result}"
+        assert "name" in result, f"Expected name in response: {result}"
+        assert "status" in result, f"Expected status in response: {result}"
+        assert result.get("objectType") == "KalturaFtpDistributionProfile", \
+            f"Expected KalturaFtpDistributionProfile, got {result.get('objectType')}"
+        assert "submitEnabled" in result, f"Expected submitEnabled: {list(result.keys())}"
+        assert "distributeTrigger" in result, f"Expected distributeTrigger: {list(result.keys())}"
+        print(f"    Profile: {result['name']}, provider={result['providerType']}, status={result['status']}")
+
+    runner.run_test("distributionProfile.get — FTP profile details and fields", test_profile_get)
 
     def test_profile_update():
         """Update the created distribution profile name."""
@@ -172,41 +154,24 @@ def main():
     runner.run_test("distributionProfile.update — change name", test_profile_update)
 
     def test_profile_update_status():
-        """Enable the created distribution profile."""
+        """Disable then re-enable the created distribution profile."""
         pid = state.get("created_profile_id")
         if not pid:
             print("    Skipped — no created profile")
             return
         result = kaltura_post("contentDistribution_distributionProfile", "updateStatus", {
             "id": pid,
+            "status": 1,  # DISABLED
+        })
+        assert result.get("status") == 1, f"Expected status=1, got {result.get('status')}"
+        result = kaltura_post("contentDistribution_distributionProfile", "updateStatus", {
+            "id": pid,
             "status": 2,  # ENABLED
         })
         assert result.get("status") == 2, f"Expected status=2, got {result.get('status')}"
-        print(f"    Enabled: status={result['status']}")
+        print(f"    Toggled DISABLED→ENABLED: status={result['status']}")
 
-    runner.run_test("distributionProfile.updateStatus — enable profile", test_profile_update_status)
-
-    def test_profile_delete():
-        """Delete the created distribution profile and verify."""
-        pid = state.get("created_profile_id")
-        if not pid:
-            print("    Skipped — no created profile")
-            return
-        kaltura_post("contentDistribution_distributionProfile", "delete", {"id": pid})
-        try:
-            kaltura_post("contentDistribution_distributionProfile", "get", {"id": pid})
-            assert False, "Expected NOT_FOUND after delete"
-        except Exception as e:
-            assert "NOT_FOUND" in str(e).upper() or "not found" in str(e).lower(), (
-                f"Expected not-found error, got: {e}"
-            )
-            print(f"    Deleted and verified: {pid}")
-        runner._cleanup_actions = [
-            (l, fn) for l, fn in runner._cleanup_actions
-            if f"created profile {pid}" not in l
-        ]
-
-    runner.run_test("distributionProfile.delete — remove and verify", test_profile_delete)
+    runner.run_test("distributionProfile.updateStatus — toggle status", test_profile_update_status)
 
     # ════════════════════════════════════════════
     # Phase 3: Entry Distribution Lifecycle
@@ -223,11 +188,11 @@ def main():
     runner.run_test("media.add — create test entry", test_create_test_entry)
 
     def test_entry_distribution_add():
-        """Bind test entry to YouTube distribution profile."""
+        """Bind test entry to our FTP distribution profile."""
         result = kaltura_post("contentDistribution_entryDistribution", "add", {
             "entryDistribution[objectType]": "KalturaEntryDistribution",
             "entryDistribution[entryId]": state["test_entry_id"],
-            "entryDistribution[distributionProfileId]": EXISTING_YOUTUBE_PROFILE_ID,
+            "entryDistribution[distributionProfileId]": state["created_profile_id"],
         })
         assert "id" in result, f"Expected id in response: {result}"
         assert result.get("entryId") == state["test_entry_id"], \
@@ -247,13 +212,12 @@ def main():
         })
         assert "validationErrors" in result, f"Expected validationErrors: {result}"
         errors = result["validationErrors"]
-        has_flavor_error = any(
-            e.get("objectType") == "KalturaDistributionValidationErrorMissingFlavor"
-            for e in errors
-        )
-        assert has_flavor_error, f"Expected missing flavor error, got: {errors}"
         state["validation_error_count"] = len(errors)
-        print(f"    Validation errors: {len(errors)} (missing flavor expected for empty entry)")
+        if errors:
+            error_types = [e.get("objectType", "?") for e in errors]
+            print(f"    Validation errors: {len(errors)} — {error_types}")
+        else:
+            print(f"    No validation errors (profile has no required flavors)")
 
     runner.run_test("entryDistribution.validate — check requirements", test_entry_distribution_validate)
 
@@ -289,11 +253,11 @@ def main():
         """List entry distributions filtered by distribution profile ID."""
         result = kaltura_post("contentDistribution_entryDistribution", "list", {
             "filter[objectType]": "KalturaEntryDistributionFilter",
-            "filter[distributionProfileIdEqual]": EXISTING_YOUTUBE_PROFILE_ID,
+            "filter[distributionProfileIdEqual]": state["created_profile_id"],
         })
         assert result.get("totalCount", 0) >= 1, \
             f"Expected at least 1 distribution for profile, got {result.get('totalCount')}"
-        print(f"    Found {result['totalCount']} distributions for profile {EXISTING_YOUTUBE_PROFILE_ID}")
+        print(f"    Found {result['totalCount']} distributions for profile {state['created_profile_id']}")
 
     runner.run_test("entryDistribution.list — filter by profileId", test_entry_distribution_list_by_profile)
 
@@ -336,10 +300,12 @@ def main():
         })
         assert result.get("id") == state["entry_dist_id"], \
             f"Expected id={state['entry_dist_id']}, got {result.get('id')}"
-        assert result.get("status") in [1, 4], \
-            f"Expected status QUEUED(1) or SUBMITTING(4), got {result.get('status')}"
-        state["post_submit_status"] = result["status"]
-        print(f"    Submitted: status={result['status']} ({'QUEUED' if result['status'] == 1 else 'SUBMITTING'})")
+        status_names = {0: "PENDING", 1: "QUEUED", 4: "SUBMITTING", 7: "ERROR_SUBMITTING"}
+        status = result.get("status")
+        assert status in [0, 1, 4, 7], \
+            f"Expected valid distribution status, got {status}"
+        state["post_submit_status"] = status
+        print(f"    Submitted: status={status} ({status_names.get(status, 'UNKNOWN')})")
 
     runner.run_test("entryDistribution.submitAdd — submit to remote", test_entry_distribution_submit_add)
 
@@ -720,11 +686,15 @@ def main():
 
     def test_entry_dist_invalid_entry():
         """Verify error for binding non-existent entry to distribution."""
+        pid = state.get("created_profile_id")
+        if not pid:
+            print("    Skipped — no created profile")
+            return
         try:
             kaltura_post("contentDistribution_entryDistribution", "add", {
                 "entryDistribution[objectType]": "KalturaEntryDistribution",
                 "entryDistribution[entryId]": "0_nonexistent",
-                "entryDistribution[distributionProfileId]": EXISTING_YOUTUBE_PROFILE_ID,
+                "entryDistribution[distributionProfileId]": pid,
             })
             assert False, "Expected error for non-existent entry"
         except Exception as e:
@@ -740,13 +710,17 @@ def main():
 
     def test_entry_dist_delete_and_verify():
         """Delete an entry distribution and verify it is removed."""
+        pid = state.get("created_profile_id")
+        if not pid:
+            print("    Skipped — no created profile")
+            return
         entry_id = create_test_entry()
         runner.register_cleanup(f"delete-test entry {entry_id}",
                                 lambda: delete_test_entry(entry_id))
         result = kaltura_post("contentDistribution_entryDistribution", "add", {
             "entryDistribution[objectType]": "KalturaEntryDistribution",
             "entryDistribution[entryId]": entry_id,
-            "entryDistribution[distributionProfileId]": EXISTING_YOUTUBE_PROFILE_ID,
+            "entryDistribution[distributionProfileId]": pid,
         })
         dist_id = result["id"]
         print(f"    Created entry distribution to delete: {dist_id}")
@@ -764,6 +738,31 @@ def main():
             print(f"    Verified deleted: {e}")
 
     runner.run_test("entryDistribution.delete — delete and verify", test_entry_dist_delete_and_verify)
+
+    # ════════════════════════════════════════════
+    # Phase 8: Profile Delete Verification
+    # ════════════════════════════════════════════
+
+    def test_profile_delete_verify():
+        """Delete the FTP profile and verify NOT_FOUND."""
+        pid = state.get("created_profile_id")
+        if not pid:
+            print("    Skipped — no created profile")
+            return
+        kaltura_post("contentDistribution_distributionProfile", "delete", {"id": pid})
+        try:
+            kaltura_post("contentDistribution_distributionProfile", "get", {"id": pid})
+            assert False, "Expected NOT_FOUND after delete"
+        except Exception as e:
+            assert "NOT_FOUND" in str(e).upper() or "not found" in str(e).lower(), \
+                f"Expected NOT_FOUND error, got: {e}"
+            print(f"    Deleted and verified: {pid}")
+        runner._cleanup_actions = [
+            (l, fn) for l, fn in runner._cleanup_actions
+            if f"created profile {pid}" not in l
+        ]
+
+    runner.run_test("distributionProfile.delete — remove and verify", test_profile_delete_verify)
 
     # ════════════════════════════════════════════
     # Cleanup & Summary

@@ -136,15 +136,22 @@ def main():
     runner.run_test("appToken.list — find test token in active list", test_list_tokens)
 
     def test_list_filter_by_hash():
-        """Filter tokens by hash type."""
+        """Filter tokens by hash type — verify our SHA256 token appears and no SHA1 leaks."""
         result = kaltura_post("appToken", "list", {
             "filter[hashTypeEqual]": "SHA256",
+            "filter[statusEqual]": 2,  # ACTIVE
             "pager[pageSize]": 50,
         })
         assert result.get("totalCount", 0) > 0, "No SHA256 tokens found"
         for t in result.get("objects", []):
             assert t["hashType"] == "SHA256", f"Got non-SHA256 token: {t['hashType']}"
-        print(f"    Found {result['totalCount']} SHA256 token(s)")
+        token_ids = [t["id"] for t in result.get("objects", [])]
+        assert state["token_id"] in token_ids, \
+            f"Our SHA256 token {state['token_id']} not in filtered results"
+        if state.get("sha1_token_id"):
+            assert state["sha1_token_id"] not in token_ids, \
+                f"SHA1 token {state['sha1_token_id']} leaked into SHA256 filter"
+        print(f"    Found {result['totalCount']} SHA256 token(s), our token confirmed present")
 
     runner.run_test("appToken.list — filter by hashType=SHA256", test_list_filter_by_hash)
 

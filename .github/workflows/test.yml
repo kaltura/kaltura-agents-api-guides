@@ -29,6 +29,7 @@ jobs:
       KALTURA_GENIE_URL: ${{ secrets.KALTURA_GENIE_URL }}
       KALTURA_PLAYER_ID: ${{ secrets.KALTURA_PLAYER_ID }}
       KALTURA_GENIE_CATEGORY_ID: ${{ secrets.KALTURA_GENIE_CATEGORY_ID }}
+      KALTURA_USER_ID: ${{ secrets.KALTURA_USER_ID }}
     steps:
       - name: Check for API credentials
         id: check-secrets
@@ -124,6 +125,7 @@ jobs:
       KALTURA_ADMIN_SECRET: ${{ secrets.KALTURA_ADMIN_SECRET }}
       KALTURA_GENIE_URL: ${{ secrets.KALTURA_GENIE_URL }}
       KALTURA_PLAYER_ID: ${{ secrets.KALTURA_PLAYER_ID }}
+      KALTURA_USER_ID: ${{ secrets.KALTURA_USER_ID }}
     steps:
       - name: Check for API credentials
         id: check-secrets

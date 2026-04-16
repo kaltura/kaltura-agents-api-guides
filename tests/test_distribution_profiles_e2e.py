@@ -15,8 +15,6 @@ from test_helpers import kaltura_post, TestRunner, PARTNER_ID, KS, SERVICE_URL
 
 state = {}
 
-EXISTING_YOUTUBE_PROFILE_ID = 413741  # Pre-configured YouTube API profile on test account
-
 
 def _add_profile(profile_data):
     """Create a distribution profile using direct requests.post with partnerId.
@@ -515,68 +513,88 @@ def main():
     runner.run_test("distributionProfile.delete — remove CrossKaltura profile", test_crosskaltura_delete)
 
     # ════════════════════════════════════════════
-    # Phase 4: YouTube Profile Inspection (Read-Only)
+    # Phase 4: Profile Field Inspection
     # ════════════════════════════════════════════
 
-    def test_youtube_get():
-        """Retrieve the pre-existing YouTube distribution profile."""
-        result = kaltura_post("contentDistribution_distributionProfile", "get", {
-            "id": EXISTING_YOUTUBE_PROFILE_ID,
+    def test_inspect_add():
+        """Create an FTP profile for detailed field inspection."""
+        ts = int(time.time())
+        result = _add_profile({
+            "distributionProfile[objectType]": "KalturaFtpDistributionProfile",
+            "distributionProfile[providerType]": "ftpDistribution.FTP",
+            "distributionProfile[name]": f"E2E_Inspect_{ts}",
+            "distributionProfile[status]": 2,  # ENABLED
+            "distributionProfile[protocol]": 1,
+            "distributionProfile[host]": "ftp.inspect.example.com",
+            "distributionProfile[port]": 21,
+            "distributionProfile[basePath]": "/inspect",
+            "distributionProfile[username]": "inspector",
+            "distributionProfile[password]": "pass",
+            "distributionProfile[submitEnabled]": 3,  # MANUAL
+            "distributionProfile[updateEnabled]": 2,  # AUTOMATIC
+            "distributionProfile[deleteEnabled]": 1,  # DISABLED
+            "distributionProfile[reportEnabled]": 1,  # DISABLED
+            "distributionProfile[distributeTrigger]": 1,  # ENTRY_READY
         })
-        assert result.get("id") == EXISTING_YOUTUBE_PROFILE_ID, \
-            f"Expected id={EXISTING_YOUTUBE_PROFILE_ID}, got {result.get('id')}"
-        assert result.get("objectType") == "KalturaYoutubeApiDistributionProfile", \
-            f"Expected KalturaYoutubeApiDistributionProfile, got {result.get('objectType')}"
-        state["youtube_profile"] = result
-        print(f"    YouTube profile: {result.get('name')}, status={result.get('status')}")
+        assert "id" in result, f"Expected id: {result}"
+        state["inspect_profile_id"] = result["id"]
+        state["inspect_profile"] = result
+        runner.register_cleanup(f"inspect profile {result['id']}",
+                                lambda: _delete_profile(state["inspect_profile_id"]))
+        print(f"    Created inspect profile: {result['id']}")
 
-    runner.run_test("distributionProfile.get — YouTube profile", test_youtube_get)
+    runner.run_test("distributionProfile.add — create inspection profile", test_inspect_add)
 
-    def test_youtube_base_fields():
-        """Verify YouTube profile has all base distribution profile fields."""
-        p = state.get("youtube_profile")
-        if not p:
-            print("    Skipped — no YouTube profile")
+    def test_inspect_base_fields():
+        """Verify profile has all base distribution profile fields."""
+        pid = state.get("inspect_profile_id")
+        if not pid:
+            print("    Skipped — no inspect profile")
             return
+        p = kaltura_post("contentDistribution_distributionProfile", "get", {"id": pid})
         base_fields = ["id", "name", "status", "providerType", "submitEnabled",
                        "updateEnabled", "deleteEnabled", "reportEnabled",
                        "distributeTrigger", "partnerId", "createdAt", "updatedAt"]
         missing = [f for f in base_fields if f not in p]
         assert not missing, f"Missing base fields: {missing}"
-        assert p.get("providerType") == "youtubeApiDistribution.YOUTUBE_API", \
-            f"Expected providerType=youtubeApiDistribution.YOUTUBE_API, got {p.get('providerType')}"
+        assert p.get("providerType") == "ftpDistribution.FTP", \
+            f"Expected providerType=ftpDistribution.FTP, got {p.get('providerType')}"
         assert p.get("partnerId") == int(PARTNER_ID), \
             f"Expected partnerId={PARTNER_ID}, got {p.get('partnerId')}"
         print(f"    All base fields present: {', '.join(base_fields)}")
 
-    runner.run_test("distributionProfile.get — YouTube base fields", test_youtube_base_fields)
+    runner.run_test("distributionProfile.get — base fields inspection", test_inspect_base_fields)
 
-    def test_youtube_specific_fields():
-        """Verify YouTube-specific fields: defaultCategory, allowComments, allowEmbedding, allowRatings."""
-        p = state.get("youtube_profile")
-        if not p:
-            print("    Skipped — no YouTube profile")
+    def test_inspect_ftp_fields():
+        """Verify FTP-specific fields: host, port, protocol, basePath, username."""
+        pid = state.get("inspect_profile_id")
+        if not pid:
+            print("    Skipped — no inspect profile")
             return
-        yt_fields = ["defaultCategory", "allowComments", "allowEmbedding", "allowRatings"]
-        missing = [f for f in yt_fields if f not in p]
-        assert not missing, f"Missing YouTube fields: {missing}"
-        print(f"    YouTube fields: category={p.get('defaultCategory')}, "
-              f"comments={p.get('allowComments')}, embedding={p.get('allowEmbedding')}, "
-              f"ratings={p.get('allowRatings')}")
+        p = kaltura_post("contentDistribution_distributionProfile", "get", {"id": pid})
+        ftp_fields = ["host", "port", "protocol", "basePath", "username"]
+        missing = [f for f in ftp_fields if f not in p]
+        assert not missing, f"Missing FTP fields: {missing}"
+        assert p.get("host") == "ftp.inspect.example.com"
+        assert p.get("port") == 21
+        assert p.get("basePath") == "/inspect"
+        print(f"    FTP fields: host={p.get('host')}, port={p.get('port')}, "
+              f"basePath={p.get('basePath')}, username={p.get('username')}")
 
-    runner.run_test("distributionProfile.get — YouTube-specific fields", test_youtube_specific_fields)
+    runner.run_test("distributionProfile.get — FTP-specific fields", test_inspect_ftp_fields)
 
-    def test_youtube_in_list():
-        """Verify YouTube profile appears in the profile list."""
+    def test_inspect_in_list():
+        """Verify inspect profile appears in the profile list."""
+        pid = state.get("inspect_profile_id")
+        if not pid:
+            print("    Skipped — no inspect profile")
+            return
         result = kaltura_post("contentDistribution_distributionProfile", "list", {})
-        found = any(
-            obj.get("id") == EXISTING_YOUTUBE_PROFILE_ID
-            for obj in result.get("objects", [])
-        )
-        assert found, f"YouTube profile {EXISTING_YOUTUBE_PROFILE_ID} not found in list"
-        print(f"    YouTube profile found in list of {result['totalCount']} profiles")
+        found = any(obj.get("id") == pid for obj in result.get("objects", []))
+        assert found, f"Inspect profile {pid} not found in list"
+        print(f"    Profile found in list of {result['totalCount']} profiles")
 
-    runner.run_test("distributionProfile.list — YouTube profile in results", test_youtube_in_list)
+    runner.run_test("distributionProfile.list — inspect profile in results", test_inspect_in_list)
 
     # ════════════════════════════════════════════
     # Phase 5: Profile with Flavor/Thumb Requirements
