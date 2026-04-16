@@ -4,66 +4,20 @@ on:
   push:
     branches: [main]
     paths:
-      - "KALTURA_EXPERIENCE_COMPONENTS_API.md"
-      - "KALTURA_EXPRESS_RECORDER_API.md"
-      - "KALTURA_CAPTIONS_EDITOR_API.md"
-      - "KALTURA_CONVERSATIONAL_AVATAR_API.md"
-      - "KALTURA_CNC_API.md"
-      - "KALTURA_GENIE_WIDGET_API.md"
-      - "KALTURA_ANALYTICS_EMBED_API.md"
-      - "KALTURA_MEDIA_MANAGER_API.md"
-      - "KALTURA_CONTENT_LAB_API.md"
-      - "KALTURA_AGENTS_WIDGET_API.md"
-      - "KALTURA_VOD_AVATAR_API.md"
-      - "KALTURA_UNISPHERE_FRAMEWORK_API.md"
-      - "KALTURA_CUE_POINTS_API.md"
-      - "KALTURA_QUIZ_API.md"
-      - "KALTURA_CHAPTERS_AND_SLIDES_API.md"
-      - "KALTURA_ANNOTATIONS_API.md"
-      - "KALTURA_AD_CUE_POINTS_API.md"
-      - "KALTURA_CODE_CUE_POINTS_API.md"
-      - "tests/test_experience_components_*.py"
-      - "tests/test_cue_points_api.py"
-      - "tests/test_quiz_api.py"
-      - "tests/test_chapters_slides_api.py"
-      - "tests/test_annotations_api.py"
-      - "tests/test_ad_cue_points_api.py"
-      - "tests/test_code_cue_points_api.py"
+      - "KALTURA_*.md"
+      - "tests/test_*.py"
       - "tests/test_helpers.py"
       - ".github/workflows/test.yml"
   pull_request:
     paths:
-      - "KALTURA_EXPERIENCE_COMPONENTS_API.md"
-      - "KALTURA_EXPRESS_RECORDER_API.md"
-      - "KALTURA_CAPTIONS_EDITOR_API.md"
-      - "KALTURA_CONVERSATIONAL_AVATAR_API.md"
-      - "KALTURA_CNC_API.md"
-      - "KALTURA_GENIE_WIDGET_API.md"
-      - "KALTURA_ANALYTICS_EMBED_API.md"
-      - "KALTURA_MEDIA_MANAGER_API.md"
-      - "KALTURA_CONTENT_LAB_API.md"
-      - "KALTURA_AGENTS_WIDGET_API.md"
-      - "KALTURA_VOD_AVATAR_API.md"
-      - "KALTURA_UNISPHERE_FRAMEWORK_API.md"
-      - "KALTURA_CUE_POINTS_API.md"
-      - "KALTURA_QUIZ_API.md"
-      - "KALTURA_CHAPTERS_AND_SLIDES_API.md"
-      - "KALTURA_ANNOTATIONS_API.md"
-      - "KALTURA_AD_CUE_POINTS_API.md"
-      - "KALTURA_CODE_CUE_POINTS_API.md"
-      - "tests/test_experience_components_*.py"
-      - "tests/test_cue_points_api.py"
-      - "tests/test_quiz_api.py"
-      - "tests/test_chapters_slides_api.py"
-      - "tests/test_annotations_api.py"
-      - "tests/test_ad_cue_points_api.py"
-      - "tests/test_code_cue_points_api.py"
+      - "KALTURA_*.md"
+      - "tests/test_*.py"
       - "tests/test_helpers.py"
       - ".github/workflows/test.yml"
   workflow_dispatch:
 
 jobs:
-  # ── Live API Validation ──────────────────────────────────
+  # ── Live API Validation (all non-Playwright tests) ──────
   api-tests:
     name: API validation
     runs-on: ubuntu-latest
@@ -98,11 +52,68 @@ jobs:
         if: steps.check-secrets.outputs.skip != 'true'
         run: pip install requests
 
-      - name: Run API tests
+      - name: Run all API tests
         if: steps.check-secrets.outputs.skip != 'true'
-        run: python3 tests/test_experience_components_api.py
+        run: |
+          failed=0
+          for test_file in \
+            tests/test_getting_started_api.py \
+            tests/test_session_api.py \
+            tests/test_apptokens_api.py \
+            tests/test_esearch_api.py \
+            tests/test_upload_delivery_api.py \
+            tests/test_player_embed_api.py \
+            tests/test_reach_api.py \
+            tests/test_clips_api.py \
+            tests/test_agents_manager_api.py \
+            tests/test_genie_api.py \
+            tests/test_events_platform_api.py \
+            tests/test_app_registry_api.py \
+            tests/test_user_profile_api.py \
+            tests/test_messaging_api.py \
+            tests/test_webhooks_api.py \
+            tests/test_multi_stream_api.py \
+            tests/test_user_management_api.py \
+            tests/test_auth_broker_api.py \
+            tests/test_categories_access_control_api.py \
+            tests/test_custom_metadata_api.py \
+            tests/test_captions_transcripts_api.py \
+            tests/test_analytics_reports_api.py \
+            tests/test_analytics_events_collection_api.py \
+            tests/test_gamification_api.py \
+            tests/test_distribution_api.py \
+            tests/test_distribution_profiles_e2e.py \
+            tests/test_syndication_api.py \
+            tests/test_experience_components_api.py \
+            tests/test_multi_account_api.py \
+            tests/test_moderation_api.py \
+            tests/test_cue_points_api.py \
+            tests/test_quiz_api.py \
+            tests/test_chapters_slides_api.py \
+            tests/test_annotations_api.py \
+            tests/test_ad_cue_points_api.py \
+            tests/test_code_cue_points_api.py \
+            tests/test_unisphere_framework_api.py \
+          ; do
+            echo ""
+            echo "════════════════════════════════════════════"
+            echo "Running: $test_file"
+            echo "════════════════════════════════════════════"
+            if ! python3 "$test_file"; then
+              echo "::error::FAILED: $test_file"
+              failed=$((failed + 1))
+            fi
+          done
+          echo ""
+          echo "════════════════════════════════════════════"
+          if [ "$failed" -gt 0 ]; then
+            echo "::error::$failed test file(s) failed"
+            exit 1
+          else
+            echo "All API test files passed"
+          fi
 
-  # ── Browser E2E ──────────────────────────────────────────
+  # ── Browser E2E (Playwright-dependent tests) ────────────
   browser-e2e:
     name: Browser E2E (Playwright)
     runs-on: ubuntu-latest
@@ -138,6 +149,33 @@ jobs:
           pip install requests playwright
           playwright install --with-deps chromium
 
-      - name: Run browser E2E tests
+      - name: Run all browser E2E tests
         if: steps.check-secrets.outputs.skip != 'true'
-        run: python3 tests/test_experience_components_e2e.py
+        run: |
+          failed=0
+          for test_file in \
+            tests/test_experience_components_e2e.py \
+            tests/test_unisphere_framework_e2e.py \
+            tests/test_agents_widget_api.py \
+            tests/test_content_lab_api.py \
+            tests/test_genie_widget_api.py \
+            tests/test_media_manager_api.py \
+            tests/test_vod_avatar_api.py \
+          ; do
+            echo ""
+            echo "════════════════════════════════════════════"
+            echo "Running: $test_file"
+            echo "════════════════════════════════════════════"
+            if ! python3 "$test_file"; then
+              echo "::error::FAILED: $test_file"
+              failed=$((failed + 1))
+            fi
+          done
+          echo ""
+          echo "════════════════════════════════════════════"
+          if [ "$failed" -gt 0 ]; then
+            echo "::error::$failed test file(s) failed"
+            exit 1
+          else
+            echo "All browser E2E test files passed"
+          fi
