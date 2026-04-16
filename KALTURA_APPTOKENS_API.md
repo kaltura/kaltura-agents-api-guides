@@ -483,7 +483,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/appToken/action/delete" \
 - **[eSearch Guide](KALTURA_ESEARCH_API.md)** — Use AppToken-generated KS for search
 - **[User Management API](KALTURA_USER_MANAGEMENT_API.md)** — User roles and permissions that AppTokens scope to via `setrole` privileges
 - **[Player Embed](KALTURA_PLAYER_EMBED_GUIDE.md)** — Generate scoped player KS via AppToken flow
-- **[REACH](KALTURA_REACH_API.md)** — Scoped tokens for automated captioning and enrichment workflows
+- **[REACH](KALTURA_REACH_API.md)** — Scoped tokens for enrichment service workflows (captions, translation, moderation, and more)
 - **[Events Platform](KALTURA_EVENTS_PLATFORM_API.md)** — Bearer KS for events API calls
 - **[Webhooks](KALTURA_WEBHOOKS_API.md)** — AppToken-based KS for webhook handler authentication
 - **[Analytics Reports](KALTURA_ANALYTICS_REPORTS_API.md)** — Analytics-scoped tokens for reporting dashboards

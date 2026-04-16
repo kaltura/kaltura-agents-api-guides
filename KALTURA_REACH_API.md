@@ -1,6 +1,8 @@
 # Kaltura REACH API Guide
 
-Kaltura REACH is the **captioning, translation, accessibility, and content enrichment** services framework. Order processing tasks — from machine-generated captions to professional human translations — against your media entries. Results (caption files, audio tracks, chapters, metadata) are delivered directly back into Kaltura and attached to the entry automatically.
+Kaltura REACH is a **governed, budget-controlled marketplace for content enrichment services**. It provides a unified API for ordering any enrichment task — from machine-generated captions to professional human translations, AI-powered content moderation to conversational AI agents — against your media entries. Services are delivered by both **Machine/AI engines** and **Human Professional vendors**, supporting **80+ languages**. Results (caption files, audio tracks, chapters, metadata, moderation reports) are delivered directly back into Kaltura and attached to the entry automatically.
+
+REACH centralizes the management of enrichment services across your organization: credit budgets per account and department, moderation workflows for quality control, content deletion policies for privacy compliance, and vendor abstraction that ensures third-party providers never get direct access to your account. Customers pre-purchase credits that can be used across any integrated service during the contract period.
 
 **Base URL:** `https://www.kaltura.com/api_v3` (may differ by region/deployment)  
 **Auth:** KS passed as `ks` parameter in POST form data (see [Session Guide](KALTURA_SESSION_GUIDE.md))  
@@ -24,6 +26,8 @@ All parameters are passed as form data. Always include `ks=<YOUR_KS>` and `forma
 
 ## What REACH Provides
 
+REACH is an open marketplace — the services listed below are current as of this writing, but the platform is designed to integrate any enrichment service. Each service can be provided by Machine/AI engines, Human Professional vendors, or both, depending on vendor availability for your account.
+
 ### Captioning & Transcription
 - **Machine Captions (ASR)** — AI-powered, ~85% accuracy, up to 2-hour turnaround. Supports custom vocabularies/dictionaries for domain-specific terminology.
 - **Professional (Human) Captions** — 99%+ accuracy, 3-48 hour turnaround depending on SLA tier. Compliant with closed captioning standards.
@@ -31,28 +35,45 @@ All parameters are passed as form data. Always include `ks=<YOUR_KS>` and `forma
 - **Alignment** — Upload an existing transcript file and REACH syncs it to the audio timeline.
 
 ### Translation & Localization
-- **Translation** — Three modes: (1) translate directly from audio, (2) translate from existing captions file, (3) order professional captions first, then translate. Supports 100+ languages.
+- **Translation** — Three modes: (1) translate directly from audio, (2) translate from existing captions file, (3) order professional captions first, then translate. 80+ languages supported.
 - **Live Translation** — Real-time machine-generated subtitles in a different language during live events.
 - **Dubbing** — Machine-based translated audio via text-to-speech, synced to original dialogue timing.
 
 ### Accessibility
-- **Standard Audio Description** — Narration of visual elements mixed with original audio. English only.
+- **Standard Audio Description** — Narration of visual elements mixed with original audio.
 - **Extended Audio Description** — Pauses video to allow detailed narration of visual content. Uses speech synthesis from time-coded VTT. Requires player plugin.
 - **Sign Language** — Creates a child entry with sign language video (ASL or BSL) linked to the parent entry.
 
-### Clips & Video Intelligence
+### Intelligence & Analysis
 - **AI Clips** — Automatically generate short clips/highlights from longer content using AI analysis. Machine-powered, immediate turnaround.
 - **Quiz** — AI-generated quiz questions from video content.
 - **Video Analysis** — Visual content analysis including OCR (optical character recognition).
+- **Intelligent Tagging** — Automatic topic extraction and semantic tagging from transcript content.
+- **Sentiment Analysis** — AI-powered sentiment and tone analysis of spoken content.
+- **Content Moderation** — Screen video transcripts and frames against configurable moderation policies using LLMs and computer vision. See [Moderation API](KALTURA_MODERATION_API.md) for policies, rules, and scoring.
 
 ### Content Enrichment
-- **Chaptering** — AI-based chapter detection, reviewed by professionals. 24-hour turnaround, English only.
+- **Chaptering** — AI-based chapter detection, reviewed by professionals. 24-hour turnaround.
 - **Summary** — AI-generated content summary with auto-chaptering.
 - **Metadata Enrichment** — Automatic tags, keywords, and metadata extraction.
 - **Document Enrichment** — AI-powered enrichment for document-type entries.
 
-### Billing
-REACH services are billed in **credits**, defined per REACH profile. Credit balances, usage, and limits are managed through the REACH profile configuration.
+### Conversational AI
+- **Immersive Agent Chat** — Text-based conversational AI agent interaction over content.
+- **Immersive Agent Call** — Voice-based conversational AI agent interaction over content.
+
+### Governance & Billing
+REACH services are billed in **credits**, defined per REACH profile. Credit balances, usage, and limits are managed through the REACH profile configuration. Key governance features:
+
+- **Credit management** — Per-account, per-instance (KMS/KAF app), and per-department budgets. Central reporting of usage and billing.
+- **Moderation workflows** — Approval/rejection of enrichment task requests with email notifications, controlling when credits are spent.
+- **Content deletion policy** — Configure when source content is deleted from vendor systems after processing, ensuring compliance with data privacy regulations (GDPR, DPA).
+- **Vendor abstraction** — Third-party vendors receive only time-expired tokens with access to the specific entry being processed, never your account credentials or broader content access.
+- **Automation rules** — Define per-channel/category or account-wide rules for automatic enrichment ordering based on content events.
+
+### Language Support
+
+REACH services support 80+ languages including: English, Spanish, French, German, Portuguese, Arabic, Mandarin Chinese, Cantonese, Japanese, Korean, Russian, Hindi, Hebrew, Italian, Thai, Swedish, Polish, Danish, Finnish, Norwegian, Dutch, Hungarian, Romanian, Vietnamese, Czech, Greek, Indonesian, Turkish, Ukrainian, Welsh, Irish, Catalan, Tamil, Bulgarian, Estonian, Lithuanian, Slovak, Slovenian, Croatian, Farsi, Galician, Malay, Marathi, Mongolian, Taiwanese Mandarin, Afrikaans, Icelandic, Malayalam, Urdu, Zulu, Azerbaijani, Burmese, Bosnian, Georgian, Gujarati, Javanese, Kannada, Kazakh, Macedonian, Nepali, Punjabi, Serbian, Uzbek, Xhosa, Simplified Chinese, Traditional Chinese, and more. Language availability varies by service type and vendor.
 
 
 ## Core Concepts
@@ -72,24 +93,28 @@ The typical flow: discover available catalog items for your account, then create
 
 | Value | Name | Description |
 |---|---|---|
-| 1 | CAPTIONS | Speech-to-text captioning |
+| 1 | CAPTIONS | Speech-to-text captioning (machine ASR or human professional) |
 | 2 | TRANSLATION | Caption/audio translation |
 | 3 | ALIGNMENT | Transcript-to-audio alignment |
-| 4 | AUDIO_DESCRIPTION | Standard audio description |
+| 4 | AUDIO_DESCRIPTION | Standard audio description narration |
 | 5 | CHAPTERING | AI chapter detection |
-| 7 | DUBBING | Text-to-speech dubbing |
+| 6 | INTELLIGENT_TAGGING | Automatic topic extraction and semantic tagging |
+| 7 | DUBBING | Text-to-speech dubbed audio |
 | 8 | LIVE_CAPTION | Real-time live captions |
-| 9 | EXTENDED_AUDIO_DESCRIPTION | Extended audio description (VTT) |
+| 9 | EXTENDED_AUDIO_DESCRIPTION | Extended audio description (pauses video, VTT-based) |
 | 10 | CLIPS | AI-powered clip generation from longer content |
 | 11 | LIVE_TRANSLATION | Real-time live translation |
-| 12 | QUIZ | Quiz generation |
-| 13 | SUMMARY | Content summarization |
-| 14 | VIDEO_ANALYSIS | Video content analysis |
-| 15 | MODERATION | Content moderation |
-| 16 | METADATA_ENRICHMENT | Metadata enrichment |
-| 17 | SENTIMENT_ANALYSIS | Sentiment analysis |
-| 18 | DOCUMENT_ENRICHMENT | Document enrichment |
-| 19 | SIGN_LANGUAGE | Sign language video |
+| 12 | QUIZ | Quiz generation from video content |
+| 13 | SUMMARY | Content summarization with auto-chaptering |
+| 14 | VIDEO_ANALYSIS | Video content analysis (OCR, visual recognition) |
+| 15 | MODERATION | Content moderation (text + visual policy evaluation) |
+| 16 | METADATA_ENRICHMENT | Automatic tags, keywords, and metadata extraction |
+| 17 | SENTIMENT_ANALYSIS | Sentiment and tone analysis of spoken content |
+| 18 | DOCUMENT_ENRICHMENT | AI enrichment for document-type entries |
+| 19 | SIGN_LANGUAGE | Sign language video (ASL, BSL) |
+| 21 | IMMERSIVE_AGENT_CALL | Voice-based conversational AI agent interaction |
+| 22 | IMMERSIVE_AGENT_CHAT | Text-based conversational AI agent interaction |
+| 23 | AVATAR_VOD | Pre-recorded avatar video generation from scripts |
 
 ### Service Types (`serviceType`)
 
@@ -1056,7 +1081,7 @@ For human captioning, use the `notes` field on the task to provide terminology g
 
 # 7. Best Practices
 
-- **Use REACH Automation Rules for automatic processing.** Set always-on rules or Boolean condition rules on your REACH profile to auto-caption every new entry — avoids building custom per-entry task submission logic.
+- **Use REACH Automation Rules for automatic processing.** Set always-on rules or Boolean condition rules on your REACH profile to automatically enrich every new entry — avoids building custom per-entry task submission logic.
 - **Use Agents Manager for multi-step workflows.** For "caption → translate → summarize" pipelines, use Agents Manager rather than chaining manual REACH task submissions.
 - **Check credit before bulk operations.** Query `reachProfile.get` to compare `credit` vs `usedCredit` before submitting large batches.
 - **Use machine captions (serviceType=2) for speed.** Machine captions complete in minutes; human captions take hours. Use machine for time-sensitive content and human for high-accuracy needs.
@@ -1092,12 +1117,19 @@ For human captioning, use the `notes` field on the task to provide terminology g
 
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — Generate the KS required for all REACH API calls
 - **[AppTokens](KALTURA_APPTOKENS_API.md)** — Secure server-to-server auth for production REACH integrations
-- **[Upload & Delivery](KALTURA_UPLOAD_AND_DELIVERY_API.md)** — Upload content before ordering REACH services
-- **[eSearch](KALTURA_ESEARCH_API.md)** — Search entries enriched by REACH captions and metadata
-- **[AI Genie](KALTURA_AI_GENIE_API.md)** — Conversational AI that benefits from REACH-generated transcripts
-- **[Player Embed](KALTURA_PLAYER_EMBED_GUIDE.md)** — Play entries with REACH-generated captions in the player
+- **[Upload & Delivery](KALTURA_UPLOAD_AND_DELIVERY_API.md)** — Upload content before ordering REACH enrichment services
+- **[eSearch](KALTURA_ESEARCH_API.md)** — Search entries enriched by REACH-generated captions, metadata, and tags
+- **[AI Genie](KALTURA_AI_GENIE_API.md)** — Conversational AI that benefits from REACH-generated transcripts and enrichment
+- **[Player Embed](KALTURA_PLAYER_EMBED_GUIDE.md)** — Play entries with REACH-generated captions, translations, and audio descriptions
 - **[Agents Manager](KALTURA_AGENTS_MANAGER_API.md)** — Automate REACH tasks with event-driven agents
 - **[Webhooks API](KALTURA_WEBHOOKS_API.md)** — Boolean templates as REACH automation rule conditions; HTTP callbacks for task completion events
 - **[Captions & Transcripts API](KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md)** — Caption assets created and managed by REACH tasks; format conversion, multi-language workflows
 - **[Custom Metadata API](KALTURA_CUSTOM_METADATA_API.md)** — Custom metadata schemas for content enrichment
-- **[Analytics Reports](KALTURA_ANALYTICS_REPORTS_API.md)** — Monitor REACH task volumes and costs via reports
+- **[Analytics Reports](KALTURA_ANALYTICS_REPORTS_API.md)** — Monitor REACH task volumes and costs via reports  
+- **[Moderation API](KALTURA_MODERATION_API.md)** — AI moderation via REACH (serviceFeature=15), policies, rules, and category auto-action  
+- **[Content Lab](KALTURA_CONTENT_LAB_API.md)** — Unisphere widget UI for REACH enrichment (summaries, chapters, clips, quizzes)  
+- **[Agents Widget](KALTURA_AGENTS_WIDGET_API.md)** — Management UI for automated REACH enrichment tasks  
+- **[Events Platform](KALTURA_EVENTS_PLATFORM_API.md)** — Auto-enrich virtual event recordings with REACH services  
+- **[Captions Editor](KALTURA_CAPTIONS_EDITOR_API.md)** — Interactive editing of REACH-generated captions  
+- **[Multi-Stream](KALTURA_MULTI_STREAM_API.md)** — Apply REACH enrichment to parent and child stream entries  
+- **[VOD Avatar](KALTURA_VOD_AVATAR_API.md)** — Enrich generated avatar videos with REACH services

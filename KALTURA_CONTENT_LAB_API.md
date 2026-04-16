@@ -119,7 +119,7 @@ Load the Unisphere loader and configure both the application and ai-consent runt
 | `hostAppName` | number | yes | Numeric host application identifier |
 | `hostedInKalturaProduct` | boolean | no | Set `false` when embedding in third-party apps. Controls AI consent enforcement |
 | `hostAppVersion` | string | no | Host application version string |
-| `reachProfileId` | string | no | REACH profile ID for AI/captioning services |
+| `reachProfileId` | string | no | REACH profile ID for enrichment services |
 | `loadThumbnailWithKS` | boolean | no | Append KS to thumbnail URLs (for access-controlled thumbnails) |
 | `publishCategoryId` | string | no | Default category ID for publishing generated content |
 | `hidePlaylists` | boolean | no | Hide playlist creation option |
@@ -308,7 +308,8 @@ The account must have the `FEATURE_CONTENT_LAB` permission enabled.
 
 - **[Unisphere Framework](KALTURA_UNISPHERE_FRAMEWORK_API.md)** — The micro-frontend framework that powers this widget: loader, workspace lifecycle, services  
 - **[Experience Components Overview](KALTURA_EXPERIENCE_COMPONENTS_API.md)** — Index of all embeddable components with shared guidelines  
-- **[REACH API](KALTURA_REACH_API.md)** — AI services (captions, translation, dubbing, summarization) that Content Lab orchestrates  
+- **[REACH API](KALTURA_REACH_API.md)** — Enrichment services marketplace (captions, translation, summarization, and more) that Content Lab orchestrates  
 - **[Agents Manager API](KALTURA_AGENTS_MANAGER_API.md)** — Automated content processing agents for batch AI operations  
+- **[Moderation API](KALTURA_MODERATION_API.md)** — AI content screening via REACH alongside content repurposing  
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — KS generation and privilege management  
 - **[AppTokens API](KALTURA_APPTOKENS_API.md)** — Production token management for secure KS generation  

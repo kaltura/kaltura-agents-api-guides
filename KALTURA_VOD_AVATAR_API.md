@@ -189,7 +189,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/session/action/start" \
 - **Set `partnerId` as a number.** Unlike most Unisphere widgets that accept string IDs, the VOD Avatar Studio requires `partnerId` as a number type.  
 - **Size the container for full-page layout.** The studio works best as a full-page experience with `width: 100%` and `height: 100vh`.  
 - **Use HTTPS.** The Unisphere loader and all widget bundles require HTTPS.  
-- **Process generated videos.** After generation, the resulting Kaltura entry can be processed with other services — add captions via [REACH](KALTURA_REACH_API.md), generate chapters via [Content Lab](KALTURA_CONTENT_LAB_API.md), or set up automated processing via [Agents](KALTURA_AGENTS_MANAGER_API.md).  
+- **Process generated videos.** After generation, the resulting Kaltura entry can be processed with other services — enrich via [REACH](KALTURA_REACH_API.md) (captions, translation, metadata), generate chapters via [Content Lab](KALTURA_CONTENT_LAB_API.md), or set up automated processing via [Agents](KALTURA_AGENTS_MANAGER_API.md).  
 
 
 # 10. Multi-Region
@@ -208,7 +208,7 @@ Set the `serverUrl` in the workspace configuration to match your Kaltura account
 - **[Conversational Avatar Embed](KALTURA_CONVERSATIONAL_AVATAR_API.md)** — Real-time AI avatar conversations via iframe SDK or WebRTC — the live counterpart to this pre-recorded studio  
 - **[Unisphere Framework](KALTURA_UNISPHERE_FRAMEWORK_API.md)** — The micro-frontend framework that powers this widget: loader, workspace lifecycle, services  
 - **[Experience Components Overview](KALTURA_EXPERIENCE_COMPONENTS_API.md)** — Index of all embeddable components with shared guidelines  
-- **[REACH API](KALTURA_REACH_API.md)** — Add captions, translations, or dubbing to generated avatar videos  
+- **[REACH API](KALTURA_REACH_API.md)** — Enrichment services: add captions, translations, dubbing, and more to generated avatar videos  
 - **[Content Lab API](KALTURA_CONTENT_LAB_API.md)** — Generate summaries, chapters, or clips from avatar videos  
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — KS generation and privilege management  
 - **[AppTokens API](KALTURA_APPTOKENS_API.md)** — Production token management for secure KS generation  

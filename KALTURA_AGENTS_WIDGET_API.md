@@ -165,13 +165,13 @@ curl -X POST "$KALTURA_SERVICE_URL/service/session/action/start" \
 
 **Required access:** The KS must have admin privileges (type=2) to create and manage agents. The Agents Manager backend validates permissions for agent CRUD operations.
 
-The account must have the Agents Manager capability enabled. Available actions depend on which services (REACH for captions/translation/summary, etc.) are provisioned on your account.
+The account must have the Agents Manager capability enabled. Available actions depend on which REACH enrichment services are provisioned on your account.
 
 
 # 7. Error Handling
 
 - **Blank drawer** — If the drawer renders empty, verify the KS is valid, the `pid` matches your account, and the account has the Agents Manager capability enabled. Check the browser console for API errors.  
-- **No action types available** — The available actions depend on which services are enabled on your account. Contact your Kaltura account manager to enable REACH services for captions, translation, summary, and other AI-powered actions.  
+- **No action types available** — The available actions depend on which REACH enrichment services are enabled on your account. Contact your Kaltura account manager to provision REACH services.  
 - **Agent creation fails** — Verify the KS has admin privileges (type=2). User-level sessions cannot create or modify agents.  
 - **KS expiry** — Update the workspace session reactively: `workspace.session.setData(prev => ({ ...prev, ks: "new-ks" }))`.  
 
@@ -201,6 +201,6 @@ Set both `serverUrl` and `agentsServiceURI` to match your Kaltura account region
 - **[Agents Manager API](KALTURA_AGENTS_MANAGER_API.md)** — Server-side REST API for creating, managing, and executing agents programmatically  
 - **[Unisphere Framework](KALTURA_UNISPHERE_FRAMEWORK_API.md)** — The micro-frontend framework that powers this widget: loader, workspace lifecycle, services  
 - **[Experience Components Overview](KALTURA_EXPERIENCE_COMPONENTS_API.md)** — Index of all embeddable components with shared guidelines  
-- **[REACH API](KALTURA_REACH_API.md)** — AI services (captions, translation, dubbing, summarization) that power agent actions  
+- **[REACH API](KALTURA_REACH_API.md)** — Enrichment services marketplace (captions, translation, moderation, and 20+ services) that powers agent actions  
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — KS generation and privilege management  
 - **[AppTokens API](KALTURA_APPTOKENS_API.md)** — Production token management for secure KS generation  

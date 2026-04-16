@@ -1,6 +1,6 @@
 ---
 name: kaltura-api
-description: Build applications on Kaltura — The Agentic Digital Experience Platform. 39 guides covering authentication (sessions, AppTokens, SSO/SAML), content management (upload, search, categories, metadata, captions), playback, AI services (captions, translation, agents, conversational AI), virtual events, user management, multi-stream, content distribution, syndication feeds, analytics, gamification, webhooks, messaging, content moderation (flagging, AI-powered via REACH), experience components (Player, Express Recorder, Captions Editor, Genie Widget, Media Manager, Content Lab, Agents Widget, VOD Avatar Studio, Conversational Avatar, Chat & Collaborate, Embeddable Analytics), Unisphere framework, multi-account management. 771 tests validated against live API. API v3 (form-encoded) and modern JSON APIs with curl examples.
+description: Build applications on Kaltura — The Agentic Digital Experience Platform. 39 guides covering authentication (sessions, AppTokens, SSO/SAML), content management (upload, search, categories, metadata, captions), playback, AI services (captions, translation, agents, conversational AI), virtual events, user management, multi-stream, content distribution, syndication feeds, analytics, gamification, webhooks, messaging, content moderation (flagging, AI-powered via REACH), experience components (Player, Express Recorder, Captions Editor, Genie Widget, Media Manager, Content Lab, Agents Widget, VOD Avatar Studio, Conversational Avatar, Chat & Collaborate, Embeddable Analytics), Unisphere framework, multi-account management. 774 tests validated against live API. API v3 (form-encoded) and modern JSON APIs with curl examples.
 ---
 
 # Kaltura API Integration
@@ -74,7 +74,7 @@ Some newer services use JSON bodies with auth headers:
 
 1. **Upload** content via chunked upload or import-from-URL
 2. **Poll** for entry status to reach READY (status=2)
-3. **Process** with AI services (captions, translation, summaries) via REACH or Agents
+3. **Enrich** with REACH services (captions, translation, moderation, 22+ services) or Agents
 4. **Search** your content library with eSearch
 5. **Embed** the player in your application
 
@@ -131,7 +131,7 @@ Read the relevant guide when you need to implement a specific capability:
 
 ### AI Services
 
-- **[REACH API](../../../KALTURA_REACH_API.md)** — Order AI or human captions, translations (40+ languages), audio descriptions, in-video chapters, summaries, and smart clips. Results auto-attach to entries. Includes the AI Clips workflow for generating highlight reels and REACH Automation Rules (Boolean event conditions, category conditions, always-on) for automatic processing of matching entries.
+- **[REACH API](../../../KALTURA_REACH_API.md)** — Governed enrichment services marketplace: 22+ service types (captions, translation, moderation, dubbing, AI clips, quiz, sentiment analysis, and more) delivered by Machine/AI and Human Professional vendors across 80+ languages. Includes credit management, vendor abstraction, content deletion policies, and REACH Automation Rules (Boolean event conditions, category conditions, always-on) for automatic processing.
 
 - **[Agents Manager API](../../../KALTURA_AGENTS_MANAGER_API.md)** — Create automated content-processing agents with triggers ("when a new entry is uploaded") and actions ("generate captions, then translate to Spanish"). Hands-free processing at scale.
 
@@ -195,7 +195,7 @@ When building on Kaltura, follow these principles for production-quality integra
 - **Use AppTokens for production auth.** Generate KS server-side via AppTokens; keep `adminSecret` on the server only. Create scoped tokens with minimal privileges and rotate periodically. See [AppTokens API](../../../KALTURA_APPTOKENS_API.md).
 - **Prefer USER KS (type=0)** for end-user operations. Reserve ADMIN KS (type=2) for backend-only management. Scope privileges with `edit:`, `sview:`, `setrole:`, `iprestrict:`.
 - **Verify webhook signatures.** Validate `SHA256(signing_secret + body)` on all incoming HTTP webhooks before processing.
-- **Use Kaltura's built-in services** rather than reimplementing. REACH for transcription/translation, Agents Manager for automated processing, Messaging for email delivery, eSearch for search, Access Control for content protection.
+- **Use Kaltura's built-in services** rather than reimplementing. REACH for enrichment services (captions, translation, moderation, and more), Agents Manager for automated processing, Messaging for email delivery, eSearch for search, Access Control for content protection.
 - **Handle errors and retries.** Check every API response for error codes. Implement exponential backoff for transient failures (HTTP 500, rate limits). Log error codes for debugging.
 - **Set short KS expiry.** Default to 1-4 hour sessions. Use AppToken session renewal rather than long-lived admin sessions.
 - **Sanitize inputs.** Validate user-provided entry IDs, search terms, and metadata before passing to API calls.

@@ -318,7 +318,7 @@ These IDs appear in logs and system metadata. Customer accounts always have posi
 - **[Upload & Delivery](KALTURA_UPLOAD_AND_DELIVERY_API.md)** — Upload content and construct playback URLs (requires KS)
 - **[eSearch](KALTURA_ESEARCH_API.md)** — Search entries, categories, users (requires KS)
 - **[Player Embed](KALTURA_PLAYER_EMBED_GUIDE.md)** — Embed the player with KS for access-controlled content
-- **[REACH](KALTURA_REACH_API.md)** — AI-powered captions, translation, clips (requires KS)
+- **[REACH](KALTURA_REACH_API.md)** — Enrichment services marketplace: captions, translation, moderation, AI analysis, and more (requires KS)
 - **[Agents Manager](KALTURA_AGENTS_MANAGER_API.md)** — Automate workflows with triggers and actions (Bearer KS)
 - **[AI Genie](KALTURA_AI_GENIE_API.md)** — Conversational AI and RAG search over video content (KS auth)
 - **[Events Platform](KALTURA_EVENTS_PLATFORM_API.md)** — Virtual events with Bearer KS auth

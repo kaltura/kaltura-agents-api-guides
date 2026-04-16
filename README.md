@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Guides](https://img.shields.io/badge/Guides-39-green.svg)](#guides)
-[![Tests](https://img.shields.io/badge/Live--Tested-771_tests-brightgreen.svg)](#guides)
+[![Tests](https://img.shields.io/badge/Live--Tested-774_tests-brightgreen.svg)](#guides)
 [![llms.txt](https://img.shields.io/badge/llms.txt-available-purple.svg)](llms.txt)
 [![Agent Skill](https://img.shields.io/badge/Agent_Skill-kaltura--api-orange.svg)](.agents/skills/kaltura-api/SKILL.md)
 [![Docs Site](https://img.shields.io/badge/Docs-GitHub_Pages-blue.svg)](https://zoharbabin.github.io/kaltura-api-guides/)
@@ -34,7 +34,7 @@ These guides are optimized for AI agent consumption through multiple discovery m
 | [eSearch API](KALTURA_ESEARCH_API.md) | Unified search across entries, captions, metadata | 19 tests |
 | [Upload & Delivery API](KALTURA_UPLOAD_AND_DELIVERY_API.md) | Upload, chunked ingest, playback URLs, thumbnails | 34 tests |
 | [Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md) | Player v7 embed (iframe + JavaScript) | 14 tests |
-| [REACH API](KALTURA_REACH_API.md) | AI captions, translation, dubbing, automation rules | 32 tests |
+| [REACH API](KALTURA_REACH_API.md) | Governed enrichment services marketplace: captions, translation, moderation, 22+ services | 32 tests |
 | [REACH — AI Clips](KALTURA_REACH_API.md) | AI clip generation via Content Lab / REACH | 15 tests |
 | [Agents Manager API](KALTURA_AGENTS_MANAGER_API.md) | Automated content processing agents | 15 tests |
 | [AI Genie API](KALTURA_AI_GENIE_API.md) | Conversational AI search and RAG | 17 tests |
@@ -67,7 +67,7 @@ These guides are optimized for AI agent consumption through multiple discovery m
 | [Embeddable Analytics API](KALTURA_ANALYTICS_EMBED_API.md) | Analytics dashboards via iframe + postMessage | — |
 | [Unisphere Framework API](KALTURA_UNISPHERE_FRAMEWORK_API.md) | Micro-frontend framework: loader, workspace, services | 21 tests |
 | [Multi-Account Management API](KALTURA_MULTI_ACCOUNT_MANAGEMENT_API.md) | Sub-accounts, cross-account auth, multi-account analytics | 6 tests |
-| [Moderation API](KALTURA_MODERATION_API.md) | Content flagging, approve/reject queue, AI moderation via REACH | 13 tests |
+| [Moderation API](KALTURA_MODERATION_API.md) | Content flagging, approve/reject queue, AI moderation via REACH | 16 tests |
 
 ## Quick Start
 

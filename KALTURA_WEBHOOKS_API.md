@@ -70,7 +70,7 @@ The type of Kaltura object that triggers the event:
 | USERLOGINDATA | 22 | Login data |
 | LIVE_STREAM | 38 | Live stream entries |
 | SERVER_NODE | 39 | Server nodes |
-| ENTRY_VENDOR_TASK | 42 | REACH vendor tasks (captions, translations) |
+| ENTRY_VENDOR_TASK | 42 | REACH enrichment service tasks (captions, translations, moderation, and more) |
 
 Plugin-contributed object types use string IDs (available when the corresponding plugin is enabled):
 
@@ -925,7 +925,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/eventnotification_eventnotificationte
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — KS generation and management
 - **[AppTokens API](KALTURA_APPTOKENS_API.md)** — Secure server-to-server auth
 - **[Upload & Delivery API](KALTURA_UPLOAD_AND_DELIVERY_API.md)** — Content upload and delivery (entries that trigger webhooks)
-- **[REACH API](KALTURA_REACH_API.md)** — AI captions and translations (ENTRY_VENDOR_TASK events)
+- **[REACH API](KALTURA_REACH_API.md)** — Enrichment services marketplace: captions, translation, moderation, and more (ENTRY_VENDOR_TASK events)
 - **[Agents Manager API](KALTURA_AGENTS_MANAGER_API.md)** — Automated content processing (alternative to webhooks for content workflows)
 - **[Messaging API](KALTURA_MESSAGING_API.md)** — Template-based email messaging with delivery tracking, engagement analytics, and unsubscribe management (shared delivery infrastructure for email notifications; use directly for application-triggered emails)
 - **[User Management API](KALTURA_USER_MANAGEMENT_API.md)** — User event notifications (user creation, role changes)

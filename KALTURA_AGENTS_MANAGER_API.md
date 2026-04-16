@@ -10,7 +10,7 @@ The Agents Manager lets you create **automated content-processing agents** that 
 
 - Know how to generate Kaltura Sessions (KS) in your backend (see [Session Guide](KALTURA_SESSION_GUIDE.md))
 - Have a Kaltura account with the Agents Manager capability enabled
-- Have relevant services (e.g., REACH for captions) provisioned on your account (see [REACH Guide](KALTURA_REACH_API.md))
+- Have relevant REACH enrichment services provisioned on your account (see [REACH Guide](KALTURA_REACH_API.md))
 
 
 ## Key Benefits
@@ -451,7 +451,7 @@ The response includes the full agent object with inline trigger and actions.
 
 ## Kaltura REACH — The Services Behind Agent Actions
 
-Many of the actions available to agents — captions, dubbing, translations, and content enrichment — are powered by **Kaltura REACH**, Kaltura's captioning and media enrichment services framework.
+Many of the actions available to agents — captions, dubbing, translations, moderation, and content enrichment — are powered by **Kaltura REACH**, Kaltura's governed marketplace for content enrichment services. REACH provides a unified API for 22+ service types, delivered by both Machine/AI engines and Human Professional vendors, with centralized credit management, moderation workflows, and vendor abstraction.
 
 When you call the Action Definitions API, the `catalogItemId` values returned for actions like `captions` and `translation` map directly to REACH vendor catalog items. Each defines the vendor, quality tier (machine vs. human), language, and turnaround time.
 
@@ -519,7 +519,7 @@ In addition to the API, agents can be configured through Kaltura's management in
 - **[Agents Widget](KALTURA_AGENTS_WIDGET_API.md)** — Embeddable UI for managing agents via a Unisphere drawer panel — the visual counterpart to this server-side API  
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — Generate the KS needed for Bearer auth
 - **[AppTokens](KALTURA_APPTOKENS_API.md)** — Secure server-to-server auth for agent automation services
-- **[REACH](KALTURA_REACH_API.md)** — The AI services (captions, translation, clips) that power agent actions
+- **[REACH](KALTURA_REACH_API.md)** — Enrichment services marketplace (captions, translation, moderation, and 20+ services) powering agent actions
 - **[Upload & Delivery](KALTURA_UPLOAD_AND_DELIVERY_API.md)** — Upload content that triggers agent processing
 - **[AI Genie](KALTURA_AI_GENIE_API.md)** — Conversational AI search over content processed by agents
 - **[eSearch](KALTURA_ESEARCH_API.md)** — Search entries to find content for agent processing

@@ -1,6 +1,6 @@
 # Kaltura Moderation API
 
-Moderation lets administrators and AI engines review content before it becomes visible to end users. The platform provides two complementary systems: a **legacy moderation queue** (user flagging, manual approve/reject) and **AI-powered moderation via REACH** (automated policy evaluation using LLMs and computer vision). Both systems share the same entry-level `moderationStatus` field that controls playback visibility.
+Moderation lets administrators and AI engines review content before it becomes visible to end users. The platform provides two complementary systems: a **manual moderation queue** (community flagging, moderator approve/reject) and **AI-powered moderation via REACH** (automated policy evaluation using LLMs and computer vision). The two work together — AI screens content at scale against configurable policies, while community flagging catches context-specific issues that automated systems miss. Both systems share the same entry-level `moderationStatus` field that controls playback visibility.
 
 **Base URL:** `$KALTURA_SERVICE_URL` (default `https://www.kaltura.com/api_v3`)  
 **Auth:** KS (admin session for approve/reject; user or widget session for flagging)  
@@ -20,7 +20,7 @@ Moderation lets administrators and AI engines review content before it becomes v
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│               ENTRY MODERATION (Legacy Queue)                   │
+│            ENTRY MODERATION (Manual / Community)                │
 │                                                                 │
 │  baseEntry.flag ──► FLAGGED_FOR_REVIEW (5)                     │
 │  baseEntry.approve ──► APPROVED (2)                            │
@@ -51,7 +51,7 @@ Every entry has a `moderationStatus` field that controls playback visibility and
 | 1 | PENDING_MODERATION | No | No | Awaiting moderator review — entry is hidden |
 | 2 | APPROVED | Yes | Yes | Moderator approved the entry |
 | 3 | REJECTED | No | No | Moderator rejected the entry |
-| 4 | DELETED | No | No | Legacy — entry deleted via moderation |
+| 4 | DELETED | No | No | Entry deleted via moderation |
 | 5 | FLAGGED_FOR_REVIEW | Yes | Yes | User flagged — entry remains playable during review |
 | 6 | AUTO_APPROVED | Yes | Yes | No moderation required — default for new entries |
 

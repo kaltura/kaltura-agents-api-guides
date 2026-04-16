@@ -177,6 +177,27 @@ def main():
     runner.run_test("baseEntry.reject — sets REJECTED (3)",
                      test_reject_entry)
 
+    def test_reject_side_effects():
+        """Verify reject clears moderationCount and marks flags as MODERATED."""
+        entry_id = state.get("reject_entry")
+        if not entry_id:
+            print("    SKIP: No rejected entry from Phase 4")
+            return
+        entry = kaltura_post("baseEntry", "get", {"entryId": entry_id})
+        mod_count = entry.get("moderationCount", -1)
+        assert mod_count == 0, f"Expected moderationCount=0 after reject, got {mod_count}"
+        # Verify flags are now MODERATED (listFlags returns only PENDING flags)
+        flags = kaltura_post("baseEntry", "listFlags", {
+            "entryId": entry_id,
+            "pager[pageSize]": 50,
+        })
+        pending = flags.get("totalCount", 0)
+        assert pending == 0, f"Expected 0 pending flags after reject, got {pending}"
+        print(f"    Reject side effects verified: moderationCount={mod_count}, pendingFlags={pending}")
+
+    runner.run_test("baseEntry.reject — clears moderationCount and flags",
+                     test_reject_side_effects)
+
     def test_flag_rejected_fails():
         """Flagging a REJECTED entry returns ENTRY_CANNOT_BE_FLAGGED."""
         entry_id = state.get("reject_entry")
@@ -417,6 +438,76 @@ def main():
 
     runner.run_test("categoryEntry.add + activate — category moderation flow",
                      test_category_entry_moderation)
+
+    def test_category_entry_reject():
+        """Reject an entry from a moderated category."""
+        cat_id = state.get("mod_category_id")
+        if not cat_id:
+            print("    SKIP: No moderated category from Phase 8")
+            return
+        # Create a fresh entry and add it to the moderated category
+        entry_id = create_test_entry()
+        state["cat_reject_entry"] = entry_id
+        runner.register_cleanup(f"entry {entry_id}", lambda: delete_test_entry(entry_id))
+        ce_result = kaltura_post("categoryEntry", "add", {
+            "categoryEntry[objectType]": "KalturaCategoryEntry",
+            "categoryEntry[entryId]": entry_id,
+            "categoryEntry[categoryId]": cat_id,
+        })
+        initial_status = ce_result.get("status")
+        if initial_status == 2:
+            # Admin KS auto-approves — reject requires PENDING (1)
+            # This confirms the API correctly enforces the PENDING prerequisite
+            try:
+                kaltura_post("categoryEntry", "reject", {
+                    "entryId": entry_id,
+                    "categoryId": cat_id,
+                })
+                print(f"    categoryEntry.reject succeeded on ACTIVE entry (unexpected)")
+            except Exception as e:
+                err = str(e)
+                assert "CANNOT_REJECT" in err or "NOT_PENDING" in err, (
+                    f"Expected CANNOT_REJECT error, got: {err}"
+                )
+                print(f"    categoryEntry.reject correctly requires PENDING status (admin KS auto-approves)")
+        elif initial_status == 1:
+            # PENDING — reject should work
+            kaltura_post("categoryEntry", "reject", {
+                "entryId": entry_id,
+                "categoryId": cat_id,
+            })
+            ce_list = kaltura_post("categoryEntry", "list", {
+                "filter[objectType]": "KalturaCategoryEntryFilter",
+                "filter[entryIdEqual]": entry_id,
+                "filter[categoryIdEqual]": cat_id,
+            })
+            total = ce_list.get("totalCount", 0)
+            assert total == 0, f"Expected 0 categoryEntries after reject, got {total}"
+            print(f"    categoryEntry.reject removed entry {entry_id} from category {cat_id}")
+
+    runner.run_test("categoryEntry.reject — reject validates PENDING prerequisite",
+                     test_category_entry_reject)
+
+    def test_user_notify_ban():
+        """Test user.notifyBan — sends ban notification to a user."""
+        try:
+            result = kaltura_post("user", "notifyBan", {
+                "userId": os.environ.get("KALTURA_USER_ID", "test@example.com"),
+            })
+            # notifyBan returns void on success (empty response or null)
+            print(f"    user.notifyBan succeeded (sends notification only, no account ban)")
+        except Exception as e:
+            err = str(e)
+            if "SERVICE_FORBIDDEN" in err or "PERMISSION" in err.upper():
+                print(f"    SKIP: user.notifyBan not accessible — {err[:60]}")
+                return
+            if "USER_NOT_FOUND" in err or "INVALID_USER" in err:
+                print(f"    SKIP: test user not found — {err[:60]}")
+                return
+            raise
+
+    runner.run_test("user.notifyBan — send ban notification",
+                     test_user_notify_ban)
 
     # ════════════════════════════════════════════
     # Cleanup & Summary

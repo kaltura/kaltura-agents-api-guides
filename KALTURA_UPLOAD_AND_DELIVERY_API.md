@@ -353,6 +353,8 @@ When content moderation is enabled on the account, entries have a `moderationSta
 | 5 | FLAGGED_FOR_REVIEW | Flagged by user for review |
 | 6 | AUTO_APPROVED | Automatically approved by rules |
 
+For user flagging, moderator approve/reject, AI moderation via REACH, and category-level content gating, see the [Moderation API Guide](KALTURA_MODERATION_API.md).
+
 ## 3.8 media.get -- Retrieve Entry Details and Poll for READY
 
 ```
@@ -985,7 +987,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/media/action/addContent" \
 - **[AppTokens Guide](KALTURA_APPTOKENS_API.md)** — Secure token-based auth for upload integrations
 - **[eSearch Guide](KALTURA_ESEARCH_API.md)** — Search for entries after upload
 - **[Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md)** — Embed uploaded content
-- **[REACH Guide](KALTURA_REACH_API.md)** — Auto-caption and enrich uploaded content
+- **[REACH Guide](KALTURA_REACH_API.md)** — Enrichment services marketplace: captions, translation, moderation, and more for uploaded content
 - **[Agents Manager](KALTURA_AGENTS_MANAGER_API.md)** — Auto-process uploaded content (triggers on ENTRY_READY)
 - **[AI Genie](KALTURA_AI_GENIE_API.md)** — Search uploaded content via conversational AI
 - **[Events Platform](KALTURA_EVENTS_PLATFORM_API.md)** — Upload logo/banner assets for virtual events

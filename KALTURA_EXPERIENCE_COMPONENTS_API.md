@@ -44,7 +44,7 @@ Each component creates, modifies, or interacts with Kaltura content and services
 
 **Content Lab** — AI-powered content repurposing from video entries. Generates summaries, chapters, clips, quizzes, and other derived content. Uses dual runtimes — an application runtime for the main UI and an ai-consent runtime for the AI approval flow. Loaded as an ES module via the Unisphere loader. See [Content Lab Guide](KALTURA_CONTENT_LAB_API.md).
 
-**Agents Widget** — UI for managing automated content-processing agents. Users create and configure agents with triggers (new upload, category assignment) and actions (captions, translation, summary, moderation). Renders as a drawer panel. Loaded as an ES module via the Unisphere loader. See [Agents Widget Guide](KALTURA_AGENTS_WIDGET_API.md).
+**Agents Widget** — UI for managing automated content-processing agents. Users create and configure agents with triggers (new upload, category assignment) and actions (captions, translation, summary, moderation). Renders as a drawer panel. Loaded as an ES module via the Unisphere loader. See [Agents Widget Guide](KALTURA_AGENTS_WIDGET_API.md). For AI moderation policies, rules, and scoring, see the [Moderation API Guide](KALTURA_MODERATION_API.md).
 
 **VOD Avatar Studio** — Studio for creating pre-recorded avatar video presentations from scripts. Users select an AI avatar, enter a script, and generate a professional video saved as a Kaltura entry. For real-time conversational avatars, see the Conversational Avatar guide instead. See [VOD Avatar Studio Guide](KALTURA_VOD_AVATAR_API.md).
 

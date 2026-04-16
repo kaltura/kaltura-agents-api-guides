@@ -1279,4 +1279,4 @@ A `LegalHold` (listType yes/no) field prevents automated deletion. `ComplianceSt
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — KS generation and permission scoping
 - **[AppTokens API](KALTURA_APPTOKENS_API.md)** — Secure auth without admin secrets
 - **[Distribution](KALTURA_DISTRIBUTION_API.md)** — Custom metadata fields mapped to distribution platform fields
-- **[REACH](KALTURA_REACH_API.md)** — Metadata-based rules for automated captioning triggers
+- **[REACH](KALTURA_REACH_API.md)** — Metadata-based rules for automated enrichment triggers (captions, translation, moderation, and more)

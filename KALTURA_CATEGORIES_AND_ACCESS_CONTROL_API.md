@@ -560,7 +560,7 @@ Removes the entry from the category. The entry itself is not deleted.
 
 ## 6.5 Moderate Category Entries
 
-When a category has `contributionPolicy=2` (MEMBERS_WITH_CONTRIBUTION_PERMISSION), new assignments may enter `PENDING` status. Moderators and managers can approve or reject:
+When a category has `contributionPolicy=2` (MEMBERS_WITH_CONTRIBUTION_PERMISSION), new assignments may enter `PENDING` status. Moderators and managers can approve or reject. For full moderation workflows including user flagging, AI-powered content screening, and the entry-level moderation queue, see the [Moderation API Guide](KALTURA_MODERATION_API.md).
 
 **Activate (approve) a pending entry:**
 ```bash

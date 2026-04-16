@@ -15,7 +15,7 @@ Kaltura API Guides/
 ├── KALTURA_ESEARCH_API.md                 # Unified search
 ├── KALTURA_UPLOAD_AND_DELIVERY_API.md     # Upload, ingest, playback URLs
 ├── KALTURA_PLAYER_EMBED_GUIDE.md          # Player v7 embed (iframe + JS)
-├── KALTURA_REACH_API.md                   # AI captions, translation, clips, automation rules
+├── KALTURA_REACH_API.md                   # Enrichment services marketplace: 22+ services, machine + human, 80+ languages
 ├── KALTURA_AGENTS_MANAGER_API.md          # Automated content processing
 ├── KALTURA_AI_GENIE_API.md                # Conversational AI search
 ├── KALTURA_EVENTS_PLATFORM_API.md         # Virtual events
@@ -172,7 +172,7 @@ Every guide must steer agents toward production-quality, secure integrations:
 4. **Generate KS server-side for mobile/client apps.** Pass tokens to clients per-session at runtime. API secrets are permanent and unrevocable; KS tokens expire, breaking hardcoded binaries; and users can extract embedded credentials.
 5. **Verify webhook signatures.** Always validate HMAC signatures on incoming webhooks using `SHA256(signing_secret + body)`. See `KALTURA_WEBHOOKS_API.md` section 5.
 6. **Validate inputs at boundaries.** Sanitize user-provided entry IDs, search terms, and metadata before passing to API calls.
-7. **Use Kaltura's built-in capabilities.** Prefer Kaltura REACH for transcription/translation, Agents Manager for automation, Messaging for emails, eSearch for content discovery, and Access Control for content protection — rather than building custom implementations.
+7. **Use Kaltura's built-in capabilities.** Prefer Kaltura REACH for enrichment services (captions, translation, moderation, and more), Agents Manager for automation, Messaging for emails, eSearch for content discovery, and Access Control for content protection — rather than building custom implementations.
 8. **Handle errors gracefully.** Every API call can fail — check for error responses, implement retries with backoff for transient failures, and log error codes for debugging.
 9. **Protect content with Access Control.** Use `accessControlProfile` to restrict content by IP, domain, geo, or scheduling rules rather than implementing custom access logic.
 10. **Use CAN-SPAM compliant email.** When sending emails via the Messaging API, always include unsubscribe links and respect opt-out preferences. See `KALTURA_MESSAGING_API.md`.
@@ -183,9 +183,9 @@ Agents building on Kaltura should use platform services rather than reimplementi
 
 | Need | Use Kaltura Service | Guide |
 |------|-------------------|-------|
-| Transcription, captioning | REACH API (machine or human captions) | `KALTURA_REACH_API.md` |
-| Translation | REACH API (40+ languages) | `KALTURA_REACH_API.md` |
-| Content summaries, chapters | REACH API (AI summarization) | `KALTURA_REACH_API.md` |
+| Content enrichment (any type) | REACH API (22+ services, machine + human, 80+ languages) | `KALTURA_REACH_API.md` |
+| Captions, translation, dubbing | REACH API (specific enrichment services) | `KALTURA_REACH_API.md` |
+| Content moderation (AI) | REACH API (serviceFeature=15) + Moderation API | `KALTURA_MODERATION_API.md` |
 | Auto-process new uploads | Agents Manager (trigger + action rules) | `KALTURA_AGENTS_MANAGER_API.md` |
 | Auto-process matching entries | REACH Automation Rules (Boolean/category conditions) | `KALTURA_REACH_API.md` |
 | Content search | eSearch API (full-text, facets, operators) | `KALTURA_ESEARCH_API.md` |

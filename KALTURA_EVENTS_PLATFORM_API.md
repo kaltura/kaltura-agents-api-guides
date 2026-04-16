@@ -708,7 +708,7 @@ curl -X POST "$KALTURA_EVENTS_API_URL/events/delete" \
 - **[AppTokens Guide](KALTURA_APPTOKENS_API.md)** — Secure token-based auth for integrations
 - **[Upload & Delivery Guide](KALTURA_UPLOAD_AND_DELIVERY_API.md)** — Upload logo/banner assets for events
 - **[Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md)** — Embed event recordings
-- **[REACH Guide](KALTURA_REACH_API.md)** — Auto-caption event session recordings
+- **[REACH Guide](KALTURA_REACH_API.md)** — Enrichment services: auto-caption, translate, and enrich event session recordings
 - **[Agents Manager](KALTURA_AGENTS_MANAGER_API.md)** — Auto-process event content with triggers and actions
 - **[AI Genie](KALTURA_AI_GENIE_API.md)** — Conversational AI search over event content
 - **[App Registry API](KALTURA_APP_REGISTRY_API.md)** — Application instance registry (events auto-register apps)

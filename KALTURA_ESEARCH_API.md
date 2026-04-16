@@ -432,7 +432,7 @@ Use these values in the `sortField` property of `KalturaESearchOrderByItem`:
 - **[AppTokens](KALTURA_APPTOKENS_API.md)** — Secure KS generation for production integrations
 - **[Upload & Delivery](KALTURA_UPLOAD_AND_DELIVERY_API.md)** — Upload content that becomes searchable via eSearch
 - **[Player Embed](KALTURA_PLAYER_EMBED_GUIDE.md)** — Embed search results for playback
-- **[REACH](KALTURA_REACH_API.md)** — Enrich entries with captions and metadata (improves search quality)
+- **[REACH](KALTURA_REACH_API.md)** — Enrichment services: captions, metadata, tagging, and more (improves search quality)
 - **[AI Genie](KALTURA_AI_GENIE_API.md)** — Conversational AI search (uses eSearch internally for RAG)
 - **[Multi-Stream](KALTURA_MULTI_STREAM_API.md)** — Search for parent entries; use `parentEntryIdEqual` filter to find child entries
 - **[Webhooks](KALTURA_WEBHOOKS_API.md)** — Trigger notifications based on content events (search results inform webhook conditions)

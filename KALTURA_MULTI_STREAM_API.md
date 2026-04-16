@@ -449,5 +449,5 @@ curl -X POST "$KALTURA_SERVICE_URL/service/media/action/delete" \
 - **[Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md)** — Embed the Dual Screen player
 - **[eSearch Guide](KALTURA_ESEARCH_API.md)** — Search for parent entries (use `parentEntryIdEqual` filter to find child entries)
 - **[Webhooks API](KALTURA_WEBHOOKS_API.md)** — Get notified when entries finish processing (HTTP callbacks)
-- **[REACH Guide](KALTURA_REACH_API.md)** — Auto-caption parent and child streams
+- **[REACH Guide](KALTURA_REACH_API.md)** — Enrichment services: auto-caption, translate, and enrich parent and child streams
 - **[Agents Manager](KALTURA_AGENTS_MANAGER_API.md)** — Automate processing of multi-stream content

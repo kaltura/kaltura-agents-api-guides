@@ -25,7 +25,7 @@ Guides for getting content into the platform and enriching it with AI.
 | [Multi-Stream](KALTURA_MULTI_STREAM_API.md) | Editing & Personalization | Dual-screen / PIP multi-camera entries |
 | [Captions & Transcripts](KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md) | Editing & Personalization | Caption asset CRUD, formats, serving, search |
 | [Custom Metadata](KALTURA_CUSTOM_METADATA_API.md) | Editing & Personalization | XSD schemas, structured XML metadata on entries |
-| [REACH API](KALTURA_REACH_API.md) | AI Enrichment | AI captioning, translation, enrichment tasks |
+| [REACH API](KALTURA_REACH_API.md) | AI Enrichment | Governed enrichment services marketplace: captions, translation, moderation, AI analysis, 22+ services |
 | [Agents Manager](KALTURA_AGENTS_MANAGER_API.md) | AI Enrichment | Automated content-processing rules and workflows |
 | [AI Genie](KALTURA_AI_GENIE_API.md) | AI Enrichment | Conversational AI / RAG over video library |
 
@@ -207,7 +207,7 @@ Blue = Foundation | Purple = Creation | Orange = Management | Green = Experience
 | Embed a video player | [Player Embed](KALTURA_PLAYER_EMBED_GUIDE.md) |
 | Search my content library | [eSearch](KALTURA_ESEARCH_API.md) |
 | Add captions or transcripts | [Captions & Transcripts](KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md) |
-| Auto-caption with AI | [REACH API](KALTURA_REACH_API.md) |
+| Enrich content with AI (captions, translation, moderation, and more) | [REACH API](KALTURA_REACH_API.md) |
 | Build a chatbot over video | [AI Genie](KALTURA_AI_GENIE_API.md) |
 | Embed Genie AI search widget | [Genie Widget](KALTURA_GENIE_WIDGET_API.md) |
 | Embed composable experiences (multi-runtime) | [Unisphere Framework](KALTURA_UNISPHERE_FRAMEWORK_API.md) |

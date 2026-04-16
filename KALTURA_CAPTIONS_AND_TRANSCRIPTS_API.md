@@ -1127,7 +1127,7 @@ Bulk list entries → check caption presence per entry → report gaps → order
 # 15. Related Guides
 
 - **[Captions Editor](KALTURA_CAPTIONS_EDITOR_API.md)** — Captions Studio (interactive caption editor) embed
-- **[REACH API](KALTURA_REACH_API.md)** — AI captioning, translation, dubbing, audio description, automation rules
+- **[REACH API](KALTURA_REACH_API.md)** — Enrichment services marketplace: captioning, translation, dubbing, moderation, and 20+ services with automation rules
 - **[eSearch API](KALTURA_ESEARCH_API.md)** — Caption search with `KalturaESearchCaptionItem`, timestamp deep-linking
 - **[Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md)** — Caption display, track selection, transcript plugin
 - **[Upload & Delivery API](KALTURA_UPLOAD_AND_DELIVERY_API.md)** — Upload tokens for `KalturaUploadedFileTokenResource`

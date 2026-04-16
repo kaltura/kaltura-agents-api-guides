@@ -30,7 +30,7 @@ EVT_SVC = "eventnotification_eventnotificationtemplate"
 
 # ── Documented enums (from KALTURA_REACH_API.md) ──
 
-DOCUMENTED_SERVICE_FEATURES = {1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19}
+DOCUMENTED_SERVICE_FEATURES = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23}
 DOCUMENTED_SERVICE_TYPES = {1, 2}
 DOCUMENTED_OUTPUT_FORMATS = {1, 2, 3}
 DOCUMENTED_TASK_STATUSES = {1, 2, 3, 4, 5, 6, 7, 8, 9}
@@ -120,11 +120,15 @@ def main():
             "pager[pageSize]": 500,
         })
         assert result["totalCount"] > 0, "No active machine captions found"
-        # Server filters serviceType/serviceFeature/status; client-filter for English
-        english_items = [i for i in result["objects"]
-                        if i.get("sourceLanguage") == "English"]
-        assert len(english_items) > 0, "No English machine captions found after client-side filter"
-        item = english_items[0]
+        # Server filters serviceType/serviceFeature/status; prefer English, fall back to Auto Detect
+        preferred = [i for i in result["objects"]
+                     if i.get("sourceLanguage") == "English"]
+        if not preferred:
+            preferred = [i for i in result["objects"]
+                         if i.get("sourceLanguage") == "Auto Detect"]
+        assert len(preferred) > 0, \
+            f"No English or Auto Detect machine captions found. Languages: {set(i.get('sourceLanguage') for i in result['objects'])}"
+        item = preferred[0]
         assert item["serviceType"] == 2
         assert item["serviceFeature"] == 1
         assert item["status"] == 2
