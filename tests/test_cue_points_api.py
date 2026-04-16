@@ -8,6 +8,9 @@ clone, updateStatus, updateCuePointsTimes, and filtering.
 import sys
 import os
 import time
+import struct
+import zlib
+import requests
 
 sys.path.insert(0, os.path.dirname(__file__))
 from test_helpers import kaltura_post, TestRunner, PARTNER_ID, KS, SERVICE_URL
@@ -30,10 +33,40 @@ def _find_ready_entry():
     return entries[0]["id"], entries[0].get("name", "unknown")
 
 
+def _make_test_png():
+    """Generate a minimal 2x2 red PNG in memory (no PIL needed)."""
+    width, height = 2, 2
+    # Red pixels (RGBA)
+    raw_data = b''
+    for _ in range(height):
+        raw_data += b'\x00'  # filter byte
+        for _ in range(width):
+            raw_data += b'\xff\x00\x00\xff'  # RGBA red
+    compressed = zlib.compress(raw_data)
+
+    def _chunk(chunk_type, data):
+        c = chunk_type + data
+        return struct.pack('>I', len(data)) + c + struct.pack('>I', zlib.crc32(c) & 0xffffffff)
+
+    png = b'\x89PNG\r\n\x1a\n'
+    png += _chunk(b'IHDR', struct.pack('>IIBBBBB', width, height, 8, 6, 0, 0, 0))
+    png += _chunk(b'IDAT', compressed)
+    png += _chunk(b'IEND', b'')
+    return png
+
+
 def _delete_cue_point(cp_id):
     """Delete a cue point, ignoring errors."""
     try:
         kaltura_post("cuepoint_cuepoint", "delete", {"id": cp_id})
+    except Exception:
+        pass
+
+
+def _delete_thumb_asset(asset_id):
+    """Delete a thumb asset, ignoring errors."""
+    try:
+        kaltura_post("thumbAsset", "delete", {"thumbAssetId": asset_id})
     except Exception:
         pass
 
@@ -205,6 +238,130 @@ def main():
 
     runner.run_test("cuePoint.list — filter thumb by subType=CHAPTER", test_thumb_filter)
 
+    # ── Slide with Thumbnail Asset (timedThumbAsset workflow) ──
+
+    def test_slide_with_thumb_asset():
+        """Create a slide cue point, attach a timedThumbAsset with image, verify PENDING→READY."""
+        # Step 1: Create a slide cue point (subType=1) — should be PENDING without asset
+        cp = kaltura_post("cuepoint_cuepoint", "add", {
+            "cuePoint[objectType]": "KalturaThumbCuePoint",
+            "cuePoint[entryId]": state["entry_id"],
+            "cuePoint[startTime]": 45000,
+            "cuePoint[subType]": 1,
+            "cuePoint[title]": "E2E Slide With Image",
+            "cuePoint[description]": "OCR text from the slide image",
+            "cuePoint[tags]": "e2e-test",
+        })
+        assert cp.get("objectType") == "KalturaThumbCuePoint"
+        cp_id = cp["id"]
+        state["slide_with_asset_cp_id"] = cp_id
+        runner.register_cleanup(f"slide+asset cue point {cp_id}",
+                                lambda: _delete_cue_point(cp_id))
+        initial_status = cp.get("status")
+        print(f"    Slide created: {cp_id}, initial status={initial_status}")
+
+        # Step 2: Create timedThumbAsset linked to this cue point
+        asset = kaltura_post("thumbAsset", "add", {
+            "entryId": state["entry_id"],
+            "thumbAsset[objectType]": "KalturaTimedThumbAsset",
+            "thumbAsset[cuePointId]": cp_id,
+        })
+        assert asset.get("objectType") == "KalturaTimedThumbAsset", \
+            f"Expected KalturaTimedThumbAsset, got {asset.get('objectType')}"
+        asset_id = asset["id"]
+        state["timed_thumb_asset_id"] = asset_id
+        # Register cleanup — though cascade delete from cue point should handle it
+        runner.register_cleanup(f"timedThumbAsset {asset_id}",
+                                lambda: _delete_thumb_asset(asset_id))
+        print(f"    TimedThumbAsset created: {asset_id}, status={asset.get('status')}")
+
+        # Step 3: Upload a test image via uploadToken
+        token = kaltura_post("uploadToken", "add", {})
+        token_id = token["id"]
+
+        png_data = _make_test_png()
+        upload_resp = requests.post(
+            f"{SERVICE_URL}/service/uploadToken/action/upload",
+            data={"ks": KS, "format": 1, "uploadTokenId": token_id},
+            files={"fileData": ("slide.png", png_data, "image/png")},
+            timeout=30,
+        )
+        upload_resp.raise_for_status()
+        upload_result = upload_resp.json()
+        assert upload_result.get("status") == 2, \
+            f"Upload token should be CLOSED (2), got {upload_result.get('status')}"
+        print(f"    Uploaded {len(png_data)} bytes via token {token_id}")
+
+        # Step 4: Set content on the thumb asset
+        set_result = kaltura_post("thumbAsset", "setContent", {
+            "id": asset_id,
+            "contentResource[objectType]": "KalturaUploadedFileTokenResource",
+            "contentResource[token]": token_id,
+        })
+        assert set_result.get("status") == 2, \
+            f"Asset should be READY (2), got {set_result.get('status')}"
+        print(f"    Asset content set: status={set_result.get('status')}, size={set_result.get('size')}")
+
+        # Step 5: Verify cue point transitioned from PENDING(4) to READY(1)
+        cp_after = kaltura_post("cuepoint_cuepoint", "get", {"id": cp_id})
+        assert cp_after.get("status") == 1, \
+            f"Cue point should be READY (1) after asset, got {cp_after.get('status')}"
+        assert cp_after.get("assetId") == asset_id, \
+            f"Cue point assetId should be {asset_id}, got {cp_after.get('assetId')}"
+        print(f"    Cue point status: {initial_status} → {cp_after.get('status')} (READY), assetId={cp_after.get('assetId')}")
+
+    runner.run_test("thumbAsset — full slide with image (PENDING→READY)", test_slide_with_thumb_asset)
+
+    def test_thumb_asset_serve():
+        """Serve the slide thumbnail image via thumbAsset.getUrl."""
+        result = kaltura_post("thumbAsset", "getUrl", {
+            "id": state["timed_thumb_asset_id"],
+        })
+        assert isinstance(result, str) and "http" in result, \
+            f"Expected URL string, got: {result}"
+        # Verify the URL returns an image
+        img_resp = requests.get(result, timeout=15)
+        assert img_resp.status_code == 200, f"Image serve returned {img_resp.status_code}"
+        content_type = img_resp.headers.get("Content-Type", "")
+        assert "image" in content_type, f"Expected image content-type, got {content_type}"
+        print(f"    Serve URL: {result[:80]}...")
+        print(f"    Image response: {img_resp.status_code}, type={content_type}, size={len(img_resp.content)}")
+
+    runner.run_test("thumbAsset.getUrl — serve slide thumbnail image", test_thumb_asset_serve)
+
+    def test_thumb_asset_list():
+        """List thumb assets on the entry, verify timedThumbAsset appears."""
+        result = kaltura_post("thumbAsset", "list", {
+            "filter[entryIdEqual]": state["entry_id"],
+        })
+        assert result.get("totalCount", 0) >= 1, f"Expected thumb assets, got {result}"
+        timed = [o for o in result.get("objects", [])
+                 if o.get("objectType") == "KalturaTimedThumbAsset"]
+        assert len(timed) >= 1, "No KalturaTimedThumbAsset found in list"
+        found = any(o["id"] == state["timed_thumb_asset_id"] for o in timed)
+        assert found, f"Expected asset {state['timed_thumb_asset_id']} in list"
+        print(f"    Total thumb assets: {result['totalCount']}, timed: {len(timed)}")
+
+    runner.run_test("thumbAsset.list — verify timedThumbAsset in list", test_thumb_asset_list)
+
+    def test_cascade_delete():
+        """Delete slide cue point and verify timedThumbAsset is cascade-deleted."""
+        cp_id = state["slide_with_asset_cp_id"]
+        asset_id = state["timed_thumb_asset_id"]
+        kaltura_post("cuepoint_cuepoint", "delete", {"id": cp_id})
+        # Verify the linked thumb asset was cascade-deleted
+        try:
+            kaltura_post("thumbAsset", "get", {"thumbAssetId": asset_id})
+            print(f"    WARNING: timedThumbAsset {asset_id} still exists after cue point delete")
+        except Exception as e:
+            assert "NOT_FOUND" in str(e) or "THUMB_ASSET" in str(e), f"Unexpected error: {e}"
+            print(f"    Cascade confirmed: cue point delete also removed timedThumbAsset {asset_id}")
+        # Remove from cleanup since already deleted
+        runner._cleanup_actions = [(n, f) for n, f in runner._cleanup_actions
+                                   if cp_id not in n and asset_id not in n]
+
+    runner.run_test("cuePoint.delete — cascade deletes timedThumbAsset", test_cascade_delete)
+
     # ════════════════════════════════════════════
     # Phase 4: Annotation Cue Points
     # ════════════════════════════════════════════
@@ -252,6 +409,26 @@ def main():
         print(f"    Created child: {result['id']}, parent directChildren={parent.get('directChildrenCount')}")
 
     runner.run_test("cuePoint.add — threaded annotation (parent-child)", test_annotation_child)
+
+    def test_hotspot():
+        """Create a hotspot annotation (annotation with tag 'hotspots')."""
+        result = kaltura_post("cuepoint_cuepoint", "add", {
+            "cuePoint[objectType]": "KalturaAnnotation",
+            "cuePoint[entryId]": state["entry_id"],
+            "cuePoint[startTime]": 5000,
+            "cuePoint[endTime]": 15000,
+            "cuePoint[text]": "Click for product details",
+            "cuePoint[tags]": "hotspots,e2e-test",
+            "cuePoint[partnerData]": '{"x":10,"y":20,"width":30,"height":25}',
+        })
+        assert result.get("objectType") == "KalturaAnnotation"
+        assert "hotspots" in result.get("tags", ""), f"Missing hotspots tag: {result.get('tags')}"
+        state["hotspot_cp_id"] = result["id"]
+        runner.register_cleanup(f"hotspot {result['id']}",
+                                lambda: _delete_cue_point(result["id"]))
+        print(f"    Created hotspot: {result['id']}, tags={result.get('tags')}")
+
+    runner.run_test("cuePoint.add — create hotspot annotation", test_hotspot)
 
     # ════════════════════════════════════════════
     # Phase 5: Ad Cue Points

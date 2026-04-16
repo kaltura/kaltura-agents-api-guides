@@ -207,17 +207,73 @@ curl -X POST "$KALTURA_SERVICE_URL/service/cuepoint_cuepoint/action/add" \
 
 Thumb cue points created without a thumbnail asset get `status=4` (PENDING) instead of `status=1` (READY).
 
-## 3.4 How Slides Are Created
+## 3.4 Attaching Slide Images (timedThumbAsset)
+
+A slide cue point without an image stays in `status=4` (PENDING). To make it READY, attach a `KalturaTimedThumbAsset` with the slide image:
+
+**Step 1 — Create the timedThumbAsset linked to the cue point:**
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/thumbAsset/action/add" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "entryId=$KALTURA_ENTRY_ID" \
+  -d "thumbAsset[objectType]=KalturaTimedThumbAsset" \
+  -d "thumbAsset[cuePointId]=1_slide_cp_id"
+```
+
+**Step 2 — Upload the image via uploadToken and set content:**
+
+```bash
+# Create upload token
+curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/add" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1"
+
+# Upload the slide image file
+curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/upload" \
+  -F "ks=$KALTURA_KS" \
+  -F "format=1" \
+  -F "uploadTokenId=TOKEN_ID" \
+  -F "fileData=@slide.png"
+
+# Attach the uploaded image to the thumb asset
+curl -X POST "$KALTURA_SERVICE_URL/service/thumbAsset/action/setContent" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "id=THUMB_ASSET_ID" \
+  -d "contentResource[objectType]=KalturaUploadedFileTokenResource" \
+  -d "contentResource[token]=TOKEN_ID"
+```
+
+After `setContent`, the thumb asset reaches `status=2` (READY) and the linked cue point automatically transitions from `status=4` (PENDING) to `status=1` (READY). The cue point's `assetId` field is populated with the thumb asset ID.
+
+**Step 3 — Serve the slide image:**
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/thumbAsset/action/getUrl" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "id=THUMB_ASSET_ID"
+```
+
+Returns a CDN URL that serves the slide image directly.
+
+**Listing timedThumbAssets:** Use `thumbAsset.list` with `filter[entryIdEqual]` — both `KalturaThumbAsset` (entry thumbnails) and `KalturaTimedThumbAsset` (slide images) appear in the results.
+
+**Cascade delete:** Deleting a slide cue point automatically deletes its linked `KalturaTimedThumbAsset`.
+
+## 3.5 How Slides Are Created
 
 Slides become cue points through several pathways:
 
 1. **PPT/PDF upload** — Server extracts each slide as a thumbnail image, creates `KalturaThumbCuePoint` (subType=1) with OCR text in `description`, and links a `KalturaTimedThumbAsset` for the image
-2. **Live sessions (KME)** — Presenter slide changes create thumb cue points on the live stream entry in real time; after recording, they persist on the VOD
+2. **Live sessions (KME)** — Presenter slide changes push thumb cue points with slide images to the live stream entry in real time via the API; after recording ends, they persist on the VOD entry
 3. **REACH Chaptering** — AI analyzes video content and creates `KalturaThumbCuePoint` (subType=2) at detected topic boundaries (serviceFeature=5)
-4. **Manual via API** — Create thumb cue points directly as shown above
+4. **Manual via API** — Create thumb cue points and attach images as shown in section 3.4
 5. **Bulk XML import** — Ingest multiple cue points via `cuePoint.addFromBulk`
 
-## 3.5 Player Rendering
+## 3.6 Player Rendering
 
 - **Chapters** (subType=2) render as colored segments on the player seekbar via the `timeline` plugin. The `navigation` plugin shows a chapters tab with titles and thumbnails.
 - **Slides** (subType=1) sync with the `dualscreen` plugin — as playback progresses, the secondary view updates to show the slide active at that time. Supports PIP, side-by-side, and single-media layouts.
@@ -947,7 +1003,7 @@ Ad, Annotation, Code, Thumb, and Quiz cue points support custom metadata profile
 - **Register cleanup before assertions** in tests. Cue points persist on entries — always clean up test cue points.
 - **eSearch indexing has a delay.** Newly created cue points may take seconds to appear in search results. Use `cuePoint.list` for immediate retrieval.
 - **Quiz answer security is server-enforced.** Non-editors cannot see `isCorrect` or `explanation` on question cue points — no client-side hiding needed.
-- **Thumb cue points need assets for READY status.** Without an associated `timedThumbAsset`, thumb cue points remain in PENDING (4) status.
+- **Thumb cue points need assets for READY status.** Without an associated `timedThumbAsset`, thumb cue points remain in PENDING (4) status. See section 3.4 for the full attachment workflow.
 - **Filter is mandatory.** Every `list`/`count` call must include at least one identifying filter field.
 - **Ad `protocolType` is set once.** Plan the protocol type before creating ad cue points — it cannot be changed.
 - **Use `forceStop=1`** to pause the player at a cue point (works for all types, not just quizzes).

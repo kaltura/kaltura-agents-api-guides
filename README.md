@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/zoharbabin/kaltura-api-guides?label=Release)](https://github.com/zoharbabin/kaltura-api-guides/releases/latest)
 [![Guides](https://img.shields.io/badge/Guides-40-green.svg)](#guides)
-[![Tests](https://img.shields.io/badge/Live--Tested-809_tests-brightgreen.svg)](#guides)
+[![Tests](https://img.shields.io/badge/Live--Tested-814_tests-brightgreen.svg)](#guides)
 [![llms.txt](https://img.shields.io/badge/llms.txt-available-purple.svg)](llms.txt)
 [![Agent Skill](https://img.shields.io/badge/Agent_Skill-kaltura--api-orange.svg)](.agents/skills/kaltura-api/SKILL.md)
 [![Docs Site](https://img.shields.io/badge/Docs-GitHub_Pages-blue.svg)](https://zoharbabin.github.io/kaltura-api-guides/)
@@ -69,7 +69,7 @@ These guides are optimized for AI agent consumption through multiple discovery m
 | [Unisphere Framework API](KALTURA_UNISPHERE_FRAMEWORK_API.md) | Micro-frontend framework: loader, workspace, services | 21 tests |
 | [Multi-Account Management API](KALTURA_MULTI_ACCOUNT_MANAGEMENT_API.md) | Sub-accounts, cross-account auth, multi-account analytics | 6 tests |
 | [Moderation API](KALTURA_MODERATION_API.md) | Content flagging, approve/reject queue, AI moderation via REACH | 16 tests |
-| [Cue Points & Interactive Video API](KALTURA_CUE_POINTS_API.md) | Chapters, slides, ads, annotations, quizzes, eSearch, player plugins | 32 tests |
+| [Cue Points & Interactive Video API](KALTURA_CUE_POINTS_API.md) | Chapters, slides, ads, annotations, quizzes, hotspots, eSearch, player plugins | 37 tests |
 
 ## Quick Start
 
