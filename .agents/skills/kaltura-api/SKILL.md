@@ -1,6 +1,6 @@
 ---
 name: kaltura-api
-description: Build applications on Kaltura — The Agentic Digital Experience Platform. 40 guides covering authentication (sessions, AppTokens, SSO/SAML), content management (upload, search, categories, metadata, captions), playback, AI services (captions, translation, agents, conversational AI), virtual events, user management, multi-stream, cue points & interactive video, content distribution, syndication feeds, analytics, gamification, webhooks, messaging, content moderation (flagging, AI-powered via REACH), experience components (Player, Express Recorder, Captions Editor, Genie Widget, Media Manager, Content Lab, Agents Widget, VOD Avatar Studio, Conversational Avatar, Chat & Collaborate, Embeddable Analytics), Unisphere framework, multi-account management. 828 tests validated against live API. API v3 (form-encoded) and modern JSON APIs with curl examples.
+description: Build applications on Kaltura — The Agentic Digital Experience Platform. 45 guides covering authentication (sessions, AppTokens, SSO/SAML), content management (upload, search, categories, metadata, captions), playback, AI services (captions, translation, agents, conversational AI), virtual events, user management, multi-stream, cue points & interactive video (hub + 5 dedicated type guides), content distribution, syndication feeds, analytics, gamification, webhooks, messaging, content moderation (flagging, AI-powered via REACH), experience components (Player, Express Recorder, Captions Editor, Genie Widget, Media Manager, Content Lab, Agents Widget, VOD Avatar Studio, Conversational Avatar, Chat & Collaborate, Embeddable Analytics), Unisphere framework, multi-account management. 843 tests validated against live API. API v3 (form-encoded) and modern JSON APIs with curl examples.
 ---
 
 # Kaltura API Integration
@@ -123,7 +123,17 @@ Read the relevant guide when you need to implement a specific capability:
 
 - **[Moderation API](../../../KALTURA_MODERATION_API.md)** — Content moderation with two systems: legacy queue (`baseEntry.flag/approve/reject/listFlags` with `KalturaEntryModerationStatus` 1-6) and AI-powered moderation via REACH (`entryVendorTask` with `serviceFeature=15`, LLM-based text analysis and AWS Rekognition visual moderation). Configurable policies with weighted rules, critical-rule overrides, and category auto-activation. Player plugin `playkit-js-moderation` for viewer content flagging.
 
-- **[Cue Points & Interactive Video API](../../../KALTURA_CUE_POINTS_API.md)** — Temporal markers on video entries via `cuepoint_cuepoint` service: 8 types (chapters, slides, annotations, ads, code, quiz questions/answers, events, sessions). Interactive video quiz lifecycle via `quiz_quiz` + `userEntry` services with 8 question types, scoring, PDF export. eSearch integration via `KalturaESearchCuePointItem` (12 indexed fields including OCR text). Player v7 plugins: `kalturaCuepoints` (data loading), `timeline` (seekbar markers), `navigation` (side panel), `ivq` (quiz overlay), `dualscreen` (slide sync). Bulk XML import, clone, hotspots via annotation tags.
+- **[Cue Points & Interactive Video API](../../../KALTURA_CUE_POINTS_API.md)** — Hub guide for temporal metadata on video entries via `cuepoint_cuepoint` service. Covers architecture, base service CRUD, 8 cue point types, REST vs live push protocols, eSearch integration via `KalturaESearchCuePointItem`, player plugin ecosystem, bulk XML import. Links to 5 dedicated type guides below.
+
+- **[Quiz API](../../../KALTURA_QUIZ_API.md)** — Interactive video quiz lifecycle via `quiz_quiz` + `userEntry` services with 8 question types (MC, T/F, reflection, multi-answer, open, fill-in-blank, hotspot, go-to), 5 scoring models, PDF export, 4 report types, player IVQ plugin.
+
+- **[Chapters & Slides API](../../../KALTURA_CHAPTERS_AND_SLIDES_API.md)** — Thumb cue points (chapter=subType 2, slide=subType 1), timedThumbAsset workflow (create, upload, serve, cascade delete), 5 slide creation pathways, navigation and dualscreen player plugins.
+
+- **[Annotations API](../../../KALTURA_ANNOTATIONS_API.md)** — Annotations with threaded parent-child replies, hotspot pattern (JSON partnerData), searchableOnEntry flag, navigation player plugin.
+
+- **[Ad Cue Points API](../../../KALTURA_AD_CUE_POINTS_API.md)** — VAST/VPAID ad insertion with 4 protocol types, pre-roll/mid-roll/overlay placement, protocol immutability, bumper player plugin.
+
+- **[Code, Event & Session Cue Points API](../../../KALTURA_CODE_CUE_POINTS_API.md)** — Code cue points (view-change commands, systemName, forceStop), event cue points (BROADCAST_START/END, auto-created by media server), session cue points (recording boundaries), dualscreen player plugin.
 
 ### Playback
 

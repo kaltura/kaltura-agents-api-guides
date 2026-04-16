@@ -1697,3 +1697,4 @@ The `filterPaths: ["company"]` setting on the sub-leaderboard groups users by th
 - **[Custom Metadata](KALTURA_CUSTOM_METADATA_API.md)** — `metadataProfileId` on certificates for PDF generation context  
 - **[Categories & Access Control](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md)** — Category IDs in rule conditions for content scoping  
 - **[eSearch](KALTURA_ESEARCH_API.md)** — Search entries and users by badge-related metadata
+- **[Quiz API](KALTURA_QUIZ_API.md)** — Interactive video quizzes that feed gamification scoring rules

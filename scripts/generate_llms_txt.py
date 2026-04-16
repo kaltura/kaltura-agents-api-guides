@@ -34,6 +34,11 @@ CATEGORIES = {
         "KALTURA_VOD_AVATAR_API.md",
         "KALTURA_ANALYTICS_EMBED_API.md",
         "KALTURA_CUE_POINTS_API.md",
+        "KALTURA_QUIZ_API.md",
+        "KALTURA_CHAPTERS_AND_SLIDES_API.md",
+        "KALTURA_ANNOTATIONS_API.md",
+        "KALTURA_AD_CUE_POINTS_API.md",
+        "KALTURA_CODE_CUE_POINTS_API.md",
     ],
     "Content Management": [
         "KALTURA_ESEARCH_API.md",

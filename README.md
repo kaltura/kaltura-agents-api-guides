@@ -2,8 +2,8 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/zoharbabin/kaltura-api-guides?label=Release)](https://github.com/zoharbabin/kaltura-api-guides/releases/latest)
-[![Guides](https://img.shields.io/badge/Guides-40-green.svg)](#guides)
-[![Tests](https://img.shields.io/badge/Live--Tested-828_tests-brightgreen.svg)](#guides)
+[![Guides](https://img.shields.io/badge/Guides-45-green.svg)](#guides)
+[![Tests](https://img.shields.io/badge/Live--Tested-843_tests-brightgreen.svg)](#guides)
 [![llms.txt](https://img.shields.io/badge/llms.txt-available-purple.svg)](llms.txt)
 [![Agent Skill](https://img.shields.io/badge/Agent_Skill-kaltura--api-orange.svg)](.agents/skills/kaltura-api/SKILL.md)
 [![Docs Site](https://img.shields.io/badge/Docs-GitHub_Pages-blue.svg)](https://zoharbabin.github.io/kaltura-api-guides/)
@@ -69,7 +69,12 @@ These guides are optimized for AI agent consumption through multiple discovery m
 | [Unisphere Framework API](KALTURA_UNISPHERE_FRAMEWORK_API.md) | Micro-frontend framework: loader, workspace, services | 21 tests |
 | [Multi-Account Management API](KALTURA_MULTI_ACCOUNT_MANAGEMENT_API.md) | Sub-accounts, cross-account auth, multi-account analytics | 6 tests |
 | [Moderation API](KALTURA_MODERATION_API.md) | Content flagging, approve/reject queue, AI moderation via REACH | 16 tests |
-| [Cue Points & Interactive Video API](KALTURA_CUE_POINTS_API.md) | Chapters, slides, ads, annotations, quizzes, hotspots, eSearch, player plugins | 51 tests |
+| [Cue Points & Interactive Video API](KALTURA_CUE_POINTS_API.md) | Temporal metadata hub: base service, eSearch, protocols, bulk ops | 12 tests |
+| [Quiz API](KALTURA_QUIZ_API.md) | Interactive video quizzes: questions, scoring, reports, IVQ plugin | 19 tests |
+| [Chapters & Slides API](KALTURA_CHAPTERS_AND_SLIDES_API.md) | Chapters, slides, timedThumbAsset workflow, navigation plugin | 8 tests |
+| [Annotations API](KALTURA_ANNOTATIONS_API.md) | Annotations, threaded replies, hotspots, searchableOnEntry | 7 tests |
+| [Ad Cue Points API](KALTURA_AD_CUE_POINTS_API.md) | VAST/VPAID ad insertion: pre-roll, mid-roll, overlay | 6 tests |
+| [Code, Event & Session Cue Points API](KALTURA_CODE_CUE_POINTS_API.md) | Code markers, view-change, forceStop, event/session cue points | 14 tests |
 
 ## Quick Start
 
@@ -138,7 +143,7 @@ See [PLAN.md](PLAN.md) for the full Kaltura API landscape and prioritized list o
 - Live Streaming
 - Playlists
 - Scheduling
-- Cue Points & Interactive Video ✓
+- Cue Points & Interactive Video ✓ (hub + 5 dedicated type guides)
 
 ## License
 

@@ -48,7 +48,12 @@ Kaltura API Guides/
 ├── KALTURA_UNISPHERE_FRAMEWORK_API.md     # Unisphere micro-frontend framework (loader, workspace, services)
 ├── KALTURA_MULTI_ACCOUNT_MANAGEMENT_API.md # Multi-account management, cross-account analytics
 ├── KALTURA_MODERATION_API.md              # Content moderation: flagging, approve/reject, AI moderation via REACH
-├── KALTURA_CUE_POINTS_API.md             # Cue points: chapters, slides, annotations, ads, quizzes, hotspots, eSearch
+├── KALTURA_CUE_POINTS_API.md             # Cue points hub: temporal metadata concepts, base service, eSearch, protocols
+├── KALTURA_QUIZ_API.md                   # Interactive video quizzes: questions, scoring, reports, IVQ plugin
+├── KALTURA_CHAPTERS_AND_SLIDES_API.md    # Chapters, slides, timedThumbAsset workflow, navigation plugin
+├── KALTURA_ANNOTATIONS_API.md            # Annotations, threaded replies, hotspots, searchableOnEntry
+├── KALTURA_AD_CUE_POINTS_API.md          # VAST/VPAID ad insertion: pre-roll, mid-roll, overlay
+├── KALTURA_CODE_CUE_POINTS_API.md        # Code markers, view-change, forceStop, event/session cue points
 ├── version.txt                            # Current version (managed by release-please)
 ├── release-please-config.json             # Release automation config
 ├── .release-please-manifest.json          # Version tracking for release-please
@@ -220,7 +225,12 @@ Agents building on Kaltura should use platform services rather than reimplementi
 | Embedded analytics | Embeddable Analytics (iframe dashboards) | `KALTURA_ANALYTICS_EMBED_API.md` |
 | Unisphere experiences | Micro-frontend framework: loader, workspace, services, Media Manager | `KALTURA_UNISPHERE_FRAMEWORK_API.md` |
 | Multi-account management | Parent-child accounts, cross-account analytics | `KALTURA_MULTI_ACCOUNT_MANAGEMENT_API.md` |
-| Cue points & interactive video | Chapters, slides, annotations, ads, quizzes, hotspots, eSearch, player plugins | `KALTURA_CUE_POINTS_API.md` |
+| Cue points (overview & base service) | Temporal metadata concepts, base CRUD, eSearch, protocols, bulk ops | `KALTURA_CUE_POINTS_API.md` |
+| Interactive video quizzes | Quiz lifecycle, 8 question types, scoring, reports, IVQ plugin | `KALTURA_QUIZ_API.md` |
+| Chapters & slides | Thumb cue points, timedThumbAsset workflow, navigation plugin | `KALTURA_CHAPTERS_AND_SLIDES_API.md` |
+| Annotations & hotspots | Threaded annotations, hotspot pattern, searchableOnEntry | `KALTURA_ANNOTATIONS_API.md` |
+| Ad cue points | VAST/VPAID ad insertion, pre-roll/mid-roll/overlay | `KALTURA_AD_CUE_POINTS_API.md` |
+| Code, event & session markers | View-change commands, forceStop, broadcast events, sessions | `KALTURA_CODE_CUE_POINTS_API.md` |
 
 ## Commit Messages & Versioning
 

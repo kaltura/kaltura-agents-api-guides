@@ -25,7 +25,12 @@ Guides for getting content into the platform and enriching it with AI.
 | [Multi-Stream](KALTURA_MULTI_STREAM_API.md) | Editing & Personalization | Dual-screen / PIP multi-camera entries |
 | [Captions & Transcripts](KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md) | Editing & Personalization | Caption asset CRUD, formats, serving, search |
 | [Custom Metadata](KALTURA_CUSTOM_METADATA_API.md) | Editing & Personalization | XSD schemas, structured XML metadata on entries |
-| [Cue Points & Interactive Video](KALTURA_CUE_POINTS_API.md) | Editing & Personalization | Chapters, slides, ads, annotations, quizzes, hotspots, player integration |
+| [Cue Points & Interactive Video](KALTURA_CUE_POINTS_API.md) | Editing & Personalization | Temporal metadata hub: base service, eSearch, protocols, bulk ops |
+| [Quiz API](KALTURA_QUIZ_API.md) | Editing & Personalization | Interactive video quizzes: questions, scoring, reports, IVQ plugin |
+| [Chapters & Slides](KALTURA_CHAPTERS_AND_SLIDES_API.md) | Editing & Personalization | Chapters, slides, timedThumbAsset workflow, navigation plugin |
+| [Annotations](KALTURA_ANNOTATIONS_API.md) | Editing & Personalization | Annotations, threaded replies, hotspots, searchableOnEntry |
+| [Ad Cue Points](KALTURA_AD_CUE_POINTS_API.md) | Editing & Personalization | VAST/VPAID ad insertion: pre-roll, mid-roll, overlay |
+| [Code, Event & Session Cue Points](KALTURA_CODE_CUE_POINTS_API.md) | Editing & Personalization | Code markers, view-change, forceStop, event/session cue points |
 | [REACH API](KALTURA_REACH_API.md) | AI Enrichment | Governed enrichment services marketplace: captions, translation, moderation, AI analysis, 22+ services |
 | [Agents Manager](KALTURA_AGENTS_MANAGER_API.md) | AI Enrichment | Automated content-processing rules and workflows |
 | [AI Genie](KALTURA_AI_GENIE_API.md) | AI Enrichment | Conversational AI / RAG over video library |
@@ -102,9 +107,19 @@ graph TD
     RE --> AG
     RE --> CT
     KS --> AI
-    CP["Cue Points"]
+    CP["Cue Points Hub"]
+    QZ["Quiz"]
+    CS["Chapters & Slides"]
+    AN["Annotations"]
+    AD["Ad Cue Points"]
+    CE["Code/Event/Session CPs"]
     KS --> CP
     UD --> CP
+    CP --> QZ
+    CP --> CS
+    CP --> AN
+    CP --> AD
+    CP --> CE
 
     %% Management
     ES["eSearch"]
@@ -190,7 +205,7 @@ graph TD
     classDef experience fill:#50C878,color:#fff,stroke:#3A9A5A
 
     class GS,KS,AT foundation
-    class UD,MS,CT,CM,RE,AG,AI,CP creation
+    class UD,MS,CT,CM,RE,AG,AI,CP,QZ,CS,AN,AD,CE creation
     class ES,CA,UM,AB,MA,AR,AE,WH,APR,MSG,MO management
     class PE,EC,ER,CE,CVA,CNC,GW,EA,UF,MM,CL,AW,VA,EP,UP,GA,DI,SY experience
 ```
@@ -234,9 +249,12 @@ Blue = Foundation | Purple = Creation | Orange = Management | Green = Experience
 | Control who sees what | [Categories & Access Control](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md) |
 | Moderate content (flag, approve, reject) | [Moderation](KALTURA_MODERATION_API.md) |
 | Screen content with AI for policy violations | [Moderation](KALTURA_MODERATION_API.md) |
-| Add chapters, quizzes, or annotations to video | [Cue Points](KALTURA_CUE_POINTS_API.md) |
-| Insert ads (VAST/VPAID) at specific times | [Cue Points](KALTURA_CUE_POINTS_API.md) |
-| Build interactive video quizzes | [Cue Points](KALTURA_CUE_POINTS_API.md) |
-| Sync slides with video playback | [Cue Points](KALTURA_CUE_POINTS_API.md) |
+| Add chapters to video | [Chapters & Slides](KALTURA_CHAPTERS_AND_SLIDES_API.md) |
+| Add annotations or hotspots to video | [Annotations](KALTURA_ANNOTATIONS_API.md) |
+| Insert ads (VAST/VPAID) at specific times | [Ad Cue Points](KALTURA_AD_CUE_POINTS_API.md) |
+| Build interactive video quizzes | [Quiz](KALTURA_QUIZ_API.md) |
+| Sync slides with video playback | [Chapters & Slides](KALTURA_CHAPTERS_AND_SLIDES_API.md) |
+| Add code markers or view-change commands | [Code, Event & Session CPs](KALTURA_CODE_CUE_POINTS_API.md) |
+| Understand cue point types and base service | [Cue Points Hub](KALTURA_CUE_POINTS_API.md) |
 | Generate thumbnails | [Upload & Delivery](KALTURA_UPLOAD_AND_DELIVERY_API.md) (section 4) |
 | Add gamification | [Gamification](KALTURA_GAMIFICATION_API.md) |

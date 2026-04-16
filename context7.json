@@ -1,6 +1,6 @@
 {
   "name": "Kaltura API Guides",
-  "description": "Live-tested API guides for Kaltura — The Agentic Digital Experience Platform. Covers authentication, content management, search, player embed, REACH enrichment services marketplace (22+ services: captions, translation, moderation, dubbing, AI clips, 80+ languages, machine and human vendors), conversational AI, virtual events, multi-stream, webhooks, email messaging, user management, SSO/SAML, categories, custom metadata, captions & transcripts, analytics reports, event collection, gamification, content distribution, syndication feeds, experience components (Express Recorder, Captions Editor, Conversational Avatar, Chat & Collaborate, Genie Widget, Media Manager, Content Lab, Agents Widget, VOD Avatar Studio, Embeddable Analytics), Unisphere framework, multi-account management, content moderation (flagging, AI-powered via REACH), and more. 828 tests validated against live API. For AI agents and developers.",
+  "description": "Live-tested API guides for Kaltura — The Agentic Digital Experience Platform. Covers authentication, content management, search, player embed, REACH enrichment services marketplace (22+ services: captions, translation, moderation, dubbing, AI clips, 80+ languages, machine and human vendors), conversational AI, virtual events, multi-stream, webhooks, email messaging, user management, SSO/SAML, categories, custom metadata, captions & transcripts, analytics reports, event collection, gamification, content distribution, syndication feeds, experience components (Express Recorder, Captions Editor, Conversational Avatar, Chat & Collaborate, Genie Widget, Media Manager, Content Lab, Agents Widget, VOD Avatar Studio, Embeddable Analytics), Unisphere framework, multi-account management, content moderation (flagging, AI-powered via REACH), and more. 843 tests validated against live API. For AI agents and developers.",
   "focus": [
     "KALTURA_SESSION_GUIDE.md",
     "KALTURA_APPTOKENS_API.md",
@@ -42,6 +42,11 @@
     "KALTURA_VOD_AVATAR_API.md",
     "KALTURA_MODERATION_API.md",
     "KALTURA_CUE_POINTS_API.md",
+    "KALTURA_QUIZ_API.md",
+    "KALTURA_CHAPTERS_AND_SLIDES_API.md",
+    "KALTURA_ANNOTATIONS_API.md",
+    "KALTURA_AD_CUE_POINTS_API.md",
+    "KALTURA_CODE_CUE_POINTS_API.md",
     "GUIDE_MAP.md",
     "AGENTS.md",
     ".agents/skills/kaltura-api/SKILL.md"
