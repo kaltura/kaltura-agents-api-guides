@@ -1,4 +1,4 @@
-name: Deploy docs & update llms.txt
+name: Deploy
 
 on:
   push:
@@ -13,7 +13,6 @@ on:
       - "LICENSE"
       - "CODE_OF_CONDUCT.md"
       - "mkdocs.yml"
-      - ".github/workflows/deploy.yml"
       - "scripts/generate_llms_txt.py"
       - ".agents/skills/kaltura-api/SKILL.md"
       - "assets/**"
@@ -25,7 +24,8 @@ permissions:
   id-token: write
 
 jobs:
-  update-llms-txt:
+  # ── Generate Discovery Index ─────────────────────────────
+  llms-txt:
     name: Update llms.txt
     runs-on: ubuntu-latest
     steps:
@@ -52,9 +52,10 @@ jobs:
           git commit -m "chore: auto-update llms.txt from guide changes"
           git push
 
-  deploy:
-    name: Deploy to GitHub Pages
-    needs: update-llms-txt
+  # ── Publish Docs Site ────────────────────────────────────
+  pages:
+    name: GitHub Pages
+    needs: llms-txt
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -71,12 +72,10 @@ jobs:
       - name: Prepare docs directory
         run: |
           mkdir -p docs
-          # Symlink all markdown files into docs/
           for f in *.md; do
             ln -sf "../$f" "docs/$f"
           done
           ln -sf ../LICENSE docs/LICENSE
-          # Symlink assets (logo, favicon, CSS)
           ln -sf ../assets docs/assets
 
       - name: Build and deploy

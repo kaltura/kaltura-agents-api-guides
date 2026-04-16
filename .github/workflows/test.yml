@@ -1,4 +1,4 @@
-name: Experience Components E2E
+name: Test
 
 on:
   push:
@@ -18,7 +18,7 @@ on:
       - "KALTURA_UNISPHERE_FRAMEWORK_API.md"
       - "tests/test_experience_components_*.py"
       - "tests/test_helpers.py"
-      - ".github/workflows/e2e-tests.yml"
+      - ".github/workflows/test.yml"
   pull_request:
     paths:
       - "KALTURA_EXPERIENCE_COMPONENTS_API.md"
@@ -35,12 +35,13 @@ on:
       - "KALTURA_UNISPHERE_FRAMEWORK_API.md"
       - "tests/test_experience_components_*.py"
       - "tests/test_helpers.py"
-      - ".github/workflows/e2e-tests.yml"
+      - ".github/workflows/test.yml"
   workflow_dispatch:
 
 jobs:
+  # ── Live API Validation ──────────────────────────────────
   api-tests:
-    name: API validation (KS + Genie auth)
+    name: API validation
     runs-on: ubuntu-latest
     env:
       KALTURA_PARTNER_ID: ${{ secrets.KALTURA_PARTNER_ID }}
@@ -77,6 +78,7 @@ jobs:
         if: steps.check-secrets.outputs.skip != 'true'
         run: python3 tests/test_experience_components_api.py
 
+  # ── Browser E2E ──────────────────────────────────────────
   browser-e2e:
     name: Browser E2E (Playwright)
     runs-on: ubuntu-latest

@@ -1,25 +1,32 @@
-name: Check links
+name: CI
 
 on:
   push:
     branches: [main]
-    paths:
-      - "**.md"
   pull_request:
-    paths:
-      - "**.md"
   schedule:
-    - cron: "0 9 * * 1"  # Every Monday at 9am UTC
-  workflow_dispatch:
+    - cron: "0 9 * * 1" # Weekly link check — Mondays 9am UTC
 
 jobs:
-  links:
-    name: Validate markdown links
+  # ── Quality Gates ────────────────────────────────────────
+  commit-lint:
+    name: Commit lint
+    if: github.event_name != 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: opensource-nepal/commitlint@v1
+
+  link-check:
+    name: Link check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Check links
+      - name: Validate markdown links
         uses: lycheeverse/lychee-action@v2
         with:
           args: >-

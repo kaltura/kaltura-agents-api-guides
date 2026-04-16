@@ -9,8 +9,9 @@ permissions:
   pull-requests: write
 
 jobs:
+  # ── Automated Versioning ─────────────────────────────────
   release-please:
-    name: Create or update release PR
+    name: Release PR
     runs-on: ubuntu-latest
     steps:
       - uses: googleapis/release-please-action@v4
