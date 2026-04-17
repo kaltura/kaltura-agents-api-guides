@@ -8,16 +8,24 @@ Kaltura's content distribution system pushes media to external platforms (YouTub
 **Services:** `contentDistribution_distributionProvider`, `contentDistribution_distributionProfile`, `contentDistribution_entryDistribution`, `contentDistribution_genericDistributionProvider`, `contentDistribution_genericDistributionProviderAction`  
 
 
-# 1. Prerequisites
+# 1. When to Use
+
+- **Multi-platform content syndication** — Media teams publishing video content simultaneously to YouTube, Facebook, Dailymotion, and other platforms from a single source of truth in Kaltura  
+- **Cross-account content sharing** — Organizations synchronizing content between multiple Kaltura accounts (e.g., from a central production account to regional or departmental accounts)  
+- **Automated publishing workflows** — Operations teams configuring rules that automatically distribute content to external platforms when entries are approved, reach a scheduled sunrise date, or match specific metadata criteria  
+- **FTP/SFTP content delivery** — Enterprise teams pushing video files and metadata to partner systems, archive servers, or CDN origins via automated FTP distribution  
+
+
+# 2. Prerequisites
 
 - A Kaltura account with the Content Distribution plugin enabled (contact your Kaltura account manager if distribution actions return `SERVICE_FORBIDDEN`)
 - An ADMIN KS (type=2) with `disableentitlement` privilege for full distribution management
 - At least one distribution profile configured (YouTube API, FTP, Cross-Kaltura, etc.)
 
 
-# 2. Core Concepts
+# 3. Core Concepts
 
-## 2.1 Distribution Workflow
+## 3.1 Distribution Workflow
 
 1. **Configure a distribution profile** — defines the target platform, credentials, and automation rules
 2. **Bind an entry to a profile** — creates an `entryDistribution` record linking the entry to the profile
@@ -25,7 +33,7 @@ Kaltura's content distribution system pushes media to external platforms (YouTub
 4. **Submit** — pushes the entry to the remote platform; status tracks progress through the state machine
 5. **Monitor** — track status changes, dirty flags (content updated), and sunrise/sunset scheduling
 
-## 2.2 Service Name Prefix
+## 3.2 Service Name Prefix
 
 Distribution services use the `contentDistribution_` plugin prefix:
 
@@ -36,9 +44,9 @@ Distribution services use the `contentDistribution_` plugin prefix:
 | Entry Distribution | `contentDistribution_entryDistribution` |
 
 
-# 3. Distribution Providers
+# 4. Distribution Providers
 
-## 3.1 Provider Types
+## 4.1 Provider Types
 
 Distribution providers define the available connector types. Providers are system-level (partner 0) and include built-in connectors for major platforms.
 
@@ -59,7 +67,7 @@ Key provider types:
 | `cortexApiDistribution.CORTEX_API` | Cortex API | Cortex API connector |
 | `tvinciDistribution.TVINCI` | Tvinci | OTT/Tvinci platform |
 
-## 3.2 distributionProvider.list
+## 4.2 distributionProvider.list
 
 List all available distribution provider types on the account:
 
@@ -91,11 +99,11 @@ curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_distributionProvi
 ```
 
 
-# 4. Distribution Profile Management
+# 5. Distribution Profile Management
 
 Distribution profiles configure how content is distributed to a specific target platform. Each profile specifies the provider type, automation rules (automatic vs manual submit/update/delete), required assets, and provider-specific settings.
 
-## 4.1 Profile Object Fields
+## 5.1 Profile Object Fields
 
 Base fields (all `KalturaDistributionProfile` subtypes):
 
@@ -127,7 +135,7 @@ Base fields (all `KalturaDistributionProfile` subtypes):
 | 2 | AUTOMATIC | Triggered automatically when conditions are met |
 | 3 | MANUAL | Requires an explicit API call |
 
-## 4.2 distributionProfile.add
+## 5.2 distributionProfile.add
 
 Create a new distribution profile. The `objectType` and provider-specific fields vary by connector type.
 
@@ -151,7 +159,7 @@ Create a new distribution profile. The `objectType` and provider-specific fields
 | `distributionProfile[sunriseDefaultOffset]` | int | No | Default sunrise offset in seconds |
 | `distributionProfile[sunsetDefaultOffset]` | int | No | Default sunset offset in seconds |
 
-Additional provider-specific fields depend on the `objectType` (see section 7 for connector-specific fields).
+Additional provider-specific fields depend on the `objectType` (see section 8 for connector-specific fields).
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_distributionProfile/action/add" \
@@ -176,7 +184,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_distributionProfi
 
 Profile creation requires provider-specific configuration (OAuth credentials for YouTube/Facebook, connection details for FTP, target account details for Cross-Kaltura). Profiles are typically configured through the KMC (Kaltura Management Console) and then managed via API.
 
-## 4.3 distributionProfile.get
+## 5.3 distributionProfile.get
 
 Retrieve a distribution profile by ID.
 
@@ -211,7 +219,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_distributionProfi
 }
 ```
 
-## 4.4 distributionProfile.list
+## 5.4 distributionProfile.list
 
 List distribution profiles with optional filters.
 
@@ -244,7 +252,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_distributionProfi
   -d "filter[statusEqual]=2"
 ```
 
-## 4.5 distributionProfile.update
+## 5.5 distributionProfile.update
 
 Update distribution profile fields. Only include the fields you want to change.
 
@@ -272,7 +280,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_distributionProfi
 
 The `protocol` field on FTP profiles is immutable after creation — include it in the `add` call but do not attempt to update it. Updating `protocol` returns `PROPERTY_VALIDATION_NOT_UPDATABLE` and rejects the entire request. To change protocol, delete the profile and create a new one.
 
-## 4.6 distributionProfile.updateStatus
+## 5.6 distributionProfile.updateStatus
 
 Enable or disable a distribution profile.
 
@@ -301,7 +309,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_distributionProfi
   -d "status=2"
 ```
 
-## 4.7 distributionProfile.delete
+## 5.7 distributionProfile.delete
 
 Delete a distribution profile.
 
@@ -317,20 +325,20 @@ curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_distributionProfi
 ```
 
 
-# 5. Entry Distribution Lifecycle
+# 6. Entry Distribution Lifecycle
 
 Entry distributions bind a specific media entry to a distribution profile, tracking the full lifecycle of distributing that entry to the external platform.
 
-## 5.1 Entry Distribution Object Fields
+## 6.1 Entry Distribution Object Fields
 
 | Field | Type | Description |
 |-------|------|-------------|
 | `id` | int | Entry distribution ID (auto-assigned) |
 | `entryId` | string | The Kaltura entry ID |
 | `distributionProfileId` | int | The distribution profile ID |
-| `status` | int | Current status (see section 10.1) |
-| `dirtyStatus` | int | What changed since last sync (see section 10.3) |
-| `sunStatus` | int | Sunrise/sunset state (see section 10.3) |
+| `status` | int | Current status (see section 11.1) |
+| `dirtyStatus` | int | What changed since last sync (see section 11.3) |
+| `sunStatus` | int | Sunrise/sunset state (see section 11.3) |
 | `thumbAssetIds` | string | Comma-separated thumbnail asset IDs to distribute |
 | `flavorAssetIds` | string | Comma-separated flavor asset IDs to distribute |
 | `sunrise` | int | Unix timestamp — content becomes active |
@@ -341,7 +349,7 @@ Entry distributions bind a specific media entry to a distribution profile, track
 | `errorNumber` | int | Provider-specific error code |
 | `errorDescription` | string | Human-readable error message |
 
-## 5.2 entryDistribution.add
+## 6.2 entryDistribution.add
 
 Bind an entry to a distribution profile.
 
@@ -368,7 +376,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution
 
 The new entry distribution starts in PENDING status (0). Optionally set `thumbAssetIds` and `flavorAssetIds` to control which assets are distributed, and `sunrise`/`sunset` for time-based scheduling.
 
-## 5.3 entryDistribution.validate
+## 6.3 entryDistribution.validate
 
 Validate an entry against the distribution profile requirements before submitting.
 
@@ -409,7 +417,7 @@ Validation checks:
 
 If `autoCreateFlavors` or `autoCreateThumb` is enabled on the profile, missing assets are automatically queued for creation.
 
-## 5.4 entryDistribution.submitAdd
+## 6.4 entryDistribution.submitAdd
 
 Submit an entry to the remote platform.
 
@@ -440,7 +448,7 @@ The submission pipeline:
 5. If validation passes, creates a batch job and sets status to SUBMITTING (4)
 6. On success, status becomes READY (2) and `remoteId` is populated with the external platform ID
 
-## 5.5 entryDistribution.list
+## 6.5 entryDistribution.list
 
 List entry distributions with filters.
 
@@ -450,7 +458,7 @@ List entry distributions with filters.
 |-----------|------|-------------|
 | `filter[entryIdEqual]` | string | Filter by Kaltura entry ID |
 | `filter[distributionProfileIdEqual]` | int | Filter by distribution profile ID |
-| `filter[statusEqual]` | int | Filter by status (see section 10.1) |
+| `filter[statusEqual]` | int | Filter by status (see section 11.1) |
 | `filter[statusIn]` | string | Comma-separated statuses |
 | `filter[dirtyStatusEqual]` | int | Filter by dirty status |
 | `filter[sunriseGreaterThanOrEqual]` | int | Filter by minimum sunrise timestamp |
@@ -494,7 +502,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution
   -d "filter[statusEqual]=2"
 ```
 
-## 5.6 entryDistribution.get
+## 6.6 entryDistribution.get
 
 Retrieve a specific entry distribution.
 
@@ -509,9 +517,9 @@ curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution
   -d "id=$ENTRY_DISTRIBUTION_ID"
 ```
 
-**Response:** Full entry distribution object (see section 5.1 for field definitions).
+**Response:** Full entry distribution object (see section 6.1 for field definitions).
 
-## 5.7 entryDistribution.update
+## 6.7 entryDistribution.update
 
 Update entry distribution fields (sunrise/sunset scheduling, asset selection).
 
@@ -536,7 +544,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution
   -d "entryDistribution[sunset]=$SUNSET_TIMESTAMP"
 ```
 
-## 5.8 entryDistribution.submitUpdate
+## 6.8 entryDistribution.submitUpdate
 
 Push metadata or content updates to the remote platform.
 
@@ -555,7 +563,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution
 
 Valid when current status is READY (2), ERROR_UPDATING (8), ERROR_DELETING (9), or IMPORT_UPDATING (12).
 
-## 5.9 entryDistribution.submitDelete
+## 6.9 entryDistribution.submitDelete
 
 Remove the entry from the remote platform.
 
@@ -574,7 +582,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution
 
 Valid when current status is READY (2), ERROR_DELETING (9), or ERROR_UPDATING (8).
 
-## 5.10 entryDistribution.submitFetchReport
+## 6.10 entryDistribution.submitFetchReport
 
 Request a delivery report from the remote platform.
 
@@ -591,7 +599,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution
 
 Valid only when status is READY (2). The distribution profile must have `reportEnabled` set to AUTOMATIC (2).
 
-## 5.11 entryDistribution.retrySubmit
+## 6.11 entryDistribution.retrySubmit
 
 Retry the last failed operation.
 
@@ -608,7 +616,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution
 
 Use this when an entry distribution is in an ERROR_* status (7, 8, or 9) to re-attempt the failed operation. The operation retried corresponds to the status: ERROR_SUBMITTING retries submit, ERROR_UPDATING retries update, ERROR_DELETING retries delete.
 
-## 5.12 entryDistribution.serveSentData / serveReturnedData
+## 6.12 entryDistribution.serveSentData / serveReturnedData
 
 Retrieve the raw XML data sent to or received from the remote platform for debugging.
 
@@ -645,7 +653,7 @@ These endpoints return `text/html` with the raw XML payload. The body is empty (
 | 2 | UPDATE |
 | 3 | DELETE |
 
-## 5.13 entryDistribution.delete
+## 6.13 entryDistribution.delete
 
 Delete the entry distribution record.
 
@@ -663,9 +671,9 @@ curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution
 This removes the entry distribution record. To also remove the content from the remote platform, call `submitDelete` first.
 
 
-# 6. Distribution Triggers & Automation
+# 7. Distribution Triggers & Automation
 
-## 6.1 Automatic Distribution on Entry Ready
+## 7.1 Automatic Distribution on Entry Ready
 
 When `submitEnabled=2` (AUTOMATIC) and `distributeTrigger=1` (ENTRY_READY), entries are automatically submitted to the remote platform when they finish processing:
 
@@ -679,7 +687,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_distributionProfi
   -d "distributionProfile[distributeTrigger]=1"
 ```
 
-## 6.2 Moderation-Gated Distribution
+## 7.2 Moderation-Gated Distribution
 
 When `distributeTrigger=2` (MODERATION_APPROVED), entries are only submitted after passing content moderation:
 
@@ -692,7 +700,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_distributionProfi
   -d "distributionProfile[distributeTrigger]=2"
 ```
 
-## 6.3 Sunrise / Sunset Scheduling
+## 7.3 Sunrise / Sunset Scheduling
 
 Control when distributed content becomes active and expires using Unix timestamps:
 
@@ -716,7 +724,7 @@ The `sunStatus` field tracks the current state:
 
 When `submitWhenReady=true` and sunrise is in the future, the entry distribution is queued and automatically submitted at the sunrise time.
 
-## 6.4 Dirty Status & Update Propagation
+## 7.4 Dirty Status & Update Propagation
 
 When a distributed entry changes (metadata update, new flavors, thumbnail change), the `dirtyStatus` is set:
 
@@ -730,7 +738,7 @@ When a distributed entry changes (metadata update, new flavors, thumbnail change
 
 When `updateEnabled=2` (AUTOMATIC), the system auto-submits updates when the dirty flag is set. When `updateEnabled=3` (MANUAL), call `submitUpdate` explicitly to push changes.
 
-## 6.5 Status State Machine
+## 7.5 Status State Machine
 
 The distribution engine enforces strict status transitions:
 
@@ -742,9 +750,9 @@ The distribution engine enforces strict status transitions:
 | `submitFetchReport` | READY (2) only |
 
 
-# 7. Distribution Connector Reference
+# 8. Distribution Connector Reference
 
-## 7.1 YouTube API Distribution
+## 8.1 YouTube API Distribution
 
 The YouTube API connector pushes video entries to a YouTube channel via OAuth 2.0.
 
@@ -796,7 +804,7 @@ This authorization is typically done once during profile setup through the KMC (
 
 When an entry is successfully distributed to YouTube, the `remoteId` field on the entry distribution is populated with the YouTube video ID.
 
-## 7.2 Facebook Distribution
+## 8.2 Facebook Distribution
 
 The Facebook connector pushes video entries to a Facebook page.
 
@@ -822,7 +830,7 @@ Key fields:
 
 This authorization is typically done once during profile setup through the KMC (Kaltura Management Console).
 
-## 7.3 Cross-Kaltura Distribution
+## 8.3 Cross-Kaltura Distribution
 
 The Cross-Kaltura connector syncs content between Kaltura accounts, including metadata, flavors, thumbnails, captions, and cue points.
 
@@ -845,7 +853,7 @@ Key fields:
 | `mapConversionProfileIds` | Source-to-target conversion profile mapping |
 | `mapMetadataProfileIds` | Source-to-target metadata profile mapping |
 
-## 7.4 FTP Distribution
+## 8.4 FTP Distribution
 
 The FTP connector pushes content and MRSS metadata files to an FTP/SFTP/SCP server.
 
@@ -868,9 +876,9 @@ Key fields:
 | `sendMetadataAfterAssets` | Send MRSS file after asset uploads |
 
 
-# 8. MRSS & Field Configuration
+# 9. MRSS & Field Configuration
 
-## 8.1 MRSS Structure
+## 9.1 MRSS Structure
 
 Kaltura generates an internal MRSS (Media RSS) feed for each entry that includes all metadata, content URLs, thumbnails, and distribution-specific data. This MRSS is the input for distribution connectors — each connector transforms it into the provider-specific format.
 
@@ -896,7 +904,7 @@ Each entry's MRSS includes a `<distribution>` block per active distribution:
 </distribution>
 ```
 
-## 8.2 Field Configuration (fieldConfigArray)
+## 9.2 Field Configuration (fieldConfigArray)
 
 Configurable distribution profiles (YouTube, Facebook, etc.) use `fieldConfigArray` to map Kaltura MRSS elements to provider fields:
 
@@ -922,17 +930,17 @@ Configurable distribution profiles (YouTube, Facebook, etc.) use `fieldConfigArr
 When `updateOnChange=true` and the corresponding entry field changes, the `dirtyStatus` is automatically set, triggering an update cycle if `updateEnabled=AUTOMATIC`.
 
 
-# 9. Building a Custom Connector
+# 10. Building a Custom Connector
 
 Kaltura's built-in connectors cover major platforms (YouTube, Facebook, FTP, Cross-Kaltura). For platforms not covered by a built-in connector, there are two paths:
 
-- **Generic Distribution (XSLT-based)** — Configure a custom connector entirely through API calls. Kaltura's internal MRSS feed (section 8.1) is transformed into the target platform's expected format via XSLT and delivered over FTP, SFTP, SCP, HTTP, or HTTPS. This approach works for any target that accepts XML or file-based ingest.
+- **Generic Distribution (XSLT-based)** — Configure a custom connector entirely through API calls. Kaltura's internal MRSS feed (section 9.1) is transformed into the target platform's expected format via XSLT and delivered over FTP, SFTP, SCP, HTTP, or HTTPS. This approach works for any target that accepts XML or file-based ingest.
 
 - **Custom built-in connector** — For platforms requiring OAuth authentication, complex REST API interactions, or custom business logic beyond XML transformation, contact your Kaltura account manager to submit a feature request for a new built-in distribution connector. Built-in connectors are developed and maintained by Kaltura as server-side plugins.
 
 The rest of this section covers the Generic Distribution approach.
 
-## 9.1 Generic Distribution Provider
+## 10.1 Generic Distribution Provider
 
 A Generic Distribution Provider defines a custom connector type. It specifies the provider's name, required and optional assets, and which entry fields trigger distribution updates.
 
@@ -1004,7 +1012,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_genericDistributi
   -d "id=$GENERIC_PROVIDER_ID"
 ```
 
-## 9.2 Provider Actions
+## 10.2 Provider Actions
 
 Each provider needs one or more **actions** that define how content is delivered to the target platform. Create a separate action for each operation the connector supports.
 
@@ -1079,11 +1087,11 @@ curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_genericDistributi
 
 The `remotePath` field supports the `{REMOTE_ID}` placeholder, which is replaced with the entry distribution's `remoteId` at runtime. This is useful for UPDATE and DELETE actions that target a specific remote resource.
 
-## 9.3 XSLT Transforms
+## 10.3 XSLT Transforms
 
 Three transforms can be attached to each provider action to control the data pipeline:
 
-**MRSS Transformer** — XSLT stylesheet that converts Kaltura's internal MRSS (section 8.1) into the target platform's expected XML format. This is where you map Kaltura entry fields (title, description, tags, content URLs) to the target's schema.
+**MRSS Transformer** — XSLT stylesheet that converts Kaltura's internal MRSS (section 9.1) into the target platform's expected XML format. This is where you map Kaltura entry fields (title, description, tags, content URLs) to the target's schema.
 
 **MRSS Validator** — XSD schema that validates the transformed XML before delivery. If validation fails, the distribution job reports a validation error instead of sending malformed data.
 
@@ -1147,7 +1155,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_genericDistributi
 
 Transforms can also be uploaded from files using the `addMrssTransformFromFile`, `addMrssValidateFromFile`, and `addResultsTransformFromFile` actions.
 
-## 9.4 Creating a Generic Distribution Profile
+## 10.4 Creating a Generic Distribution Profile
 
 Once the provider and its actions are configured, create a distribution profile that references the provider:
 
@@ -1165,17 +1173,17 @@ curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_distributionProfi
   -d "distributionProfile[deleteEnabled]=2"
 ```
 
-The `genericProviderId` field links the profile to the provider you created in section 9.1. The profile inherits the provider's required assets, and the actions you defined in section 9.2 control how each operation is executed.
+The `genericProviderId` field links the profile to the provider you created in section 10.1. The profile inherits the provider's required assets, and the actions you defined in section 10.2 control how each operation is executed.
 
-The `partnerId` parameter is required in the request body (same requirement as all distribution profiles — see section 4.2).
+The `partnerId` parameter is required in the request body (same requirement as all distribution profiles — see section 5.2).
 
-From here, the standard entry distribution workflow applies: bind an entry (section 5.2), validate (section 5.3), and submit (section 5.4).
+From here, the standard entry distribution workflow applies: bind an entry (section 6.2), validate (section 6.3), and submit (section 6.4).
 
-## 9.5 Generic Distribution Data Flow
+## 10.5 Generic Distribution Data Flow
 
 When an entry distribution is submitted against a Generic Distribution profile:
 
-1. Kaltura generates the entry's **MRSS XML** (section 8.1), including all metadata, content URLs, thumbnails, and distribution-specific data
+1. Kaltura generates the entry's **MRSS XML** (section 9.1), including all metadata, content URLs, thumbnails, and distribution-specific data
 2. The SUBMIT action's **MRSS Transformer** XSLT is applied, converting the MRSS into the target platform's format
 3. If an **MRSS Validator** XSD is configured, the transformed XML is validated — failures are reported as validation errors
 4. The transformed XML is delivered to the target server via the configured **protocol** (FTP, SFTP, SCP, HTTP, or HTTPS)
@@ -1185,9 +1193,9 @@ When an entry distribution is submitted against a Generic Distribution profile:
 The same pipeline runs for UPDATE and DELETE actions using their respective transforms and server configurations.
 
 
-# 10. Status & Error Reference
+# 11. Status & Error Reference
 
-## 10.1 Entry Distribution Status Values
+## 11.1 Entry Distribution Status Values
 
 | Value | Name | Description |
 |-------|------|-------------|
@@ -1205,7 +1213,7 @@ The same pipeline runs for UPDATE and DELETE actions using their respective tran
 | 11 | IMPORT_SUBMITTING | Importing from remote |
 | 12 | IMPORT_UPDATING | Updating import |
 
-## 10.2 Distribution Validation Error Types
+## 11.2 Distribution Validation Error Types
 
 | Error Object | errorType | Description |
 |-------------|-----------|-------------|
@@ -1216,7 +1224,7 @@ The same pipeline runs for UPDATE and DELETE actions using their respective tran
 | `KalturaDistributionValidationErrorMissingAsset` | 5 | Required asset not found |
 | `KalturaDistributionValidationErrorConditionNotMet` | 6 | XSLT distribution condition not satisfied |
 
-## 10.3 Dirty Status & Sun Status Flags
+## 11.3 Dirty Status & Sun Status Flags
 
 **Dirty status** (tracks what changed since last sync):
 
@@ -1237,7 +1245,7 @@ The same pipeline runs for UPDATE and DELETE actions using their respective tran
 | 3 | AFTER_SUNSET | Content has expired |
 
 
-# 11. Error Handling
+# 12. Error Handling
 
 | Error Code | Meaning | Resolution |
 |------------|---------|------------|
@@ -1252,7 +1260,7 @@ The same pipeline runs for UPDATE and DELETE actions using their respective tran
 **Retry strategy:** For transient errors (HTTP 5xx, timeouts), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (`ENTRY_DISTRIBUTION_NOT_FOUND`, `SERVICE_FORBIDDEN`), fix the request before retrying. Distribution submission is asynchronous — after calling `submitAdd`, poll the entry distribution status rather than retrying the submit call.
 
 
-# 12. Best Practices
+# 13. Best Practices
 
 - **Validate before submitting.** Call `entryDistribution.validate` before `submitAdd` to catch missing flavors, thumbnails, or metadata. Fix validation errors before attempting submission.
 - **Use `submitWhenReady=true` for newly uploaded content.** Entries that are still processing will be automatically submitted once they reach READY status, avoiding timing issues.
@@ -1261,12 +1269,12 @@ The same pipeline runs for UPDATE and DELETE actions using their respective tran
 - **Check `serveSentData` / `serveReturnedData` for debugging.** When distribution fails, inspect the raw XML sent to and received from the remote platform.
 - **Use entry distribution `list` with filters for monitoring.** Filter by `statusEqual` to find failed distributions (status 7, 8, 9) and retry or investigate.
 - **Call `submitDelete` before `delete`.** To remove content from both the remote platform and Kaltura, call `submitDelete` first (removes from remote), then `delete` (removes the local record).
-- **Use Generic Distribution for custom XML-based targets.** Build a custom connector via API (section 9) for any platform that accepts XML file delivery. For platforms requiring OAuth or custom REST API integration, contact your Kaltura account manager to request a new built-in connector.
+- **Use Generic Distribution for custom XML-based targets.** Build a custom connector via API (section 10) for any platform that accepts XML file delivery. For platforms requiring OAuth or custom REST API integration, contact your Kaltura account manager to request a new built-in connector.
 
 
-# 13. Common Integration Patterns
+# 14. Common Integration Patterns
 
-## 13.1 Multi-Platform Publishing Pipeline
+## 14.1 Multi-Platform Publishing Pipeline
 
 Distribute a single entry to multiple platforms simultaneously by binding it to multiple distribution profiles:
 
@@ -1301,7 +1309,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution
   -d "submitWhenReady=true"
 ```
 
-## 13.2 YouTube Channel Distribution
+## 14.2 YouTube Channel Distribution
 
 Full workflow for distributing content to YouTube:
 
@@ -1346,7 +1354,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution
   -d "id=$ENTRY_DISTRIBUTION_ID"
 ```
 
-## 13.3 Time-Based Content Release
+## 14.3 Time-Based Content Release
 
 Schedule content to go live on a remote platform at a future date and expire automatically:
 
@@ -1367,7 +1375,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution
   -d "submitWhenReady=true"
 ```
 
-## 13.4 Monitoring Distribution Health
+## 14.4 Monitoring Distribution Health
 
 Find all failed distributions and retry them:
 
@@ -1393,7 +1401,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution
   -d "id=$FAILED_ENTRY_DIST_ID"
 ```
 
-## 13.5 Webhook-Triggered Distribution
+## 14.5 Webhook-Triggered Distribution
 
 Combine distribution with [webhooks](KALTURA_WEBHOOKS_API.md) for event-driven publishing. Set up a webhook that fires when entry metadata changes, then programmatically manage distribution updates:
 
@@ -1402,7 +1410,7 @@ Combine distribution with [webhooks](KALTURA_WEBHOOKS_API.md) for event-driven p
 3. If `dirtyStatus != 0`, call `entryDistribution.submitUpdate` to push changes
 
 
-# 14. API Actions Reference
+# 15. API Actions Reference
 
 | Service | Action | Description |
 |---------|--------|-------------|
@@ -1442,7 +1450,7 @@ Combine distribution with [webhooks](KALTURA_WEBHOOKS_API.md) for event-driven p
 | `contentDistribution_entryDistribution` | `serveReturnedData` | Retrieve XML returned from remote |
 
 
-# 15. Related Guides
+# 16. Related Guides
 
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — KS generation and management
 - **[AppTokens API](KALTURA_APPTOKENS_API.md)** — Secure server-to-server auth for automated distribution workflows

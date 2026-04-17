@@ -6,6 +6,12 @@ Create synchronized multi-stream entries for dual-screen playback — Picture-in
 **Auth:** All requests require a valid KS (see [Session Guide](KALTURA_SESSION_GUIDE.md))  
 **Format:** Form-encoded POST, `format=1` for JSON responses  
 
+## When to Use
+
+- **Multi-camera lecture recordings** — Education teams publishing synchronized presenter and slide capture videos so students can switch between camera angles during playback  
+- **Picture-in-Picture and Side-by-Side experiences** — Content producers creating dual-screen video experiences where viewers see a primary speaker alongside a secondary stream (screen share, whiteboard, or additional camera)  
+- **Corporate training with multi-angle video** — L&D teams delivering training sessions with multiple synchronized video streams that viewers can toggle between for the best perspective  
+
 ## Prerequisites
 
 - A Kaltura account with a valid Partner ID

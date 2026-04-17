@@ -22,7 +22,23 @@ The Game Services (SCM) API powers engagement mechanics for virtual events and l
 | `scheduledGameObject` | create, update, list, delete | Scheduled status transitions |
 
 
-# 1. Authentication
+# 1. When to Use This Guide
+
+- **Learning and development teams** driving training completion through leaderboards, badges, and certificates  
+- **Event organizers** increasing attendee engagement with real-time scoring and achievement mechanics  
+- **HR and compliance departments** issuing verifiable certificates for continuing education credits  
+- **Marketing teams** implementing lead scoring based on event participation and content consumption  
+- **LMS integrators** connecting gamification data (scores, badges, certificates) to external learning management systems
+
+
+# 2. Prerequisites
+
+- **KS type:** ADMIN KS (type=2) with `GAME_BASE` (read) and `GAME_MANAGE` (write) permissions  
+- **Plugins:** Game Services (SCM) must be enabled on the partner account via Kaltura Admin Console  
+- **Session guide:** Generate a KS using `session.start` or `appToken.startSession` (see [Session Guide](KALTURA_SESSION_GUIDE.md))
+
+
+# 3. Authentication
 
 All requests require an ADMIN KS (type=2) in the `Authorization` header:
 
@@ -34,7 +50,7 @@ export KALTURA_KS="your_kaltura_session"
 
 Generate an ADMIN KS via `session.start` (see [Session Guide](KALTURA_SESSION_GUIDE.md)) or `appToken.startSession` (see [AppTokens Guide](KALTURA_APPTOKENS_API.md)).
 
-## 1.1 Regional Endpoints
+## 3.1 Regional Endpoints
 
 | Region | Base URL |
 |--------|----------|
@@ -45,7 +61,7 @@ Generate an ADMIN KS via `session.start` (see [Session Guide](KALTURA_SESSION_GU
 | APAC (Sydney) | `https://scm.syp2.ovp.kaltura.com/api/v1/` |
 | Canada | `https://scm.cap2.ovp.kaltura.com/api/v1/` |
 
-## 1.2 Permissions
+## 3.2 Permissions
 
 | Permission | Description |
 |------------|-------------|
@@ -55,11 +71,11 @@ Generate an ADMIN KS via `session.start` (see [Session Guide](KALTURA_SESSION_GU
 Enable Game Services for your partner account in Kaltura Admin Console.
 
 
-# 2. Leaderboard Entity & CRUD
+# 4. Leaderboard Entity & CRUD
 
 Leaderboards track user scores and rank users. They are scoped to virtual events via `virtualEventIds`.
 
-## 2.1 Leaderboard Entity
+## 4.1 Leaderboard Entity
 
 | Field | Type | Description |
 |-------|------|-------------|
@@ -70,12 +86,12 @@ Leaderboards track user scores and rank users. They are scoped to virtual events
 | `startDate` | ISO 8601 | Scoring window start |
 | `endDate` | ISO 8601 | Scoring window end |
 | `virtualEventIds` | int[] | Virtual event IDs this leaderboard applies to |
-| `participationPolicy` | object | Controls user visibility (see section 3) |
-| `subLeaderboards` | array | Segments for team/regional rankings (see section 2.4) |
+| `participationPolicy` | object | Controls user visibility (see section 5) |
+| `subLeaderboards` | array | Segments for team/regional rankings (see section 4.4) |
 
 **Status lifecycle:** `scheduled` → `enabled` → `disabled`. Create leaderboards as `scheduled`, then update to `enabled` when the event starts.
 
-## 2.2 Create Leaderboard
+## 4.2 Create Leaderboard
 
 **Parameters**
 
@@ -88,10 +104,10 @@ Leaderboards track user scores and rank users. They are scoped to virtual events
 | `startDate` | string | Yes | Scoring window start in ISO 8601 format |
 | `endDate` | string | Yes | Scoring window end in ISO 8601 format |
 | `virtualEventIds` | array | Yes | Array of virtual event ID strings this leaderboard applies to |
-| `participationPolicy` | object | No | Controls user visibility (see section 3). Default: all users visible |
+| `participationPolicy` | object | No | Controls user visibility (see section 5). Default: all users visible |
 | `participationPolicy.userDefaultPolicy` | string | No | Default policy: `"display"`, `"do_not_display"`, or `"do_not_save"` |
 | `participationPolicy.policies` | array | No | Array of policy override objects with `policy`, `matchCriteria`, and `values` |
-| `subLeaderboards` | array | No | Segment definitions for team/regional rankings (see section 2.4) |
+| `subLeaderboards` | array | No | Segment definitions for team/regional rankings (see section 4.4) |
 
 ```bash
 curl -X POST "$KALTURA_SCM_URL/leaderboard/create" \
@@ -132,7 +148,7 @@ curl -X POST "$KALTURA_SCM_URL/leaderboard/create" \
 }
 ```
 
-## 2.3 Get, Update, List, Delete
+## 4.3 Get, Update, List, Delete
 
 ```bash
 # Get
@@ -160,7 +176,7 @@ curl -X POST "$KALTURA_SCM_URL/leaderboard/delete" \
   -d '{"id": "'$LEADERBOARD_ID'"}'
 ```
 
-## 2.4 Sub-Leaderboards
+## 4.4 Sub-Leaderboards
 
 Segment users by properties (country, company, department) for team-based or regional competitions.
 
@@ -186,7 +202,7 @@ curl -X POST "$KALTURA_SCM_URL/leaderboard/create" \
 `filterPaths` references user profile properties from the [User Profile API](KALTURA_USER_PROFILE_API.md). Individual scores automatically aggregate within their sub-leaderboard segment.
 
 
-# 3. Participation Policies
+# 5. Participation Policies
 
 Participation policies control user visibility across all game objects (leaderboards, badges, certificates, lead scoring).
 
@@ -196,7 +212,7 @@ Participation policies control user visibility across all game objects (leaderbo
 | `do_not_display` | User participates; progress visible only to admins |
 | `do_not_save` | User does not participate; no data collected |
 
-## 3.1 Matching Criteria
+## 5.1 Matching Criteria
 
 | Criteria | Description |
 |----------|-------------|
@@ -229,11 +245,11 @@ curl -X POST "$KALTURA_SCM_URL/leaderboard/create" \
 In this example, internal employees are excluded entirely (`do_not_save`), speakers participate but are hidden from rankings (`do_not_display`), and all other users are visible (`display`).
 
 
-# 4. Rules Engine
+# 6. Rules Engine
 
 The rules engine evaluates analytics events against configured rules and triggers scoring, achievement, and certification actions. Rules are the core abstraction that ties all gamification features together.
 
-## 4.1 Rule Entity
+## 6.1 Rule Entity
 
 | Field | Required | Description |
 |-------|----------|-------------|
@@ -253,7 +269,7 @@ The rules engine evaluates analytics events against configured rules and trigger
 | `subRules` | No | Array of child rules for multi-stage logic |
 | `userIdOverride` | No | Map points to a different user (e.g., upvote recipient) |
 
-## 4.2 Rule Types
+## 6.2 Rule Types
 
 | Type | Description | Example |
 |------|-------------|---------|
@@ -264,7 +280,7 @@ The rules engine evaluates analytics events against configured rules and trigger
 | `external` | Accept external/3rd-party scores | Metric must be `"score"`; points come from the event's score field |
 | `override` | Replace existing score entirely | Override with new value instead of accumulating |
 
-## 4.3 Rule Modes
+## 6.3 Rule Modes
 
 | Mode | Description |
 |------|-------------|
@@ -273,11 +289,11 @@ The rules engine evaluates analytics events against configured rules and trigger
 | `block_root_rule_while_in_progress` | Sub-rule must complete before the root rule can accumulate |
 | `block_root_rule_if_exhausted` | Once this sub-rule reaches its max, the root rule stops accumulating |
 
-## 4.4 Condition Operators
+## 6.4 Condition Operators
 
 `equal`, `notEqual`, `lessThan`, `greaterThan`, `in`, `notIn`, `contains`, `doesNotContain`
 
-## 4.5 Condition Facts (Event Fields)
+## 6.5 Condition Facts (Event Fields)
 
 | Fact | Description |
 |------|-------------|
@@ -301,7 +317,7 @@ The rules engine evaluates analytics events against configured rules and trigger
 }
 ```
 
-## 4.6 Analytics Events That Feed Rules
+## 6.6 Analytics Events That Feed Rules
 
 | Source | Event Types | Example Rules |
 |--------|------------|---------------|
@@ -312,7 +328,7 @@ The rules engine evaluates analytics events against configured rules and trigger
 | KME | `participated`, `quizAnswer` | Meeting attendance |
 | Registration | `registered` | Event registration, first-to-register bonus |
 
-## 4.7 Rule CRUD
+## 6.7 Rule CRUD
 
 ```bash
 # Create rule for a leaderboard
@@ -354,7 +370,7 @@ curl -X POST "$KALTURA_SCM_URL/rule/delete" \
   -d '{"id": "'$RULE_ID'"}'
 ```
 
-## 4.8 Sub-Rules
+## 6.8 Sub-Rules
 
 Sub-rules enable multi-stage logic. Example: root rule awards points per upvote, sub-rule caps total upvotes per user.
 
@@ -389,11 +405,11 @@ curl -X POST "$KALTURA_SCM_URL/rule/create" \
 ```
 
 
-# 5. Badges
+# 7. Badges
 
 Badges reward users for completing a set of activity rules. A user either has a badge or does not — they are binary achievements.
 
-## 5.1 Badge Entity
+## 7.1 Badge Entity
 
 Rules are defined **inline** during badge creation (not via separate `rule/create` calls).
 
@@ -422,13 +438,13 @@ curl -X POST "$KALTURA_SCM_URL/badge/create" \
   }'
 ```
 
-## 5.2 Badge Achievement Lifecycle
+## 7.2 Badge Achievement Lifecycle
 
 1. Analytics events are evaluated against each badge's rules
 2. Per-user per-rule progress is tracked in `rulesData[]` (each has `id`, `progress`, `completed`)
 3. When **all** rules have `completed: true`, badge status updates to `ACHIEVED` with `achievedTimestamp`
 
-## 5.3 Badge CRUD
+## 7.3 Badge CRUD
 
 ```bash
 # Get badge
@@ -450,7 +466,7 @@ curl -X POST "$KALTURA_SCM_URL/badge/delete" \
   -d '{"id": "'$BADGE_ID'"}'
 ```
 
-## 5.4 User Badge Progress
+## 7.4 User Badge Progress
 
 ```bash
 curl -X POST "$KALTURA_SCM_URL/userBadge/list" \
@@ -476,11 +492,11 @@ Response:
 ```
 
 
-# 6. Certificates
+# 8. Certificates
 
 Certificates issue PDF credentials to users who complete required activities. They use the same rules engine as badges, with added PDF generation configuration.
 
-## 6.1 Certificate Entity
+## 8.1 Certificate Entity
 
 | Field | Type | Description |
 |-------|------|-------------|
@@ -495,7 +511,7 @@ Certificates issue PDF credentials to users who complete required activities. Th
 | `creditsMapping` | string | Maps rules to credit values |
 | `participationPolicy` | object | Controls user visibility |
 
-## 6.2 PDF Template (outputFileConfiguration)
+## 8.2 PDF Template (outputFileConfiguration)
 
 The first element is a background image URL. Subsequent elements are text overlays with positioning.
 
@@ -526,7 +542,7 @@ curl -X POST "$KALTURA_SCM_URL/certificate/create" \
   }'
 ```
 
-## 6.3 Credits Mapping
+## 8.3 Credits Mapping
 
 Maps rules to credit values using a newline-delimited format:
 
@@ -547,7 +563,7 @@ curl -X POST "$KALTURA_SCM_URL/certificate/update" \
   }'
 ```
 
-## 6.4 Certificate Rules
+## 8.4 Certificate Rules
 
 Create rules for certificates via the standard `rule/create` endpoint with `gameObjectType: "certificate"`:
 
@@ -571,7 +587,7 @@ curl -X POST "$KALTURA_SCM_URL/rule/create" \
   }'
 ```
 
-## 6.5 User Certificate Progress
+## 8.5 User Certificate Progress
 
 ```bash
 curl -X POST "$KALTURA_SCM_URL/userCertificateReport/list" \
@@ -581,11 +597,11 @@ curl -X POST "$KALTURA_SCM_URL/userCertificateReport/list" \
 ```
 
 
-# 7. Lead Scoring
+# 9. Lead Scoring
 
 Lead scoring tracks user engagement during events and segments users by likelihood to convert. Two parallel segmentation systems run simultaneously.
 
-## 7.1 Percentage Groups (Relative Ranking)
+## 9.1 Percentage Groups (Relative Ranking)
 
 | Group | Range | Description |
 |-------|-------|-------------|
@@ -593,7 +609,7 @@ Lead scoring tracks user engagement during events and segments users by likeliho
 | Warm Leads | 50-79% | Middle 30% |
 | Cold Leads | 0-49% | Bottom 50% |
 
-## 7.2 Score Groups (Absolute Thresholds)
+## 9.2 Score Groups (Absolute Thresholds)
 
 | Group | Range |
 |-------|-------|
@@ -601,7 +617,7 @@ Lead scoring tracks user engagement during events and segments users by likeliho
 | Mid Score Leads | 500-999 |
 | Low Score Leads | 0-499 |
 
-## 7.3 Lead Scoring CRUD
+## 9.3 Lead Scoring CRUD
 
 ```bash
 # Create lead scoring profile (scoreGroups or percentageGroups required)
@@ -648,7 +664,7 @@ curl -X POST "$KALTURA_SCM_URL/rule/create" \
   }'
 ```
 
-## 7.4 User Lead Scoring Data
+## 9.4 User Lead Scoring Data
 
 ```bash
 curl -X POST "$KALTURA_SCM_URL/userLeadScoring/list" \
@@ -657,7 +673,7 @@ curl -X POST "$KALTURA_SCM_URL/userLeadScoring/list" \
   -d '{"gameObjectId": "'$LEAD_SCORING_ID'", "pager": {"pageSize": 100, "pageIndex": 1}}'
 ```
 
-## 7.5 Lead Scoring Reports
+## 9.5 Lead Scoring Reports
 
 **Summary report:** Percentage Group Name, Range, Number of Users, Average Score, Average Engagement Score, Average User Profile Score.
 
@@ -666,9 +682,9 @@ curl -X POST "$KALTURA_SCM_URL/userLeadScoring/list" \
 Reports are exportable to CRM systems as custom objects.
 
 
-# 8. User Scores & Progress
+# 10. User Scores & Progress
 
-## 8.1 Get User Score
+## 10.1 Get User Score
 
 **Parameters**
 
@@ -684,7 +700,7 @@ curl -X POST "$KALTURA_SCM_URL/userScore/get" \
   -d '{"gameObjectId": "'$LEADERBOARD_ID'", "userId": "'$USER_ID'"}'
 ```
 
-## 8.2 List Scores (Paginated Ranking)
+## 10.2 List Scores (Paginated Ranking)
 
 ```bash
 curl -X POST "$KALTURA_SCM_URL/userScore/list" \
@@ -693,7 +709,7 @@ curl -X POST "$KALTURA_SCM_URL/userScore/list" \
   -d '{"gameObjectId": "'$LEADERBOARD_ID'", "pager": {"pageSize": 25, "pageIndex": 1}}'
 ```
 
-## 8.3 Per-Rule Progress
+## 10.3 Per-Rule Progress
 
 ```bash
 curl -X POST "$KALTURA_SCM_URL/userScore/ruleProgress" \
@@ -702,7 +718,7 @@ curl -X POST "$KALTURA_SCM_URL/userScore/ruleProgress" \
   -d '{"gameObjectId": "'$LEADERBOARD_ID'", "userId": "'$USER_ID'"}'
 ```
 
-## 8.4 Clear Scores
+## 10.4 Clear Scores
 
 **Parameters**
 
@@ -717,7 +733,7 @@ curl -X POST "$KALTURA_SCM_URL/userScore/clear" \
   -d '{"gameObjectId": "'$LEADERBOARD_ID'"}'
 ```
 
-## 8.5 API v3 Game Plugin
+## 10.5 API v3 Game Plugin
 
 User scores are also accessible via the standard Kaltura API v3:
 
@@ -735,7 +751,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/leaderboard_userscore/action/list" \
 Response: `KalturaUserScorePropertiesResponse` with `rank`, `userId`, `puserId`, `score`, `scoreTags`, `oldRank`.
 
 
-# 9. External Events & CSV Import
+# 11. External Events & CSV Import
 
 Import scores from external systems (booth scans, external quiz platforms, physical activities) via CSV upload.
 
@@ -770,11 +786,11 @@ curl -X POST "$KALTURA_SCM_URL/event/sendExternalEventsFromCSV" \
 The `external` rule type is required for the leaderboard to accept external events. Set `metric: "score"` so points come from the event's score field.
 
 
-# 10. Reports
+# 12. Reports
 
 Generate reports for gamification data export.
 
-## 10.1 Report Types
+## 12.1 Report Types
 
 | Report Type | Description |
 |-------------|-------------|
@@ -787,7 +803,7 @@ Generate reports for gamification data export.
 | `userScore` | Leaderboard scores and rankings |
 | `userLeadScoring` | Lead scoring data with group assignments |
 
-## 10.2 Generate Report
+## 12.2 Generate Report
 
 **Parameters**
 
@@ -807,7 +823,7 @@ curl -X POST "$KALTURA_SCM_URL/report/generate" \
 ```
 
 
-# 11. Scheduled Game Objects
+# 13. Scheduled Game Objects
 
 Automate status transitions for game objects (e.g., enable a leaderboard at event start, disable at event end).
 
@@ -857,9 +873,9 @@ curl -X POST "$KALTURA_SCM_URL/scheduledGameObject/delete" \
 ```
 
 
-# 12. Error Handling
+# 14. Error Handling
 
-## 12.1 Common Errors
+## 14.1 Common Errors
 
 | Error | Cause | Resolution |
 |-------|-------|------------|
@@ -868,14 +884,14 @@ curl -X POST "$KALTURA_SCM_URL/scheduledGameObject/delete" \
 | 404 Not Found | Invalid game object ID | Verify the ID with a `list` call |
 | 400 Bad Request | Missing required fields | Include all required fields for the endpoint |
 
-## 12.2 Permission Errors
+## 14.2 Permission Errors
 
 Read operations (`list`, `get`, `userScore/list`) require `GAME_BASE`.
 Write operations (`create`, `update`, `delete`) require `GAME_MANAGE`.
 
 If Game Services is not enabled for your partner account, all endpoints return 403. Enable via Kaltura Admin Console.
 
-## 12.3 Standard List Filters
+## 14.3 Standard List Filters
 
 All `list` endpoints support these filter fields:
 
@@ -890,9 +906,9 @@ All `list` endpoints support these filter fields:
 | `pager` | object | `{pageSize, pageIndex}` for pagination |
 
 
-# 13. Common Integration Patterns
+# 15. Common Integration Patterns
 
-## 13.1 Virtual Conference Engagement Program
+## 15.1 Virtual Conference Engagement Program
 
 Set up a complete gamification program for a multi-day virtual conference.
 
@@ -1000,7 +1016,7 @@ curl -s -X POST "$KALTURA_SCM_URL/leaderboard/update" \
   -d '{"id": "'$LEADERBOARD'", "status": "enabled"}'
 ```
 
-## 13.2 Partner Training Certification
+## 15.2 Partner Training Certification
 
 Set up tiered certification with PDF certificates.
 
@@ -1057,7 +1073,7 @@ curl -s -X POST "$KALTURA_SCM_URL/certificate/update" \
   }'
 ```
 
-## 13.3 Post-Event Lead Scoring
+## 15.3 Post-Event Lead Scoring
 
 Score attendees and export hot leads to CRM.
 
@@ -1133,7 +1149,7 @@ curl -s -X POST "$KALTURA_SCM_URL/userLeadScoring/list" \
   -d '{"gameObjectId": "'$LEAD'", "pager": {"pageSize": 100, "pageIndex": 1}}'
 ```
 
-## 13.4 Flash Challenges with Scheduled Transitions
+## 15.4 Flash Challenges with Scheduled Transitions
 
 Create time-limited challenges that auto-enable and auto-disable.
 
@@ -1193,7 +1209,7 @@ curl -s -X POST "$KALTURA_SCM_URL/scheduledGameObject/create" \
   }'
 ```
 
-## 13.5 CPE / Continuing Education Credits
+## 15.5 CPE / Continuing Education Credits
 
 Track Continuing Professional Education (CPE) credits per session for accreditation bodies (medical, legal, accounting). Each session awards credits based on verified watch time, and a branded PDF certificate is generated for submission to the accreditation authority.
 
@@ -1277,7 +1293,7 @@ The `categories` condition in the rule ensures only sessions within the accredit
 
 > **See also:** [Events Platform](KALTURA_EVENTS_PLATFORM_API.md) for virtual event and session category setup, [Custom Metadata](KALTURA_CUSTOM_METADATA_API.md) for attaching accreditation metadata to entries.
 
-## 13.6 External Score Import (Hybrid Events)
+## 15.6 External Score Import (Hybrid Events)
 
 Hybrid events combine in-person and digital activities on a single leaderboard. Booth visits, physical check-ins, and external quiz platforms produce scores outside the Kaltura analytics pipeline. Import those scores via CSV so they appear alongside digital engagement on the same leaderboard.
 
@@ -1332,9 +1348,9 @@ CSVEOF
 
 Use `delta` for incremental activities where each occurrence adds points (booth scans, check-ins). Use `upsert` when the external system provides a corrected or final score that should replace the previous value (exam retakes, final quiz grades).
 
-> **See also:** Section 9 (External Events & CSV Import) for CSV format details, [Analytics Reports](KALTURA_ANALYTICS_REPORTS_API.md) for verifying imported data in analytics.
+> **See also:** Section 11 (External Events & CSV Import) for CSV format details, [Analytics Reports](KALTURA_ANALYTICS_REPORTS_API.md) for verifying imported data in analytics.
 
-## 13.7 Sponsor Engagement Tracking & ROI Reports
+## 15.7 Sponsor Engagement Tracking & ROI Reports
 
 Event sponsors need measurable engagement data to justify renewal. Organize sponsor content by category, track booth page visits via analytics events, score engagement on a per-sponsor leaderboard, and generate per-sponsor reports.
 
@@ -1400,7 +1416,7 @@ The `categories` condition on the rule ensures only content within the sponsor's
 
 > **See also:** [Categories & Access Control](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md) for sponsor category setup, [Events Collection](KALTURA_ANALYTICS_EVENTS_COLLECTION_API.md) for analytics event tracking, [Analytics Reports](KALTURA_ANALYTICS_REPORTS_API.md) for report.getTable usage, [Events Platform](KALTURA_EVENTS_PLATFORM_API.md) for virtual event structure.
 
-## 13.8 Employee Onboarding Gamification
+## 15.8 Employee Onboarding Gamification
 
 Make employee onboarding engaging with module-based scoring, milestone badges, and a branded completion certificate. HR managers track cohort progress and generate records for compliance.
 
@@ -1520,7 +1536,7 @@ The 90-day window on the leaderboard defines the cohort period. Each onboarding 
 
 > **See also:** [Categories & Access Control](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md) for organizing onboarding modules by category, [User Management](KALTURA_USER_MANAGEMENT_API.md) for managing new hire user accounts and group assignments.
 
-## 13.9 Customer Education Academy with Badges
+## 15.9 Customer Education Academy with Badges
 
 Reduce support tickets by building a customer education portal with visible achievement badges. Each product area has a badge requiring both content consumption and quiz completion. Track customer progress and export completion data to CRM.
 
@@ -1592,7 +1608,7 @@ Each badge requires both content consumption (`countUnique` ensures the customer
 
 > **See also:** [Categories & Access Control](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md) for product area category structure, [eSearch](KALTURA_ESEARCH_API.md) for searching entries and users by badge-related metadata.
 
-## 13.10 Team-Based Competitions
+## 15.10 Team-Based Competitions
 
 Run department-level or regional competitions alongside individual rankings. Sub-leaderboards automatically aggregate individual scores by a user profile property (company, country, department), so team standings update in real time without separate team-level scoring logic.
 
@@ -1666,7 +1682,7 @@ The `filterPaths: ["company"]` setting on the sub-leaderboard groups users by th
 > **See also:** [User Profile](KALTURA_USER_PROFILE_API.md) for user properties that power `filterPaths` grouping, [Events Platform](KALTURA_EVENTS_PLATFORM_API.md) for virtual event scoping.
 
 
-# 14. Best Practices
+# 16. Best Practices
 
 **Rule design — use groupBy wisely.** `groupBy: "kuserId"` accumulates across all entries. `groupBy: "kuserId,entryId"` accumulates per entry per user — use this for "watch X minutes per session" rules where you want per-session caps.
 
@@ -1685,7 +1701,7 @@ The `filterPaths: ["company"]` setting on the sub-leaderboard groups users by th
 **External events.** Use `delta` mode for incremental score additions (booth visits, check-ins). Use `upsert` mode when the external system provides final scores (exam results, external quiz platforms).
 
 
-# 15. Related Guides
+# 17. Related Guides
 
 - **[Events Platform](KALTURA_EVENTS_PLATFORM_API.md)** — `virtualEventIds` scope game objects to events; category IDs in rule conditions  
 - **[User Profile](KALTURA_USER_PROFILE_API.md)** — User properties power sub-leaderboards via `filterPaths[]`; user metadata enriches reports  

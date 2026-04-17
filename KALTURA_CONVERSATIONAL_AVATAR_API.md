@@ -17,7 +17,15 @@ Kaltura also offers a full Avatar SDK (`@unisphere/models-sdk-js`) for direct We
 - **Language learning** — Practice pronunciation and conversation with real-time feedback  
 
 
-# 2. Embedding
+# 2. Prerequisites
+
+- **API key from Kaltura** — Obtain a `clientId` and `flowId` from the Kaltura Avatar management console (provided as part of your Kaltura Events or Enterprise subscription). These credentials identify your application and the avatar flow to load.  
+- **Avatar asset configured** — A flow must be created in the Avatar management console that defines the avatar appearance, AI model, and conversation logic.  
+- **Kaltura Session (KS)** — While the Avatar embed itself authenticates via Client ID + Flow ID, a KS may be needed for related Kaltura API operations (e.g., retrieving entry data or analytics). See the [Session Guide](KALTURA_SESSION_GUIDE.md) for KS generation details.  
+- **HTTPS and microphone access** — The embed requires a secure context (HTTPS) for microphone access and iframe security policies. The user's browser must support WebRTC.  
+
+
+# 3. Embedding
 
 Load the Avatar SDK and initialize with your client and flow IDs. The SDK is hosted on Kaltura's Avatar CDN:
 
@@ -57,7 +65,7 @@ Load the Avatar SDK and initialize with your client and flow IDs. The SDK is hos
 The SDK creates a sandboxed iframe inside the container element. All communication between the host page and the avatar happens via `postMessage`.
 
 
-# 3. Configuration
+# 4. Configuration
 
 | Parameter | Required | Description |
 |-----------|----------|-------------|
@@ -69,7 +77,7 @@ The SDK creates a sandboxed iframe inside the container element. All communicati
 | `config.meetBaseUrl` | no | Override meeting URL (default: `https://meet.avatar.us.kaltura.ai`) |
 
 
-# 4. Lifecycle and Events
+# 5. Lifecycle and Events
 
 The avatar progresses through states: `uninitialized` → `initializing` → `ready` → `in-conversation` → `ended`.
 
@@ -82,7 +90,7 @@ The avatar progresses through states: `uninitialized` → `initializing` → `re
 | `error` | — | An error occurred |
 
 
-# 5. Methods
+# 6. Methods
 
 | Method | Returns | Description |
 |--------|---------|-------------|
@@ -96,14 +104,14 @@ The avatar progresses through states: `uninitialized` → `initializing` → `re
 The **Dynamic Page Prompt (DPP)** is the mechanism for customizing avatar behavior at runtime. Inject it on the `showing-agent` event to configure the avatar's persona, scenario, evaluation criteria, and guardrails.
 
 
-# 6. Error Handling
+# 7. Error Handling
 
 - **`error` event** — The SDK emits `error` when the avatar fails to initialize or the conversation breaks. Check network connectivity to the avatar API endpoint.  
 - **Container not rendered** — If the avatar iframe does not appear, verify the `container` selector matches an existing DOM element with explicit width and height.  
 - **Microphone permissions** — The avatar requires microphone access for voice conversation. If the user denies permissions, the conversation cannot proceed. Handle this gracefully in your UI.  
 
 
-# 7. Best Practices
+# 8. Best Practices
 
 - **Inject Dynamic Page Prompts on the correct event.** Always inject the DPP on the `showing-agent` event, not on an arbitrary timeout after `start()`. The avatar must be fully loaded before receiving prompts.  
 - **Use HTTPS.** The embed requires a secure context for microphone access and iframe security policies.  
@@ -111,7 +119,7 @@ The **Dynamic Page Prompt (DPP)** is the mechanism for customizing avatar behavi
 - **Clean up on navigation.** Call `destroy()` when the user navigates away from the page to release microphone access and remove the iframe.  
 
 
-# 8. Related Guides
+# 9. Related Guides
 
 - **[VOD Avatar Studio](KALTURA_VOD_AVATAR_API.md)** — Pre-recorded avatar video generation from scripts — the pre-recorded counterpart to this real-time conversational embed  
 - **[Experience Components Overview](KALTURA_EXPERIENCE_COMPONENTS_API.md)** — Index of all embeddable components with shared guidelines  

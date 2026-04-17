@@ -14,8 +14,14 @@ The Media Manager is a Unisphere widget for browsing, selecting, and uploading K
 - **Media library panel** — Embed an inline browsable media grid in your application  
 - **Entry management** — Allow users to detach or delete entries from categories  
 
+# 2. Prerequisites
 
-# 2. Embedding
+- A valid Kaltura Session (KS) — ADMIN KS (type=2) for manage mode with uploads, or USER KS (type=0) for read-only select mode (see [Session Guide](KALTURA_SESSION_GUIDE.md))  
+- The Unisphere Media Manager widget URL for your region (default: `https://unisphere.nvp1.ovp.kaltura.com/v1`)  
+- A target container element in your page with an explicit `id` attribute for the widget to render into  
+
+
+# 3. Embedding
 
 The Media Manager loads as a Unisphere runtime from the CDN. Import the loader and configure a workspace with the `unisphere.widget.media-manager` widget:
 
@@ -60,7 +66,7 @@ The Media Manager loads as a Unisphere runtime from the CDN. Import the loader a
 The container `<div>` must have an `id` attribute matching the `target` value in the visual config (no `#` prefix). The widget renders inside this container and fills the available space.
 
 
-# 3. Configuration
+# 4. Configuration
 
 ## Runtime Settings
 
@@ -110,7 +116,7 @@ visuals: [{
 | `detach` | Remove the entry from the current category without deleting it |
 
 
-# 4. Visual Types
+# 5. Visual Types
 
 ## Table (Inline Library)
 
@@ -139,7 +145,7 @@ visuals: [{
 You can also open dialogs programmatically using the runtime API — see section 6.
 
 
-# 5. Modes
+# 6. Modes
 
 ## Select Mode
 
@@ -180,7 +186,7 @@ runtimes: [{
 ```
 
 
-# 6. Runtime API
+# 7. Runtime API
 
 After the workspace loads, get the runtime instance for programmatic control:
 
@@ -270,7 +276,7 @@ mm.showDialog("manage", entry => {
 ```
 
 
-# 7. Switching Categories at Runtime
+# 8. Switching Categories at Runtime
 
 Use `updateSettings` to change the category scope without reloading the workspace:
 
@@ -285,7 +291,7 @@ mm.updateSettings({
 The widget reloads its entry list from the new category.
 
 
-# 8. Upload Flow
+# 9. Upload Flow
 
 When a user uploads a file through the Media Manager in `manage` mode, the widget internally executes a multiRequest with:
 
@@ -299,7 +305,7 @@ The KS used for the Media Manager must have sufficient privileges for these oper
 After upload completes, the new entry appears in the media grid. The entry goes through transcoding (status=1) before becoming ready (status=2). The upload UI within the widget shows progress during the file transfer.
 
 
-# 9. KS Requirements
+# 10. KS Requirements
 
 The Media Manager accesses multiple Kaltura API services. Generate the KS server-side with appropriate privileges:
 
@@ -320,7 +326,7 @@ For read-only select mode, a USER KS (type=0) with content browsing privileges i
 See the [Session Guide](KALTURA_SESSION_GUIDE.md) for KS generation details and the [AppTokens API](KALTURA_APPTOKENS_API.md) for production token management.
 
 
-# 10. Container CSS
+# 11. Container CSS
 
 The Media Manager fills the available space in its container. Set explicit dimensions:
 
@@ -346,7 +352,7 @@ The Media Manager fills the available space in its container. Set explicit dimen
 ```
 
 
-# 11. Error Handling
+# 12. Error Handling
 
 - **Empty container** — If the widget renders empty, verify the KS is valid and the `partnerId` matches your account. Check the browser console for errors. The container `<div>` must have an `id` attribute matching the `target` value (no `#` prefix).  
 - **No entries displayed** — Verify the `contextId` category exists and contains entries. If omitted, the widget shows all accessible entries.  
@@ -354,7 +360,7 @@ The Media Manager fills the available space in its container. Set explicit dimen
 - **KS expiry** — The widget does not automatically renew expired sessions. Generate a KS with sufficient expiry or update the workspace session reactively: `workspace.session.setData(prev => ({ ...prev, ks: "new-ks" }))`.  
 
 
-# 12. Best Practices
+# 13. Best Practices
 
 - **Generate the KS server-side.** The KS is visible in client-side code — generate it on your backend with minimal privileges for the intended mode.  
 - **Scope with `contextId`.** Always set a `contextId` to limit the media library to a specific category rather than exposing the entire content library.  
@@ -365,7 +371,7 @@ The Media Manager fills the available space in its container. Set explicit dimen
 - **Refresh KS before expiry.** Call `workspace.session.setData(prev => ({ ...prev, ks: "new-ks" }))` to refresh the KS without reloading the workspace.  
 
 
-# 13. Multi-Region
+# 14. Multi-Region
 
 | Region | Server URL |
 |--------|-----------|
@@ -376,7 +382,7 @@ The Media Manager fills the available space in its container. Set explicit dimen
 Set the `serverUrl` in the workspace configuration to match your Kaltura account region.
 
 
-# 14. Related Guides
+# 15. Related Guides
 
 - **[Unisphere Framework](KALTURA_UNISPHERE_FRAMEWORK_API.md)** — The micro-frontend framework that powers this widget: loader, workspace lifecycle, services, multi-runtime composition  
 - **[Experience Components Overview](KALTURA_EXPERIENCE_COMPONENTS_API.md)** — Index of all embeddable components with shared guidelines  

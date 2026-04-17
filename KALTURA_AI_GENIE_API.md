@@ -6,6 +6,13 @@ Kaltura AI Genie provides conversational AI search and generative answers over y
 **Auth:** `Authorization: KS <YOUR_KS>` header  
 **Format:** JSON request/response bodies, all endpoints use POST  
 
+# When to Use
+
+- **AI-powered video search** — Product teams building intelligent search experiences that let users find specific moments across large video libraries using natural language queries  
+- **Conversational Q&A over video content** — Developers integrating a chat-based interface where users ask questions and receive AI-generated answers grounded in actual video content with source citations  
+- **Knowledge extraction and content discovery** — Organizations surfacing insights from their video libraries by enabling users to query across transcripts, metadata, and visual content without watching every video  
+- **Custom RAG integrations** — Backend developers building server-side workflows that programmatically query Genie's retrieval-augmented generation API for content indexing, reporting, or automated knowledge base construction  
+
 # Prerequisites
 
 This guide assumes you already:

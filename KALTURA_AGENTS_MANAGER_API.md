@@ -6,6 +6,13 @@ The Agents Manager lets you create **automated content-processing agents** that 
 **Auth:** `Authorization: Bearer <YOUR_KS>` header  
 **Format:** JSON request/response bodies, all endpoints use POST  
 
+## When to Use
+
+- **Automated post-upload processing** — Media operations teams deploying agents that automatically caption, summarize, and tag every new video upload without manual intervention  
+- **AI-powered content enrichment at scale** — Organizations processing large content libraries with consistent quality by configuring agents to generate translations, audio descriptions, and metadata enrichment across thousands of entries  
+- **Event-driven content workflows** — Developers building automation pipelines that trigger specific actions when content is added to a category, updated, or reaches a ready state  
+- **On-demand batch processing** — Content managers running agents manually on selected entries to apply enrichment services to existing content that predates the automation setup  
+
 ## Prerequisites
 
 - Know how to generate Kaltura Sessions (KS) in your backend (see [Session Guide](KALTURA_SESSION_GUIDE.md))

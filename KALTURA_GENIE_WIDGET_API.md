@@ -15,7 +15,14 @@ Kaltura Genie provides a conversational AI search widget that lets users ask nat
 - **Training platforms** — Enable employees or students to search training video content conversationally  
 
 
-# 2. Embedding
+# 2. Prerequisites
+
+- **Kaltura Session (KS)** — A USER KS (type=0) with `setrole:PLAYBACK_BASE_ROLE` and `sview:*` privileges is recommended for the Genie widget. The KS is visible client-side, so generate it on your backend. See the [Session Guide](KALTURA_SESSION_GUIDE.md) for KS generation details.  
+- **Genie feature enabled** — The account must have Genie (AI Search) enabled and configured. The account must have indexed content for Genie to search.  
+- **Partner-specific Genie URL** — The Genie widget loads via the Unisphere loader from your region's endpoint (e.g., `https://unisphere.nvp1.ovp.kaltura.com/v1` for US). Match the `serverUrl` and `kalturaServerURI` to your Kaltura account region.  
+
+
+# 3. Embedding
 
 Load the Unisphere loader as an ES module and call `loader()` with your configuration:
 
@@ -49,7 +56,7 @@ Load the Unisphere loader as an ES module and call `loader()` with your configur
   };
   const workspace = await loader(options);
 
-  // Get the runtime instance for programmatic interaction (see section 10)
+  // Get the runtime instance for programmatic interaction (see section 11)
   const genie = await workspace.getRuntimeAsync("unisphere.widget.genie", "chat");
 </script>
 ```
@@ -57,7 +64,7 @@ Load the Unisphere loader as an ES module and call `loader()` with your configur
 The container `<div>` must have an `id` attribute matching the `target` value in the visuals config. The widget renders inside this container and fills the available space.
 
 
-# 3. Configuration
+# 4. Configuration
 
 ## Top-Level Options
 
@@ -66,8 +73,8 @@ The container `<div>` must have an `id` attribute matching the `target` value in
 | `appId` | string | yes | Unique identifier for your application instance (e.g., `"my-portal"`) |
 | `appVersion` | string | yes | Your application version (e.g., `"1.0.0"`) — useful for tracking and debugging |
 | `serverUrl` | string | yes | Unisphere server URL: `https://unisphere.nvp1.ovp.kaltura.com/v1` |
-| `ui.theme` | string or object | yes | `"light"`, `"dark"`, or a custom theme object (see section 6) |
-| `ui.language` | string | no | UI language code (e.g., `"en-US"`, `"he-IL"`) — see section 9 for supported languages |
+| `ui.theme` | string or object | yes | `"light"`, `"dark"`, or a custom theme object (see section 7) |
+| `ui.language` | string | no | UI language code (e.g., `"en-US"`, `"he-IL"`) — see section 10 for supported languages |
 | `runtimes` | array | yes | Array of runtime configurations (one entry for Genie) |
 
 ## Runtime Settings
@@ -77,7 +84,7 @@ The container `<div>` must have an `id` attribute matching the `target` value in
 | `widgetName` | string | yes | Must be `"unisphere.widget.genie"` |
 | `runtimeName` | string | yes | Must be `"chat"` |
 | `settings.kalturaServerURI` | string | yes | Kaltura API endpoint (e.g., `https://www.kaltura.com`). Use your region's endpoint if applicable (e.g., `https://api.irp2.ovp.kaltura.com` for EU) |
-| `settings.ks` | string | yes | Kaltura Session — must be a USER session (type=0). See section 4 |
+| `settings.ks` | string | yes | Kaltura Session — must be a USER session (type=0). See section 5 |
 | `settings.partnerId` | string | yes | Your Kaltura partner ID. Also accepted as `pid` |
 | `settings.uiConfId` | string | no | UI Configuration ID for advanced customization |
 | `settings.getSourceUrl` | function | no | Callback receiving `{ entryId, startTime }` — return a URL to the entry in your application. Omit or return empty string if your app has no entry page |
@@ -92,10 +99,10 @@ The container `<div>` must have an `id` attribute matching the `target` value in
 | `visuals[].target` | string | yes | The `id` attribute of the container `<div>` where the widget renders |
 | `visuals[].settings` | object | yes | Pass an empty object `{}` — reserved for future visual type settings |
 | `visuals[].settings.customization.initialPage.title` | string | no | Title displayed on the initial landing page (e.g., `"Ask Anything"`) |
-| `visuals[].settings.customization.initialPage.initialQuestions` | array | no | Pre-populated question suggestions — see section 7 |
+| `visuals[].settings.customization.initialPage.initialQuestions` | array | no | Pre-populated question suggestions — see section 8 |
 
 
-# 4. KS Requirements
+# 5. KS Requirements
 
 The KS passed to the Genie widget is visible client-side. Generate it as a **USER session** (type=0) on your backend:
 
@@ -138,7 +145,7 @@ If only authenticated users access Genie, specify the `userId` when creating the
 See the [Session Guide](KALTURA_SESSION_GUIDE.md) for KS generation details and the [AppTokens Guide](KALTURA_APPTOKENS_API.md) for production token management.
 
 
-# 5. Container CSS
+# 6. Container CSS
 
 The container `<div>` must be sized by your page layout — the widget fills the available space.
 
@@ -164,7 +171,7 @@ The container `<div>` must be sized by your page layout — the widget fills the
 ```
 
 
-# 6. Custom Theming
+# 7. Custom Theming
 
 Pass a theme object instead of `"light"` or `"dark"` to fully customize the widget appearance:
 
@@ -236,7 +243,7 @@ const options = {
 | `breakpoints.sm/md/lg/xl` | Responsive breakpoint widths in pixels |
 
 
-# 7. Initial Questions
+# 8. Initial Questions
 
 Pre-populate the landing page with suggested questions using the `initialQuestions` array in the visuals settings:
 
@@ -264,7 +271,7 @@ Each question object has:
 - **`answerType`** — Response format hint (e.g., `"flashcards"` for structured card-based answers)
 
 
-# 8. Source URL and Share URL Callbacks
+# 9. Source URL and Share URL Callbacks
 
 Provide callbacks to integrate Genie with your application's navigation and sharing:
 
@@ -290,7 +297,7 @@ settings: {
 - **`shareUrl`** — Enables conversation sharing. `queryParam` names the URL parameter, and `createUrl` builds the shareable URL from the `messageId`.
 
 
-# 9. Supported Languages
+# 10. Supported Languages
 
 | Code | Language |
 |------|----------|
@@ -313,7 +320,7 @@ settings: {
 Short codes (e.g., `"en"`, `"he"`) are also accepted.
 
 
-# 10. Workspace Lifecycle
+# 11. Workspace Lifecycle
 
 The `loader()` function returns a workspace object for managing the Genie runtime:
 
@@ -358,12 +365,12 @@ workspace.kill();
 ```
 
 
-# 11. Server-Side API
+# 12. Server-Side API
 
 The Genie widget communicates with the Genie server automatically. For custom integrations that bypass the widget (server-to-server RAG search, streaming conversations, polling sessions), see the [AI Genie API Guide](KALTURA_AI_GENIE_API.md).
 
 
-# 12. Player Integration
+# 13. Player Integration
 
 The Genie chat can be embedded as a side panel inside the Kaltura Player v7 using three PlayKit plugins. This enables users to ask AI questions about the video they are watching.
 
@@ -436,26 +443,26 @@ player.addEventListener('GENIE_OPEN_MANUAL', function(e) {
 The `fallbackToPlayerKS: true` setting uses the player's provider KS for Genie authentication. If you need a separate KS with different privileges (e.g., `setrole:PLAYBACK_BASE_ROLE,sview:*` for Genie), pass it via the `ks` parameter instead.
 
 
-# 13. Error Handling
+# 14. Error Handling
 
 - **Blank container** — If the widget container renders empty, verify the `ks` is valid and the `partnerId` matches your account. Check the browser console for CORS errors or ES module import failures. The container `<div>` must have an `id` attribute matching the `target` value in the visuals config.  
 - **ES module import failure** — The Genie widget loads as an ES module (`type="module"`). Verify your page uses HTTPS and the browser supports ES modules. The `import` statement requires a script tag with `type="module"`.  
-- **KS expiry** — The widget does not automatically renew expired sessions. Use `workspace.session.setData()` to refresh the KS before it expires (see section 10). Generate a KS with sufficient expiry for the expected session duration.  
+- **KS expiry** — The widget does not automatically renew expired sessions. Use `workspace.session.setData()` to refresh the KS before it expires (see section 11). Generate a KS with sufficient expiry for the expected session duration.  
 - **Genie not configured for account** — If the widget loads but returns no results, verify that Genie (AI Search) is enabled and configured for your Kaltura account. The account must have indexed content for Genie to search.  
-- **Entitlement-protected content not appearing** — If Genie returns fewer results than expected, verify the KS includes `enableentitlement,privacycontext:<PRIVACY_CONTEXT>` for entitlement-protected content (see section 4).  
+- **Entitlement-protected content not appearing** — If Genie returns fewer results than expected, verify the KS includes `enableentitlement,privacycontext:<PRIVACY_CONTEXT>` for entitlement-protected content (see section 5).  
 
 
-# 14. Best Practices
+# 15. Best Practices
 
 - **Generate the KS server-side.** The Genie widget KS is visible client-side — generate USER sessions (type=0) with `setrole:PLAYBACK_BASE_ROLE` on your backend. Never embed admin secrets in client-side code.  
 - **Scope content with category privileges.** Use `geniecategoryid` or `genieancestorid` KS privileges to limit queries to relevant content rather than exposing the entire library.  
 - **Size the container explicitly.** The widget fills the available space in the container `<div>` — set explicit `width` and `height` via CSS.  
 - **Use HTTPS.** The embed URL and all component URLs must use HTTPS for ES module imports and secure media access.  
-- **Clean up on navigation.** Call `workspace.kill()` when the user navigates away from the Genie page to release all runtimes and remove rendered DOM elements (see section 10).  
+- **Clean up on navigation.** Call `workspace.kill()` when the user navigates away from the Genie page to release all runtimes and remove rendered DOM elements (see section 11).  
 - **Refresh KS before expiry.** Call `workspace.session.setData()` to refresh the KS without reloading the workspace. This avoids interrupting an active conversation.  
 
 
-# 15. Related Guides
+# 16. Related Guides
 
 - **[Unisphere Framework](KALTURA_UNISPHERE_FRAMEWORK_API.md)** — The micro-frontend framework that powers this widget: loader, workspace lifecycle, services, multi-runtime composition  
 - **[Experience Components Overview](KALTURA_EXPERIENCE_COMPONENTS_API.md)** — Index of all embeddable components with shared guidelines  

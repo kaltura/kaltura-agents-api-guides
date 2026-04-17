@@ -7,7 +7,21 @@ Application Tokens provide secure, scoped API access without exposing admin secr
 **Format:** Form-encoded POST, `format=1` for JSON responses  
 
 
-# 1. Why AppTokens Instead of Admin Secrets
+# 1. When to Use
+
+- **Production integrations** require revocable, scoped API credentials that can be rotated without disrupting other services or exposing admin secrets.  
+- **Server-to-server microservices** authenticate with Kaltura using HMAC-based token exchange, keeping secrets strictly on the backend.  
+- **Mobile and client-side applications** need API access without embedding permanent credentials in compiled binaries or client-side code.  
+- **Partner and vendor onboarding** provisions isolated API access with specific privilege sets that can be revoked independently per integration.
+
+# 2. Prerequisites
+
+- **Kaltura Session (KS):** ADMIN KS (type=2) required for creating, listing, and managing AppTokens. See [Session Guide](KALTURA_SESSION_GUIDE.md) for generation methods.  
+- **Partner ID and admin secret:** Needed for the initial ADMIN KS that creates the AppToken. Available from KMC under Settings > Integration Settings.  
+- **Service URL:** Set `$KALTURA_SERVICE_URL` to your account's regional endpoint (default: `https://www.kaltura.com/api_v3`).  
+- **Hash algorithm choice:** Select a hash type (SHA256 recommended) at token creation time -- it is immutable after creation.
+
+# 3. Why AppTokens Instead of Admin Secrets
 
 | Concern | Admin Secret | AppToken |
 |---------|-------------|----------|
@@ -22,7 +36,7 @@ Application Tokens provide secure, scoped API access without exposing admin secr
 > **API secrets are permanent.** The `adminSecret` and `secret` for a Kaltura account cannot be regenerated, rotated, or revoked. If a secret is compromised, contact Kaltura support. This makes AppTokens essential — they can be revoked and reissued independently without affecting other integrations.
 
 
-# 2. AppToken Object (KalturaAppToken)
+# 4. AppToken Object (KalturaAppToken)
 
 | Field | Type | Description |
 |-------|------|-------------|
@@ -43,9 +57,9 @@ Application Tokens provide secure, scoped API access without exposing admin secr
 > `sessionPrivileges` and `sessionUserId` are enforced at creation time and locked into every session minted from this token. Configure them at token creation.
 
 
-# 3. AppToken CRUD Operations
+# 5. AppToken CRUD Operations
 
-## 3.1 appToken.add — Create a Token
+## 5.1 appToken.add — Create a Token
 
 ```
 POST /api_v3/service/appToken/action/add
@@ -97,7 +111,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/appToken/action/add" \
 
 The response includes `id` (token ID) and `token` (the secret value — store securely on your backend server only). The `token` field is a hex string whose length depends on the hash algorithm (64 characters for SHA256).
 
-## 3.2 appToken.get — Retrieve a Token
+## 5.2 appToken.get — Retrieve a Token
 
 ```
 POST /api_v3/service/appToken/action/get
@@ -137,7 +151,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/appToken/action/get" \
 }
 ```
 
-## 3.3 appToken.list — List All Tokens
+## 5.3 appToken.list — List All Tokens
 
 ```
 POST /api_v3/service/appToken/action/list
@@ -187,7 +201,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/appToken/action/list" \
 
 The `token` field is included in list results only for the account admin.
 
-## 3.4 appToken.update — Modify a Token
+## 5.4 appToken.update — Modify a Token
 
 ```
 POST /api_v3/service/appToken/action/update
@@ -232,7 +246,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/appToken/action/update" \
 }
 ```
 
-## 3.5 appToken.delete — Revoke a Token
+## 5.5 appToken.delete — Revoke a Token
 
 ```
 POST /api_v3/service/appToken/action/delete
@@ -255,11 +269,11 @@ curl -X POST "$KALTURA_SERVICE_URL/service/appToken/action/delete" \
 Immediately revokes the token. Existing KS sessions already issued from this token remain valid until their TTL expires; revoke those with `session.end` if needed.
 
 
-# 4. Starting a Session with AppToken (HMAC Flow)
+# 6. Starting a Session with AppToken (HMAC Flow)
 
 This is the core flow for integrations that use AppTokens instead of admin secrets.
 
-## 4.1 The Three-Step Flow
+## 6.1 The Three-Step Flow
 
 ```
 session.startWidgetSession  →  HMAC(widget_ks + token_value)  →  appToken.startSession
@@ -269,7 +283,7 @@ session.startWidgetSession  →  HMAC(widget_ks + token_value)  →  appToken.st
 2. **Compute the token hash** — `HASH(widget_ks + token_value)` using the token's hash algorithm
 3. **Exchange for a privileged KS** — `appToken.startSession` validates the hash and returns a scoped KS
 
-## 4.2 appToken.startSession
+## 6.2 appToken.startSession
 
 ```
 POST /api_v3/service/appToken/action/startSession
@@ -279,7 +293,7 @@ POST /api_v3/service/appToken/action/startSession
 |-----------|------|----------|-------------|
 | `ks` | string | Yes | The widget session KS (from `startWidgetSession`) |
 | `id` | string | Yes | AppToken ID |
-| `tokenHash` | string | Yes | `HASH(widget_ks + token_value)` — see section 4.3 for computation |
+| `tokenHash` | string | Yes | `HASH(widget_ks + token_value)` — see section 6.3 for computation |
 | `userId` | string | No | User ID for the session (overridden by token's `sessionUserId` if set) |
 | `type` | int | No | Session type: `0`=USER, `2`=ADMIN (overridden by token's `sessionType`) |
 | `expiry` | int | No | Session TTL in seconds (capped by token's `sessionDuration`) |
@@ -293,7 +307,7 @@ POST /api_v3/service/appToken/action/startSession
 }
 ```
 
-## 4.3 Computing the Token Hash
+## 6.3 Computing the Token Hash
 
 The `tokenHash` is computed by concatenating the widget KS and the AppToken's `token` value, then hashing the result with the algorithm matching the token's `hashType`.
 
@@ -319,7 +333,7 @@ TOKEN_HASH=$(echo -n "${WIDGET_KS}${APP_TOKEN_VALUE}" | md5sum | cut -d' ' -f1)
 
 The `echo -n` flag is critical — it prevents a trailing newline from being included in the hash input.
 
-## 4.4 Complete curl Example
+## 6.4 Complete curl Example
 
 ```bash
 # --- Step 1: Get a widget session (unprivileged) ---
@@ -367,11 +381,11 @@ curl -X POST "$KALTURA_SERVICE_URL/service/media/action/list" \
 }
 ```
 
-# 5. Privilege Reference
+# 7. Privilege Reference
 
 These privileges can be set on the AppToken (`sessionPrivileges`) or passed at `startSession` time.
 
-## 5.1 Access Control Privileges
+## 7.1 Access Control Privileges
 
 | Privilege | Description |
 |-----------|-------------|
@@ -385,7 +399,7 @@ These privileges can be set on the AppToken (`sessionPrivileges`) or passed at `
 | `disableentitlement` | Disable entitlement checks (use cautiously) |
 | `privacycontext:<label>` | Scope to a specific privacy context |
 
-## 5.2 Session Control Privileges
+## 7.2 Session Control Privileges
 
 | Privilege | Description |
 |-----------|-------------|
@@ -396,7 +410,7 @@ These privileges can be set on the AppToken (`sessionPrivileges`) or passed at `
 | `sessionid:<GUID>` | Group sessions for bulk revocation |
 | `appId:<name-domain>` | Tag session for analytics tracking |
 
-## 5.3 Common Privilege Sets
+## 7.3 Common Privilege Sets
 
 ```
 # Read-only playback (with entitlements)
@@ -413,7 +427,7 @@ sview:*,list:*,appId:my-app-example.com
 ```
 
 
-# 6. Token Rotation Pattern
+# 8. Token Rotation Pattern
 
 Rotating AppTokens without downtime:
 
@@ -442,7 +456,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/appToken/action/delete" \
 ```
 
 
-# 7. Hash Types
+# 9. Hash Types
 
 | Hash Type | Security Level | Recommendation |
 |-----------|---------------|----------------|
@@ -454,7 +468,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/appToken/action/delete" \
 > Use `SHA256` or `SHA512` for new tokens. `hashType` is locked at creation.
 
 
-# 8. Error Handling
+# 10. Error Handling
 
 | Error Code | Meaning | Resolution |
 |------------|---------|------------|
@@ -467,16 +481,16 @@ curl -X POST "$KALTURA_SERVICE_URL/service/appToken/action/delete" \
 
 **Retry strategy:** For transient errors (HTTP 5xx, timeouts), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (`INVALID_APP_TOKEN_HASH`, `INVALID_KS`, `EXPIRED_TOKEN`, validation errors), fix the request before retrying — these will not resolve on their own.
 
-# 9. Best Practices
+# 11. Best Practices
 
 - **Use SHA256 or SHA512** for all new tokens. MD5 and SHA1 are supported for backward compatibility only.
 - **Set `sessionExpiry`** on AppTokens to limit session duration (e.g., 86400 for 24 hours). Shorter is more secure.
 - **Scope privileges tightly.** Use `sessionPrivileges` to restrict what the generated KS can do: `edit:entryId`, `sview:*`, `setrole:ROLE_ID`, `iprestrict:CIDR`.
-- **Rotate tokens periodically.** Create a new token, migrate integrations, then delete the old one. See section 6 (Token Rotation Pattern).
+- **Rotate tokens periodically.** Create a new token, migrate integrations, then delete the old one. See section 8 (Token Rotation Pattern).
 - **Store tokens server-side only.** Keep AppToken IDs and token values on your backend. The HMAC exchange should happen on your server.
 - **One token per integration.** Create separate AppTokens for each application or service to isolate access and simplify revocation.
 
-# 10. Related Guides
+# 12. Related Guides
 
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — KS generation, privileges, and session management
 - **[Upload & Delivery Guide](KALTURA_UPLOAD_AND_DELIVERY_API.md)** — Use AppToken-generated KS for uploads

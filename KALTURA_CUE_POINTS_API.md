@@ -7,7 +7,7 @@ ad insertion) and are searchable via eSearch.
 
 This hub guide covers the shared cue point architecture, base service, protocols,  
 and cross-type features. Each cue point type has a dedicated guide with  
-implementation details — see section 3 for links.
+implementation details — see section 5 for links.
 
 **Base URL:** `$KALTURA_SERVICE_URL` (e.g., `https://www.kaltura.com/api_v3`)  
 **Auth:** KS via `ks` parameter (admin KS with `disableentitlement` for full access)  
@@ -15,7 +15,24 @@ implementation details — see section 3 for links.
 **Times:** All `startTime` and `endTime` values are in **milliseconds**
 
 
-# 1. Architecture Overview
+# 1. When to Use
+
+- **Temporal metadata foundation** — Add structured, time-based markers to any video entry, enabling chapters, slides, annotations, ads, quizzes, and custom triggers on the timeline.  
+- **Interactive video experiences** — Build rich in-player interactions such as chapter navigation, slide synchronization, in-video quizzes, hotspot overlays, and ad insertion using cue points as the data layer.  
+- **Video timeline enrichment** — Attach searchable text, thumbnails, and structured data to specific moments in a video, making content discoverable at the timestamp level via eSearch.  
+- **Cross-application integration** — Provide a unified marker system consumed by the Player, KMC, KME, REACH, Content Lab, and external applications through a single API service.  
+- **Live and VOD workflows** — Support both pre-authored cue points (REST API for VOD) and real-time cue points pushed during live broadcasts (socket.io from the media server).
+
+
+# 2. Prerequisites
+
+- **KS (Kaltura Session):** Admin KS (type=2) with `disableentitlement` for full cue point management. A USER KS (type=0) scoped to an entry is sufficient for reading cue points during playback.  
+- **Cue Points plugin:** The base `cuePoint` server plugin must be enabled on the account. Individual cue point types require their respective plugins (`thumbCuePoint`, `adCuePoint`, `codeCuePoint`, `annotation`, `quiz`, etc.).  
+- **Player plugins:** To render cue points during playback, enable `kalturaCuepoints` (core data loader) plus consumer plugins (`navigation`, `dualscreen`, `ivq`, `timeline`, `hotspots`) as needed.  
+- **Session management:** See [Session Guide](KALTURA_SESSION_GUIDE.md) for KS generation and privilege scoping.
+
+
+# 3. Architecture Overview
 
 Cue points are a plugin-based system. Eight server plugins extend a common `KalturaCuePoint` base:
 
@@ -33,13 +50,13 @@ Cue points are a plugin-based system. Eight server plugins extend a common `Kalt
 All types share a common set of base fields and are managed through a single service (`cuepoint_cuepoint`), with additional services for quiz management (`quiz_quiz`, `userEntry`).
 
 
-# 2. Base Cue Point Service
+# 4. Base Cue Point Service
 
 **Service:** `cuepoint_cuepoint`
 
 All cue point types are managed through this single service. The deprecated `annotation_annotation` service exists but has restricted actions — use `cuepoint_cuepoint` for all operations.
 
-## 2.1 Actions
+## 4.1 Actions
 
 | Action | Description |
 |--------|-------------|
@@ -54,7 +71,7 @@ All cue point types are managed through this single service. The deprecated `ann
 | `updateCuePointsTimes` | Update start/end times without full update call |
 | `addFromBulk` | Import multiple cue points via XML file upload |
 
-## 2.2 Base Fields (shared by all types)
+## 4.2 Base Fields (shared by all types)
 
 | Field | Type | Description |
 |-------|------|-------------|
@@ -71,7 +88,7 @@ All cue point types are managed through this single service. The deprecated `ann
 | `updatedAt` | int | Unix timestamp (readonly) |
 | `copiedFrom` | string | Source cue point ID if cloned (readonly) |
 
-## 2.3 Listing and Filtering
+## 4.3 Listing and Filtering
 
 Every `list` and `count` call **requires** at least one identifying filter:
 
@@ -86,7 +103,7 @@ Every `list` and `count` call **requires** at least one identifying filter:
 
 Omitting all identifying filters returns `PROPERTY_VALIDATION_CANNOT_BE_NULL`.
 
-## 2.4 Create Example
+## 4.4 Create Example
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/cuepoint_cuepoint/action/add" \
@@ -99,7 +116,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/cuepoint_cuepoint/action/add" \
   -d "cuePoint[tags]=chapter"
 ```
 
-## 2.5 Update (objectType required)
+## 4.5 Update (objectType required)
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/cuepoint_cuepoint/action/update" \
@@ -110,7 +127,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/cuepoint_cuepoint/action/update" \
   -d "cuePoint[code]=updated-marker"
 ```
 
-## 2.6 Clone
+## 4.6 Clone
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/cuepoint_cuepoint/action/clone" \
@@ -122,7 +139,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/cuepoint_cuepoint/action/clone" \
 
 Returns a new cue point with `copiedFrom` set to the source ID.
 
-## 2.7 Status Enum
+## 4.7 Status Enum
 
 | Value | Name | Meaning |
 |-------|------|---------|
@@ -132,7 +149,7 @@ Returns a new cue point with `copiedFrom` set to the source ID.
 | 4 | PENDING | Awaiting asset (thumb cue points without images) |
 
 
-# 3. Cue Point Types
+# 5. Cue Point Types
 
 Each type has a dedicated guide with fields, curl examples, and player integration details:
 
@@ -145,7 +162,7 @@ Each type has a dedicated guide with fields, curl examples, and player integrati
 | Interactive Video Quiz | `KalturaQuestionCuePoint`, `KalturaAnswerCuePoint` | [Interactive Video Quiz API](KALTURA_QUIZ_API.md) | In-video quizzes with scoring, 8 question types, reports |
 
 
-# 4. Protocols: REST API vs Live Push
+# 6. Protocols: REST API vs Live Push
 
 Cue points reach the player through two protocols:
 
@@ -159,7 +176,7 @@ Cue points reach the player through two protocols:
 The player receives `TIMED_METADATA_ADDED` events as new cue points arrive via either protocol.
 
 
-# 5. Applications
+# 7. Applications
 
 Cue points are created and consumed across multiple Kaltura applications:
 
@@ -174,11 +191,11 @@ Cue points are created and consumed across multiple Kaltura applications:
 | **Bulk import** | `addFromBulk` XML file upload | — | REST |
 
 
-# 6. eSearch Integration
+# 8. eSearch Integration
 
 Cue point content is indexed in Elasticsearch and searchable via `KalturaESearchCuePointItem`.
 
-## 6.1 Searchable Fields
+## 8.1 Searchable Fields
 
 | Field Name | What It Indexes | Search Modes |
 |------------|----------------|--------------|
@@ -195,7 +212,7 @@ Cue point content is indexed in Elasticsearch and searchable via `KalturaESearch
 | `start_time` | Start time in milliseconds | range |
 | `end_time` | End time in milliseconds | range |
 
-## 6.2 Search Within Slide OCR Text
+## 8.2 Search Within Slide OCR Text
 
 Find entries containing slides with specific text:
 
@@ -215,7 +232,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/elasticsearch_esearch/action/searchEn
 
 `itemType`: 1=EXACT_MATCH, 2=PARTIAL, 3=STARTS_WITH, 4=EXISTS, 5=RANGE
 
-## 6.3 Search Quiz Questions
+## 8.3 Search Quiz Questions
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/elasticsearch_esearch/action/searchEntry" \
@@ -230,7 +247,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/elasticsearch_esearch/action/searchEn
   -d "searchParams[searchOperator][searchItems][0][searchTerm]=design pattern"
 ```
 
-## 6.4 Unified Search
+## 8.4 Unified Search
 
 `KalturaESearchUnifiedItem` automatically searches across all entry data including cue point content:
 
@@ -247,7 +264,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/elasticsearch_esearch/action/searchEn
 ```
 
 
-# 7. Player Plugin Ecosystem
+# 9. Player Plugin Ecosystem
 
 Five Player v7 plugins form the cue point rendering ecosystem:
 
@@ -264,7 +281,7 @@ KalturaPlayer.setup({ plugins: { ... } })
   └── dualscreen          ← Slide sync, PIP/side-by-side layouts
 ```
 
-## 7.1 Core Plugin: kalturaCuepoints
+## 9.1 Core Plugin: kalturaCuepoints
 
 The foundation plugin that loads cue point data and feeds it to consumer plugins:
 
@@ -291,7 +308,7 @@ Consumer plugins register the types they need via `player.getService('kalturaCue
 - `TIMED_METADATA_ADDED` — fired when cue points are loaded
 - `TIMED_METADATA_CHANGE` — fired on each time update with active/inactive cue points
 
-## 7.2 Full Setup Example
+## 9.2 Full Setup Example
 
 ```javascript
 var player = KalturaPlayer.setup({
@@ -321,9 +338,9 @@ For plugin-specific configuration details, see the dedicated type guides:
 - Dualscreen view-change → [Code Cue Points](KALTURA_CODE_CUE_POINTS_API.md)
 
 
-# 8. Bulk Operations
+# 10. Bulk Operations
 
-## 8.1 XML Import
+## 10.1 XML Import
 
 Upload multiple cue points via `cuePoint.addFromBulk` with an XML file:
 
@@ -362,7 +379,7 @@ Upload multiple cue points via `cuePoint.addFromBulk` with an XML file:
 
 XML element names: `scene-thumb-cue-point`, `scene-annotation`, `scene-code-cue-point`, `scene-ad-cue-point`, `scene-session-cue-point`, `scene-question-cue-point`, `scene-answer-cue-point`
 
-## 8.2 Clone Support
+## 10.2 Clone Support
 
 | Type | Clonable | Clone Option Constant |
 |------|----------|-----------------------|
@@ -374,12 +391,12 @@ XML element names: `scene-thumb-cue-point`, `scene-annotation`, `scene-code-cue-
 | Event | No | — |
 | Quiz (Question/Answer) | No | — |
 
-## 8.3 Custom Metadata
+## 10.3 Custom Metadata
 
 Ad, Annotation, Code, Thumb, and Quiz cue points support custom metadata profiles (XSD schemas attached to cue points via the Metadata API). This enables structured data on individual cue points beyond the built-in fields.
 
 
-# 9. Error Handling
+# 11. Error Handling
 
 | Error | Cause | Fix |
 |-------|-------|-----|
@@ -389,7 +406,7 @@ Ad, Annotation, Code, Thumb, and Quiz cue points support custom metadata profile
 | `NO_PERMISSION_ON_ENTRY` | KS `limitEntry` privilege mismatch | Ensure KS has access to the target entry |
 
 
-# 10. Best Practices
+# 12. Best Practices
 
 - **Times are in milliseconds.** A cue point at 1 minute 30 seconds = `startTime=90000`.
 - **Use `cuepoint_cuepoint` service** for all operations. The `annotation_annotation` service is deprecated and has restricted actions.
@@ -400,7 +417,7 @@ Ad, Annotation, Code, Thumb, and Quiz cue points support custom metadata profile
 - **Use `forceStop=1`** to pause the player at a cue point (works for all types, not just quizzes).
 
 
-# 11. Related Guides
+# 13. Related Guides
 
 **Dedicated type guides:**
 - [Interactive Video Quiz API](KALTURA_QUIZ_API.md) — Quiz lifecycle, 8 question types, scoring, reports, IVQ plugin

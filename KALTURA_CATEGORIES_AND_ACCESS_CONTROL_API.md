@@ -8,7 +8,21 @@ The Categories & Access Control API covers content organization and permissions:
 **Services:** `category` (11 actions), `categoryUser` (10 actions), `categoryEntry` (9 actions), `accessControlProfile` (5 actions)  
 
 
-# 1. Authentication
+# 1. When to Use
+
+- **Department-based content portals** organize media into hierarchical categories with membership-based visibility so each team sees only its own content.  
+- **Compliance and governance teams** enforce playback restrictions through access control profiles that gate content by geography, domain, time window, or authentication status.  
+- **Multi-tenant applications** use category entitlements to isolate content between business units, clients, or partner organizations within a single Kaltura account.  
+- **Content operations teams** manage large-scale content assignment, category restructuring, and bulk permission updates across thousands of entries.
+
+# 2. Prerequisites
+
+- **Kaltura Session (KS):** ADMIN KS (type=2) with `CONTENT_MANAGE_CATEGORY` permission for category and membership operations, `ACCESS_CONTROL_BASE` for access control profiles. See [Session Guide](KALTURA_SESSION_GUIDE.md) for generation methods.  
+- **Partner ID and API credentials:** Available from your Kaltura Management Console (KMC) under Settings > Integration Settings.  
+- **Service URL:** Set `$KALTURA_SERVICE_URL` to your account's regional endpoint (default: `https://www.kaltura.com/api_v3`).  
+- **Entitlement feature:** Category entitlements require activation on your account. Contact your Kaltura representative to enable entitlement if category privacy settings are needed.
+
+# 3. Authentication
 
 All endpoints require an ADMIN KS (type=2) with appropriate permissions:
 
@@ -25,7 +39,7 @@ export KALTURA_SERVICE_URL="https://www.kaltura.com/api_v3"
 ```
 
 
-# 2. KalturaCategory Object
+# 4. KalturaCategory Object
 
 Every category in a Kaltura partner account is a `KalturaCategory`:
 
@@ -57,7 +71,7 @@ Every category in a Kaltura partner account is a `KalturaCategory`:
 | `updatedAt` | integer | Unix timestamp (read-only) |
 | `objectType` | string | Always `"KalturaCategory"` (read-only) |
 
-## 2.1 Category Status Values
+## 4.1 Category Status Values
 
 | Value | Name | Description |
 |-------|------|-------------|
@@ -66,7 +80,7 @@ Every category in a Kaltura partner account is a `KalturaCategory`:
 | 3 | DELETED | Soft-deleted |
 | 4 | PURGED | Permanently removed |
 
-## 2.2 Privacy Levels
+## 4.2 Privacy Levels
 
 | Value | Name | Description |
 |-------|------|-------------|
@@ -74,14 +88,14 @@ Every category in a Kaltura partner account is a `KalturaCategory`:
 | 2 | AUTHENTICATED_USERS | Content is visible to authenticated users only |
 | 3 | MEMBERS_ONLY | Content is visible only to category members |
 
-## 2.3 Contribution Policy
+## 4.3 Contribution Policy
 
 | Value | Name | Description |
 |-------|------|-------------|
 | 1 | ALL | Any user can assign content to this category |
 | 2 | MEMBERS_WITH_CONTRIBUTION_PERMISSION | Only members with CONTRIBUTOR permission or higher can assign content |
 
-## 2.4 Appear In List
+## 4.4 Appear In List
 
 | Value | Name | Description |
 |-------|------|-------------|
@@ -89,9 +103,9 @@ Every category in a Kaltura partner account is a `KalturaCategory`:
 | 3 | CATEGORY_MEMBERS_ONLY | Visible only to category members |
 
 
-# 3. Category CRUD
+# 5. Category CRUD
 
-## 3.1 Create a Category
+## 5.1 Create a Category
 
 ```
 POST /service/category/action/add
@@ -160,7 +174,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/category/action/add" \
 
 The response includes the computed `fullName` (e.g., `"Training>Onboarding"`) and `fullIds` (e.g., `"12345>67890"`).
 
-## 3.2 Get a Category
+## 5.2 Get a Category
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/category/action/get" \
@@ -171,7 +185,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/category/action/get" \
 
 Returns the full `KalturaCategory` object. Returns `CATEGORY_NOT_FOUND` if the ID is invalid.
 
-## 3.3 List Categories
+## 5.3 List Categories
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/category/action/list" \
@@ -221,7 +235,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/category/action/list" \
 }
 ```
 
-## 3.4 Update a Category
+## 5.4 Update a Category
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/category/action/update" \
@@ -246,7 +260,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/category/action/update" \
 
 Fields not included remain unchanged. **Response:** Full updated `KalturaCategory` object.
 
-## 3.5 Delete a Category
+## 5.5 Delete a Category
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/category/action/delete" \
@@ -262,7 +276,7 @@ Deletes the category. Child categories are also deleted. Entries assigned to the
 | `id` | integer | Yes | Category ID to delete |
 | `moveEntriesToParentCategory` | integer | No | `1` to move entries to parent before deleting |
 
-## 3.6 Clone a Category Branch
+## 5.6 Clone a Category Branch
 
 Duplicate a category and its entire subtree:
 
@@ -286,7 +300,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/category/action/clone" \
 **Response:** A new `KalturaCategory` object representing the cloned root. The entire branch (all descendants) is duplicated under the same parent as the source category. The cloned categories receive new IDs while preserving the hierarchy structure, names, and settings of the source branch.
 
 
-# 4. Category Hierarchy
+# 6. Category Hierarchy
 
 Categories form a tree structure via the `parentId` field. The API automatically computes path fields:
 
@@ -297,7 +311,7 @@ Categories form a tree structure via the `parentId` field. The API automatically
 | `fullIds` | `"100>12345>67890"` | Full path of IDs separated by `>` |
 | `depth` | `2` | Distance from root (`0` for root categories) |
 
-## 4.1 Move a Category
+## 6.1 Move a Category
 
 Reparent a category under a different parent:
 
@@ -316,7 +330,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/category/action/move" \
 
 Moving a category updates `fullName`, `fullIds`, and `depth` for the category and all its descendants. The category status may temporarily become `1` (UPDATING) during the move operation.
 
-## 4.2 Traversal Patterns
+## 6.2 Traversal Patterns
 
 **List root categories:**
 ```bash
@@ -355,11 +369,11 @@ curl -X POST "$KALTURA_SERVICE_URL/service/category/action/list" \
 ```
 
 
-# 5. Category Membership (categoryUser)
+# 7. Category Membership (categoryUser)
 
 Category membership controls which users belong to a category. When entitlement is enabled, membership determines who can see content assigned to `MEMBERS_ONLY` categories.
 
-## 5.1 KalturaCategoryUser Object
+## 7.1 KalturaCategoryUser Object
 
 | Field | Type | Description |
 |-------|------|-------------|
@@ -391,7 +405,7 @@ Category membership controls which users belong to a category. When entitlement 
 | 3 | NOT_ACTIVE | Deactivated |
 | 4 | DELETED | Removed |
 
-## 5.2 Add a Member
+## 7.2 Add a Member
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/categoryUser/action/add" \
@@ -412,7 +426,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/categoryUser/action/add" \
 
 **Response:** Full `KalturaCategoryUser` object with `status=1` (ACTIVE).
 
-## 5.3 Get a Member
+## 7.3 Get a Member
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/categoryUser/action/get" \
@@ -422,7 +436,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/categoryUser/action/get" \
   -d "userId=jane.doe@example.com"
 ```
 
-## 5.4 List Members
+## 7.4 List Members
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/categoryUser/action/list" \
@@ -445,7 +459,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/categoryUser/action/list" \
 | `statusEqual` | Filter by membership status |
 | `orderBy` | `+createdAt`, `-createdAt` |
 
-## 5.5 Update a Member
+## 7.5 Update a Member
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/categoryUser/action/update" \
@@ -459,7 +473,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/categoryUser/action/update" \
 
 Updates the permission level or other mutable fields for an existing membership.
 
-## 5.6 Delete a Member
+## 7.6 Delete a Member
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/categoryUser/action/delete" \
@@ -469,7 +483,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/categoryUser/action/delete" \
   -d "userId=jane.doe@example.com"
 ```
 
-## 5.7 Activate / Deactivate a Member
+## 7.7 Activate / Deactivate a Member
 
 Activate a pending or deactivated member:
 
@@ -492,11 +506,11 @@ curl -X POST "$KALTURA_SERVICE_URL/service/categoryUser/action/deactivate" \
 ```
 
 
-# 6. Content Assignment (categoryEntry)
+# 8. Content Assignment (categoryEntry)
 
 Assign media entries to categories to organize content and enforce entitlement rules.
 
-## 6.1 KalturaCategoryEntry Object
+## 8.1 KalturaCategoryEntry Object
 
 | Field | Type | Description |
 |-------|------|-------------|
@@ -506,7 +520,7 @@ Assign media entries to categories to organize content and enforce entitlement r
 | `createdAt` | integer | Unix timestamp (read-only) |
 | `objectType` | string | Always `"KalturaCategoryEntry"` (read-only) |
 
-## 6.2 Assign an Entry to a Category
+## 8.2 Assign an Entry to a Category
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/categoryEntry/action/add" \
@@ -525,7 +539,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/categoryEntry/action/add" \
 
 **Response:** Full `KalturaCategoryEntry` object with `status=2` (ACTIVE).
 
-## 6.3 List Category Entries
+## 8.3 List Category Entries
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/categoryEntry/action/list" \
@@ -546,7 +560,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/categoryEntry/action/list" \
 | `statusEqual` | Filter by status (1=PENDING, 2=ACTIVE, 3=DELETED, 4=REJECTED) |
 | `orderBy` | `+createdAt`, `-createdAt` |
 
-## 6.4 Delete a Category Entry
+## 8.4 Delete a Category Entry
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/categoryEntry/action/delete" \
@@ -558,7 +572,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/categoryEntry/action/delete" \
 
 Removes the entry from the category. The entry itself is not deleted.
 
-## 6.5 Moderate Category Entries
+## 8.5 Moderate Category Entries
 
 When a category has `contributionPolicy=2` (MEMBERS_WITH_CONTRIBUTION_PERMISSION), new assignments may enter `PENDING` status. Moderators and managers can approve or reject. For full moderation workflows including user flagging, AI-powered content screening, and the entry-level moderation queue, see the [Moderation API Guide](KALTURA_MODERATION_API.md).
 
@@ -580,7 +594,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/categoryEntry/action/reject" \
   -d "categoryId=12345"
 ```
 
-## 6.6 Sync Privacy Context
+## 8.6 Sync Privacy Context
 
 Synchronize the privacy context for all entries in a category. Use this after changing a category's `privacyContext`:
 
@@ -593,11 +607,11 @@ curl -X POST "$KALTURA_SERVICE_URL/service/categoryEntry/action/syncPrivacyConte
 ```
 
 
-# 7. Access Control Profiles
+# 9. Access Control Profiles
 
 Access control profiles define rules that restrict who can access content and how. Profiles are assigned to entries and evaluated at playback time.
 
-## 7.1 KalturaAccessControlProfile Object
+## 9.1 KalturaAccessControlProfile Object
 
 | Field | Type | Description |
 |-------|------|-------------|
@@ -612,7 +626,7 @@ Access control profiles define rules that restrict who can access content and ho
 | `updatedAt` | integer | Unix timestamp (read-only) |
 | `objectType` | string | Always `"KalturaAccessControlProfile"` (read-only) |
 
-## 7.2 Rule Structure
+## 9.2 Rule Structure
 
 Each rule in the `rules` array has conditions, actions, and contexts:
 
@@ -665,7 +679,7 @@ Each rule in the `rules` array has conditions, actions, and contexts:
 | 3 | THUMBNAIL | Thumbnail context |
 | 4 | METADATA | Metadata context |
 
-## 7.3 Create an Access Control Profile
+## 9.3 Create an Access Control Profile
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/accessControlProfile/action/add" \
@@ -695,7 +709,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/accessControlProfile/action/add" \
 
 **Response:** Full `KalturaAccessControlProfile` object with generated `id`.
 
-## 7.4 Get an Access Control Profile
+## 9.4 Get an Access Control Profile
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/accessControlProfile/action/get" \
@@ -704,7 +718,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/accessControlProfile/action/get" \
   -d "id=12345"
 ```
 
-## 7.5 List Access Control Profiles
+## 9.5 List Access Control Profiles
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/accessControlProfile/action/list" \
@@ -725,7 +739,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/accessControlProfile/action/list" \
 | `createdAtLessThanOrEqual` | Unix timestamp maximum |
 | `orderBy` | `+createdAt`, `-createdAt` |
 
-## 7.6 Update an Access Control Profile
+## 9.6 Update an Access Control Profile
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/accessControlProfile/action/update" \
@@ -736,7 +750,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/accessControlProfile/action/update" \
   -d "accessControlProfile[description]=Updated IP restrictions"
 ```
 
-## 7.7 Delete an Access Control Profile
+## 9.7 Delete an Access Control Profile
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/accessControlProfile/action/delete" \
@@ -748,17 +762,17 @@ curl -X POST "$KALTURA_SERVICE_URL/service/accessControlProfile/action/delete" \
 Profiles assigned to entries are unlinked before deletion. Entries revert to the partner's default access control.
 
 
-# 8. Entitlement
+# 10. Entitlement
 
 Entitlement is Kaltura's mechanism for restricting content access based on category membership. It combines category privacy, user membership, and KS privileges.
 
-## 8.1 How Entitlement Works
+## 10.1 How Entitlement Works
 
 1. **Category privacy** determines the baseline access rule (`privacy` field on `KalturaCategory`).
 2. **Category membership** (`categoryUser`) determines which users have access to `MEMBERS_ONLY` categories.
 3. **KS privileges** control whether entitlement is enforced and which privacy contexts are applied.
 
-## 8.2 KS Privileges for Entitlement
+## 10.2 KS Privileges for Entitlement
 
 Enable entitlement by adding the `enableentitlement` privilege to the KS, and specify the privacy context with `privacycontext`:
 
@@ -779,7 +793,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/session/action/start" \
 | `privacycontext:LABEL` | Sets the privacy context to match against category `privacyContext` values |
 | `disableentitlement` | Explicitly disables entitlement (default for ADMIN KS) |
 
-## 8.3 Entitlement Decision Matrix
+## 10.3 Entitlement Decision Matrix
 
 When entitlement is enabled, content visibility depends on category privacy and user membership:
 
@@ -790,7 +804,7 @@ When entitlement is enabled, content visibility depends on category privacy and 
 | MEMBERS_ONLY (3) | Yes (ACTIVE) | Content visible |
 | MEMBERS_ONLY (3) | No | Content hidden |
 
-## 8.4 Setting Up Entitlement
+## 10.4 Setting Up Entitlement
 
 1. Create a category with `privacy=3` (MEMBERS_ONLY) and a `privacyContext`:
 
@@ -842,11 +856,11 @@ curl -X POST "$KALTURA_SERVICE_URL/service/session/action/start" \
 Only `jane.doe@example.com` (a category member) can see entries in this category when using this KS. Other users with entitlement enabled for the same `privacycontext` are unable to see the entries.
 
 
-# 9. Bulk Operations
+# 11. Bulk Operations
 
 Use bulk upload actions to create categories, assign members, or assign entries in batch via CSV.
 
-## 9.1 Bulk Category Creation
+## 11.1 Bulk Category Creation
 
 Upload a CSV file to create multiple categories at once:
 
@@ -872,7 +886,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/category/action/addFromBulkUpload" \
 
 **Response:** A `KalturaBulkUpload` job object with `id`, `status`, and `uploadedBy`. Poll the job status via `bulk.get` to track completion.
 
-## 9.2 Bulk Membership Assignment
+## 11.2 Bulk Membership Assignment
 
 Assign multiple users to categories in batch:
 
@@ -898,7 +912,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/categoryUser/action/addFromBulkUpload
 
 **Response:** A `KalturaBulkUpload` job object. Each row creates a `KalturaCategoryUser` membership record.
 
-## 9.3 Bulk Content Assignment
+## 11.3 Bulk Content Assignment
 
 Assign multiple entries to categories in batch:
 
@@ -924,7 +938,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/categoryEntry/action/addFromBulkUploa
 
 **Response:** A `KalturaBulkUpload` job object. Each row creates a `KalturaCategoryEntry` assignment.
 
-## 9.4 Tracking Bulk Job Status
+## 11.4 Tracking Bulk Job Status
 
 Poll the bulk upload job to check completion:
 
@@ -945,7 +959,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/bulk/action/get" \
 | 5 | ABORTED | Job was cancelled |
 
 
-# 10. Error Handling
+# 12. Error Handling
 
 | Error Code | Meaning |
 |------------|---------|
@@ -964,7 +978,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/bulk/action/get" \
 **Retry strategy:** For transient errors (HTTP 5xx, timeouts), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (HTTP 400, `CATEGORY_NOT_FOUND`, `INVALID_ENTRY_ID`), fix the request before retrying.
 
 
-# 11. Best Practices
+# 13. Best Practices
 
 - **Design hierarchy before creating categories.** Plan your category tree structure in advance. Moving categories later triggers a full path recalculation for all descendants.
 - **Use `referenceId` for external system mapping.** Store external system IDs in `referenceId` to simplify integration and avoid needing to track Kaltura category IDs.
@@ -985,7 +999,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/bulk/action/get" \
 - **Access control profiles are per-action.** Profiles evaluate based on `contextType` — `PLAY` (1) for playback, `DOWNLOAD` (3) for downloads. A profile can allow playback but deny downloads. When creating rules, set `contexts` to specify which actions the rule applies to.
 
 
-# 12. Related Guides
+# 14. Related Guides
 
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — `enableentitlement`, `privacycontext` KS privileges, user vs admin sessions
 - **[User Management API](KALTURA_USER_MANAGEMENT_API.md)** — Users for category membership (`categoryUser` references KalturaUser IDs)

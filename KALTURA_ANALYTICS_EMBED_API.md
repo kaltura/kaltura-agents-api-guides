@@ -15,7 +15,13 @@ The Embeddable Analytics widget provides analytics visualization dashboards that
 - **White-label analytics** — Embed Kaltura analytics into your branded application with custom styling  
 
 
-# 2. Embedding
+# 2. Prerequisites
+
+- **ADMIN KS (type=2)** — The analytics dashboard requires an ADMIN Kaltura Session with analytics permissions. The user associated with the KS must have a role that includes analytics access (the `Publisher Administrator` role includes these by default). See the [Session Guide](KALTURA_SESSION_GUIDE.md) for KS generation details.  
+- **Analytics module enabled** — The account must have the analytics module enabled. For multi-account analytics, the parent account must also have the `FEATURE_MULTI_ACCOUNT_ANALYTICS` permission.  
+
+
+# 3. Embedding
 
 Embed the analytics dashboard in an iframe:
 
@@ -49,7 +55,7 @@ fetch('https://kmc.kaltura.com/apps/kmc-analytics/latest/index.html')
 The `postMessage` protocol works identically with both approaches.
 
 
-# 3. Initialization Protocol
+# 4. Initialization Protocol
 
 The analytics iframe communicates with the host via `window.postMessage`. The host must listen for messages and respond with configuration:
 
@@ -109,7 +115,7 @@ analyticsIframe.contentWindow.postMessage({
 ```
 
 
-# 4. Init Payload Reference
+# 5. Init Payload Reference
 
 The `init` message payload configures the analytics app. All properties below are passed inside the `payload` object:
 
@@ -129,7 +135,7 @@ The `init` message payload configures the analytics app. All properties below ar
 
 | Property | Type | Required | Description |
 |----------|------|----------|-------------|
-| `ks` | string | yes | Kaltura Session — must be ADMIN (type=2). See section 10 |
+| `ks` | string | yes | Kaltura Session — must be ADMIN (type=2). See section 11 |
 | `pid` | number | yes | Kaltura partner ID |
 | `locale` | string | no | UI language code. Default: `en`. Supported: `de`, `en`, `es`, `fr`, `ja`, `nl`, `pt_br`, `ru`, `zh_hans`, `zh_hant` |
 | `hostAppName` | number | no | Identifies the hosting application: `0` = KMC, `1` = MediaSpace, `11` = Events Platform |
@@ -141,7 +147,7 @@ The `init` message payload configures the analytics app. All properties below ar
 |----------|------|---------|-------------|
 | `menuConfig.showMenu` | boolean | true | Show or hide the left navigation menu. Set `false` when embedding a specific view |
 | `menuConfig.items` | array | default menu | Custom menu structure — array of `{ id, link, label, children }` |
-| `viewsConfig` | object | full defaults | Controls visibility of every dashboard widget. See section 8 |
+| `viewsConfig` | object | full defaults | Controls visibility of every dashboard widget. See section 9 |
 | `dateFormat` | string | `month-day-year` | Date display format: `month-day-year` or `day-month-year` |
 | `contrastTheme` | boolean | false | Enable high-contrast accessibility theme |
 | `loadThumbnailWithKs` | boolean | false | Append KS to thumbnail URLs (required for accounts with restricted content access) |
@@ -193,7 +199,7 @@ customStyle: {
 ```
 
 
-# 5. Message Types
+# 6. Message Types
 
 Messages **from analytics app to host:**  
 
@@ -203,7 +209,7 @@ Messages **from analytics app to host:**
 | `analyticsInitComplete` | — | Initialization complete, app ready for `navigate` and `updateFilters` |
 | `updateLayout` | `{ height: number }` | Request host to resize iframe to the given height in pixels. Handle this to avoid scrollbars inside the iframe |
 | `scrollTo` | `string` (pixel offset) | Request host to scroll the parent window to the specified pixel offset |
-| `navigateTo` | `string` (URL path) | User clicked a drill-down link — host should handle navigation (see section 9). Path includes entity type and ID |
+| `navigateTo` | `string` (URL path) | User clicked a drill-down link — host should handle navigation (see section 10). Path includes entity type and ID |
 | `navigateBack` | — | User clicked back — host should navigate to the previous view |
 | `modalOpened` | — | A modal dialog opened inside analytics (host can dim its own UI) |
 | `modalClosed` | — | The modal dialog closed |
@@ -213,17 +219,17 @@ Messages **from host to analytics app:**
 
 | messageType | Payload | Description |
 |-------------|---------|-------------|
-| `init` | Full config object | KS, pid, servers, viewsConfig — see section 4 for the complete payload reference |
-| `navigate` | `{ url: string, queryParams: object, prevRoute: string }` | Navigate to a specific view. `url` is the analytics path (see section 6). `prevRoute` tracks the previous path for context-aware back navigation |
-| `updateFilters` | `{ queryParams: object }` | Update date range or other filters. Pass `dateBy` for presets or `dateFrom`/`dateTo` for custom ranges (see section 7) |
+| `init` | Full config object | KS, pid, servers, viewsConfig — see section 5 for the complete payload reference |
+| `navigate` | `{ url: string, queryParams: object, prevRoute: string }` | Navigate to a specific view. `url` is the analytics path (see section 7). `prevRoute` tracks the previous path for context-aware back navigation |
+| `updateFilters` | `{ queryParams: object }` | Update date range or other filters. Pass `dateBy` for presets or `dateFrom`/`dateTo` for custom ranges (see section 8) |
 | `updateConfig` | Partial config object | Update configuration at runtime — use to refresh an expiring KS (`{ ks: 'new-ks' }`) or change viewsConfig without reinitializing |
-| `setLanguage` | `string` (locale code) | Change UI language at runtime (e.g., `'fr'`, `'ja'`). See supported locales in section 4 |
+| `setLanguage` | `string` (locale code) | Change UI language at runtime (e.g., `'fr'`, `'ja'`). See supported locales in section 5 |
 | `updateMultiAccount` | `{ multiAccount: boolean }` | Toggle multi-account analytics on or off. Requires `FEATURE_MULTI_ACCOUNT_ANALYTICS` permission |
 | `toggleContrastTheme` | — | Toggle high-contrast accessibility theme on or off |
 | `setLogsLevel` | `{ level: string }` | Set logging verbosity for debugging. Levels: `"off"`, `"error"`, `"warn"`, `"info"`, `"debug"`, `"trace"` |
 
 
-# 6. Navigation Paths
+# 7. Navigation Paths
 
 Send these paths via the `navigate` message to display a specific analytics view. Paths with `{ID}` require the entity ID in a `queryParams.id` field.
 
@@ -292,7 +298,7 @@ Real-Time                /analytics/live
 Set `menuConfig.showMenu` to `false` when embedding a single view (e.g., entry analytics within a content page).
 
 
-# 7. Date Filters
+# 8. Date Filters
 
 Send date filters via the `updateFilters` message. The `dateBy` parameter accepts these values:
 
@@ -328,7 +334,7 @@ analyticsIframe.contentWindow.postMessage({
 ```
 
 
-# 8. viewsConfig — Controlling Dashboard Widgets
+# 9. viewsConfig — Controlling Dashboard Widgets
 
 The `viewsConfig` object controls which widgets, filters, and buttons appear in every analytics view. Each key maps to a UI element — set a key to `null` to hide it, or `{}` to show it with defaults.
 
@@ -402,7 +408,7 @@ Each top-level key corresponds to a dashboard type. Within each, nested keys con
 **`userEp`** — title, download, metricsCards, eventInteractivity, userDetails, minutesViewed, sessions, polls, contentOnDemand  
 
 
-# 9. Handling Drill-Down Navigation
+# 10. Handling Drill-Down Navigation
 
 When a user clicks a drill-down link inside the analytics dashboard (e.g., clicking an entry name from the engagement view), the analytics app sends a `navigateTo` message to the host with a URL path like `/content/entries/entry/0_abc123?dateBy=last30days`.
 
@@ -446,7 +452,7 @@ analyticsIframe.contentWindow.postMessage({
 ```
 
 
-# 10. KS Requirements
+# 11. KS Requirements
 
 The KS passed in the `init` message must be an ADMIN KS (type=2) with permissions to access analytics data. The user associated with the KS must have a role with analytics permissions — the `Publisher Administrator` role includes these by default.
 
@@ -455,7 +461,7 @@ Use a short-lived KS and refresh it when the user navigates to the analytics vie
 For multi-account analytics, the parent account must have the `FEATURE_MULTI_ACCOUNT_ANALYTICS` permission, and the KS must be generated on the parent account. Set `multiAccount: true` in the init payload.
 
 
-# 11. Error Handling
+# 12. Error Handling
 
 - **`analyticsInitComplete` not received** — If the postMessage handshake starts (`analyticsInit` received) but `analyticsInitComplete` never arrives, verify the KS user has a role with analytics permissions. The app fetches the user's role during initialization — a user with empty `roleIds` causes the init to stall. Use the `Publisher Administrator` role or another role that includes analytics access.  
 - **Blank iframe** — Verify the iframe `src` URL is accessible and HTTPS is used. Check the browser console for mixed content warnings.  
@@ -463,7 +469,7 @@ For multi-account analytics, the parent account must have the `FEATURE_MULTI_ACC
 - **Cross-origin postMessage issues** — When using the standard cross-origin iframe, ensure you do not filter `event.origin` too strictly in your `message` listener. The analytics app runs on `kmc.kaltura.com`.  
 
 
-# 12. Best Practices
+# 13. Best Practices
 
 - **Hide the menu for single-view embeds.** Set `menuConfig.showMenu` to `false` when embedding a specific analytics view (e.g., entry analytics on a content detail page).  
 - **Handle `updateLayout` messages.** The analytics app sends `updateLayout` with the content height — resize the iframe dynamically to avoid scrollbars inside the iframe:  
@@ -481,7 +487,7 @@ window.addEventListener('message', function(e) {
 - **Use `viewsConfig` to scope the UI.** Hide irrelevant widgets, filters, and buttons by setting their `viewsConfig` keys to `null`. This creates a focused, branded analytics experience.  
 
 
-# 13. Complete Integration Example
+# 14. Complete Integration Example
 
 A full working example that handles the init handshake, dynamic iframe sizing, navigation, and KS refresh:
 
@@ -557,12 +563,12 @@ A full working example that handles the init handshake, dynamic iframe sizing, n
 ```
 
 
-# 14. Programmatic Alternative
+# 15. Programmatic Alternative
 
 For full programmatic access to analytics data (custom reports, CSV exports, time-series queries), use the [Analytics Reports API](KALTURA_ANALYTICS_REPORTS_API.md) instead. The API provides more granular control over report parameters, date ranges, and output formats without requiring iframe integration.
 
 
-# 15. Related Guides
+# 16. Related Guides
 
 - **[Experience Components Overview](KALTURA_EXPERIENCE_COMPONENTS_API.md)** — Index of all embeddable components with shared guidelines  
 - **[Analytics Reports API](KALTURA_ANALYTICS_REPORTS_API.md)** — Programmatic analytics data access (alternative to iframe embed)  

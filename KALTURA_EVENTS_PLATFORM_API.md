@@ -7,7 +7,24 @@ The Virtual Events Platform has a dedicated modern REST API (OAS 3.0) for creati
 **Format:** JSON request/response bodies, all endpoints use POST  
 **Regions:** NVP (default), EU (`irp2`), DE (`frp2`)  
 
-# 1. Authentication
+
+# 1. When to Use This Guide
+
+- **Event producers** creating and managing virtual town halls, webinars, and hybrid conferences programmatically  
+- **Enterprise communications teams** scheduling recurring all-hands meetings with session tracks and speaker management  
+- **Training organizations** building event-driven learning experiences with registration and attendance tracking  
+- **Integration developers** connecting Kaltura events with external calendars, CRM systems, or marketing automation  
+- **Conference platforms** orchestrating multi-session events with templates, team member roles, and event duplication
+
+
+# 2. Prerequisites
+
+- **KS type:** ADMIN KS (type=2) with a `userId` set (required by the Events Platform API)  
+- **Plugins:** Virtual Events Platform must be enabled on the partner account  
+- **Session guide:** Generate a KS using `session.start` or `appToken.startSession` (see [Session Guide](KALTURA_SESSION_GUIDE.md))
+
+
+# 3. Authentication
 
 All requests require a valid KS in the `Authorization` header:
 
@@ -22,7 +39,7 @@ For production, use `appToken.startSession` with a `userId` privilege.
 See [Session Guide](KALTURA_SESSION_GUIDE.md) for full details on KS generation.
 
 
-# 2. Regional Endpoints
+# 4. Regional Endpoints
 
 | Region | Base URL |
 |--------|----------|
@@ -33,9 +50,9 @@ See [Session Guide](KALTURA_SESSION_GUIDE.md) for full details on KS generation.
 Use the region that matches your Kaltura account deployment.
 
 
-# 3. Events API
+# 5. Events API
 
-## 3.1 Create an Event
+## 5.1 Create an Event
 
 ```
 POST /api/v1/events/create
@@ -57,7 +74,7 @@ Authorization: Bearer <KS>
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `name` | string | Yes | Event display name |
-| `templateId` | string | Yes | Template to use (see section 6) |
+| `templateId` | string | Yes | Template to use (see section 8) |
 | `startDate` | string | Yes | ISO 8601 start date |
 | `endDate` | string | Yes | ISO 8601 end date |
 | `timezone` | string | Yes | IANA timezone (e.g., `America/New_York`, `Europe/London`) |
@@ -103,7 +120,7 @@ curl -X POST "$KALTURA_EVENTS_API_URL/events/create" \
 
 Save the `id` from the response as `EVENT_ID`.
 
-## 3.2 List Events
+## 5.2 List Events
 
 ```
 POST /api/v1/events/list
@@ -176,7 +193,7 @@ curl -X POST "$KALTURA_EVENTS_API_URL/events/list" \
 
 The response contains an `events` array and `totalCount`.
 
-## 3.3 Update an Event
+## 5.3 Update an Event
 
 ```
 POST /api/v1/events/update
@@ -225,7 +242,7 @@ curl -X POST "$KALTURA_EVENTS_API_URL/events/update" \
   }"
 ```
 
-## 3.4 Delete an Event
+## 5.4 Delete an Event
 
 ```
 POST /api/v1/events/delete
@@ -252,7 +269,7 @@ curl -X POST "$KALTURA_EVENTS_API_URL/events/delete" \
   -d "{\"id\": $EVENT_ID}"
 ```
 
-## 3.5 Duplicate an Event
+## 5.5 Duplicate an Event
 
 ```
 POST /api/v1/events/duplicate
@@ -277,7 +294,7 @@ Creates a copy of the event with all its configuration. Returns a job object wit
 }
 ```
 
-## 3.6 Check Duplication Status
+## 5.6 Check Duplication Status
 
 ```
 POST /api/v1/events/duplicateStatus
@@ -321,11 +338,11 @@ curl -X POST "$KALTURA_EVENTS_API_URL/events/duplicateStatus" \
 ```
 
 
-# 4. Sessions API
+# 6. Sessions API
 
 Sessions are the individual rooms/streams within an event. Each event can have multiple sessions of different types.
 
-## 4.1 Session Types
+## 6.1 Session Types
 
 | Type | Description |
 |------|-------------|
@@ -335,7 +352,7 @@ Sessions are the individual rooms/streams within an event. Each event can have m
 | `LiveKME` | DIY live — bring your own encoder (RTMP/SRT ingest) |
 | `VirtualLearningRoom` | Virtual classroom with interactive learning tools |
 
-## 4.2 Create a Session
+## 6.2 Create a Session
 
 ```
 POST /api/v1/sessions/create
@@ -420,7 +437,7 @@ curl -X POST "$KALTURA_EVENTS_API_URL/sessions/create" \
 
 The response contains a `session` object with `id`, `name`, `type`, and other fields.
 
-## 4.3 List Sessions for an Event
+## 6.3 List Sessions for an Event
 
 ```
 POST /api/v1/sessions/list
@@ -464,7 +481,7 @@ curl -X POST "$KALTURA_EVENTS_API_URL/sessions/list" \
 
 The response contains a `sessions` array with each session's `id`, `name`, `type`, and `visibility`.
 
-## 4.4 List Speakers for a Session
+## 6.4 List Speakers for a Session
 
 ```
 POST /api/v1/sessions/speakerList
@@ -485,7 +502,7 @@ POST /api/v1/sessions/speakerList
 Returns the list of speakers assigned to the session.
 
 
-# 5. Team Members API
+# 7. Team Members API
 
 Manage team members (organizers, admins, content managers) for events. Team members are managed at the account level — no `eventId` is needed for create or list.
 
@@ -497,7 +514,7 @@ Manage team members (organizers, admins, content managers) for events. Team memb
 | `Organizer` | Can manage event content and sessions |
 | `ContentManager` | Can manage content within events |
 
-## 5.1 Add a Team Member
+## 7.1 Add a Team Member
 
 ```
 POST /api/v1/team-members/create
@@ -519,7 +536,7 @@ POST /api/v1/team-members/create
 | `firstName` | string | Yes | First name |
 | `lastName` | string | Yes | Last name |
 
-## 5.2 List Team Members
+## 7.2 List Team Members
 
 ```
 POST /api/v1/team-members/list
@@ -547,7 +564,7 @@ No parameters required. Returns all team members for the account.
 }
 ```
 
-## 5.3 Update a Team Member
+## 7.3 Update a Team Member
 
 ```
 POST /api/v1/team-members/update
@@ -569,7 +586,7 @@ POST /api/v1/team-members/update
 
 Only include the fields you want to change. Returns the updated team member object.
 
-## 5.4 Delete a Team Member
+## 7.4 Delete a Team Member
 
 ```
 POST /api/v1/team-members/delete
@@ -588,7 +605,7 @@ POST /api/v1/team-members/delete
 Permanently removes the team member from the account. Returns an empty response on success (HTTP 200).
 
 
-# 6. Event Templates
+# 8. Event Templates
 
 Templates pre-configure events with specific session types and settings.
 
@@ -601,7 +618,7 @@ Templates pre-configure events with specific session types and settings.
 | `tm4000` | Room broadcasting to webcast | MeetingEntry + LiveWebcast |
 
 
-# 7. Event Status Values
+# 9. Event Status Values
 
 | Status | Description |
 |--------|-------------|
@@ -612,7 +629,7 @@ Templates pre-configure events with specific session types and settings.
 | `cancelled` | Event was cancelled |
 
 
-# 8. Complete Example — Event Lifecycle
+# 10. Complete Example — Event Lifecycle
 
 Generate a KS with `userId` via `session.start` (see [Session Guide](KALTURA_SESSION_GUIDE.md)) and set the shell variables:
 
@@ -680,7 +697,7 @@ curl -X POST "$KALTURA_EVENTS_API_URL/events/delete" \
 ```
 
 
-# 9. Error Handling
+# 11. Error Handling
 
 | HTTP Status / Error | Meaning | Resolution |
 |---------------------|---------|------------|
@@ -692,7 +709,7 @@ curl -X POST "$KALTURA_EVENTS_API_URL/events/delete" \
 
 **Retry strategy:** For transient errors (HTTP 5xx, timeouts), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (`401 Unauthorized`, `403 Forbidden`, `400 Bad Request`), fix the request before retrying — these will not resolve on their own. For async operations (event duplication), poll with increasing intervals (5s, 10s, 30s) rather than tight loops.
 
-# 10. Best Practices
+# 12. Best Practices
 
 - **Use templates for consistent events.** Clone from preset templates (`tm1000` for interactive room, `tm2000` for live webcast, `tm3000` for simulive) to inherit default session configuration.
 - **Set `doorsOpenDate`** before `startDate` to allow early attendee access (e.g., 15 minutes before start).
@@ -702,7 +719,7 @@ curl -X POST "$KALTURA_EVENTS_API_URL/events/delete" \
 - **Use AppTokens for production integrations.** Create a scoped AppToken for event management automation.
 - **Set up webhooks for event lifecycle.** Use the Webhooks API to receive callbacks when sessions start/end, recordings become available, or attendee status changes.
 
-# 11. Related Guides
+# 13. Related Guides
 
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — Generate the KS needed for Bearer auth (must include `userId`)
 - **[AppTokens Guide](KALTURA_APPTOKENS_API.md)** — Secure token-based auth for integrations

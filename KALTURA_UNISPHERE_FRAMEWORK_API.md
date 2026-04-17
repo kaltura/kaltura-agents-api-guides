@@ -9,7 +9,24 @@ and use built-in services for theming, inter-runtime communication, and analytic
 **Format:** ES module JavaScript embed  
 
 
-# 1. Architecture Overview
+# 1. When to Use
+
+- **Building custom video portal UIs** — Product teams embedding a composable, branded video experience into their web application without building media management from scratch  
+- **Embedding AI-powered widgets** — Developers adding conversational AI search (Genie), content repurposing (Content Lab), or agent management directly into existing web pages using micro-frontend runtimes  
+- **Creating branded portal experiences** — Organizations customizing the look, feel, and behavior of Kaltura-powered experiences with full theme control, multi-language support, and cross-runtime communication  
+- **Integrating multiple Kaltura services in one page** — Teams combining media browsing, AI chat, notifications, and content tools in a single workspace with shared session and reactive state  
+
+
+# 2. Prerequisites
+
+- A Kaltura account with a valid Partner ID  
+- A KS generated server-side with privileges scoped to the runtimes being loaded (see [Session Guide](KALTURA_SESSION_GUIDE.md))  
+- For Genie runtimes: a USER KS (type=0) with `setrole:PLAYBACK_BASE_ROLE,sview:*` privileges  
+- For Media Manager runtimes: a KS with access to `baseEntry`, `category`, and `uploadToken` services  
+- A modern browser with ES module support (all major browsers since 2018)  
+
+
+# 3. Architecture Overview
 
 Unisphere follows a layered pipeline:
 
@@ -32,7 +49,7 @@ Loader (ES module) → Workspace → Services (9) → Runtimes → Visuals (DOM)
 The v1 API path (`/v1/`) provides long-term backward compatibility. All runtimes and services within v1 maintain stable interfaces.
 
 
-# 2. Embedding a Workspace
+# 4. Embedding a Workspace
 
 Import the loader ES module from the Unisphere CDN and call `loader()` with your configuration. No npm install, bundler, or build step is needed — the CDN path works standalone in any HTML page:
 
@@ -91,7 +108,7 @@ const workspace = await fetchAndLoadUnisphereWorkspace({
 ```
 
 
-# 3. Workspace Configuration
+# 5. Workspace Configuration
 
 ## Top-Level Options
 
@@ -103,7 +120,7 @@ const workspace = await fetchAndLoadUnisphereWorkspace({
 | `session.ks` | string | no | Kaltura Session shared across all runtimes |
 | `session.partnerId` | string/number | no | Kaltura partner ID |
 | `runtimes` | array | yes | Array of runtime configurations |
-| `ui.theme` | string or object | no | `"light"`, `"dark"`, or a custom theme object (see section 9) |
+| `ui.theme` | string or object | no | `"light"`, `"dark"`, or a custom theme object (see section 11) |
 | `ui.language` | string | no | Language code (e.g., `"en-US"`, `"he-IL"`) — 15 languages supported |
 | `ui.bodyContainer.zIndex` | number | no | z-index for body-mounted visuals (popups, dialogs) |
 | `devops.fetchStrategy` | string | no | `"esm"` (default) or `"scripts"` for legacy environments |
@@ -152,7 +169,7 @@ const workspace = await loader({
 All runtimes share the workspace session and services. Use pub-sub or storage services for cross-runtime communication.
 
 
-# 4. Authentication
+# 6. Authentication
 
 The KS (Kaltura Session) is passed via `session.ks` in the workspace configuration. All runtimes in the workspace share this session by default.
 
@@ -194,7 +211,7 @@ The required KS privileges depend on which Kaltura services the loaded runtimes 
 See the [Session Guide](KALTURA_SESSION_GUIDE.md) for KS generation details and the [AppTokens API](KALTURA_APPTOKENS_API.md) for production token management.
 
 
-# 5. Available Experiences
+# 7. Available Experiences
 
 The Unisphere manifest (`/v1/runtime.json`) declares all available widgets. All widget bundles are served from the public CDN — no npm install or private access required.
 
@@ -234,18 +251,18 @@ The manifest includes presets that auto-load runtimes:
 - **`tools`** / **`ktools`** (inactive) — Developer tools presets  
 
 
-# 6. Media Manager
+# 8. Media Manager
 
 The Media Manager widget (`unisphere.widget.media-manager`) provides a reusable runtime for browsing, selecting, and uploading Kaltura entries. It supports inline table and modal dialog visual types, select and manage modes, and programmatic control via `showDialog()` / `hideDialog()`.
 
 See the **[Media Manager Guide](KALTURA_MEDIA_MANAGER_API.md)** for complete documentation including configuration, visual types, modes, runtime API, upload flow, and KS requirements.
 
 
-# 7. Built-in Services
+# 9. Built-in Services
 
 Services are accessed via `workspace.getService('service-id')`. All nine services are available to every runtime in the workspace.
 
-## 7.1 Pub-Sub (`unisphere.service.pub-sub`)
+## 9.1 Pub-Sub (`unisphere.service.pub-sub`)
 
 Loose-coupled event system for cross-runtime communication:
 
@@ -264,7 +281,7 @@ const unsubscribe = pubSub.subscribe("my-event", (payload) => {
 unsubscribe();
 ```
 
-## 7.2 Storage (`unisphere.service.storage`)
+## 9.2 Storage (`unisphere.service.storage`)
 
 Shared reactive state between runtimes:
 
@@ -284,7 +301,7 @@ const unsubscribe = storage.subscribe(
 );
 ```
 
-## 7.3 Theme (`unisphere.service.theme`)
+## 9.3 Theme (`unisphere.service.theme`)
 
 Dynamic theme management:
 
@@ -307,7 +324,7 @@ const styles = theme.injectStyles(
 styles.remove(); // Clean up
 ```
 
-## 7.4 User Settings (`unisphere.service.user-settings`)
+## 9.4 User Settings (`unisphere.service.user-settings`)
 
 Language preferences and legal consent:
 
@@ -322,7 +339,7 @@ settings.setUserLegalApproved();
 const approved = settings.getUserLegalApproved();
 ```
 
-## 7.5 Analytics (`unisphere.service.kaltura-analytics`)
+## 9.5 Analytics (`unisphere.service.kaltura-analytics`)
 
 ```javascript
 const analytics = workspace.getService("unisphere.service.kaltura-analytics");
@@ -331,7 +348,7 @@ analytics.registerUnisphereApp({ analyticsAppId: "my-app", appVersion: "1.0" });
 analytics.report("my-app", { eventType: "click", target: "button" });
 ```
 
-## 7.6 Logger (`unisphere.service.logger`)
+## 9.6 Logger (`unisphere.service.logger`)
 
 ```javascript
 const loggerService = workspace.getService("unisphere.service.logger");
@@ -343,7 +360,7 @@ logger.warn("Warning message");
 logger.error("Error message");
 ```
 
-## 7.7 Iframes (`unisphere.service.iframes`)
+## 9.7 Iframes (`unisphere.service.iframes`)
 
 Cross-iframe communication for runtimes running in sandboxed iframes:
 
@@ -356,7 +373,7 @@ const unsubscribe = iframes.onQuery("query-type", (payload, respond) => {
 });
 ```
 
-## 7.8 Developer (`unisphere.service.developer`)
+## 9.8 Developer (`unisphere.service.developer`)
 
 Development and debugging tools. The Developer Toolbox opens with `Cmd+K` / `Ctrl+K` in staging or local environments:
 
@@ -364,7 +381,7 @@ Development and debugging tools. The Developer Toolbox opens with `Cmd+K` / `Ctr
 - Macros — Automate repetitive development tasks  
 - Diagnostic notifications — Debug service interactions  
 
-## 7.9 Utils (`unisphere.service.utils`)
+## 9.9 Utils (`unisphere.service.utils`)
 
 Utility functions for visual management:
 
@@ -374,7 +391,7 @@ Utility functions for visual management:
 - `getRuntimeStyles()` — Get computed styles for a runtime  
 
 
-# 8. Workspace API
+# 10. Workspace API
 
 After the loader returns a workspace, use these methods to interact with runtimes and services:
 
@@ -426,7 +443,7 @@ workspace.kill();
 ```
 
 
-# 9. Custom Theming
+# 11. Custom Theming
 
 Pass `"light"` or `"dark"` as a string, or provide a full theme object for complete control:
 
@@ -471,7 +488,7 @@ const workspace = await loader({
 See the [Genie Widget Guide](KALTURA_GENIE_WIDGET_API.md) section 6 for a complete theme object example with all properties.
 
 
-# 10. Player Integration
+# 12. Player Integration
 
 Three PlayKit plugins bridge Unisphere into the Kaltura Player v7:
 
@@ -528,7 +545,7 @@ The `unisphereService` plugin must always be included when using `unisphere` or 
 See the [Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md) for player setup fundamentals.
 
 
-# 11. Building Custom Experiences
+# 13. Building Custom Experiences
 
 Developers can create custom Unisphere runtimes. All tools are on public npm — no private registry or Kaltura internal access needed.
 
@@ -566,7 +583,7 @@ npx nx g @unisphere/nx:add-application
 - **Local development:** `npx unisphere runtime serve {name}` (serves on port 8300)  
 
 
-# 12. Multi-Region
+# 14. Multi-Region
 
 Unisphere is deployed across three regions. Use the region that matches your Kaltura account deployment:
 
@@ -579,7 +596,7 @@ Unisphere is deployed across three regions. Use the region that matches your Kal
 Each region serves its own loader, runtime.json manifest, and widget bundles. Pass the appropriate region URL as the `serverUrl` in your workspace configuration.
 
 
-# 13. Error Handling
+# 15. Error Handling
 
 - **Loader import failure** — The `import` statement requires HTTPS and a browser that supports ES modules. Verify your page uses `type="module"` on the script tag.  
 - **Workspace bootstrap failure** — Check that `serverUrl` points to a valid Unisphere endpoint and `appId` is set. The loader will fail if it cannot fetch `/v1/runtime.json`.  
@@ -589,7 +606,7 @@ Each region serves its own loader, runtime.json manifest, and widget bundles. Pa
 - **Container not found** — The visual `target` must match an existing DOM element. If the element is not found, the visual will not mount.  
 
 
-# 14. Best Practices
+# 16. Best Practices
 
 - **Generate KS server-side.** Workspace configuration is visible client-side — generate USER sessions (type=0) with scoped privileges on your backend. Use `setrole:PLAYBACK_BASE_ROLE` for read-only widgets.  
 - **Use workspace session for shared KS.** Only use per-runtime `settings.ks` when runtimes genuinely need different privilege scopes.  
@@ -602,7 +619,7 @@ Each region serves its own loader, runtime.json manifest, and widget bundles. Pa
 - **Use HTTPS.** All Unisphere CDN URLs and API endpoints require HTTPS.  
 
 
-# 15. Related Guides
+# 17. Related Guides
 
 - **[Media Manager API](KALTURA_MEDIA_MANAGER_API.md)** — Browsable media library widget: select, upload, manage entries  
 - **[Content Lab API](KALTURA_CONTENT_LAB_API.md)** — AI content repurposing widget: summaries, chapters, clips, quizzes  

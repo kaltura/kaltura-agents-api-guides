@@ -16,7 +16,14 @@ Content Lab is a Unisphere widget for AI-powered content repurposing. It generat
 - **Content repurposing** — Transform a single video into multiple derivative assets  
 
 
-# 2. Architecture
+# 2. Prerequisites
+
+- **ADMIN KS (type=2)** — Content Lab accesses REACH services, entry data, and the consent API. Generate an ADMIN Kaltura Session on your backend with sufficient privileges. See the [Session Guide](KALTURA_SESSION_GUIDE.md) for KS generation details.  
+- **Content Lab feature enabled** — The account must have the `FEATURE_CONTENT_LAB` permission enabled.  
+- **REACH plugin provisioned** — Content Lab orchestrates AI processing through Kaltura REACH services. A REACH profile with available catalog items must be configured on your account for summarization, chapter generation, clip creation, and quiz generation features.  
+
+
+# 3. Architecture
 
 Content Lab has two runtimes:
 
@@ -34,7 +41,7 @@ The `ai-consent` runtime manages the approval flow required before AI features c
 - For live entries: must have a recording (`redirectEntryId` or `recordedEntryId`)  
 
 
-# 3. Embedding
+# 4. Embedding
 
 Load the Unisphere loader and configure both the application and ai-consent runtimes:
 
@@ -106,7 +113,7 @@ Load the Unisphere loader and configure both the application and ai-consent runt
 ```
 
 
-# 4. Application Runtime Settings
+# 5. Application Runtime Settings
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
@@ -127,7 +134,7 @@ Load the Unisphere loader and configure both the application and ai-consent runt
 | `hideAddCaptionsCTA` | boolean | no | Hide "Add Captions" call-to-action |
 
 
-# 5. AI Consent Runtime Settings
+# 6. AI Consent Runtime Settings
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
@@ -169,7 +176,7 @@ The `ai-consent` runtime communicates with the application runtime via Unisphere
 - `unisphere.widget.content-lab.ai-consent-dismiss` — User dismissed the consent banner  
 
 
-# 6. Runtime API
+# 7. Runtime API
 
 ## Application Runtime
 
@@ -257,7 +264,7 @@ workspace.kill();
 ```
 
 
-# 7. KS Requirements
+# 8. KS Requirements
 
 Content Lab accesses REACH services, entry data, and the consent API. Generate the KS server-side with sufficient privileges:
 
@@ -276,7 +283,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/session/action/start" \
 The account must have the `FEATURE_CONTENT_LAB` permission enabled.
 
 
-# 8. Error Handling
+# 9. Error Handling
 
 - **Blank drawer** — If Content Lab renders empty, verify the KS is valid and the account has `FEATURE_CONTENT_LAB` enabled. Check the browser console for API errors.  
 - **"Entry not eligible" messages** — The entry must be READY (status=2), video or audio type, and at least 60 seconds long. Use `isEntryRelevant()` to check eligibility before opening.  
@@ -285,7 +292,7 @@ The account must have the `FEATURE_CONTENT_LAB` permission enabled.
 - **KS expiry** — Update the workspace session reactively: `workspace.session.setData(prev => ({ ...prev, ks: "new-ks" }))`.  
 
 
-# 9. Best Practices
+# 10. Best Practices
 
 - **Check entry eligibility first.** Call `isEntryRelevant()` before opening Content Lab to avoid presenting a non-functional UI.  
 - **Load both runtimes.** Always include the `ai-consent` runtime alongside the `application` runtime. Without consent, AI features are blocked.  
@@ -295,7 +302,7 @@ The account must have the `FEATURE_CONTENT_LAB` permission enabled.
 - **Use HTTPS.** The Unisphere loader and all widget bundles require HTTPS.  
 
 
-# 10. Multi-Region
+# 11. Multi-Region
 
 | Region | Server URL | Consent API |
 |--------|-----------|-------------|
@@ -304,7 +311,7 @@ The account must have the `FEATURE_CONTENT_LAB` permission enabled.
 | FRP2 (DE) | `https://unisphere.frp2.ovp.kaltura.com/v1` | `https://consent.frp2.ovp.kaltura.com/api/v1` |
 
 
-# 11. Related Guides
+# 12. Related Guides
 
 - **[Unisphere Framework](KALTURA_UNISPHERE_FRAMEWORK_API.md)** — The micro-frontend framework that powers this widget: loader, workspace lifecycle, services  
 - **[Experience Components Overview](KALTURA_EXPERIENCE_COMPONENTS_API.md)** — Index of all embeddable components with shared guidelines  

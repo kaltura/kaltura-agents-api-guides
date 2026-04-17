@@ -11,7 +11,25 @@ on the entry and a user-entry service for tracking attempts and scores.
 **Prerequisite:** [Cue Points Hub](KALTURA_CUE_POINTS_API.md) for base cue point concepts and shared CRUD
 
 
-# 1. Quiz Lifecycle
+# 1. When to Use
+
+- **Interactive learning** — Add assessments directly inside training videos so learners answer questions without leaving the player.  
+- **Knowledge evaluation** — Measure learner comprehension with scored quizzes that track attempts, correctness, and completion rates.  
+- **LMS quiz integration** — Programmatically create and manage video-based quizzes from an external Learning Management System, syncing scores and reports back to the LMS.  
+- **Certification and compliance** — Gate course completion behind passing quiz scores, supporting multiple retakes and configurable scoring models.  
+- **Content engagement** — Increase viewer attention and retention by interspersing questions, reflection points, and branching navigation throughout video content.
+
+
+# 2. Prerequisites
+
+- **KS (Kaltura Session):** Admin KS (type=2) with `disableentitlement` for creating and managing quizzes. Viewer interactions (starting attempts, submitting answers) use a USER KS (type=0) scoped to the entry.  
+- **Cue Points plugin:** The `cuePoint` server plugin must be enabled on the account (enabled by default on most accounts).  
+- **Quiz plugin:** The `quiz` server plugin must be enabled on the account.  
+- **Player IVQ plugin:** To render quizzes during playback, enable the `ivq` and `kalturaCuepoints` plugins in the player configuration.  
+- **Session management:** See [Session Guide](KALTURA_SESSION_GUIDE.md) for KS generation and privilege scoping.
+
+
+# 3. Quiz Lifecycle
 
 ```
 quiz.add (mark entry as quiz)
@@ -25,7 +43,7 @@ quiz.add (mark entry as quiz)
 An entry becomes a quiz when you call `quiz.add`. Questions are cue points positioned on the timeline. Viewers start an attempt, answer questions as playback progresses, and submit for scoring. The system auto-calculates correctness and computes scores across attempts.
 
 
-# 2. Mark an Entry as a Quiz
+# 4. Mark an Entry as a Quiz
 
 **Service:** `quiz_quiz`
 
@@ -46,7 +64,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/quiz_quiz/action/add" \
 If the entry already has a quiz configuration, `quiz.add` returns `PROVIDED_ENTRY_IS_ALREADY_A_QUIZ` — use `quiz.update` instead.
 
 
-# 3. Quiz Configuration (KalturaQuiz)
+# 5. Quiz Configuration (KalturaQuiz)
 
 | Field | Type | Description |
 |-------|------|-------------|
@@ -61,7 +79,7 @@ If the entry already has a quiz configuration, `quiz.add` returns `PROVIDED_ENTR
 | `scoreType` | int | How to calculate final score across attempts |
 
 
-# 4. Quiz Service Actions
+# 6. Quiz Service Actions
 
 | Action | Description |
 |--------|-------------|
@@ -75,7 +93,7 @@ If the entry already has a quiz configuration, `quiz.add` returns `PROVIDED_ENTR
 **Deleting quiz attempts:** Use `userEntry.delete` with the user entry ID to remove a quiz attempt.
 
 
-# 5. Question Types
+# 7. Question Types
 
 | Value | Name | Description |
 |-------|------|-------------|
@@ -88,7 +106,7 @@ If the entry already has a quiz configuration, `quiz.add` returns `PROVIDED_ENTR
 | 7 | GO_TO | Navigation/branching point |
 | 8 | OPEN_QUESTION | Free-text open-ended question |
 
-## 5.1 Multiple Choice (type=1)
+## 7.1 Multiple Choice (type=1)
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/cuepoint_cuepoint/action/add" \
@@ -115,7 +133,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/cuepoint_cuepoint/action/add" \
   -d "cuePoint[optionalAnswers][2][weight]=1"
 ```
 
-## 5.2 True/False (type=2)
+## 7.2 True/False (type=2)
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/cuepoint_cuepoint/action/add" \
@@ -134,7 +152,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/cuepoint_cuepoint/action/add" \
   -d "cuePoint[optionalAnswers][1][isCorrect]=0"
 ```
 
-## 5.3 Reflection Point (type=3)
+## 7.3 Reflection Point (type=3)
 
 Pauses for reflection — no correct answer, excluded from scoring:
 
@@ -150,7 +168,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/cuepoint_cuepoint/action/add" \
   -d "cuePoint[excludeFromScore]=1"
 ```
 
-## 5.4 Multiple Answer (type=4)
+## 7.4 Multiple Answer (type=4)
 
 Multiple correct answers — viewer must select all correct options:
 
@@ -174,7 +192,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/cuepoint_cuepoint/action/add" \
   -d "cuePoint[optionalAnswers][2][isCorrect]=1"
 ```
 
-## 5.5 Open Question (type=8)
+## 7.5 Open Question (type=8)
 
 Free-text open-ended question — viewer types a response:
 
@@ -189,20 +207,20 @@ curl -X POST "$KALTURA_SERVICE_URL/service/cuepoint_cuepoint/action/add" \
   -d "cuePoint[questionType]=8"
 ```
 
-## 5.6 Fill in the Blank (type=5)
+## 7.6 Fill in the Blank (type=5)
 
 The viewer fills in a blank within the question text. The `optionalAnswers` array defines acceptable answers.
 
-## 5.7 Hot Spot (type=6)
+## 7.7 Hot Spot (type=6)
 
 Hotspot on a video frame — the viewer clicks on a region. Position data is stored in `partnerData`.
 
-## 5.8 Go To (type=7)
+## 7.8 Go To (type=7)
 
 Navigation/branching point — used for adaptive quizzes where the next question depends on the answer.
 
 
-# 6. Question Fields
+# 8. Question Fields
 
 | Field | Type | Description |
 |-------|------|-------------|
@@ -219,7 +237,7 @@ Each `optionalAnswer` has: `key` (string), `text` (string), `weight` (float, def
 **Security:** When a non-editor viewer retrieves question cue points, `isCorrect` on each answer option is returned as null and `explanation` is omitted. This prevents viewers from reading correct answers via the API.
 
 
-# 7. Viewer Quiz Flow
+# 9. Viewer Quiz Flow
 
 **Step 1 — Start attempt:**
 
@@ -275,7 +293,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/userentry/action/submitQuiz" \
 Returns the `KalturaQuizUserEntry` with `score`, `calculatedScore`, and `status=quiz.3` (SUBMITTED).
 
 
-# 8. Answer Fields
+# 10. Answer Fields
 
 | Field | Type | Description |
 |-------|------|-------------|
@@ -291,7 +309,7 @@ Returns the `KalturaQuizUserEntry` with `score`, `calculatedScore`, and `status=
 **Instructor feedback:** Update an answer cue point with the `feedback` field. The update requires both `entryId` and `quizUserEntryId` in the request body.
 
 
-# 9. Quiz User Entry
+# 11. Quiz User Entry
 
 | Field | Type | Description |
 |-------|------|-------------|
@@ -302,7 +320,7 @@ Returns the `KalturaQuizUserEntry` with `score`, `calculatedScore`, and `status=
 | `status` | string | 1=ACTIVE, 2=DELETED, quiz.3=SUBMITTED |
 
 
-# 10. Scoring Models
+# 12. Scoring Models
 
 | Value | Name | Description |
 |-------|------|-------------|
@@ -313,7 +331,7 @@ Returns the `KalturaQuizUserEntry` with `score`, `calculatedScore`, and `status=
 | 5 | AVERAGE | Average across all attempts |
 
 
-# 11. Quiz Reports
+# 13. Quiz Reports
 
 Four report types accessible via `report.getTable`:
 
@@ -339,7 +357,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getTable" \
 The `objectIds` parameter must be set to the entry ID. The response contains `header` (comma-separated column names) and `data` (rows).
 
 
-# 12. Player IVQ Plugin
+# 14. Player IVQ Plugin
 
 The `ivq` player plugin renders quiz questions as overlays during playback:
 
@@ -362,7 +380,7 @@ All quiz behavior is driven by the quiz data on the entry (via `quiz.get`), not 
 **Events:** `QuizStarted`, `QuizSkipped`, `QuestionAnswered`, `QuizSubmitted`, `QuizRetake`
 
 
-# 13. Quiz Generation via REACH / Content Lab
+# 15. Quiz Generation via REACH / Content Lab
 
 AI-powered quiz generation is available through two paths:
 
@@ -372,17 +390,17 @@ AI-powered quiz generation is available through two paths:
 Both paths produce standard `KalturaQuestionCuePoint` cue points — the same type created manually via the API.
 
 
-# 14. Gamification Integration
+# 16. Gamification Integration
 
 Quiz completion events (`quizSubmitted`) can trigger gamification scoring rules — leaderboard points, badges for quiz completion, and certificates for passing scores. See [Gamification API](KALTURA_GAMIFICATION_API.md).
 
 
-# 15. Searching Quiz Content
+# 17. Searching Quiz Content
 
 Quiz questions and answers are indexed in eSearch via `KalturaESearchCuePointItem`. Searchable fields include `question`, `answers`, `hint`, and `explanation`. See [Cue Points Hub — eSearch Integration](KALTURA_CUE_POINTS_API.md) for query examples.
 
 
-# 16. Error Handling
+# 18. Error Handling
 
 | Error | Cause | Fix |
 |-------|-------|-----|
@@ -393,7 +411,7 @@ Quiz questions and answers are indexed in eSearch via `KalturaESearchCuePointIte
 | `USER_ENTRY_NOT_FOUND` | Invalid `quizUserEntryId` on answer | Start an attempt with `userEntry.add` first |
 
 
-# 17. Best Practices
+# 19. Best Practices
 
 - **Quiz answer security is server-enforced.** Non-editors cannot see `isCorrect` or `explanation` on question cue points — no client-side hiding needed.
 - **Use `excludeFromScore=1`** for reflection points (type=3) and any question not meant for grading.
@@ -404,7 +422,7 @@ Quiz questions and answers are indexed in eSearch via `KalturaESearchCuePointIte
 - **Register cleanup before assertions** in tests. Quiz cue points and user entries persist — always clean up test data.
 
 
-# 18. Related Guides
+# 20. Related Guides
 
 - [Cue Points Hub](KALTURA_CUE_POINTS_API.md) — Base cue point concepts, shared CRUD, eSearch integration
 - [Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md) — Player v7 setup, IVQ plugin configuration

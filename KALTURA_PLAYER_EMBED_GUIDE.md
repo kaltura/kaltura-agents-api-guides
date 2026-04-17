@@ -6,12 +6,30 @@ Embed Kaltura's PlayKit player in web applications using iframe or dynamic JavaS
 **Auth:** Optional KS for access-controlled content (see [Session Guide](KALTURA_SESSION_GUIDE.md))  
 **Format:** HTML embed (iframe) or JavaScript SDK (PlayKit)  
 
-# 1. When to use which embed
+
+# 1. When to Use
+
+- **Website and app video playback** — Embed adaptive video and audio playback in websites, web apps, and mobile web views using iframe or JavaScript integration.  
+- **Branded player customization** — Configure player appearance (watermarks, custom CSS, UI component toggles) and behavior (autoplay, looping, stream priority) to match your application's branding.  
+- **Interactive video delivery** — Enable in-player experiences such as chapter navigation, dual-screen slides, in-video quizzes, hotspots, and transcript search through the 30+ plugin ecosystem.  
+- **Access-controlled content** — Deliver protected video content using KS-based authentication, entry-scoped sessions, privacy contexts, and IP tokenization for CDN-protected delivery.  
+- **Programmatic player control** — Build custom playback workflows with play/pause/seek APIs, event listeners for progress tracking, and runtime plugin control for dynamic layout switching.
+
+
+# 2. Prerequisites
+
+- **KS (Kaltura Session):** Optional for public content. For access-controlled entries, generate a USER KS (type=0) scoped with `sview:ENTRY_ID` on your server and pass it to the player. For IP-tokenized delivery, include `iprestrict:VIEWER_IP`.  
+- **Player instance (uiConfId):** A player configuration created in the KMC under Studio > TV Platform or Studio > Player. The `uiConfId` determines which plugins are available and the default player settings.  
+- **Partner ID:** Your Kaltura account ID, used to construct the player library URL and authenticate API requests.  
+- **Session management:** See [Session Guide](KALTURA_SESSION_GUIDE.md) for KS generation and privilege scoping.
+
+
+# 3. When to use which embed
 
 - **Iframe embed** – Simplest drop-in, ideal for quick embedding where the host page manages layout only. Works well for sites that restrict JavaScript to first-party code. Control the configuration passed to the player by adding query string params.  
 - **Dynamic JS (PlayKit)** – recommended when you need **runtime config**, **start time**, **programmatic control**, or richer integrations. 
 
-# 2. Kaltura Player Iframe Embed
+# 4. Kaltura Player Iframe Embed
 
 Use the Kaltura iframe endpoint and pass parameters via **query string**. This form accepts `entry_id`, `uiconf_id`, optional `ks`, and most common initial config and playback flags.
 
@@ -52,7 +70,7 @@ Use the Kaltura iframe endpoint and pass parameters via **query string**. This f
 
 > Note: we're using cdnapisec.kaltura.com in this example, but your account region/deployment may differ. Make sure to use the correct base URL of your Kaltura account.  
 
-# 3. Dynamic JS (PlayKit) embed
+# 5. Dynamic JS (PlayKit) embed
 
 Load the **PlayKit/Kaltura Player JS** for your PID/UiConfID, then call `KalturaPlayer.setup(...)` and `loadMedia(...)`.
 
@@ -96,7 +114,7 @@ Load the **PlayKit/Kaltura Player JS** for your PID/UiConfID, then call `Kaltura
   }
 ```
 
-## 3.1 Full KalturaPlayer.setup() Config Object
+## 5.1 Full KalturaPlayer.setup() Config Object
 
 The `KalturaPlayer.setup()` call accepts a configuration object with the following top-level sections:
 
@@ -147,7 +165,7 @@ const player = KalturaPlayer.setup({
   },
 
   plugins: {
-    // Plugin configs — see section 4.2 for details per plugin
+    // Plugin configs — see section 6.2 for details per plugin
   }
 });
 ```
@@ -161,7 +179,7 @@ const player = KalturaPlayer.setup({
 | `plugins` | Plugin activation and configuration. Pass an empty object `{}` to enable with defaults, or provide config parameters. |
 | `log` | Logging verbosity. Use `DEBUG` during development and `ERROR` in production. |
 
-## 3.2 loadMedia() Options
+## 5.2 loadMedia() Options
 
 The `player.loadMedia()` method accepts two arguments: a media info object and an optional options object:
 
@@ -184,7 +202,7 @@ player.loadMedia(
 | `startTime` | number | Initial playback position in seconds |
 
 
-# 4. JS Control (Play/Pause/Seek/Volume)
+# 6. JS Control (Play/Pause/Seek/Volume)
 
 With **dynamic JS embeds**, the player instance exposes standard controls:
 
@@ -215,7 +233,7 @@ These APIs are part of the web player’s base interface. Key properties and met
 | `player.ready()` | method | Returns a Promise that resolves when the player is ready for interaction |
 | `player.loadMedia({entryId})` | method | Load a new media entry into the player |
 
-## 4.1 Binding to JS player events (drive app flows)
+## 6.1 Binding to JS player events (drive app flows)
 
 The Kaltura player exposes a DOM-style event system and a Promise for readiness. Use it for analytics beacons, UI reactions, gated flows, etc.  
 
@@ -314,7 +332,7 @@ All core events are accessible via `player.Event.Core` as shown in the example b
 
 ```
 
-## 4.2 PlayKit Plugin Ecosystem
+## 6.2 PlayKit Plugin Ecosystem
 
 The Kaltura Player v7 (PlayKit) supports 30+ plugins that extend playback with interactive features. Plugins are configured via the `plugins` block in `KalturaPlayer.setup()`:
 
@@ -519,7 +537,7 @@ Three shared infrastructure packages power the interactive plugins: `kaltura-cue
 
 > Plugin availability depends on your player configuration (`uiConfId`). Configure plugins in the KMC under Studio > TV Platform (select a player, then edit its plugins) or via the `plugins` config block in `KalturaPlayer.setup()`.
 
-## 4.3 Player Runtime API
+## 6.3 Player Runtime API
 
 After the player is created with `KalturaPlayer.setup()`, you can control plugins and player behavior at runtime using the service and plugin APIs.
 
@@ -586,7 +604,7 @@ player.destroy();
 ```
 
 
-# 5. Server-Side KS for Player
+# 7. Server-Side KS for Player
 
 Generate a scoped USER KS (type=0) for player embeds. Use specific privileges to control what the player can access:
 
@@ -611,7 +629,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/session/action/start" \
 | `setrole:PLAYBACK_BASE_ROLE` | Restrict the KS to read-only playback operations |
 | `enableentitlement` | Enforce category entitlement checks |
 
-## 5.1 IP Tokenization for CDN-Protected Content
+## 7.1 IP Tokenization for CDN-Protected Content
 
 When CDN tokenization is enforced on your account, the player KS must include the viewer's IP address so the CDN can validate the request:
 
@@ -639,7 +657,7 @@ const player = KalturaPlayer.setup({
 > IP tokenization requires account-level CDN configuration. Contact your Kaltura specialist for setup. See [Session Guide section 8.5](KALTURA_SESSION_GUIDE.md) for `iprestrict` privilege details.
 
 
-# 6. Playback Progress Tracking (Quartile Events)
+# 8. Playback Progress Tracking (Quartile Events)
 
 Track playback milestones (25%, 50%, 75%, 100%) using the `TIME_UPDATE` event:
 
@@ -673,7 +691,7 @@ player.ready().then(() => {
 Use quartile tracking for custom engagement analytics, completion-gated content (e.g., unlock next module after 75%), or third-party analytics integration.
 
 
-# 7. Error Handling
+# 9. Error Handling
 
 | Scenario | Detection | Resolution |
 |----------|-----------|------------|
@@ -685,7 +703,7 @@ Use quartile tracking for custom engagement analytics, completion-gated content 
 
 **Retry strategy:** For transient errors (expired KS, network failures), implement KS refresh logic and retry `loadMedia`. For client errors (invalid `entryId`, missing player library, wrong `uiConfId`), fix the configuration before retrying — these will not resolve on their own.
 
-# 8. Best Practices
+# 10. Best Practices
 
 - **Use USER KS (type=0)** for player embeds. Scope to specific entries with `sview:entryId` when possible.
 - **Set short KS expiry** (1-4 hours). For long-running pages, implement KS refresh logic.
@@ -704,7 +722,7 @@ Use quartile tracking for custom engagement analytics, completion-gated content 
   });
   ```
 
-# 9. Related Guides
+# 11. Related Guides
 
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — Generate KS for access-controlled player embeds
 - **[AppTokens](KALTURA_APPTOKENS_API.md)** — Secure KS generation for production player integrations

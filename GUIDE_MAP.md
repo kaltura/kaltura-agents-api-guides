@@ -256,5 +256,5 @@ Blue = Foundation | Purple = Creation | Orange = Management | Green = Experience
 | Sync slides with video playback | [Chapters & Slides](KALTURA_CHAPTERS_AND_SLIDES_API.md) |
 | Add code markers or view-change commands | [Code, Event & Session CPs](KALTURA_CODE_CUE_POINTS_API.md) |
 | Understand cue point types and base service | [Cue Points Hub](KALTURA_CUE_POINTS_API.md) |
-| Generate thumbnails | [Upload & Delivery](KALTURA_UPLOAD_AND_DELIVERY_API.md) (section 4) |
+| Generate thumbnails | [Upload & Delivery](KALTURA_UPLOAD_AND_DELIVERY_API.md) (section 6) |
 | Add gamification | [Gamification](KALTURA_GAMIFICATION_API.md) |

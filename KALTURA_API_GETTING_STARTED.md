@@ -7,7 +7,20 @@ The Kaltura platform exposes 100+ REST API services, a dozen client libraries, s
 **Format:** Form-encoded or JSON POST, `format=1` for JSON responses  
 
 
-# 1. API Request Structure
+# 1. When to Use
+
+- **First-time Kaltura API developers** use this guide to understand request structure, authentication, error handling, and the content model before diving into specific services.  
+- **Integration architects** reference this guide for endpoint patterns, regional URL configuration, and best practices for batching API calls with multirequest.  
+- **Development teams onboarding to Kaltura** start here to set up their environment, make their first API call, and understand how entries, assets, and sessions relate.
+
+# 2. Prerequisites
+
+- **Partner ID and admin secret:** Available from your Kaltura Management Console (KMC) under Settings > Integration Settings.  
+- **Service URL:** Set `$KALTURA_SERVICE_URL` to your account's regional endpoint (default: `https://www.kaltura.com/api_v3`).  
+- **A valid Kaltura Session (KS):** Generate one using `session.start` as described in [Session Guide](KALTURA_SESSION_GUIDE.md). All API calls require a KS.  
+- **curl or an HTTP client:** All examples use curl. Any HTTP client that supports POST requests with form-encoded or JSON bodies works.
+
+# 3. API Request Structure
 
 Every Kaltura API v3 call follows this pattern:
 
@@ -68,11 +81,11 @@ The `objectType` field tells the server which object class to instantiate. Inclu
 **Newer platform services** (Events Platform, Agents Manager, AI Genie) have their own dedicated REST endpoints with Bearer or KS auth headers. Each guide specifies its endpoint and auth method.
 
 
-# 2. Endpoints & Regions
+# 4. Endpoints & Regions
 
 Kaltura operates across 6 regional deployments. Each region provides the full API and service stack. Your account is provisioned to a specific region — use the corresponding endpoints.
 
-## 2.1 Regions
+## 4.1 Regions
 
 | Region | Code | API Base URL |
 |--------|------|-------------|
@@ -83,7 +96,7 @@ Kaltura operates across 6 regional deployments. Each region provides the full AP
 | Canada | `cap2` | `https://api.ca.kaltura.com/api_v3` |
 | Australia | `syp2` | `https://api.ap.kaltura.com/api_v3` |
 
-## 2.2 URL Patterns
+## 4.2 URL Patterns
 
 Every Kaltura service follows a dual-naming convention — an internal domain and a friendly alias that resolve to the same backend:
 
@@ -92,7 +105,7 @@ Every Kaltura service follows a dual-naming convention — an internal domain an
 - **US region:** Also supports the internal pattern (`www.nvp1.ovp.kaltura.com`), but the friendly aliases (`www.kaltura.com`) are more common. Note: in the US region, the Core API service name is `www` rather than `api` (e.g., `www.nvp1.ovp.kaltura.com/api_v3`).  
 - **Microservices** follow the same `{svc}.{code}.ovp.kaltura.com` pattern in all regions, including US (`{svc}.nvp1.ovp.kaltura.com`).
 
-## 2.3 Service Endpoints by Category
+## 4.3 Service Endpoints by Category
 
 | Category | US Endpoint | Regional Pattern |
 |----------|------------|-----------------|
@@ -107,7 +120,7 @@ Every Kaltura service follows a dual-naming convention — an internal domain an
 Microservices include: `messaging`, `auth`, `chat`, `connectors`, `user`, `sso`, `app-registry`.  
 AI services (Agents Manager, AI Genie) follow the same microservice pattern: `agents-manager.{code}.ovp.kaltura.com`, `genie.{code}.ovp.kaltura.com`.
 
-## 2.4 Protocols & Ports
+## 4.4 Protocols & Ports
 
 | Protocol | Port | Usage |
 |----------|------|-------|
@@ -123,11 +136,11 @@ AI services (Agents Manager, AI Genie) follow the same microservice pattern: `ag
 - **Set `$KALTURA_SERVICE_URL`** to your region's API base URL. All guides use this variable.
 
 
-# 3. Content Model: Entries and Assets
+# 5. Content Model: Entries and Assets
 
 Understanding Kaltura's content model helps agents choose the right API for each task. All content in Kaltura is organized around two core concepts: **entries** and **assets**.
 
-## 3.1 Entries — The Content Container
+## 5.1 Entries — The Content Container
 
 An **entry** is a logical container that represents a single piece of content. It holds metadata (name, description, tags, categories) and links to one or more assets (files). Every entry has a unique `id` (e.g., `1_abc12345`) and a `type` that determines its behavior.
 
@@ -143,7 +156,7 @@ An **entry** is a logical container that represents a single piece of content. I
 
 `KalturaMediaEntry` is the most common type. It extends `KalturaPlayableEntry`, which adds playback-related fields (`plays`, `views`, `duration`, `width`, `height`). Data and document entries extend `KalturaBaseEntry` directly and have no playback fields.
 
-## 3.2 Assets — The Files Inside an Entry
+## 5.2 Assets — The Files Inside an Entry
 
 An **asset** is a file attached to an entry. Each entry can have multiple assets of different types:
 
@@ -156,7 +169,7 @@ An **asset** is a file attached to an entry. Each entry can have multiple assets
 
 The relationship is one-to-many: one entry has many assets. Each asset has an `entryId` linking it to its parent entry.
 
-## 3.3 Entry Lifecycle
+## 5.3 Entry Lifecycle
 
 A media entry progresses through these states:
 
@@ -172,7 +185,7 @@ Entry Ready (status=2 READY — all required flavors transcoded)
 
 The conversion profile assigned to the entry determines which flavors to create and when the entry is considered READY (e.g., "ready when the lowest-bitrate flavor is done" vs "ready when all flavors are done").
 
-## 3.4 Partial Updates
+## 5.4 Partial Updates
 
 Update calls (`media.update`, `baseEntry.update`) apply **partial updates** — only the fields you include in the request are changed. Fields you omit are left unchanged. There is no need to `get` the entry before updating it.
 
@@ -186,7 +199,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/media/action/update" \
 ```
 
 
-# 4. Your First API Call
+# 6. Your First API Call
 
 Generate a KS and list your content:
 
@@ -228,7 +241,7 @@ The response includes `objects` (array of entries) and `totalCount`:
 ```
 
 
-# 5. Client Libraries
+# 7. Client Libraries
 
 Kaltura provides a dozen official client libraries that abstract the HTTP layer:
 
@@ -251,7 +264,7 @@ Client libraries handle parameter encoding, object type mapping, and KS attachme
 These guides use `curl` examples so agents can adapt to any language.
 
 
-# 6. Multirequest — Batching API Calls
+# 8. Multirequest — Batching API Calls
 
 Combine multiple API calls into a single HTTP request using the multirequest endpoint. Each sub-request can reference results from previous sub-requests using `{N:result:property}` chaining.
 
@@ -309,7 +322,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/multirequest" \
 - **Common patterns:** Upload workflows (create token + entry + attach content), creating entries with metadata and categories, any sequential workflow where each step uses a result from the previous step.
 
 
-# 7. Error Handling
+# 9. Error Handling
 
 **Error response format:**
 
@@ -337,16 +350,16 @@ curl -X POST "$KALTURA_SERVICE_URL/service/multirequest" \
 **Retry strategy:** For transient errors (HTTP 5xx, timeouts), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (4xx, `INVALID_KS`, `PROPERTY_VALIDATION_*`), fix the request before retrying.
 
 
-# 8. Best Practices
+# 10. Best Practices
 
 - **Use AppTokens in production.** The `session.start` examples in this guide are for getting started. In production, use [AppTokens](KALTURA_APPTOKENS_API.md) to avoid exposing your admin secret.  
 - **Always include `format=1`.** Without it, API v3 returns XML instead of JSON.  
-- **Set `$KALTURA_SERVICE_URL` to your region.** All examples use this variable. Set it to your account's regional endpoint (see section 2).  
+- **Set `$KALTURA_SERVICE_URL` to your region.** All examples use this variable. Set it to your account's regional endpoint (see section 4).  
 - **Check multirequest sub-results individually.** Each element in the response array can be a success or a `KalturaAPIException` — check each one.  
 - **Use short-lived KS tokens.** Default to 1-4 hour expiry. Renew via AppToken flow rather than generating long-lived admin sessions.
 
 
-# 9. Shell Variables
+# 11. Shell Variables
 
 All guides in this project use these shell variables in curl examples:
 
@@ -368,7 +381,7 @@ export KALTURA_ADMIN_SECRET="YOUR_ADMIN_SECRET"
 ```
 
 
-# 10. Related Guides
+# 12. Related Guides
 
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — Deep dive into KS types, creation methods, privileges, and security
 - **[AppTokens](KALTURA_APPTOKENS_API.md)** — Production authentication without exposing secrets

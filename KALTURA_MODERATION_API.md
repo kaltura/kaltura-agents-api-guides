@@ -15,8 +15,14 @@ Moderation lets administrators and AI engines review content before it becomes v
 - **Channel-level content gating** — Require approval before content appears in specific categories/channels  
 - **Compliance workflows** — Enforce corporate content policies (hate speech, PII, profanity) with configurable rules  
 
+# 2. Prerequisites
 
-# 2. Architecture
+- An ADMIN KS (type=2) with `disableentitlement` privilege for approve, reject, and moderation queue operations (see [Session Guide](KALTURA_SESSION_GUIDE.md))  
+- The moderation feature enabled on your account (`moderateContent` setting) for entry-level moderation workflows  
+- For AI moderation: the REACH plugin enabled with a moderation catalog item (serviceFeature=15) provisioned on your account  
+
+
+# 3. Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -42,7 +48,7 @@ Moderation lets administrators and AI engines review content before it becomes v
 The AI moderation engine produces a `moderationOutputJson` report on the vendor task but does **not** automatically update `entry.moderationStatus`. To bridge AI results to entry-level moderation, either review the output manually and call `baseEntry.approve`/`reject`, or configure a webhook that reads the task result and triggers the appropriate action.
 
 
-# 3. Entry Moderation Status
+# 4. Entry Moderation Status
 
 Every entry has a `moderationStatus` field that controls playback visibility and list inclusion.
 
@@ -78,11 +84,11 @@ REJECTED (3)
 ```
 
 
-# 4. User Flagging
+# 5. User Flagging
 
 Users flag content via `baseEntry.flag`. This creates a moderation flag record and sets the entry status to `FLAGGED_FOR_REVIEW` (5). The entry remains playable during review.
 
-## 4.1 baseEntry.flag — Flag an Entry
+## 5.1 baseEntry.flag — Flag an Entry
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/baseEntry/action/flag" \
@@ -124,7 +130,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/baseEntry/action/flag" \
 
 **Permissions:** Flagging is broadly permitted — works with user sessions, widget sessions, and playback sessions. Anonymous flagging from widget KS is supported.
 
-## 4.2 baseEntry.listFlags — List Pending Flags
+## 5.2 baseEntry.listFlags — List Pending Flags
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/baseEntry/action/listFlags" \
@@ -166,9 +172,9 @@ Returns flags with `status=PENDING` (1). After `approve` or `reject`, flags are 
 **Permission:** Requires `CONTENT_MODERATE_BASE`.
 
 
-# 5. Moderator Actions
+# 6. Moderator Actions
 
-## 5.1 baseEntry.approve — Approve an Entry
+## 6.1 baseEntry.approve — Approve an Entry
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/baseEntry/action/approve" \
@@ -181,7 +187,7 @@ Sets `moderationStatus` to `APPROVED` (2), resets `moderationCount` to 0, and ma
 
 **Permission:** Requires `CONTENT_MODERATE_APPROVE_REJECT`.
 
-## 5.2 baseEntry.reject — Reject an Entry
+## 6.2 baseEntry.reject — Reject an Entry
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/baseEntry/action/reject" \
@@ -194,7 +200,7 @@ Sets `moderationStatus` to `REJECTED` (3), resets `moderationCount` to 0, and ma
 
 **Permission:** Requires `CONTENT_MODERATE_APPROVE_REJECT`.
 
-## 5.3 Listing the Moderation Queue
+## 6.3 Listing the Moderation Queue
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/baseEntry/action/list" \
@@ -218,7 +224,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/baseEntry/action/list" \
 
 The KMC moderation queue uses `moderationStatusIn=1,5` combined with `statusEqual=2` (READY) to show entries that are fully processed and awaiting moderation.
 
-## 5.4 user.notifyBan — Ban a Content Creator
+## 6.4 user.notifyBan — Ban a Content Creator
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/user/action/notifyBan" \
@@ -229,7 +235,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/user/action/notifyBan" \
 
 Sends a ban notification to the content creator. Used by the KMC moderation detail panel alongside approve/reject. The user account remains active — this sends a notification only.
 
-## 5.5 Bulk Operations
+## 6.5 Bulk Operations
 
 Approve or reject multiple entries in a single request using multirequest:
 
@@ -251,15 +257,15 @@ curl -X POST "$KALTURA_SERVICE_URL/service/multirequest" \
 Check each sub-response for `KalturaAPIException` — one failed approval does not block the others.
 
 
-# 6. AI Moderation via REACH
+# 7. AI Moderation via REACH
 
 AI moderation uses the REACH service to analyze entry content against configurable policies. The moderation engine (KAI) evaluates transcripts with an LLM (text/caption moderation) and video frames with AWS Rekognition (visual moderation).
 
-## 6.1 Service Feature
+## 7.1 Service Feature
 
 Moderation is `VendorServiceFeature = 15` in the REACH system, alongside other AI services like captions (1), translation (2), and summarization (13).
 
-## 6.2 Discovering Moderation Catalog Items
+## 7.2 Discovering Moderation Catalog Items
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/reach_vendorCatalogItem/action/list" \
@@ -271,7 +277,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/reach_vendorCatalogItem/action/list" 
 
 Returns `KalturaVendorModerationCatalogItem` objects with pricing, turn-around time, and engine type.
 
-## 6.3 Ordering a Moderation Task
+## 7.3 Ordering a Moderation Task
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/reach_entryVendorTask/action/add" \
@@ -311,7 +317,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/reach_entryVendorTask/action/add" \
 
 **REACH profile moderation gate:** If the REACH profile has `enableMachineModeration=true`, the task starts at `PENDING_MODERATION` (4) and requires `entryVendorTask.approve` before the AI engine processes it. This controls whether to spend REACH credit on the task, not the content moderation outcome.
 
-## 6.4 Reading Moderation Results
+## 7.4 Reading Moderation Results
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/reach_entryVendorTask/action/get" \
@@ -352,14 +358,14 @@ Each violation includes the rule ID, violated rule name, exact text quote, sever
 
 Each policy summary includes the weighted score, compliance boolean, and whether a critical rule was violated.
 
-## 6.5 Category Auto-Action
+## 7.5 Category Auto-Action
 
 When `categoryIds` are provided in the task data, the AI engine automatically calls `categoryEntry.activate` or `categoryEntry.reject` based on policy compliance. This enables automated content gating per channel without manual intervention — entries that pass all policies are published to the category; entries that fail are rejected.
 
 
-# 7. Moderation Policies and Rules
+# 8. Moderation Policies and Rules
 
-## 7.1 Predefined Text Rules
+## 8.1 Predefined Text Rules
 
 The AI engine includes 8 predefined text moderation rules:
 
@@ -374,7 +380,7 @@ The AI engine includes 8 predefined text moderation rules:
 | 7 | Misinformation & False Claims | 80 | Misleading information, conspiracy theories, false claims |
 | 8 | Confidential & Sensitive Data | 95 | Trade secrets, financial data, PII, internal communications |
 
-## 7.2 Predefined Visual Rules
+## 8.2 Predefined Visual Rules
 
 7 visual moderation rules powered by AWS Rekognition:
 
@@ -390,14 +396,14 @@ The AI engine includes 8 predefined text moderation rules:
 
 Visual moderation extracts video keyframes, deduplicates similar frames using perceptual hashing, and runs each unique frame through Rekognition `detect_moderation_labels` with a configurable confidence threshold (default: 80).
 
-## 7.3 Predefined Policies
+## 8.3 Predefined Policies
 
 | ID | Policy Name | Type | Rules | Threshold | Runs On |
 |----|-------------|------|-------|-----------|---------|
 | 1 | Corporate Verbal Content Integrity & Compliance | text | Rules 1-8 (equal weight) | 0.2 (20%) | name, description, tags, captions |
 | 2 | Corporate Visual Content Integrity & Compliance | video | Rules 20-26 (equal weight) | 0.6 (60%) | video frames |
 
-## 7.4 Custom Rules and Policies
+## 8.4 Custom Rules and Policies
 
 Custom rules (IDs starting at 100) allow natural-language moderation criteria evaluated by the LLM. Custom rules and policies are stored in the platform configuration system and managed through the configuration API.
 
@@ -430,7 +436,7 @@ Each `ruleConf` entry:
 | `critical` | boolean | If true, any violation auto-fails the policy regardless of score |
 | `max_score` | float | Cap on cumulative severity for this rule (prevents one rule from dominating) |
 
-## 7.5 Scoring Algorithm
+## 8.5 Scoring Algorithm
 
 The AI engine uses a hybrid scoring approach combining weighted scores with critical-rule overrides:
 
@@ -448,13 +454,13 @@ The AI engine uses a hybrid scoring approach combining weighted scores with crit
 **Post-processing:** Duplicate violations are merged, timestamps within 5 seconds are combined, and violations are capped at 10 per rule.
 
 
-# 8. Category Moderation
+# 9. Category Moderation
 
 Categories can require content approval independently of account-level moderation. This is commonly used for channel-based content gating in MediaSpace.
 
 When category moderation is enabled, entries added to the category get `categoryEntry.status = PENDING` (1) instead of `ACTIVE` (2). Channel managers approve or reject entries at the category level.
 
-## 8.1 categoryEntry.activate — Approve Content in Category
+## 9.1 categoryEntry.activate — Approve Content in Category
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/categoryEntry/action/activate" \
@@ -466,7 +472,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/categoryEntry/action/activate" \
 
 Changes `categoryEntry.status` from `PENDING` (1) to `ACTIVE` (2). The entry becomes visible within that category.
 
-## 8.2 categoryEntry.reject — Reject Content in Category
+## 9.2 categoryEntry.reject — Reject Content in Category
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/categoryEntry/action/reject" \
@@ -478,7 +484,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/categoryEntry/action/reject" \
 
 Rejects the category-entry association. The entry is removed from the category listing.
 
-## 8.3 Category vs Entry Moderation
+## 9.3 Category vs Entry Moderation
 
 | Aspect | Entry Moderation | Category Moderation |
 |--------|-----------------|-------------------|
@@ -490,11 +496,11 @@ Rejects the category-entry association. The entry is removed from the category l
 | AI integration | Manual bridge from REACH results | AI engine can auto-activate/reject via `categoryIds` |
 
 
-# 9. Player Integration
+# 10. Player Integration
 
 The `playkit-js-moderation` plugin adds a "Report Content" button to the Kaltura Player v7 upper bar. Viewers can flag content without leaving the player.
 
-## 9.1 Configuration
+## 10.1 Configuration
 
 ```javascript
 var config = {
@@ -526,7 +532,7 @@ var player = KalturaPlayer.setup(config);
 | `subtitle` | string | `''` | Extra information below the dialog title |
 | `moderateOptions` | array | Types 1-4 | Customizable flag type list (id + label) |
 
-## 9.2 Events
+## 10.2 Events
 
 | Event | When Fired | Payload |
 |-------|-----------|---------|
@@ -536,7 +542,7 @@ var player = KalturaPlayer.setup(config);
 The plugin calls `baseEntry.flag` with the player's provider KS. It pauses playback while the modal is open and resumes on close. The plugin supports 18 languages and is accessible via keyboard navigation with ARIA attributes.
 
 
-# 10. Permissions
+# 11. Permissions
 
 | Permission | ID | Allows |
 |-----------|-----|--------|
@@ -549,9 +555,9 @@ The plugin calls `baseEntry.flag` with the player's provider KS. It pauses playb
 Flagging (`baseEntry.flag`) does not require moderation permissions — it works with any authenticated session including widget and playback sessions.
 
 
-# 11. Notifications
+# 12. Notifications
 
-## 11.1 Email Notification Templates
+## 12.1 Email Notification Templates
 
 | Template | Trigger | Recipients |
 |----------|---------|------------|
@@ -560,14 +566,14 @@ Flagging (`baseEntry.flag`) does not require moderation permissions — it works
 | `New_Item_Flagged_For_Moderation_Kmc_Moderators` | Entry status changes to `FLAGGED_FOR_REVIEW` (5) | Users with approve/reject permission |
 | `Entry_Vendor_Task_Pending_Moderation` | REACH task enters `PENDING_MODERATION` (4) | Configured recipients |
 
-## 11.2 Webhook Integration
+## 12.2 Webhook Integration
 
 Monitor moderation status changes with event notification HTTP templates. The `moderationStatus` column is tracked — any change fires `OBJECT_CHANGED` event notifications configured for the entry object type.
 
 Cross-reference: [Webhooks Guide](KALTURA_WEBHOOKS_API.md) for configuring HTTP notification templates.
 
 
-# 12. REACH Automation Rules
+# 13. REACH Automation Rules
 
 REACH profiles can trigger moderation tasks automatically when entries match configured conditions.
 
@@ -587,7 +593,19 @@ REACH profiles can trigger moderation tasks automatically when entries match con
 Cross-reference: [REACH API Guide](KALTURA_REACH_API.md) for profile and rule configuration.
 
 
-# 13. Best Practices
+# 14. Error Handling
+
+| Error Code | Meaning | Resolution |
+|-----------|---------|------------|
+| `ENTRY_ID_NOT_FOUND` | Entry does not exist or was permanently deleted | Verify entry ID; check status is not 3 (DELETED) |
+| `INVALID_KS` | Session expired or malformed | Generate a fresh ADMIN KS |
+| `SERVICE_FORBIDDEN` | Account lacks moderation plugin | Contact account manager to enable moderation |
+| `MODERATE_CONTENT` permission missing | KS lacks moderation privilege | Add `disableentitlement` or ensure admin role |
+| `INVALID_ENUM_VALUE` | Invalid moderationStatus value passed | Use valid values: 1 (PENDING), 2 (APPROVED), 3 (REJECTED), 5 (FLAGGED_FOR_REVIEW), 6 (AUTO_APPROVED) |
+| `CATEGORY_NOT_FOUND` | Category ID invalid for categoryEntry operations | Verify category exists and user has access |
+
+
+# 15. Best Practices
 
 - **Generate KS server-side** — never embed admin secrets in client applications. Use AppTokens for production auth  
 - **Use category moderation for channel workflows** — `categoryEntry.activate`/`reject` provides per-channel control without affecting global entry playback  
@@ -598,7 +616,7 @@ Cross-reference: [REACH API Guide](KALTURA_REACH_API.md) for profile and rule co
 - **Register cleanup before assertions in tests** — moderation approve/reject changes are persistent. Register cleanup of test entries before asserting moderation status  
 
 
-# 14. Related Guides
+# 16. Related Guides
 
 | Guide | Relationship |
 |-------|-------------|

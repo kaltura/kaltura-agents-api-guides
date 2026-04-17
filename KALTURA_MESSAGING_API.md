@@ -8,7 +8,15 @@ The Messaging API enables sending personalized, template-based email communicati
 **Regions:** NVP (default `nvp1`), EU (`irp2`), DE (`frp2`)  
 
 
-# 1. Authentication
+# 1. When to Use
+
+- **Event communications** — Event organizers sending personalized invitations, reminders, and follow-ups to attendees with dynamic tokens for names, magic login links, and QR codes  
+- **Interactive Q&A and audience engagement** — Developers integrating real-time messaging alongside live video events to drive participation and collect audience questions  
+- **Automated lifecycle messaging** — Operations teams configuring template-based email workflows triggered by registration, attendance, or content updates with built-in delivery tracking  
+- **CAN-SPAM compliant bulk messaging** — Marketing teams sending branded email communications at scale with unsubscribe management, engagement analytics, and per-message delivery status  
+
+
+# 2. Authentication
 
 All requests require an ADMIN KS (type=2) in the `Authorization` header:
 
@@ -24,7 +32,7 @@ export KALTURA_MESSAGING_URL="https://messaging.nvp1.ovp.kaltura.com/api/v1"
 ```
 
 
-# 2. Email Template Entity
+# 3. Email Template Entity
 
 Every email template has this structure:
 
@@ -55,7 +63,7 @@ Every email template has this structure:
 | `updatedAt` | string | ISO 8601 timestamp, e.g. `"2026-04-09T04:56:27.940Z"` (read-only) |
 
 
-# 3. Token Types
+# 4. Token Types
 
 Tokens are placeholders in the template subject, body, and fromName that get replaced with actual values at send time. Define tokens in `msgParamsMap` and reference them in the template.
 
@@ -63,7 +71,7 @@ Tokens are placeholders in the template subject, body, and fromName that get rep
 - User tokens: `{tokenName.fieldName}` (e.g., `{recipient.firstName}`)
 - All other tokens: `{tokenName}` (e.g., `{eventLink}`)
 
-## 3.1 Available Token Types
+## 4.1 Available Token Types
 
 | Type | Description | Value at Send Time |
 |------|-------------|--------------------|
@@ -74,13 +82,13 @@ Tokens are placeholders in the template subject, body, and fromName that get rep
 | `UnsubscribeUri` | CAN-SPAM unsubscribe link | URI string |
 | `JwtQrCode` | QR code image with embedded JWT | Object: `{payload, secret, options?}` |
 
-## 3.2 User Token Fields
+## 4.2 User Token Fields
 
 When using a `User` type token, these fields are available from the Kaltura user record:
 
 `id`, `partnerId`, `externalId`, `firstName`, `lastName`, `email`, `fullName`, `screenName`, `dateOfBirth`, `gender`, `thumbnailUrl`, `description`, `title`, `country`, `company`, `state`, `city`, `zip`
 
-## 3.3 MagicLink Value Structure
+## 4.3 MagicLink Value Structure
 
 ```json
 {
@@ -96,7 +104,7 @@ When using a `User` type token, these fields are available from the Kaltura user
 | `expiry` | integer | Link expiry in hours |
 | `privileges` | string | KS privileges for the generated session |
 
-## 3.4 JwtQrCode Value Structure
+## 4.4 JwtQrCode Value Structure
 
 ```json
 {
@@ -113,9 +121,9 @@ When using a `User` type token, these fields are available from the Kaltura user
 | `options` | object | No | QR code rendering options (color settings) |
 
 
-# 4. Manage Email Templates
+# 5. Manage Email Templates
 
-## 4.1 Create a Template
+## 5.1 Create a Template
 
 ```
 POST /api/v1/email-template/add
@@ -178,7 +186,7 @@ curl -X POST "$KALTURA_MESSAGING_URL/email-template/add" \
 
 Save the `id` from the response as `TEMPLATE_ID`.
 
-## 4.2 Get a Template
+## 5.2 Get a Template
 
 ```
 POST /api/v1/email-template/get
@@ -197,9 +205,9 @@ curl -X POST "$KALTURA_MESSAGING_URL/email-template/get" \
   -d "{\"id\": \"$TEMPLATE_ID\"}"
 ```
 
-**Response:** Full template object (see section 2 for field definitions).
+**Response:** Full template object (see section 3 for field definitions).
 
-## 4.3 Update a Template
+## 5.3 Update a Template
 
 ```
 POST /api/v1/email-template/update
@@ -239,7 +247,7 @@ Fields not included remain unchanged. The `version` increments on each update.
 
 **Response:** Full updated template object with incremented `version`.
 
-## 4.4 List Templates
+## 5.4 List Templates
 
 ```bash
 curl -X POST "$KALTURA_MESSAGING_URL/email-template/list" \
@@ -281,7 +289,7 @@ curl -X POST "$KALTURA_MESSAGING_URL/email-template/list" \
 
 **Response:** `{objects: [...], totalCount: N}`
 
-## 4.5 Delete a Template
+## 5.5 Delete a Template
 
 ```
 POST /api/v1/email-template/delete
@@ -303,9 +311,9 @@ curl -X POST "$KALTURA_MESSAGING_URL/email-template/delete" \
 Sets the template status to `deleted`. The template is excluded from `list` results filtered by `status: "enabled"`.
 
 
-# 5. Send Messages
+# 6. Send Messages
 
-## 5.1 Send to Individual Users
+## 6.1 Send to Individual Users
 
 ```
 POST /api/v1/message/send
@@ -347,7 +355,7 @@ Authorization: Bearer <KS>
 | `msgParams` | object | Yes | Token values — name → `{type, value}` |
 | `session` | string | No | Grouping label for tracking (e.g., `"weekly-digest"`) |
 | `adminTags` | string | No | Comma-separated tags |
-| `attachments` | array | No | Email attachments (see section 5.3) |
+| `attachments` | array | No | Email attachments (see section 6.3) |
 | `customHeaders` | object | No | Custom email headers (overrides template headers) |
 
 The `msgParams` map provides runtime values for each token defined in the template's `msgParamsMap`. For `User` type tokens, set `value` to `"Message.userId"` to auto-resolve from each recipient's Kaltura profile.
@@ -370,7 +378,7 @@ The `msgParams` map provides runtime values for each token defined in the templa
 }
 ```
 
-The response returns a bulk message object. The `id` is the internal message ID and `bulkId` is the external tracking identifier used with `message/stats` and `message/list`. The `status` starts as `"sending"` and transitions through the lifecycle described in section 6.
+The response returns a bulk message object. The `id` is the internal message ID and `bulkId` is the external tracking identifier used with `message/stats` and `message/list`. The `status` starts as `"sending"` and transitions through the lifecycle described in section 7.
 
 ```bash
 curl -X POST "$KALTURA_MESSAGING_URL/message/send" \
@@ -389,7 +397,7 @@ curl -X POST "$KALTURA_MESSAGING_URL/message/send" \
   }'
 ```
 
-## 5.2 Send to Groups
+## 6.2 Send to Groups
 
 Set `receiverType` to `"group"` and provide `groupIds` instead of `userIds`:
 
@@ -410,7 +418,7 @@ curl -X POST "$KALTURA_MESSAGING_URL/message/send" \
   }'
 ```
 
-## 5.3 Attachments
+## 6.3 Attachments
 
 Include file attachments with Base64-encoded content:
 
@@ -436,9 +444,9 @@ Include file attachments with Base64-encoded content:
 | `contentId` | string | No | Content ID for inline images referenced in HTML |
 
 
-# 6. Message Lifecycle
+# 7. Message Lifecycle
 
-## 6.1 Bulk Message Status
+## 7.1 Bulk Message Status
 
 Each `message/send` call creates a bulk message that progresses through these states:
 
@@ -449,7 +457,7 @@ Each `message/send` call creates a bulk message that progresses through these st
 | `failed` | Processing failed (check `errorEnum` and `errorDescription`) |
 | `canceled` | Message was canceled before completion |
 
-## 6.2 Discrete Message Status
+## 7.2 Discrete Message Status
 
 Each recipient generates a discrete message with its own delivery lifecycle:
 
@@ -463,7 +471,7 @@ Each recipient generates a discrete message with its own delivery lifecycle:
 | `bounce` | Email bounced (mailbox full, domain not found) |
 | `error` | Delivery error |
 
-## 6.3 Engagement Tracking Events
+## 7.3 Engagement Tracking Events
 
 After delivery, these tracking events may update the discrete message status:
 
@@ -474,7 +482,7 @@ After delivery, these tracking events may update the discrete message status:
 | `spamreport` | Recipient reported the email as spam |
 | `unsubscribed` | Recipient unsubscribed via the email link |
 
-## 6.4 Discrete Error Codes
+## 7.4 Discrete Error Codes
 
 | Error | Description |
 |-------|-------------|
@@ -487,9 +495,9 @@ After delivery, these tracking events may update the discrete message status:
 | `sendGridError` | Email provider returned an error |
 
 
-# 7. Track Messages
+# 8. Track Messages
 
-## 7.1 List Bulk Messages
+## 8.1 List Bulk Messages
 
 ```bash
 curl -X POST "$KALTURA_MESSAGING_URL/message/list" \
@@ -525,7 +533,7 @@ curl -X POST "$KALTURA_MESSAGING_URL/message/list" \
 
 **Response:** `{objects: [...], totalCount: N}`
 
-## 7.2 List Messages Grouped by Session
+## 8.2 List Messages Grouped by Session
 
 Group bulk messages by their `session` label for campaign-level views:
 
@@ -556,7 +564,7 @@ curl -X POST "$KALTURA_MESSAGING_URL/message/listGroupedBySession" \
 | `createdAtGreaterThanOrEqual` | string | ISO 8601 min date |
 | `updatedAtGreaterThanOrEqual` | string | ISO 8601 min date |
 
-## 7.3 Message Statistics
+## 8.3 Message Statistics
 
 Get delivery statistics for a specific bulk message or session:
 
@@ -581,7 +589,7 @@ curl -X POST "$KALTURA_MESSAGING_URL/message/stats" \
 
 The response contains uppercase status keys with counts (e.g., `{"DELIVERED": 450, "BOUNCE": 3, "OPEN": 320}`).
 
-## 7.4 Discrete Message Details
+## 8.4 Discrete Message Details
 
 Track individual recipient delivery status:
 
@@ -608,7 +616,7 @@ curl -X POST "$KALTURA_MESSAGING_URL/message/listDiscreteAggregateMessages" \
 | `statusIn` | string[] | Filter by discrete status |
 
 
-# 8. Delivery Reports
+# 9. Delivery Reports
 
 Generate CSV delivery reports for a bulk message or session:
 
@@ -635,11 +643,11 @@ Provide either `bulkId` or `session` to scope the report.
 **Response:** A report object with a download URL for the CSV file. The report generation may be asynchronous; poll the returned report ID if the URL is not immediately available.
 
 
-# 9. Unsubscribe Management
+# 10. Unsubscribe Management
 
 CAN-SPAM compliant unsubscribe management with group-based opt-out.
 
-## 9.1 List Unsubscribe Groups
+## 10.1 List Unsubscribe Groups
 
 List all unsubscribe groups defined across your templates:
 
@@ -652,7 +660,7 @@ curl -X POST "$KALTURA_MESSAGING_URL/unsubscribe-groups/list" \
 
 Groups are defined in template `unsubscribeGroups` arrays. This endpoint returns all unique groups.
 
-## 9.2 Check User Unsubscribe Status
+## 10.2 Check User Unsubscribe Status
 
 Get the unsubscribe groups a specific user has opted out of (requires a user-scoped KS):
 
@@ -663,7 +671,7 @@ curl -X POST "$KALTURA_MESSAGING_URL/unsubscribe-users/userGroupsStatus" \
   -d '{}'
 ```
 
-## 9.3 Sync User Unsubscribe Preferences
+## 10.3 Sync User Unsubscribe Preferences
 
 Subscribe or unsubscribe a user from specific groups:
 
@@ -682,7 +690,7 @@ curl -X POST "$KALTURA_MESSAGING_URL/unsubscribe-users/syncGroups" \
 | `unsubscribed` | string[] | Groups to unsubscribe from |
 | `subscribed` | string[] | Groups to re-subscribe to |
 
-## 9.4 List Unsubscribed Users
+## 10.4 List Unsubscribed Users
 
 List all users who have unsubscribed from groups:
 
@@ -696,7 +704,7 @@ curl -X POST "$KALTURA_MESSAGING_URL/unsubscribe-users/list" \
   }'
 ```
 
-## 9.5 Unsubscribe URI Configuration
+## 10.5 Unsubscribe URI Configuration
 
 Configure custom unsubscribe endpoints for specific applications.
 
@@ -789,11 +797,11 @@ curl -X POST "$KALTURA_MESSAGING_URL/unsubscribe-uri/list" \
 | `updatedAtGreaterThanOrEqual` | string | ISO 8601 min date |
 
 
-# 10. Email Provider Configuration
+# 11. Email Provider Configuration
 
 Configure a custom email service provider (SendGrid) for your account. By default, Kaltura provides a shared email provider. For branded sending domains and dedicated deliverability, configure your own.
 
-## 10.1 Provider Entity
+## 11.1 Provider Entity
 
 | Field | Type | Description |
 |-------|------|-------------|
@@ -811,7 +819,7 @@ Configure a custom email service provider (SendGrid) for your account. By defaul
 | `createdAt` | string | ISO 8601 timestamp (read-only) |
 | `updatedAt` | string | ISO 8601 timestamp (read-only) |
 
-## 10.2 Add a Provider
+## 11.2 Add a Provider
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
@@ -838,7 +846,7 @@ curl -X POST "$KALTURA_MESSAGING_URL/email-provider/add" \
   }'
 ```
 
-## 10.3 List Providers
+## 11.3 List Providers
 
 ```bash
 curl -X POST "$KALTURA_MESSAGING_URL/email-provider/list" \
@@ -847,7 +855,7 @@ curl -X POST "$KALTURA_MESSAGING_URL/email-provider/list" \
   -d '{}'
 ```
 
-## 10.4 Provider Lookup
+## 11.4 Provider Lookup
 
 Resolve which email provider will be used for a given app context.
 
@@ -866,7 +874,7 @@ curl -X POST "$KALTURA_MESSAGING_URL/email-provider/lookup" \
 
 The resolution order is: partner + appGuid → partner → default (partner 0).
 
-## 10.5 Assign Provider to App
+## 11.5 Assign Provider to App
 
 Assign a specific provider to an app context.
 
@@ -887,7 +895,7 @@ curl -X POST "$KALTURA_MESSAGING_URL/email-provider/emailProviderAssignment" \
 
 **Response:** EmailProviderAssignmentRule object with `id`, `emailProviderId`, `appGuid`, `version`.
 
-## 10.6 Enable / Disable a Provider
+## 11.6 Enable / Disable a Provider
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
@@ -909,7 +917,7 @@ curl -X POST "$KALTURA_MESSAGING_URL/email-provider/disable" \
   -d "{\"id\": \"$PROVIDER_ID\"}"
 ```
 
-## 10.7 Delete a Provider
+## 11.7 Delete a Provider
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
@@ -923,11 +931,11 @@ curl -X POST "$KALTURA_MESSAGING_URL/email-provider/delete" \
 ```
 
 
-# 11. Domain Configuration
+# 12. Domain Configuration
 
 Verify sender domains with your email provider for improved deliverability.
 
-## 11.1 Add a Domain
+## 12.1 Add a Domain
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
@@ -946,7 +954,7 @@ curl -X POST "$KALTURA_MESSAGING_URL/domain/add" \
 
 **Response:** Contains the DNS records (CNAME, TXT) to configure for domain verification. Add these records to your DNS configuration before activating.
 
-## 11.2 Activate a Domain
+## 12.2 Activate a Domain
 
 After DNS propagation, activate the domain.
 
@@ -968,7 +976,7 @@ curl -X POST "$KALTURA_MESSAGING_URL/domain/activate" \
 **Response:** Confirmation of domain activation. If DNS records are not yet propagated, the activation fails with an error.
 
 
-# 12. Error Handling
+# 13. Error Handling
 
 Validation errors return HTTP 400. Application-level errors follow this structure:
 
@@ -990,9 +998,9 @@ Validation errors return HTTP 400. Application-level errors follow this structur
 **Retry strategy:** For transient errors (HTTP 5xx, timeouts), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (HTTP 400, `noActiveGroups`, `noActiveGroupUsers`, validation errors), fix the request before retrying — these will not resolve on their own. For async operations (message delivery tracking), poll with increasing intervals (5s, 10s, 30s) rather than tight loops.
 
 
-# 13. Common Integration Patterns
+# 14. Common Integration Patterns
 
-## 13.1 Event Invitation Workflow
+## 14.1 Event Invitation Workflow
 
 Complete flow from virtual event to personalized invitations:
 
@@ -1045,7 +1053,7 @@ curl -X POST "$KALTURA_MESSAGING_URL/message/send" \
   }"
 ```
 
-## 13.2 Delivery Tracking Dashboard
+## 14.2 Delivery Tracking Dashboard
 
 After sending, monitor delivery and engagement:
 
@@ -1068,7 +1076,7 @@ curl -X POST "$KALTURA_MESSAGING_URL/message/listDiscreteAggregateMessages" \
   }'
 ```
 
-## 13.3 Unsubscribe-Aware Messaging
+## 14.3 Unsubscribe-Aware Messaging
 
 Set up templates with unsubscribe groups to respect user preferences:
 
@@ -1104,7 +1112,7 @@ curl -X POST "$KALTURA_MESSAGING_URL/email-template/add" \
 Users who unsubscribe from the `"event-updates"` group will be automatically excluded from future messages sent with that group.
 
 
-# 14. Best Practices
+# 15. Best Practices
 
 - **Use CAN-SPAM compliant unsubscribe groups.** Assign unsubscribe groups to all marketing/event emails and include `{unsubLink}` tokens — users who unsubscribe are automatically excluded from future sends.
 - **Use dynamic tokens for personalization.** Leverage `{recipient.*}`, `{magicLink}`, `{qrCodeLink}`, and custom tokens to create engaging, per-recipient emails without manual string substitution.
@@ -1113,7 +1121,7 @@ Users who unsubscribe from the `"event-updates"` group will be automatically exc
 - **Use AppTokens for production access.** Generate KS via `appToken.startSession` with HMAC — keep admin secrets off application servers.
 - **Use the Messaging Service for all email communications.** Prefer the Messaging API over custom SMTP integrations — it provides tracking, analytics, and compliance out of the box.
 
-# 15. Related Guides
+# 16. Related Guides
 
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — KS generation and management
 - **[AppTokens API](KALTURA_APPTOKENS_API.md)** — Secure server-to-server auth

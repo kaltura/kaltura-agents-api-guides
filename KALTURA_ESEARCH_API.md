@@ -6,7 +6,21 @@ Kaltura's eSearch API, powered by Elasticsearch, provides flexible full-text sea
 **Auth:** KS passed as `ks` parameter in POST form data (see [Session Guide](KALTURA_SESSION_GUIDE.md))  
 **Format:** Form-encoded POST (`application/x-www-form-urlencoded`), `format=1` for JSON responses  
 
-# 1. API Endpoint & Structure
+# 1. When to Use
+
+- **Content discovery platforms** need fast, full-text search across video libraries with faceted filtering by media type, tags, categories, and custom metadata.  
+- **Enterprise knowledge management** requires searching inside captions, transcripts, and cue points to find the exact moment a topic is discussed.  
+- **AI-powered content workflows** use eSearch aggregations and cross-entity queries to analyze content distribution, identify gaps, and surface relevant media.  
+- **Custom portal and app builders** implement search-as-you-type experiences with ranked results, highlighted matches, and paginated browsing.
+
+# 2. Prerequisites
+
+- **Kaltura Session (KS):** USER KS (type=0) is sufficient for search operations; ADMIN KS (type=2) for searching across all content regardless of ownership. See [Session Guide](KALTURA_SESSION_GUIDE.md) for generation methods.  
+- **Partner ID and API credentials:** Available from your Kaltura Management Console (KMC) under Settings > Integration Settings.  
+- **Service URL:** Set `$KALTURA_SERVICE_URL` to your account's regional endpoint (default: `https://www.kaltura.com/api_v3`).  
+- **eSearch enabled:** eSearch (Elasticsearch-based) is enabled by default on all Kaltura accounts. Content is indexed automatically upon creation and update.
+
+# 3. API Endpoint & Structure
 
 * **Service:** `elasticsearch_esearch`
 * **Primary Actions:**
@@ -19,7 +33,7 @@ Kaltura's eSearch API, powered by Elasticsearch, provides flexible full-text sea
 * **Data Format:** `application/x-www-form-urlencoded` (Form Data). Nested parameters use standard array notation (e.g., `param[key][subkey]=value`).
 
 
-# 2. Authentication
+# 4. Authentication
 
 Include the `ks` as part of the POST form data:
 
@@ -29,7 +43,7 @@ Include the `ks` as part of the POST form data:
 ```
 
 
-# 3. Core Request Parameters & Objects
+# 5. Core Request Parameters & Objects
 
 Requests are built using specific Kaltura objects passed as form parameters.
 
@@ -41,12 +55,12 @@ Requests are built using specific Kaltura objects passed as form parameters.
             * `1` (`AND_OP`): All conditions must be met.
             * `2` (`OR_OP`): At least one condition must be met.
             * `3` (`NOT_OP`): Excludes items matching the nested conditions (typically used within an AND/OR operator).
-        * `searchItems` (Array): An array of one or more Search Item objects (see Section 5) defining the specific criteria.
+        * `searchItems` (Array): An array of one or more Search Item objects (see Section 7) defining the specific criteria.
     * **`orderBy`** (Object `KalturaESearchOrderBy`, optional): Defines sorting.
         * `orderItems` (Array of `KalturaESearchOrderByItem`): Each item specifies:
             * `sortField` (Enum, e.g., `KalturaESearchEntryOrderByFieldName`): Field like `created_at`, `plays`, `name`, `last_played_at`.
             * `sortOrder` (Enum `KalturaESearchSortOrder`): `asc` or `desc`.
-    * **`aggregations`** (Object `KalturaESearchAggregation`, optional): Defines aggregations (see Example G in Section 7).
+    * **`aggregations`** (Object `KalturaESearchAggregation`, optional): Defines aggregations (see Example G in Section 9).
         * `aggregations` (Array of `KalturaESearchAggregationItem`): Each item specifies:
             * `fieldName` (Enum, e.g., `KalturaESearchEntryAggregateByFieldName`): Field to group by, like `media_type`.
             * `size` (Integer): Max number of aggregation buckets to return.
@@ -54,7 +68,7 @@ Requests are built using specific Kaltura objects passed as form parameters.
     * `pageIndex` (Integer): The page number to retrieve (starts at 1).
     * `pageSize` (Integer): Number of results per page (default 30, max 500).
 
-# 4. Search Item (`searchItems`) Deep Dive
+# 6. Search Item (`searchItems`) Deep Dive
 
 These objects define *what* you're searching for within the `searchOperator.searchItems` array.
 
@@ -88,7 +102,7 @@ These objects define *what* you're searching for within the `searchOperator.sear
 * `metadataProfileId` (Integer, for Metadata items): ID of the metadata profile to search within.
 * `xpath` (String, optional for Metadata items): Targets a specific XML path within the metadata. If omitted, searches all fields in the profile.
 
-# 5. API Response Format (JSON)
+# 7. API Response Format (JSON)
 
 The API typically returns a JSON object structured as follows:
 
@@ -109,7 +123,7 @@ The API typically returns a JSON object structured as follows:
         * `value` (String): The specific value for the bucket (e.g., `"1"` for video media type).
         * `count` (Integer): The number of results falling into this bucket.
 
-# 6. Capabilities & Scenarios (with Curl Examples)
+# 8. Capabilities & Scenarios (with Curl Examples)
 
 Examples pipe to `jq` for readability.
 
@@ -262,7 +276,7 @@ Examples pipe to `jq` for readability.
     -d "format=1" | jq .
     ```
 
-# 7. Advanced Topics & Use Cases
+# 9. Advanced Topics & Use Cases
 
 * **Aggregations (`searchParams[aggregations]`):**
     * **Use Case:** Get a summary view without retrieving all results, e.g., "Show me the count of videos vs. images matching 'tutorial'".
@@ -319,7 +333,7 @@ Examples pipe to `jq` for readability.
     * **Use Case:** Combining complex AND/OR/NOT logic as shown in Scenario E.
     * **How:** Place a `KalturaESearchEntryOperator` (or similar) within the `searchItems` array of another operator. This allows nesting conditions (e.g., `A AND (B OR (NOT C))`).
 
-# 8. Edge Cases & Best Practices
+# 10. Edge Cases & Best Practices
 
 * **10,000 Result Limit:** Elasticsearch enforces a 10K result cap (500/page x 20 pages max). To traverse larger result sets, use `KalturaESearchRange` on `created_at` with scroll-forward pagination — move the date window after each 10K batch.
 * **Large Result Sets:** Always use the `pager` parameter (`pageIndex`, `pageSize`) to retrieve results in manageable chunks. Iterate through pages by incrementing `pageIndex` until the number of returned objects is less than `pageSize` or zero.
@@ -329,7 +343,7 @@ Examples pipe to `jq` for readability.
 * **Performance:** Unified searches (`KalturaESearchUnifiedItem`) are convenient but can be slower than targeted searches using specific `fieldName`s (like `NAME` or `CAPTIONS_CONTENT`) because they query more fields. Optimize by specifying fields when possible.
 * **Schema Reference:** The Kaltura API schema (XML) is the definitive source for all object structures, properties, enums, and their exact names. Refer to it frequently.
 
-# 9. Key Objects & Enums Quick Reference
+# 11. Key Objects & Enums Quick Reference
 
 * **Params:** `KalturaESearchEntryParams`, `KalturaESearchCategoryParams`, `KalturaESearchUserParams`
 * **Operator:** `KalturaESearchEntryOperator` (and variants)
@@ -411,7 +425,7 @@ Use these values in the `sortField` property of `KalturaESearchOrderByItem`:
 | `end_date` | Scheduling end date |
 | `last_played_at` | Last playback date |
 
-# 10. Error Handling
+# 12. Error Handling
 
 * Check the HTTP status code first.
 * If the status is not 200, parse the JSON error response. Key fields are usually:
@@ -426,7 +440,7 @@ Use these values in the `sortField` property of `KalturaESearchOrderByItem`:
 **Retry strategy:** For transient errors (HTTP 5xx, `ESEARCH_SERVICE_DOWN`, timeouts), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (`INVALID_KS`, `ELASTIC_SEARCH_QUERY_NOT_VALID`, permission errors), fix the request before retrying — these will not resolve on their own.
 
 
-# 11. Related Guides
+# 13. Related Guides
 
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — Generate the KS required for all eSearch calls
 - **[AppTokens](KALTURA_APPTOKENS_API.md)** — Secure KS generation for production integrations

@@ -16,7 +16,14 @@ The Express Recorder provides browser-based WebRTC recording — video, audio, a
 **Supported browsers:** Chrome, Firefox, Opera (WebRTC required)
 
 
-# 2. Embedding
+# 2. Prerequisites
+
+- **Kaltura Session (KS)** — A KS with `editadmintags:*` privilege is required for the recorder to create entries. See the [Session Guide](KALTURA_SESSION_GUIDE.md) for KS generation details.  
+- **Recorder widget loaded from CDN** — Load the Express Recorder JavaScript bundle from the Kaltura CDN (`https://www.kaltura.com/apps/expressrecorder/latest/express-recorder.js`).  
+- **Browser with WebRTC and getUserMedia** — The recorder requires WebRTC support for media capture. Chrome, Firefox, and Opera are recommended. The page must be served over HTTPS for camera and microphone access.  
+
+
+# 3. Embedding
 
 Load the Express Recorder bundle from the Kaltura CDN and create an instance:
 
@@ -43,7 +50,7 @@ Load the Express Recorder bundle from the Kaltura CDN and create an instance:
 ```
 
 
-# 3. Configuration
+# 4. Configuration
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
@@ -65,7 +72,7 @@ Load the Express Recorder bundle from the Kaltura CDN and create an instance:
 **KS privileges:** The KS must include `editadmintags:*` to allow the recorder to create entries.
 
 
-# 4. Events
+# 5. Events
 
 Listen for events on the component instance:
 
@@ -87,7 +94,7 @@ component.instance.addEventListener('mediaUploadStarted', function(e) {
 | `error` | `{ message: string, code: string }` | An error occurred. Common codes: `PERMISSION_DENIED` (KS lacks required privileges), `NO_MEDIA_DEVICES` (camera/microphone not found), `BROWSER_NOT_SUPPORTED` (WebRTC unavailable) |
 
 
-# 5. Methods
+# 6. Methods
 
 Call methods on the `component.instance` object returned by `Kaltura.ExpressRecorder.create()`:
 
@@ -110,7 +117,7 @@ component.instance.upload();
 | `destroy()` | void | Remove the recorder widget from the DOM and release all media streams (camera, microphone, screen). Call this when navigating away or removing the recorder from the page |
 
 
-# 6. Error Handling
+# 7. Error Handling
 
 Listen for `error` events on the component instance. The event payload includes `message` and `code` fields:
 
@@ -129,7 +136,7 @@ component.instance.addEventListener('error', function(e) {
 - **Upload network failure** — Intermittent network issues during upload. The recorder does not auto-retry. Listen for the `error` event and offer the user the option to retry with `upload()` or save locally with `saveCopy()`.
 
 
-# 7. Best Practices
+# 8. Best Practices
 
 - **Scope the KS.** The KS must include `editadmintags:*` to allow entry creation. Use the minimum additional privileges required.  
 - **Verify entry readiness after upload.** After the recorder uploads, the entry goes through transcoding. Poll `media.get` for `status=2` (READY) before redirecting users to playback or caption editing.  
@@ -137,7 +144,7 @@ component.instance.addEventListener('error', function(e) {
 - **Handle session expiry.** Generate a KS with sufficient expiry for the expected recording + upload duration. A 1-hour KS covers most use cases.
 
 
-# 8. Related Guides
+# 9. Related Guides
 
 - **[Experience Components Overview](KALTURA_EXPERIENCE_COMPONENTS_API.md)** — Index of all embeddable components with shared guidelines  
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — KS generation and privilege management  

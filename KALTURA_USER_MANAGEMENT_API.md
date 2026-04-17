@@ -8,7 +8,23 @@ The User Management API covers the core user identity layer: creating and managi
 **Services:** `user` (22 actions), `userRole` (6 actions), `group_group` (CRUD), `groupUser` (5 actions)  
 
 
-# 1. Authentication
+# 1. When to Use This Guide
+
+- **IT and identity teams** provisioning Kaltura user accounts as part of employee onboarding or offboarding automation  
+- **SSO integration projects** syncing user records from SAML/OIDC identity providers into Kaltura  
+- **Platform administrators** assigning role-based access control (RBAC) to enforce least-privilege policies  
+- **LMS and HR systems** bulk-importing users and managing group memberships for course or department scoping  
+- **Application developers** looking up user profiles, managing login credentials, or integrating user lifecycle events
+
+
+# 2. Prerequisites
+
+- **KS type:** ADMIN KS (type=2) with `ADMIN_BASE`, `ADMIN_USER_ADD`, `ADMIN_USER_UPDATE`, and `ADMIN_USER_DELETE` permissions  
+- **Plugins:** No additional plugins required (core API v3 service)  
+- **Session guide:** Generate a KS using `session.start` or `appToken.startSession` (see [Session Guide](KALTURA_SESSION_GUIDE.md))
+
+
+# 3. Authentication
 
 All endpoints require an ADMIN KS (type=2) with appropriate permissions:
 
@@ -24,7 +40,7 @@ export KALTURA_SERVICE_URL="https://www.kaltura.com/api_v3"
 ```
 
 
-# 2. KalturaUser Object
+# 4. KalturaUser Object
 
 Every user in a Kaltura partner account is a `KalturaUser`:
 
@@ -62,7 +78,7 @@ Every user in a Kaltura partner account is a `KalturaUser`:
 | `lastLoginTime` | integer | Unix timestamp of last login (read-only) |
 | `objectType` | string | Always `"KalturaUser"` (read-only) |
 
-## 2.1 User Status Values
+## 4.1 User Status Values
 
 | Value | Name | Description |
 |-------|------|-------------|
@@ -70,7 +86,7 @@ Every user in a Kaltura partner account is a `KalturaUser`:
 | 1 | ACTIVE | Normal active user |
 | 2 | DELETED | Soft-deleted |
 
-## 2.2 User Types
+## 4.2 User Types
 
 | Value | Name | Description |
 |-------|------|-------------|
@@ -78,7 +94,7 @@ Every user in a Kaltura partner account is a `KalturaUser`:
 | 200 | GROUP | Group (a virtual user that holds group membership via `groupUser`) |
 
 
-# 3. User Provisioning Pathways
+# 5. User Provisioning Pathways
 
 Users are created through several pathways:
 
@@ -90,14 +106,14 @@ Users are created through several pathways:
 | **Events registration** | User Profile API creates user internally if needed | Email address |
 | **KMC admin UI** | Manual creation in Management Console | Email address |
 
-## 3.1 Shared Users (SSO)
+## 5.1 Shared Users (SSO)
 
 When [Auth Broker](KALTURA_AUTH_BROKER_API.md) provisions a user via SSO, it sets `externalId` on the KalturaUser to the value from the IdP's `userIdAttribute` (typically the email). This `externalId` becomes the shared key for looking up users across SSO logins.
 
 
-# 4. User CRUD
+# 6. User CRUD
 
-## 4.1 Create a User
+## 6.1 Create a User
 
 ```
 POST /service/user/action/add
@@ -151,7 +167,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/user/action/add" \
 }
 ```
 
-## 4.2 Get a User
+## 6.2 Get a User
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/user/action/get" \
@@ -166,7 +182,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/user/action/get" \
 
 Returns the full `KalturaUser` object. Returns `INVALID_USER_ID` if the user does not exist.
 
-## 4.3 List Users
+## 6.3 List Users
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/user/action/list" \
@@ -217,7 +233,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/user/action/list" \
 }
 ```
 
-## 4.4 Update a User
+## 6.4 Update a User
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/user/action/update" \
@@ -245,7 +261,7 @@ Fields not included remain unchanged. The `id` field cannot be changed after cre
 
 **Response:** Full updated `KalturaUser` object.
 
-## 4.5 Delete a User
+## 6.5 Delete a User
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/user/action/delete" \
@@ -263,9 +279,9 @@ Soft-deletes the user (`status` changes to `2`). The user object is returned wit
 **Cascade behavior:** Deleting a KalturaUser soft-deletes all associated [User Profiles](KALTURA_USER_PROFILE_API.md) across all app instances. Delete user profiles explicitly first if you need to control the order.
 
 
-# 5. Login & Credentials
+# 7. Login & Credentials
 
-## 5.1 Enable Login
+## 7.1 Enable Login
 
 Grant a user the ability to log in with email + password:
 
@@ -286,7 +302,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/user/action/enableLogin" \
 
 After enabling login, the user's `loginEnabled` field becomes `true`.
 
-## 5.2 Disable Login
+## 7.2 Disable Login
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/user/action/disableLogin" \
@@ -297,7 +313,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/user/action/disableLogin" \
 
 Removes the user's ability to log in with credentials. SSO login via [Auth Broker](KALTURA_AUTH_BROKER_API.md) is not affected by this setting.
 
-## 5.3 Login by Credentials
+## 7.3 Login by Credentials
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/user/action/loginByLoginId" \
@@ -320,7 +336,7 @@ Returns a KS string on success. This action does not require an existing KS.
 
 **Password complexity requirements:** Passwords must meet the account's configured policy. The default requires at least 8 characters, including uppercase, lowercase, digits, and special characters. If the password is invalid, the API returns `PASSWORD_STRUCTURE_INVALID`.
 
-## 5.4 Reset Password
+## 7.4 Reset Password
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/user/action/resetPassword" \
@@ -332,9 +348,9 @@ curl -X POST "$KALTURA_SERVICE_URL/service/user/action/resetPassword" \
 |-----------|------|----------|-------------|
 | `email` | string | Yes | Email address of the user whose password should be reset |
 
-Sends a password reset email. Does not require a KS. The email contains a hash key used with `setInitialPassword` (section 5.5).
+Sends a password reset email. Does not require a KS. The email contains a hash key used with `setInitialPassword` (section 7.5).
 
-## 5.5 Set Initial Password
+## 7.5 Set Initial Password
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/user/action/setInitialPassword" \
@@ -348,14 +364,14 @@ curl -X POST "$KALTURA_SERVICE_URL/service/user/action/setInitialPassword" \
 | `hashKey` | string | Yes | Hash key from the password reset or invitation email |
 | `newPassword` | string | Yes | New password (must meet account password complexity requirements) |
 
-Sets a password using a hash key received via email (from `resetPassword` or invitation). Does not require a KS. The new password must meet the account's configured complexity policy (see section 5.3 for password requirements).
+Sets a password using a hash key received via email (from `resetPassword` or invitation). Does not require a KS. The new password must meet the account's configured complexity policy (see section 7.3 for password requirements).
 
 
-# 6. User Roles (RBAC)
+# 8. User Roles (RBAC)
 
 Roles define what permissions a user has. Each role is a set of named permissions. Assign roles to users via `user[roleIds]`.
 
-## 6.1 KalturaUserRole Object
+## 8.1 KalturaUserRole Object
 
 | Field | Type | Description |
 |-------|------|-------------|
@@ -370,7 +386,7 @@ Roles define what permissions a user has. Each role is a set of named permission
 | `createdAt` | integer | Unix timestamp (read-only) |
 | `updatedAt` | integer | Unix timestamp (read-only) |
 
-## 6.2 Create a Role
+## 8.2 Create a Role
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/userRole/action/add" \
@@ -421,7 +437,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/userRole/action/add" \
 }
 ```
 
-## 6.3 Get a Role
+## 8.3 Get a Role
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/userRole/action/get" \
@@ -436,7 +452,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/userRole/action/get" \
 
 Returns the full `KalturaUserRole` object. Returns `USER_ROLE_NOT_FOUND` if the role does not exist.
 
-## 6.4 List Roles
+## 8.4 List Roles
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/userRole/action/list" \
@@ -460,7 +476,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/userRole/action/list" \
 | `tagsMultiLikeOr` | Tags (OR match) |
 | `orderBy` | `+id`, `-id`, `+createdAt`, `-createdAt` |
 
-## 6.5 Update a Role
+## 8.5 Update a Role
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/userRole/action/update" \
@@ -483,7 +499,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/userRole/action/update" \
 
 Fields not included remain unchanged. **Response:** Full updated `KalturaUserRole` object.
 
-## 6.6 Clone a Role
+## 8.6 Clone a Role
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/userRole/action/clone" \
@@ -498,7 +514,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/userRole/action/clone" \
 
 Creates a copy of an existing role. Useful for customizing built-in system roles without modifying the originals. **Response:** Full `KalturaUserRole` object for the new clone with a new `id`.
 
-## 6.7 Delete a Role
+## 8.7 Delete a Role
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/userRole/action/delete" \
@@ -513,7 +529,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/userRole/action/delete" \
 
 Sets `status=3` (DELETED). Users currently assigned this role retain it until their `roleIds` are updated.
 
-## 6.8 Assigning Roles to Users
+## 8.8 Assigning Roles to Users
 
 Use `user.update` with the `roleIds` field to assign one or more roles:
 
@@ -529,11 +545,11 @@ curl -X POST "$KALTURA_SERVICE_URL/service/user/action/update" \
 Use this role ID with the `setrole:ROLE_ID` KS privilege (see [Session Guide](KALTURA_SESSION_GUIDE.md)) to create sessions that inherit the role's permissions.
 
 
-# 7. Groups
+# 9. Groups
 
 Groups are virtual users (`type=200`) that hold membership via the `groupUser` service. Use groups as recipients in the [Messaging API](KALTURA_MESSAGING_API.md), notification targets in the [Webhooks API](KALTURA_WEBHOOKS_API.md), or for content entitlement via category membership.
 
-## 7.1 Create a Group
+## 9.1 Create a Group
 
 Groups are created via the `group_group` service with `KalturaGroup`:
 
@@ -549,7 +565,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/group_group/action/add" \
 
 **Response:** A `KalturaGroup` object (status=1, membersCount=0). Delete groups via `group_group.delete` with `groupId`.
 
-## 7.2 Add User to Group
+## 9.2 Add User to Group
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/groupUser/action/add" \
@@ -580,7 +596,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/groupUser/action/add" \
 }
 ```
 
-## 7.3 List Group Members
+## 9.3 List Group Members
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/groupUser/action/list" \
@@ -601,7 +617,7 @@ At least one of these is required:
 | `userIdEqual` | List groups a specific user belongs to |
 | `userIdIn` | List groups for multiple users |
 
-## 7.4 Remove User from Group
+## 9.4 Remove User from Group
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/groupUser/action/delete" \
@@ -618,7 +634,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/groupUser/action/delete" \
 
 Removes the user from the specified group. Returns nothing on success. Returns `INVALID_USER_ID` if the user is not a member of the group.
 
-## 7.5 Sync Group Membership
+## 9.5 Sync Group Membership
 
 Replace all members of a group at once. Used by [Auth Broker](KALTURA_AUTH_BROKER_API.md) to sync IdP group claims to Kaltura groups:
 
@@ -640,9 +656,9 @@ curl -X POST "$KALTURA_SERVICE_URL/service/groupUser/action/sync" \
 Sets the user's group membership to exactly the specified groups, removing them from any groups not in the list (when `removeFromExistingGroups` is true).
 
 
-# 8. Bulk Operations
+# 10. Bulk Operations
 
-## 8.1 Bulk Upload Users
+## 10.1 Bulk Upload Users
 
 Import users from a CSV file:
 
@@ -656,7 +672,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/user/action/addFromBulkUpload" \
 
 CSV columns: `userId`, `screenName`, `firstName`, `lastName`, `email`, `tags`, `gender`, `country`, `state`, `city`, `zip`, `dateOfBirth`, `description`, `company`, `title`.
 
-## 8.2 Export Users to CSV
+## 10.2 Export Users to CSV
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/user/action/exportToCsv" \
@@ -669,7 +685,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/user/action/exportToCsv" \
 Returns a job ID. Retrieve the CSV file when the job completes using `user.serveCsv`.
 
 
-# 9. Error Handling
+# 11. Error Handling
 
 | Error Code | Meaning |
 |------------|---------|
@@ -688,7 +704,7 @@ Returns a job ID. Retrieve the CSV file when the job completes using `user.serve
 **Retry strategy:** For transient errors (HTTP 5xx, timeouts), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (HTTP 400, `INVALID_USER_ID`, `USER_ALREADY_EXISTS`), fix the request before retrying.
 
 
-# 10. Best Practices
+# 12. Best Practices
 
 - **Use meaningful user IDs.** Email addresses work well as user IDs — they're unique, recognizable, and match the pattern used by AuthBroker SSO provisioning.
 - **Use AppTokens for production auth.** Generate KS via `appToken.startSession` with HMAC — keep admin secrets off application servers. See [AppTokens API](KALTURA_APPTOKENS_API.md).
@@ -699,7 +715,7 @@ Returns a job ID. Retrieve the CSV file when the job completes using `user.serve
 - **Use `groupUser.sync` for SSO group management.** When integrating with an IdP that provides group claims, use sync to keep Kaltura groups in lockstep with the IdP rather than manual add/delete.
 
 
-# 11. Related Guides
+# 13. Related Guides
 
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — KS generation, `setrole:ROLE_ID` privilege, user vs admin sessions
 - **[AppTokens API](KALTURA_APPTOKENS_API.md)** — Secure auth without admin secrets, privilege scoping

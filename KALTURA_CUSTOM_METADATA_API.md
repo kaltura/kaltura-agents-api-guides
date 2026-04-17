@@ -10,7 +10,21 @@ The Custom Metadata API lets you define XSD-based schemas (metadata profiles) an
 **Important:** These are plugin services. The service names use underscore-prefixed compound names: `metadata_metadataProfile`, `metadata_metadata`.  
 
 
-# 1. Authentication
+# 1. When to Use
+
+- **Content classification systems** attach domain-specific fields (department, project code, sensitivity level) to entries for structured filtering and reporting.  
+- **Regulatory compliance workflows** store audit metadata such as retention dates, legal hold flags, and approval status directly on content objects.  
+- **Custom search and discovery** extend eSearch with business-specific filterable fields so users can find content by custom taxonomies and tags.  
+- **Automated content pipelines** use metadata profiles with XSLT transformations to normalize, enrich, or validate metadata on every add or update.
+
+# 2. Prerequisites
+
+- **Kaltura Session (KS):** ADMIN KS (type=2) with `METADATA_PLUGIN_PERMISSION` for profile management and `CONTENT_MANAGE_METADATA` for attaching metadata instances. See [Session Guide](KALTURA_SESSION_GUIDE.md) for generation methods.  
+- **Metadata plugin enabled:** The metadata plugin (`metadata_metadataProfile`, `metadata_metadata` services) is enabled by default on all Kaltura accounts.  
+- **Service URL:** Set `$KALTURA_SERVICE_URL` to your account's regional endpoint (default: `https://www.kaltura.com/api_v3`).  
+- **XSD schema knowledge:** Metadata profiles are defined using XSD (XML Schema Definition). Familiarity with XSD element types and annotations is helpful for schema design.
+
+# 3. Authentication
 
 All endpoints require an ADMIN KS (type=2) with appropriate permissions:
 
@@ -25,11 +39,11 @@ export KALTURA_SERVICE_URL="https://www.kaltura.com/api_v3"
 ```
 
 
-# 2. Metadata Profiles (Schemas)
+# 4. Metadata Profiles (Schemas)
 
 A `KalturaMetadataProfile` defines a schema (XSD) that describes the structure of custom metadata. You create a profile once, then attach metadata instances conforming to that schema to individual objects (entries, categories, users, etc.).
 
-## 2.1 KalturaMetadataProfile Object
+## 4.1 KalturaMetadataProfile Object
 
 | Field | Type | Description |
 |-------|------|-------------|
@@ -39,7 +53,7 @@ A `KalturaMetadataProfile` defines a schema (XSD) that describes the structure o
 | `systemName` | string | System-level identifier (machine-friendly, use for stable lookups) |
 | `description` | string | Profile description |
 | `status` | integer | `1` = ACTIVE, `2` = DEPRECATED, `3` = TRANSFORMING |
-| `metadataObjectType` | integer | Object type this profile applies to (see 2.2) |
+| `metadataObjectType` | integer | Object type this profile applies to (see 4.2) |
 | `version` | integer | Profile version, incremented on XSD changes (read-only, filterable) |
 | `xsd` | string | The XSD schema definition (read-only on get, set via add/update) |
 | `xslt` | string | XSLT applied on every metadata add/update (read-only, set via `updateTransformationFromFile`) |
@@ -49,7 +63,7 @@ A `KalturaMetadataProfile` defines a schema (XSD) that describes the structure o
 | `updatedAt` | integer | Unix timestamp (read-only) |
 | `objectType` | string | Always `"KalturaMetadataProfile"` (read-only) |
 
-## 2.2 Metadata Object Types
+## 4.2 Metadata Object Types
 
 | Value | Name | Description |
 |-------|------|-------------|
@@ -60,7 +74,7 @@ A `KalturaMetadataProfile` defines a schema (XSD) that describes the structure o
 | 5 | DYNAMIC_OBJECT | Dynamic objects |
 | 6 | USER_ENTRY | Per-user-per-entry records (quiz answers, watch progress) |
 
-## 2.3 Profile Status Values
+## 4.3 Profile Status Values
 
 | Value | Name | Description |
 |-------|------|-------------|
@@ -68,7 +82,7 @@ A `KalturaMetadataProfile` defines a schema (XSD) that describes the structure o
 | 2 | DEPRECATED | Profile is deprecated |
 | 3 | TRANSFORMING | Profile XSD update in progress, re-validating existing metadata |
 
-## 2.4 Create Profile (Inline XSD)
+## 4.4 Create Profile (Inline XSD)
 
 ```
 POST /service/metadata_metadataProfile/action/add
@@ -146,7 +160,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadataProfile/action/add" 
 
 **Response:** Full `KalturaMetadataProfile` object with generated `id`, `version=1`, and `status=1` (ACTIVE).
 
-## 2.5 Create Profile (File Upload)
+## 4.5 Create Profile (File Upload)
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadataProfile/action/addFromFile" \
@@ -171,7 +185,7 @@ Same as `add`, but the XSD is uploaded as a file instead of inline.
 
 **Response:** Full `KalturaMetadataProfile` object with generated `id`, `version=1`, and `status=1` (ACTIVE).
 
-## 2.6 Get Profile
+## 4.6 Get Profile
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadataProfile/action/get" \
@@ -206,7 +220,7 @@ Returns the full `KalturaMetadataProfile` object including the XSD content. Retu
 }
 ```
 
-## 2.7 List Profiles
+## 4.7 List Profiles
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadataProfile/action/list" \
@@ -262,7 +276,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadataProfile/action/list"
 }
 ```
 
-## 2.8 List Fields
+## 4.8 List Fields
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadataProfile/action/listFields" \
@@ -290,7 +304,7 @@ Returns a parsed list of field definitions from the XSD. Useful for dynamically 
 }
 ```
 
-## 2.9 Update Profile
+## 4.9 Update Profile
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadataProfile/action/update" \
@@ -311,7 +325,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadataProfile/action/updat
 
 Fields not included remain unchanged. Updating the XSD triggers the server to re-validate all existing metadata instances against the new schema. Incompatible changes cause `METADATA_UNABLE_TO_TRANSFORM`.
 
-## 2.10 Update XSD from File
+## 4.10 Update XSD from File
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadataProfile/action/updateDefinitionFromFile" \
@@ -328,7 +342,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadataProfile/action/updat
 
 Updates the profile XSD from a file upload. Triggers re-validation and transformation of all existing metadata instances. The profile `version` is incremented. During transformation, the profile status transitions to `TRANSFORMING` (3) and returns to `ACTIVE` (1) when complete.
 
-## 2.11 Revert Profile Version
+## 4.11 Revert Profile Version
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadataProfile/action/revert" \
@@ -345,7 +359,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadataProfile/action/rever
 
 Reverts the profile XSD to a previous version. All metadata instances are also reverted and re-validated against the restored schema. The `version` field is incremented (revert creates a new version, not a rollback).
 
-## 2.12 Serve XSD
+## 4.12 Serve XSD
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadataProfile/action/serve" \
@@ -360,7 +374,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadataProfile/action/serve
 
 Returns the raw XSD content of the profile. Useful for programmatic schema validation or building dynamic forms from the schema definition.
 
-## 2.13 Delete Profile
+## 4.13 Delete Profile
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadataProfile/action/delete" \
@@ -376,11 +390,11 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadataProfile/action/delet
 Deletes the profile and cascades to all metadata instances associated with it. This action is irreversible. Profiles of type `DYNAMIC_OBJECT` with active references return `METADATA_PROFILE_REFERENCE_EXISTS`.
 
 
-# 3. XSD Schema Design
+# 5. XSD Schema Design
 
 Every Kaltura metadata XSD must include four base type definitions that the KMC and eSearch use for field type detection. Fields annotated with `<appinfo>` elements control how the KMC renders the metadata form and how eSearch indexes the values.
 
-## 3.1 Kaltura-Native Field Types
+## 5.1 Kaltura-Native Field Types
 
 | KMC Type | XSD Type | Storage | KMC Control | eSearch Behavior |
 |----------|----------|---------|-------------|------------------|
@@ -391,7 +405,7 @@ Every Kaltura metadata XSD must include four base type definitions that the KMC 
 
 **Date fields store Unix timestamps as longs (e.g., `1718409600` for 2024-06-15), not ISO date strings.** This is the Kaltura-native convention used by KMC-NG for DatePicker rendering and eSearch range queries.
 
-## 3.2 Base Type Definitions (Required)
+## 5.2 Base Type Definitions (Required)
 
 Every Kaltura XSD must include these four type definitions at the bottom of the schema. Without them, the KMC cannot determine field types for form rendering:
 
@@ -416,7 +430,7 @@ Every Kaltura XSD must include these four type definitions at the bottom of the 
 </xsd:simpleType>
 ```
 
-## 3.3 Field Annotations (`<appinfo>`)
+## 5.3 Field Annotations (`<appinfo>`)
 
 Annotations control how the KMC-NG renders each field and how eSearch indexes it:
 
@@ -447,7 +461,7 @@ Annotations control how the KMC-NG renders each field and how eSearch indexes it
 
 Applications building custom metadata forms read these annotations from the XSD (via `metadataProfile.get` or `metadataProfile.serve`) to auto-generate UI controls matching the KMC behavior.
 
-## 3.4 Enum Fields (Dropdown)
+## 5.4 Enum Fields (Dropdown)
 
 Use `listType` with `xsd:enumeration` restrictions to create dropdown fields. This is the only field type available as a KMC filter column:
 
@@ -469,7 +483,7 @@ Use `listType` with `xsd:enumeration` restrictions to create dropdown fields. Th
 </xsd:element>
 ```
 
-## 3.5 Multi-Value Fields
+## 5.5 Multi-Value Fields
 
 Use `maxOccurs="unbounded"` for repeatable fields:
 
@@ -493,14 +507,14 @@ In metadata XML, each value is a separate element:
 </metadata>
 ```
 
-## 3.6 Required vs Optional Fields
+## 5.6 Required vs Optional Fields
 
 - `minOccurs="0"` — optional field (recommended for most fields)
 - `minOccurs="1"` — required field (metadata XML must include this element)
 - `maxOccurs="1"` — single value (default)
 - `maxOccurs="unbounded"` — multi-value (repeatable)
 
-## 3.7 Nested Elements
+## 5.7 Nested Elements
 
 Use `complexType` with `sequence` for grouped fields:
 
@@ -524,7 +538,7 @@ Use `complexType` with `sequence` for grouped fields:
 </xsd:element>
 ```
 
-## 3.8 Complete Schema Example
+## 5.8 Complete Schema Example
 
 A production-ready schema with all field types, annotations, and required base type definitions:
 
@@ -618,7 +632,7 @@ A production-ready schema with all field types, annotations, and required base t
 </xsd:schema>
 ```
 
-## 3.9 Field Type Reference
+## 5.9 Field Type Reference
 
 | KMC Type | XSD Pattern | Example Value | KMC Single Control | KMC Multi Control |
 |----------|------------|---------------|--------------------|--------------------|
@@ -629,11 +643,11 @@ A production-ready schema with all field types, annotations, and required base t
 | Nested | `complexType` + `sequence` | (sub-elements) | DynamicSectionControl | — |
 
 
-# 4. Metadata Instances (CRUD)
+# 6. Metadata Instances (CRUD)
 
 A `KalturaMetadata` instance holds the actual XML data conforming to a metadata profile's XSD schema, attached to a specific object. Each object can have at most one metadata instance per profile.
 
-## 4.1 KalturaMetadata Object
+## 6.1 KalturaMetadata Object
 
 | Field | Type | Description |
 |-------|------|-------------|
@@ -650,7 +664,7 @@ A `KalturaMetadata` instance holds the actual XML data conforming to a metadata 
 | `updatedAt` | integer | Unix timestamp (read-only) |
 | `objectType` | string | Always `"KalturaMetadata"` (read-only) |
 
-## 4.2 Metadata Status Values
+## 6.2 Metadata Status Values
 
 | Value | Name | Description |
 |-------|------|-------------|
@@ -658,7 +672,7 @@ A `KalturaMetadata` instance holds the actual XML data conforming to a metadata 
 | 2 | INVALID | Metadata XML failed validation (after XSD change) |
 | 3 | DELETED | Soft-deleted |
 
-## 4.3 Add Metadata (Inline XML)
+## 6.3 Add Metadata (Inline XML)
 
 ```
 POST /service/metadata_metadata/action/add
@@ -706,7 +720,7 @@ Each object can have at most one metadata instance per profile. Adding a duplica
 
 If the profile has an XSLT attached, the server transforms the XML before validation and storage.
 
-## 4.4 Add from File
+## 6.4 Add from File
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/addFromFile" \
@@ -727,7 +741,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/addFromFile"
 
 Same as `add`, but the XML is uploaded as a file. XML field order must match the XSD sequence.
 
-## 4.5 Add from URL
+## 6.5 Add from URL
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/addFromUrl" \
@@ -748,7 +762,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/addFromUrl" 
 
 The server fetches the XML from the provided URL, validates against the profile's XSD, and stores it. The same one-per-profile constraint applies.
 
-## 4.6 Get Metadata
+## 6.6 Get Metadata
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/get" \
@@ -782,7 +796,7 @@ Returns the full `KalturaMetadata` object including the XML content. Returns `ME
 }
 ```
 
-## 4.7 List Metadata
+## 6.7 List Metadata
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/list" \
@@ -841,7 +855,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/list" \
 }
 ```
 
-## 4.8 Update Metadata
+## 6.8 Update Metadata
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/update" \
@@ -871,7 +885,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/update" \
 
 **Response:** Full updated `KalturaMetadata` object with incremented `version`.
 
-## 4.9 Update from File
+## 6.9 Update from File
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/updateFromFile" \
@@ -888,7 +902,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/updateFromFi
 
 Same as `update`, but the XML is uploaded as a file. XML field order must match the XSD sequence.
 
-## 4.10 Update via XSLT
+## 6.10 Update via XSLT
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/updateFromXSL" \
@@ -903,9 +917,9 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/updateFromXS
 | `id` | integer | Yes | Metadata instance ID to transform |
 | `xslFile` | file | Yes | XSLT stylesheet file (multipart form field) |
 
-Applies a one-time XSLT transformation to the existing metadata XML. The server reads the current XML, transforms it using the provided XSL file, validates the result against the profile XSD, and saves. Uses locking (`kLock::runLocked`) for concurrency safety. This is different from the profile-level XSLT (section 5) which auto-applies on every add/update.
+Applies a one-time XSLT transformation to the existing metadata XML. The server reads the current XML, transforms it using the provided XSL file, validates the result against the profile XSD, and saves. Uses locking (`kLock::runLocked`) for concurrency safety. This is different from the profile-level XSLT (section 7) which auto-applies on every add/update.
 
-## 4.11 Serve (Raw XML)
+## 6.11 Serve (Raw XML)
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/serve" \
@@ -920,7 +934,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/serve" \
 
 Returns the raw XML content of the metadata instance. Useful for programmatic XML processing without the surrounding `KalturaMetadata` object fields.
 
-## 4.12 Delete Metadata
+## 6.12 Delete Metadata
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/delete" \
@@ -936,11 +950,11 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/delete" \
 Deletes the metadata instance. Does not affect the metadata profile or the object it was attached to.
 
 
-# 5. XSLT Transformation Pipeline
+# 7. XSLT Transformation Pipeline
 
 Kaltura supports two XSLT mechanisms for transforming metadata XML automatically.
 
-## 5.1 Profile-Level XSLT (Auto-Applied)
+## 7.1 Profile-Level XSLT (Auto-Applied)
 
 Attach an XSLT to a profile so it auto-transforms every `metadata.add` and `metadata.update`:
 
@@ -978,18 +992,18 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadataProfile/action/updat
 </xsl:stylesheet>
 ```
 
-## 5.2 One-Time XSLT Update
+## 7.2 One-Time XSLT Update
 
-Transform existing metadata XML using a one-time XSLT via `metadata.updateFromXSL` (see section 4.10). The server reads the current XML, applies the XSLT, validates, and saves. Uses locking for concurrency safety.
+Transform existing metadata XML using a one-time XSLT via `metadata.updateFromXSL` (see section 6.10). The server reads the current XML, applies the XSLT, validates, and saves. Uses locking for concurrency safety.
 
-## 5.3 Scheduled Task XSLT
+## 7.3 Scheduled Task XSLT
 
 Automated XSLT transforms via `KalturaExecuteMetadataXsltObjectTask` scheduled tasks. Enables periodic normalization, field migration, and computed field updates across all metadata instances matching a filter.
 
 
-# 6. Metadata on Different Object Types
+# 8. Metadata on Different Object Types
 
-## 6.1 Entry Metadata (objectType=1)
+## 8.1 Entry Metadata (objectType=1)
 
 The most common type. Attach custom fields to media entries for classification, workflow tracking, and searchability via eSearch.
 
@@ -1003,7 +1017,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/add" \
   --data-urlencode 'xmlData=<metadata><Department>Engineering</Department></metadata>'
 ```
 
-## 6.2 Category Metadata (objectType=2)
+## 8.2 Category Metadata (objectType=2)
 
 Attach structured data to categories for category-based filtering, routing rules, and MediaSpace category pages.
 
@@ -1017,22 +1031,22 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/add" \
   --data-urlencode 'xmlData=<metadata><Region>EMEA</Region></metadata>'
 ```
 
-## 6.3 User Metadata (objectType=3)
+## 8.3 User Metadata (objectType=3)
 
 Attach structured data to user records for user profile enrichment, department tracking, or role-based content routing.
 
-## 6.4 Partner Metadata (objectType=4)
+## 8.4 Partner Metadata (objectType=4)
 
 Account-wide configuration stored as metadata on the partner object. Use for global settings like compliance flags or license information.
 
-## 6.5 User-Entry Metadata (objectType=6)
+## 8.5 User-Entry Metadata (objectType=6)
 
 Per-user-per-entry data such as quiz answers, personal bookmarks, or watch progress. The `objectId` is a user-entry ID, not an entry ID.
 
 
-# 7. Search Integration
+# 9. Search Integration
 
-## 7.1 Search Metadata via eSearch
+## 9.1 Search Metadata via eSearch
 
 Use `KalturaESearchEntryMetadataItem` to search entries by metadata field values:
 
@@ -1068,18 +1082,18 @@ Target a specific field using the `xpath` parameter:
 
 **Search item types (`itemType`):** `1` = EXACT_MATCH, `2` = PARTIAL, `3` = STARTS_WITH
 
-## 7.2 Searchable Fields
+## 9.2 Searchable Fields
 
 Only fields with `<searchable>true</searchable>` in their `<appinfo>` annotation are indexed in eSearch. Non-searchable fields are stored but cannot be queried.
 
 **Indexing limit:** Elasticsearch limits each metadata profile to 4 searchable Date fields and 4 searchable Integer fields. Additional Date/Integer fields beyond this limit are stored but silently not indexed in eSearch. Use text fields for non-filterable dates and numbers.
 
-## 7.3 Cross-Field Search
+## 9.3 Cross-Field Search
 
 Combine metadata search with entry fields and caption text in a single eSearch query. See [eSearch API](KALTURA_ESEARCH_API.md) for multi-item operator syntax.
 
 
-# 8. Metadata in Distribution (MRSS)
+# 10. Metadata in Distribution (MRSS)
 
 When entries with custom metadata are distributed via MRSS feeds, the `kMetadataMrssManager` decorates each item with `<customData>` elements:
 
@@ -1098,9 +1112,9 @@ When entries with custom metadata are distributed via MRSS feeds, the `kMetadata
 The `metadataVersion` and `metadataProfileVersion` attributes track versions for incremental distribution updates.
 
 
-# 9. Common Integration Patterns
+# 11. Common Integration Patterns
 
-## 9.1 Upsert Pattern
+## 11.1 Upsert Pattern
 
 Check if metadata exists for an object, then add or update accordingly:
 
@@ -1131,7 +1145,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/update" \
   --data-urlencode 'xmlData=<metadata><Department>Marketing</Department></metadata>'
 ```
 
-## 9.2 Metadata-Driven Automation
+## 11.2 Metadata-Driven Automation
 
 Use a metadata field to trigger automated workflows via webhooks:
 
@@ -1142,7 +1156,7 @@ Use a metadata field to trigger automated workflows via webhooks:
 
 See [Webhooks API](KALTURA_WEBHOOKS_API.md) for event notification configuration.
 
-## 9.3 Bulk Metadata Retrieval
+## 11.3 Bulk Metadata Retrieval
 
 Fetch metadata for multiple entries in one call using `objectIdIn`:
 
@@ -1157,7 +1171,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/list" \
   -d "pager[pageSize]=500"
 ```
 
-## 9.4 Bulk Upload with Metadata
+## 11.4 Bulk Upload with Metadata
 
 When using Kaltura's bulk upload system, metadata is passed in `<customDataItems>` XML:
 
@@ -1174,7 +1188,7 @@ When using Kaltura's bulk upload system, metadata is passed in `<customDataItems
 
 The `metadataProfile` attribute accepts the `systemName` (not just numeric ID). When updating via bulk XML, ALL existing fields must be included — omitted fields are cleared.
 
-## 9.5 Schema Lookup by systemName
+## 11.5 Schema Lookup by systemName
 
 Use `systemNameEqual` filter for stable profile references in code:
 
@@ -1186,47 +1200,47 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadataProfile/action/list"
   -d "filter[systemNameEqual]=content_classification"
 ```
 
-## 9.6 Entry Cloning Behavior
+## 11.6 Entry Cloning Behavior
 
 When cloning an entry, metadata is conditionally copied. File-sync data is linked (not copied). In partner-copy scenarios, profile IDs are remapped if the profile was also copied.
 
-## 9.7 Cascade Delete
+## 11.7 Cascade Delete
 
 Deleting an entry, category, user, or partner cascades to delete all attached metadata instances. Deleting a metadata profile cascades to delete all metadata instances for that profile.
 
 
-# 10. Business Use Cases
+# 12. Business Use Cases
 
-## 10.1 Content Classification & Taxonomy
+## 12.1 Content Classification & Taxonomy
 
 Define Department, ContentType, Region, and BusinessUnit as enum fields. Use eSearch to filter entries by department. MediaSpace uses these fields for browsing and category pages. Automation Manager routes content based on classification values.
 
-## 10.2 Approval & Review Workflows
+## 12.2 Approval & Review Workflows
 
 Create an `ApprovalStatus` enum field (Draft, InReview, Approved, Rejected) with `ReviewedBy` (textType) and `ReviewDate` (dateType). Configure webhooks to fire on metadata data changes. Automation Manager rules publish entries when status changes to "Approved" and unpublish when "Rejected".
 
-## 10.3 Content Lifecycle Management
+## 12.3 Content Lifecycle Management
 
 Use `ExpirationDate` (dateType) and `RetentionPolicy` (listType) fields. Automation Manager scheduled tasks check expiration dates and auto-archive or delete expired content. eSearch date range queries power lifecycle dashboards.
 
-## 10.4 Rights Management & Licensing
+## 12.4 Rights Management & Licensing
 
 Track `LicenseType`, `LicenseExpiry` (dateType), `TerritoryRestriction` (multi-value listType), and `TalentRelease` (textType). Distribution profiles validate license fields before syndication. Access Control Profiles restrict playback based on territory metadata.
 
-## 10.5 Education: Course Association
+## 12.5 Education: Course Association
 
 Fields like `CourseCode`, `Semester` (enum), `Instructor` (textType), and `ModuleNumber` (textType). LMS plugins (Moodle, Canvas) filter content by course code. Automation Manager semester cleanup rules archive content when semester ends.
 
-## 10.6 Healthcare: HIPAA Compliance
+## 12.6 Healthcare: HIPAA Compliance
 
 Track `ContainsPHI` (listType yes/no), `DataClassification` (enum: Public, Internal, Restricted, Confidential), `ConsentObtained` (listType), and `RetentionPeriodYears` (textType). Access Control Profiles enforce classification-based restrictions. Audit trail via metadata version history.
 
-## 10.7 Regulatory Compliance & Legal Hold
+## 12.7 Regulatory Compliance & Legal Hold
 
 A `LegalHold` (listType yes/no) field prevents automated deletion. `ComplianceStatus` (enum) tracks review state. `RetentionEndDate` (dateType) triggers webhook alerts before expiration. Automation Manager rules enforce hold by blocking delete operations.
 
 
-# 11. Error Handling
+# 13. Error Handling
 
 | Error Code | Meaning |
 |------------|---------|
@@ -1250,7 +1264,7 @@ A `LegalHold` (listType yes/no) field prevents automated deletion. `ComplianceSt
 **Retry strategy:** For transient errors (HTTP 5xx, timeouts), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (`METADATA_ALREADY_EXISTS`, `INVALID_METADATA_DATA`, `INVALID_METADATA_VERSION`), fix the request before retrying. For `INVALID_METADATA_VERSION`, re-read the latest metadata, merge changes, and retry with the current version.
 
 
-# 12. Best Practices
+# 14. Best Practices
 
 - **Use systemName for stable profile references.** Set `systemName` on metadata profiles for machine lookups. Display names may change; system names provide a reliable key for code.
 - **Include all 4 base type definitions in every XSD.** Without `textType`, `dateType`, `objectType`, and `listType` definitions, the KMC cannot determine field types for form rendering.
@@ -1268,7 +1282,7 @@ A `LegalHold` (listType yes/no) field prevents automated deletion. `ComplianceSt
 - **`viewsData` controls KMC editor rendering.** The `viewsData` parameter on a metadata profile defines how fields render in the KMC metadata editor (field order, grouping, visibility). When omitted, a default UI is auto-generated from the XSD.
 
 
-# 13. Related Guides
+# 15. Related Guides
 
 - **[eSearch API](KALTURA_ESEARCH_API.md)** — Search metadata with `KalturaESearchEntryMetadataItem`, cross-field queries
 - **[Webhooks API](KALTURA_WEBHOOKS_API.md)** — Metadata change events: `OBJECT_ADDED`, `OBJECT_DATA_CHANGED`, `OBJECT_DELETED`, `OBJECT_UPDATED`

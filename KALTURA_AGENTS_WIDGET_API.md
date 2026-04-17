@@ -15,7 +15,14 @@ The Agents Widget is a Unisphere component that provides a UI for managing autom
 - **Integrated admin panels** — Add agent management alongside other Kaltura widgets (Media Manager, Content Lab) in a unified application  
 
 
-# 2. Architecture
+# 2. Prerequisites
+
+- **Kaltura Session (KS)** — The KS type varies by component: an ADMIN KS (type=2) is needed for agent creation and management; a USER KS (type=0) is sufficient for read-only views. See the [Session Guide](KALTURA_SESSION_GUIDE.md) for KS generation details.  
+- **Agents feature enabled** — The account must have the Agents Manager capability enabled. Contact your Kaltura account manager to provision this feature.  
+- **REACH services provisioned** — Available agent actions depend on which REACH enrichment services are enabled on your account (captions, translation, summarization, moderation, etc.).  
+
+
+# 3. Architecture
 
 The Agents Widget has one runtime:
 
@@ -31,7 +38,7 @@ The widget communicates with the Agents Manager backend service (`agentsServiceU
 - **Action definitions** — The catalog of available action types for your account, retrieved dynamically from the Agents Manager API  
 
 
-# 3. Embedding
+# 4. Embedding
 
 Load the Unisphere loader and configure the agents manager runtime:
 
@@ -76,7 +83,7 @@ Load the Unisphere loader and configure the agents manager runtime:
 ```
 
 
-# 4. Runtime Settings
+# 5. Runtime Settings
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
@@ -91,7 +98,7 @@ Load the Unisphere loader and configure the agents manager runtime:
 When `categoryId` is set, the widget only shows agents configured for that category and new agents default to that category scope.
 
 
-# 5. Runtime API
+# 6. Runtime API
 
 After the workspace loads, get the runtime instance:
 
@@ -149,7 +156,7 @@ workspace.kill();
 ```
 
 
-# 6. KS Requirements
+# 7. KS Requirements
 
 The Agents Widget accesses the Agents Manager API and Kaltura entry services. Generate the KS server-side with admin privileges:
 
@@ -168,7 +175,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/session/action/start" \
 The account must have the Agents Manager capability enabled. Available actions depend on which REACH enrichment services are provisioned on your account.
 
 
-# 7. Error Handling
+# 8. Error Handling
 
 - **Blank drawer** — If the drawer renders empty, verify the KS is valid, the `pid` matches your account, and the account has the Agents Manager capability enabled. Check the browser console for API errors.  
 - **No action types available** — The available actions depend on which REACH enrichment services are enabled on your account. Contact your Kaltura account manager to provision REACH services.  
@@ -176,7 +183,7 @@ The account must have the Agents Manager capability enabled. Available actions d
 - **KS expiry** — Update the workspace session reactively: `workspace.session.setData(prev => ({ ...prev, ks: "new-ks" }))`.  
 
 
-# 8. Best Practices
+# 9. Best Practices
 
 - **Generate the KS server-side.** The KS is visible in client-side code — generate it on your backend with admin privileges.  
 - **Scope with `categoryId`.** When embedding the widget in a category-specific context, set `categoryId` to limit the agent management UI to that category.  
@@ -185,7 +192,7 @@ The account must have the Agents Manager capability enabled. Available actions d
 - **Use HTTPS.** The Unisphere loader and all widget bundles require HTTPS.  
 
 
-# 9. Multi-Region
+# 10. Multi-Region
 
 | Region | Unisphere URL | Agents Manager URL |
 |--------|--------------|-------------------|
@@ -196,7 +203,7 @@ The account must have the Agents Manager capability enabled. Available actions d
 Set both `serverUrl` and `agentsServiceURI` to match your Kaltura account region.
 
 
-# 10. Related Guides
+# 11. Related Guides
 
 - **[Agents Manager API](KALTURA_AGENTS_MANAGER_API.md)** — Server-side REST API for creating, managing, and executing agents programmatically  
 - **[Unisphere Framework](KALTURA_UNISPHERE_FRAMEWORK_API.md)** — The micro-frontend framework that powers this widget: loader, workspace lifecycle, services  

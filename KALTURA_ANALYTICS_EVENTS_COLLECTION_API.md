@@ -15,7 +15,23 @@ Report playback and engagement events back to Kaltura's analytics system. The st
 | Player Analytics Plugin | Built-in event reporting in Kaltura Player v7 (reference implementation) |
 
 
-# 1. Authentication
+# 1. When to Use This Guide
+
+- **Custom player developers** reporting playback events from non-Kaltura players to feed Kaltura analytics  
+- **Application teams** tracking viewer behavior, page interactions, and CTA clicks alongside video events  
+- **BI integration projects** instrumenting server-side or client-side event collection for external analytics pipelines  
+- **Mobile and OTT app builders** implementing analytics parity with the Kaltura Player v7 built-in plugin  
+- **Marketing and product teams** segmenting analytics by application, user cohort, or custom context fields
+
+
+# 2. Prerequisites
+
+- **KS type:** USER KS (type=0) or ADMIN KS (type=2) with a `userId` set for per-user attribution  
+- **Plugins:** No additional plugins required; the Kaltura Player v7 handles event collection automatically  
+- **Session guide:** Generate a KS using `session.start` or `appToken.startSession` (see [Session Guide](KALTURA_SESSION_GUIDE.md))
+
+
+# 3. Authentication
 
 Event collection endpoints accept a KS for user attribution. Include `userId` in the KS to tie events to a specific user. Use the `appId` KS privilege for per-application segmentation.
 
@@ -48,11 +64,11 @@ curl -X POST "$KALTURA_SERVICE_URL/service/session/action/start" \
 The `appId:<name>` privilege tags all analytics from this session under a named application, enabling per-application analytics segmentation.
 
 
-# 2. Player Event Types
+# 4. Player Event Types
 
 The Kaltura Player v7 fires approximately 45 event types that feed the analytics system. Custom player implementations should report these events to achieve parity with the built-in player.
 
-## 2.1 Core Playback Events
+## 4.1 Core Playback Events
 
 | Event Type | Description | When to Fire |
 |------------|-------------|--------------|
@@ -65,7 +81,7 @@ The Kaltura Player v7 fires approximately 45 event types that feed the analytics
 | `SEEK` | User seeked | Seek operation completed |
 | `REPLAY` | User replayed | Playback restarted from beginning |
 
-## 2.2 Progress Events (Quartiles)
+## 4.2 Progress Events (Quartiles)
 
 | Event Type | Description | When to Fire |
 |------------|-------------|--------------|
@@ -76,7 +92,7 @@ The Kaltura Player v7 fires approximately 45 event types that feed the analytics
 
 Fire quartile events only once per playback session. If the user seeks past a quartile point, fire the event when the playhead naturally reaches that position during forward playback.
 
-## 2.3 Quality Events
+## 4.3 Quality Events
 
 | Event Type | Description | When to Fire |
 |------------|-------------|--------------|
@@ -86,7 +102,7 @@ Fire quartile events only once per playback session. If the user seeks past a qu
 | `SOURCE_SELECTED` | Source chosen | Adaptive bitrate source selected |
 | `FLAVOR_SWITCH` | Quality changed | Bitrate/quality level switched |
 
-## 2.4 Engagement Events
+## 4.4 Engagement Events
 
 | Event Type | Description | When to Fire |
 |------------|-------------|--------------|
@@ -96,7 +112,7 @@ Fire quartile events only once per playback session. If the user seeks past a qu
 | `DOWNLOAD_CLICKED` | Download clicked | User initiated download |
 
 
-# 3. stats.collect
+# 5. stats.collect
 
 Server-side event collection via the standard API v3 endpoint. Use this for backend systems, kiosks, set-top boxes, digital signage, and any non-browser playback environment.
 
@@ -112,7 +128,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/stats/action/collect" \
   -d "event[eventTimestamp]=$(date +%s)"
 ```
 
-## 3.1 Event Type IDs
+## 5.1 Event Type IDs
 
 | ID | Event | Description |
 |----|-------|-------------|
@@ -157,7 +173,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/stats/action/collect" \
 | 39 | POSTROLL_50 | Post-roll ad 50% |
 | 40 | POSTROLL_75 | Post-roll ad 75% |
 
-## 3.2 Required Fields
+## 5.2 Required Fields
 
 | Field | Type | Description |
 |-------|------|-------------|
@@ -167,7 +183,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/stats/action/collect" \
 | `event[sessionId]` | string | Analytics session identifier (unique per playback session) |
 | `event[eventTimestamp]` | int | Unix timestamp in seconds |
 
-## 3.3 Optional Fields
+## 5.3 Optional Fields
 
 | Field | Type | Description |
 |-------|------|-------------|
@@ -178,7 +194,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/stats/action/collect" \
 | `event[duration]` | int | Total content duration in seconds |
 | `event[seek]` | boolean | Whether user is seeking |
 
-## 3.4 Reporting a Complete Playback Session
+## 5.4 Reporting a Complete Playback Session
 
 Fire events in lifecycle order for a complete session:
 
@@ -234,7 +250,7 @@ done
 ```
 
 
-# 4. analytics.trackEvent
+# 6. analytics.trackEvent
 
 Application-level event tracking for page loads, button clicks, and custom interactions. Uses a separate analytics server endpoint.
 
@@ -257,14 +273,14 @@ curl -X POST "$KALTURA_ANALYTICS_URL/api_v3/index.php?service=analytics&action=t
   -d "kalturaApplication=my-portal"
 ```
 
-## 4.1 Event Types
+## 6.1 Event Types
 
 | Type ID | Name | Description |
 |---------|------|-------------|
 | 10002 | ButtonClicked | User clicked a UI element |
 | 10003 | PageLoad | Page or view was loaded |
 
-## 4.2 Additional Fields
+## 6.2 Additional Fields
 
 | Field | Description | Example |
 |-------|-------------|---------|
@@ -274,7 +290,7 @@ curl -X POST "$KALTURA_ANALYTICS_URL/api_v3/index.php?service=analytics&action=t
 | `buttonType` | Button category | `"cta"`, `"download"`, `"share"` |
 | `buttonName` | Specific button name | `"register-now"`, `"download-slides"` |
 
-## 4.3 Tracking Page Loads and CTA Clicks
+## 6.3 Tracking Page Loads and CTA Clicks
 
 ```bash
 # Track portal page load
@@ -301,9 +317,9 @@ curl -X POST "$KALTURA_ANALYTICS_URL/api_v3/index.php?service=analytics&action=t
 ```
 
 
-# 5. Event Reporting Protocol
+# 7. Event Reporting Protocol
 
-## 5.1 Session Management
+## 7.1 Session Management
 
 Each playback session requires a unique analytics session ID. The analytics session is separate from the Kaltura Session (KS):
 
@@ -312,7 +328,7 @@ Each playback session requires a unique analytics session ID. The analytics sess
 
 Generate a unique analytics session ID per player instance / playback session. Use a UUID or timestamp-based identifier.
 
-## 5.2 Event Ordering
+## 7.2 Event Ordering
 
 Fire events in the correct lifecycle order:
 
@@ -323,7 +339,7 @@ Fire events in the correct lifecycle order:
 5. `PAUSE`, `SEEK`, `BUFFER_START`/`BUFFER_END` (during playback as they occur)
 6. `REPLAY` (if user replays)
 
-## 5.3 Quartile Calculation
+## 7.3 Quartile Calculation
 
 Calculate quartile events based on the actual content duration:
 
@@ -331,25 +347,25 @@ Calculate quartile events based on the actual content duration:
 - Base quartile positions on total content duration (excluding ads)
 - If the user seeks past a quartile position, do **not** retroactively fire the skipped quartile — fire it only during natural forward playback
 
-## 5.4 Batching and Timing
+## 7.4 Batching and Timing
 
 - Fire events as they occur rather than batching — real-time analytics depend on timely delivery
 - Include accurate `eventTimestamp` values (Unix seconds)
 - If the client goes offline temporarily, queue events and send them in order when connectivity resumes
 
 
-# 6. Server-Side Collection
+# 8. Server-Side Collection
 
 For backend systems that play or process video without a browser.
 
-## 6.1 Use Cases
+## 8.1 Use Cases
 
 - **Kiosks and digital signage** — Display terminals playing video content
 - **Set-top boxes** — OTT/IPTV devices
 - **Batch processing** — Server-side video processing that should count in analytics
 - **Mobile backends** — Server-side proxy for mobile app analytics
 
-## 6.2 Pattern
+## 8.2 Pattern
 
 ```bash
 # 1. Generate a KS with userId for per-user attribution
@@ -378,9 +394,9 @@ curl -s -X POST "$KALTURA_SERVICE_URL/service/stats/action/collect" \
 Include device context in the `referrer` field for analytics segmentation.
 
 
-# 7. Custom Event Context
+# 9. Custom Event Context
 
-## 7.1 Per-Application Segmentation via appId
+## 9.1 Per-Application Segmentation via appId
 
 Use the `appId` KS privilege to segment analytics by application:
 
@@ -408,7 +424,7 @@ curl -s -X POST "$KALTURA_SERVICE_URL/service/stats/action/collect" \
 
 Pull per-application analytics via `report.getTable` with the same `appId`-scoped KS (see [Analytics Reports](KALTURA_ANALYTICS_REPORTS_API.md)).
 
-## 7.2 Event Context Fields
+## 9.2 Event Context Fields
 
 | Field | Source | Description |
 |-------|--------|-------------|
@@ -419,17 +435,17 @@ Pull per-application analytics via `report.getTable` with the same `appId`-scope
 | `uiconfId` | Event field | Player configuration ID |
 
 
-# 8. Verification
+# 10. Verification
 
 Events have an analytics propagation delay before they appear in reports.
 
-## 8.1 Propagation Delay
+## 10.1 Propagation Delay
 
 - **stats.collect** events: 10-30 minutes before appearing in `report.getTable`
 - **analytics.trackEvent** events: 10-30 minutes for standard reports
 - **Realtime report types** (`usersOverviewRealtime`, etc.): 20-90 seconds for live data
 
-## 8.2 Verification Pattern
+## 10.2 Verification Pattern
 
 ```bash
 # 1. Send events
@@ -462,9 +478,9 @@ curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getTable" \
 ```
 
 
-# 9. Error Handling
+# 11. Error Handling
 
-## 9.1 stats.collect Errors
+## 11.1 stats.collect Errors
 
 `stats.collect` is designed to be fire-and-forget. It returns a minimal response:
 
@@ -473,7 +489,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getTable" \
 | Empty/null | Event accepted (standard behavior) |
 | KalturaAPIException | Invalid KS, missing required fields |
 
-## 9.2 analytics.trackEvent Errors
+## 11.2 analytics.trackEvent Errors
 
 | HTTP Status | Cause | Resolution |
 |-------------|-------|------------|
@@ -482,7 +498,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getTable" \
 | 401 | Invalid or expired KS | Generate a new KS |
 | 404 | Wrong analytics server URL | Verify `$KALTURA_ANALYTICS_URL` |
 
-## 9.3 Retry Logic
+## 11.3 Retry Logic
 
 For transient failures (HTTP 500, network timeout):
 - Retry up to 3 times with exponential backoff (1s, 2s, 4s)
@@ -491,9 +507,9 @@ For transient failures (HTTP 500, network timeout):
 - Do not retry 400/401 errors (fix the request instead)
 
 
-# 10. Common Integration Patterns
+# 12. Common Integration Patterns
 
-## 10.1 Custom Player Analytics Integration
+## 12.1 Custom Player Analytics Integration
 
 Build a custom player that reports events back to Kaltura analytics.
 
@@ -529,7 +545,7 @@ for QUARTILE in 4 5 6 7; do
 done
 ```
 
-## 10.2 Full Funnel Tracking (Page + Video)
+## 12.2 Full Funnel Tracking (Page + Video)
 
 Track the full user journey from portal visit through video playback.
 
@@ -567,7 +583,7 @@ curl -s -X POST "$KALTURA_SERVICE_URL/service/stats/action/collect" \
   -d "event[eventTimestamp]=$(date +%s)"
 ```
 
-## 10.3 Server-Side Playback Tracking
+## 12.3 Server-Side Playback Tracking
 
 Backend systems report plays for unified analytics across all channels.
 
@@ -596,7 +612,7 @@ for EVENT_TYPE in 1 2 3 4 5 6 7; do
 done
 ```
 
-## 10.4 Per-Application Segmentation
+## 12.4 Per-Application Segmentation
 
 Separate analytics for multiple applications on the same Kaltura account.
 
@@ -625,7 +641,7 @@ KS_B=$(curl -s -X POST "$KALTURA_SERVICE_URL/service/session/action/start" \
 ```
 
 
-# 11. Best Practices
+# 13. Best Practices
 
 **Event ordering matters.** Fire events in lifecycle order (WIDGET_LOADED → MEDIA_LOADED → PLAY → quartiles). Out-of-order events may cause incorrect analytics calculations (e.g., a PLAY event without a preceding WIDGET_LOADED).
 
@@ -642,7 +658,7 @@ KS_B=$(curl -s -X POST "$KALTURA_SERVICE_URL/service/session/action/start" \
 **Gamification integration.** `viewPeriod` events (derived from playback events) feed the Gamification rules engine. Custom player events reported via `stats.collect` trigger leaderboard scoring, badge progress, and certificate tracking. See [Gamification Guide](KALTURA_GAMIFICATION_API.md).
 
 
-# 12. Related Guides
+# 14. Related Guides
 
 - **[Player Embed](KALTURA_PLAYER_EMBED_GUIDE.md)** — Reference implementation — Player v7 fires ~45 event types automatically
 - **[Analytics Reports](KALTURA_ANALYTICS_REPORTS_API.md)** — Pull the data that events collection feeds into
@@ -650,4 +666,4 @@ KS_B=$(curl -s -X POST "$KALTURA_SERVICE_URL/service/session/action/start" \
 - **[AppTokens](KALTURA_APPTOKENS_API.md)** — Scoped tokens for client-side event reporting
 - **[Gamification](KALTURA_GAMIFICATION_API.md)** — `viewPeriod` events from playback feed leaderboard and badge rules
 - **[Events Platform](KALTURA_EVENTS_PLATFORM_API.md)** — Virtual event context for scoping events
-- **[Analytics Reports: Cross-Guide Workflows](KALTURA_ANALYTICS_REPORTS_API.md)** — Full Event Lifecycle (section 13.15), Content Automation Pipeline (13.16), CRM Integration (13.17) — end-to-end orchestration patterns spanning all three analytics/gamification guides
+- **[Analytics Reports: Cross-Guide Workflows](KALTURA_ANALYTICS_REPORTS_API.md)** — Full Event Lifecycle (section 15.15), Content Automation Pipeline (15.16), CRM Integration (15.17) — end-to-end orchestration patterns spanning all three analytics/gamification guides

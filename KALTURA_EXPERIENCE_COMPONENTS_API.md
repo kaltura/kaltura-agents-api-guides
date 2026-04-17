@@ -7,7 +7,24 @@ Experience Components are front-end embeddable apps and widgets that simplify bu
 **Format:** JavaScript embed, iframe embed, or SDK  
 
 
-# 1. Components
+# 1. When to Use
+
+- **Embedding video experiences** — Add video galleries, media libraries, playback, recording, and AI-powered widgets to your website or portal without building custom video UIs.  
+- **No-code video UIs** — Provide end users with ready-made interfaces for browsing media, editing captions, generating AI summaries, and managing content-processing agents, all embeddable via script tags or iframes.  
+- **Portal and LMS integration** — Embed Kaltura components (Player, Media Manager, Content Lab) into learning management systems, intranets, and customer-facing portals for seamless video workflows.  
+- **AI-powered content tools** — Give users access to Genie (conversational video search), Content Lab (AI content repurposing), VOD Avatar Studio (scripted avatar videos), and Agents (automated processing) through embeddable widgets.  
+- **Custom application composition** — Combine multiple Kaltura components in a single page to build tailored video-centric applications (e.g., a media page with Player, Transcript, and Genie side-by-side).
+
+
+# 2. Prerequisites
+
+- **KS (Kaltura Session):** Each component requires a KS scoped to its needs. USER KS (type=0) for playback and read-only components; ADMIN KS (type=2) for analytics dashboards. Generate KS tokens server-side and pass them to client-side components.  
+- **Component-specific privileges:** Express Recorder requires `editadmintags:*`; Genie requires `setrole:PLAYBACK_BASE_ROLE`; Embeddable Analytics requires an ADMIN KS. See individual component guides for exact privilege requirements.  
+- **HTTPS hosting:** All component embed URLs and host pages must use HTTPS for WebRTC, iframe security, and ES module loading.  
+- **Session management:** See [Session Guide](KALTURA_SESSION_GUIDE.md) for KS generation and privilege scoping.
+
+
+# 3. Components
 
 | Component | Embed Format | Auth | Standalone Guide |
 |-----------|-------------|------|-----------------|
@@ -26,7 +43,7 @@ Experience Components are front-end embeddable apps and widgets that simplify bu
 Each component creates, modifies, or interacts with Kaltura content and services — Express Recorder creates new media entries, Captions Editor modifies caption assets, the Player delivers content, and the Avatar drives AI conversations.
 
 
-# 2. Component Summaries
+# 4. Component Summaries
 
 **Player (PlayKit)** — The most widely used component. Adaptive video/audio playback with 30+ plugins for interactivity, accessibility, and analytics. Supports iframe and JavaScript embed modes with a rich event API and plugin ecosystem. See [Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md).
 
@@ -51,7 +68,7 @@ Each component creates, modifies, or interacts with Kaltura content and services
 **Embeddable Analytics** — Analytics visualization dashboards embedded via iframe with a `postMessage` protocol. Provides the same views as the KMC — engagement, technology, geo, contributors, live stream health, and entity drill-downs. See [Embeddable Analytics Guide](KALTURA_ANALYTICS_EMBED_API.md).
 
 
-# 3. Shared Best Practices
+# 5. Shared Best Practices
 
 - **Scope the KS for each component.** Express Recorder needs `editadmintags:*`. Captions Editor needs edit permissions for caption assets. Genie needs `setrole:PLAYBACK_BASE_ROLE`. Analytics needs ADMIN KS (type=2). Use the minimum privileges required for each component.  
 - **Handle session expiry for long-lived embeds.** Recording, caption editing, and avatar conversations can last longer than a typical KS TTL. Generate a KS with sufficient expiry for the expected session duration, or implement KS renewal in your application. For Embeddable Analytics, send an `updateConfig` message with a fresh KS.  
@@ -60,7 +77,7 @@ Each component creates, modifies, or interacts with Kaltura content and services
 - **Generate client-facing KS tokens server-side.** Components like Genie and the Player expose the KS in client-side code. Generate USER sessions (type=0) with minimal privileges on your backend. Never embed admin secrets in client-side code.  
 
 
-# 4. Error Handling Overview
+# 6. Error Handling Overview
 
 Each standalone guide includes component-specific error handling. Common patterns across all components:
 
@@ -69,7 +86,7 @@ Each standalone guide includes component-specific error handling. Common pattern
 - **Container/iframe not rendered** — Verify CSS selectors match existing DOM elements, iframe `src` URLs are accessible over HTTPS, and container elements have explicit dimensions.  
 
 
-# 5. Related Guides
+# 7. Related Guides
 
 - **[Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md)** — Video/audio playback with 30+ plugins  
 - **[Express Recorder](KALTURA_EXPRESS_RECORDER_API.md)** — Browser-based WebRTC recording  

@@ -12,7 +12,25 @@ and overlay ad insertion.
 **Prerequisite:** [Cue Points Hub](KALTURA_CUE_POINTS_API.md) for base cue point concepts and shared CRUD
 
 
-# 1. Ad Types
+# 1. When to Use
+
+- **Video monetization** — Insert pre-roll, mid-roll, and post-roll advertisements into video content to generate ad revenue from your video library.  
+- **Publisher ad management** — Define ad break positions on the video timeline and link them to VAST or VPAID ad feeds served by your ad network.  
+- **Overlay promotions** — Display non-linear banner overlays at specific moments during playback without interrupting the video content.  
+- **Sponsored content integration** — Place sponsor messages at precise points in educational, entertainment, or event recordings.  
+- **Dynamic ad scheduling** — Programmatically manage ad cue points across large content libraries, enabling bulk ad insertion and per-entry ad customization.
+
+
+# 2. Prerequisites
+
+- **KS (Kaltura Session):** Admin KS (type=2) with `disableentitlement` for creating and managing ad cue points.  
+- **Cue Points plugin:** The `cuePoint` and `adCuePoint` server plugins must be enabled on the account.  
+- **Ad server:** A VAST or VPAID-compliant ad server providing XML ad feeds at accessible URLs.  
+- **Player ad plugin:** To trigger ads during playback, enable the `kalturaCuepoints` and `bumper` plugins in the player configuration.  
+- **Session management:** See [Session Guide](KALTURA_SESSION_GUIDE.md) for KS generation and privilege scoping.
+
+
+# 3. Ad Types
 
 | Value | Name | Description |
 |-------|------|-------------|
@@ -20,7 +38,7 @@ and overlay ad insertion.
 | 2 | OVERLAY | Non-linear ad — displays over video content |
 
 
-# 2. Fields (in addition to base)
+# 4. Fields (in addition to base)
 
 | Field | Type | Description |
 |-------|------|-------------|
@@ -32,7 +50,7 @@ and overlay ad insertion.
 | `duration` | int | Duration in milliseconds |
 
 
-# 3. Protocol Types
+# 5. Protocol Types
 
 | Value | Name | Description |
 |-------|------|-------------|
@@ -42,7 +60,7 @@ and overlay ad insertion.
 | 3 | VPAID | VPAID |
 
 
-# 4. Ad Placement
+# 6. Ad Placement
 
 | Placement | startTime | Description |
 |-----------|-----------|-------------|
@@ -52,7 +70,7 @@ and overlay ad insertion.
 | Overlay | any | Non-linear overlay with `adType=2` and `startTime`/`endTime` defining the visible window |
 
 
-# 5. Create a Mid-Roll Ad
+# 7. Create a Mid-Roll Ad
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/cuepoint_cuepoint/action/add" \
@@ -68,7 +86,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/cuepoint_cuepoint/action/add" \
 ```
 
 
-# 6. Create an Overlay Ad
+# 8. Create an Overlay Ad
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/cuepoint_cuepoint/action/add" \
@@ -87,12 +105,12 @@ curl -X POST "$KALTURA_SERVICE_URL/service/cuepoint_cuepoint/action/add" \
 Overlay ads use `adType=2` with both `startTime` and `endTime` to define the visible window.
 
 
-# 7. Protocol Immutability
+# 9. Protocol Immutability
 
 `protocolType` cannot be changed after creation — attempting to update it returns `PROPERTY_VALIDATION_NOT_UPDATABLE`. Plan the protocol type before creating ad cue points.
 
 
-# 8. Player Ad Plugin Integration
+# 10. Player Ad Plugin Integration
 
 The Player v7 `bumper` plugin handles ad playback based on ad cue points. Configure the player with the `kalturaCuepoints` core plugin to load ad cue point data:
 
@@ -106,12 +124,12 @@ plugins: {
 The bumper plugin reads ad cue points and triggers VAST/VPAID requests at the specified `startTime`.
 
 
-# 9. Searching Ad Cue Points
+# 11. Searching Ad Cue Points
 
 Ad cue point titles are indexed in eSearch via `KalturaESearchCuePointItem` with `fieldName=name`. See [Cue Points Hub — eSearch Integration](KALTURA_CUE_POINTS_API.md) for query examples.
 
 
-# 10. Error Handling
+# 12. Error Handling
 
 | Error | Cause | Fix |
 |-------|-------|-----|
@@ -120,7 +138,7 @@ Ad cue point titles are indexed in eSearch via `KalturaESearchCuePointItem` with
 | `PROPERTY_VALIDATION_NOT_UPDATABLE` | Updating `protocolType` on ad cue point | `protocolType` is immutable after creation |
 
 
-# 11. Best Practices
+# 13. Best Practices
 
 - **Times are in milliseconds.** A cue point at 2 minutes = `startTime=120000`.
 - **Ad `protocolType` is set once.** Plan the protocol type before creating ad cue points — it cannot be changed.
@@ -129,7 +147,7 @@ Ad cue point titles are indexed in eSearch via `KalturaESearchCuePointItem` with
 - **Use VAST 2.0 (protocolType=2)** for the most widely supported ad format.
 
 
-# 12. Related Guides
+# 14. Related Guides
 
 - [Cue Points Hub](KALTURA_CUE_POINTS_API.md) — Base cue point concepts, shared CRUD, eSearch integration, bulk operations
 - [Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md) — Player v7 setup, ad plugin configuration

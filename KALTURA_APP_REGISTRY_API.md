@@ -10,7 +10,22 @@ When you create a virtual event through the Events Platform, an app is automatic
 **Regions:** NVP (default `nvp1`), EU (`irp2`), DE (`frp2`)  
 
 
-# 1. Authentication
+# 1. When to Use
+
+- **Partner application management** — Platform administrators registering and tracking all application instances (KMS sites, Events Platform portals, custom integrations) across the organization  
+- **SSO and domain-based routing** — Developers configuring organization domain bindings so users are automatically directed to the correct application instance based on their email domain  
+- **Developer app lifecycle** — Development teams registering custom application instances, enabling/disabling them across environments, and syncing app metadata with external systems  
+- **Cross-service context linking** — Backend systems resolving virtual event IDs to app GUIDs for use with the User Profile API, Messaging API, and other services that associate data with specific application contexts  
+
+
+# 2. Prerequisites
+
+- An ADMIN KS (type=2) with `ADMIN_BASE` permission for all write operations, or `ANALYTICS_BASE` for read-only list access (see [Session Guide](KALTURA_SESSION_GUIDE.md))  
+- A Kaltura account with App Registry access enabled  
+- For production integrations, use AppTokens for secure KS generation (see [AppTokens API](KALTURA_APPTOKENS_API.md))  
+
+
+# 3. Authentication
 
 All requests require an ADMIN KS (type=2) with `ADMIN_BASE` permission in the `Authorization` header:
 
@@ -28,7 +43,7 @@ export KALTURA_APP_REGISTRY_URL="https://app-registry.nvp1.ovp.kaltura.com/api/v
 ```
 
 
-# 2. App Entity
+# 4. App Entity
 
 Every registered application has this structure:
 
@@ -46,7 +61,7 @@ Every registered application has this structure:
 | `organizationDomain` | object | Optional organization/domain binding |
 | `objectType` | string | Always `"App"` in responses (read-only) |
 
-## 2.1 App Types
+## 4.1 App Types
 
 | Value | Description |
 |-------|-------------|
@@ -63,7 +78,7 @@ Every registered application has this structure:
 | `mr` | Meeting Room |
 | `kalturaServer` | Kaltura Server |
 
-## 2.2 Organization Domain
+## 4.2 Organization Domain
 
 Optional object for binding an app instance to a specific domain and organization:
 
@@ -73,7 +88,7 @@ Optional object for binding an app instance to a specific domain and organizatio
 | `domain` | string | Yes | Domain name (max 255 chars, comma-separated for multiple). Whitespace is automatically stripped. |
 
 
-# 3. Register an App
+# 5. Register an App
 
 ```
 POST /api/v1/app-registry/add
@@ -92,9 +107,9 @@ Authorization: Bearer <KS>
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `appCustomId` | string | Yes | Custom identifier (unique per partner) |
-| `appType` | string | Yes | Application type (see section 2.1) |
+| `appType` | string | Yes | Application type (see section 4.1) |
 | `appCustomName` | string | Yes | Display name |
-| `organizationDomain` | object | No | Domain binding (see section 2.2) |
+| `organizationDomain` | object | No | Domain binding (see section 4.2) |
 
 The `status` is always set to `"enabled"` on creation (cannot be overridden). The `version` starts at `0`. The `partnerId` is extracted from the KS — it cannot be set in the request body.
 
@@ -141,7 +156,7 @@ Save the `id` from the response — this is the `appGuid` used by other services
 | `ORGANIZATION_ID_DOMAIN_AND_APP_TYPE_MUST_BE_UNIQUE` | Domain/org/type combination already exists |
 
 
-# 4. Get an App
+# 6. Get an App
 
 ```
 POST /api/v1/app-registry/get
@@ -186,7 +201,7 @@ curl -X POST "$KALTURA_APP_REGISTRY_URL/app-registry/get" \
 Returns `OBJECT_NOT_FOUND` if the app does not exist or belongs to a different partner.
 
 
-# 5. Update an App
+# 7. Update an App
 
 ```
 POST /api/v1/app-registry/update
@@ -239,7 +254,7 @@ curl -X POST "$KALTURA_APP_REGISTRY_URL/app-registry/update" \
 ```
 
 
-# 6. Delete an App
+# 8. Delete an App
 
 Permanently removes the app registration.
 
@@ -269,11 +284,11 @@ curl -X POST "$KALTURA_APP_REGISTRY_URL/app-registry/delete" \
 ```
 
 
-# 7. Enable / Disable an App
+# 9. Enable / Disable an App
 
 Toggle an app's status without deleting it. Disabled apps remain in the registry but are excluded from `list` results when filtering by `status: "enabled"`.
 
-## 7.1 Enable
+## 9.1 Enable
 
 ```bash
 curl -X POST "$KALTURA_APP_REGISTRY_URL/app-registry/enable" \
@@ -282,7 +297,7 @@ curl -X POST "$KALTURA_APP_REGISTRY_URL/app-registry/enable" \
   -d "{\"id\": \"$APP_GUID\"}"
 ```
 
-## 7.2 Disable
+## 9.2 Disable
 
 ```bash
 curl -X POST "$KALTURA_APP_REGISTRY_URL/app-registry/disable" \
@@ -317,7 +332,7 @@ Both endpoints accept a single parameter:
 The `version` increments only if the status actually changed. Enabling an already-enabled app (or disabling an already-disabled one) returns the current state without incrementing `version`.
 
 
-# 8. List Apps
+# 10. List Apps
 
 ```
 POST /api/v1/app-registry/list
@@ -340,7 +355,7 @@ Authorization: Bearer <KS>
 
 All filter fields are optional. If no filter is provided, all apps for your partner are returned.
 
-## 8.1 Filter Fields
+## 10.1 Filter Fields
 
 | Field | Type | Description |
 |-------|------|-------------|
@@ -356,7 +371,7 @@ All filter fields are optional. If no filter is provided, all apps for your part
 | `updatedAtGreaterThanOrEqual` | string | ISO 8601 minimum update date |
 | `updatedAtLessThanOrEqual` | string | ISO 8601 maximum update date |
 
-## 8.2 Pager
+## 10.2 Pager
 
 | Field | Type | Default | Constraints | Description |
 |-------|------|---------|-------------|-------------|
@@ -405,7 +420,7 @@ curl -X POST "$KALTURA_APP_REGISTRY_URL/app-registry/list" \
 ```
 
 
-# 9. Find Apps by Organization Domain
+# 11. Find Apps by Organization Domain
 
 Look up app instances bound to a specific domain and app type.
 
@@ -469,14 +484,14 @@ curl -X POST "$KALTURA_APP_REGISTRY_URL/app-registry/findByOrganizationDomain" \
 ```
 
 
-# 10. Versioning
+# 12. Versioning
 
 Each app record has a `version` field (starts at 0). The version increments by 1 on each successful `update`, `enable`, or `disable` call that changes the record. Use versioning to detect concurrent modifications — if you read an app at version 3 and update it, the response returns version 4.
 
 The version does NOT increment if an `enable`/`disable` call matches the current status (idempotent no-op).
 
 
-# 11. Error Handling
+# 13. Error Handling
 
 Application-level errors return HTTP 200 with an error object:
 
@@ -509,9 +524,9 @@ Validation errors (missing required fields, invalid enum values) return HTTP 400
 **Retry strategy:** For transient errors (HTTP 5xx, timeouts), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (HTTP 400, `OBJECT_NOT_FOUND`, `APP_REGISTRY_ALREADY_EXISTS_WITH_THIS_APP_CUSTOM_ID`), fix the request before retrying — these will not resolve on their own.
 
 
-# 12. Common Integration Patterns
+# 14. Common Integration Patterns
 
-## 12.1 Virtual Event ID to App GUID Mapping
+## 14.1 Virtual Event ID to App GUID Mapping
 
 When the Events Platform creates a virtual event, it automatically registers an app in the App Registry with `appType: "epmEvent"` and sets the `appCustomId` to the **virtual event ID**. This is the primary cross-service linkage — to work with registration data for a specific event, resolve the virtual event ID to an `appGuid` first:
 
@@ -549,7 +564,7 @@ curl -s -X POST "$KALTURA_APP_REGISTRY_URL/app-registry/list" \
   }'
 ```
 
-## 12.2 Register App for Custom Integration
+## 14.2 Register App for Custom Integration
 
 For custom integrations outside the Events Platform, register apps explicitly:
 
@@ -566,7 +581,7 @@ APP_GUID=$(curl -s -X POST "$KALTURA_APP_REGISTRY_URL/app-registry/add" \
 echo "App GUID: $APP_GUID"
 ```
 
-## 12.3 Register App -> Manage User Profiles
+## 14.3 Register App -> Manage User Profiles
 
 The [User Profile API](KALTURA_USER_PROFILE_API.md) associates user data with specific app instances. The `appGuid` parameter in user profile operations must reference a registered, enabled app:
 
@@ -585,7 +600,7 @@ curl -X POST "$KALTURA_USER_PROFILE_URL/user-profile/add" \
 The User Profile service validates that the `appGuid` exists and is enabled in the App Registry. Validation results are cached for up to 24 hours — if you disable or delete an app, existing user profile operations may continue to work briefly.
 
 
-## 12.4 Cross-Service Registration Data Retrieval
+## 14.4 Cross-Service Registration Data Retrieval
 
 The full flow for extracting event registration and attendance data spans four services:
 
@@ -626,7 +641,7 @@ curl -s -X POST "$KALTURA_SERVICE_URL/service/user/action/list" \
 
 For incremental syncs, use `updatedAtGreaterThanOrEqual` in both App Registry `list` and User Profile `list` filters to pull only records changed since your last sync.
 
-## 12.5 Incremental Data Sync
+## 14.5 Incremental Data Sync
 
 Use date filters for efficient delta pulls instead of full data dumps:
 
@@ -647,7 +662,7 @@ curl -s -X POST "$KALTURA_APP_REGISTRY_URL/app-registry/list" \
 Store the last record's `updatedAt` timestamp as a watermark and use it as the start of the next sync window.
 
 
-# 13. Best Practices
+# 15. Best Practices
 
 - **Use `appCustomId` for external system mapping.** Map virtual event IDs or external identifiers to app GUIDs for cross-service lookups (e.g., Events Platform auto-registers with `appCustomId` = virtual event ID).
 - **Track `version` numbers for concurrency detection.** The version increments on each state change — use it to detect concurrent modifications.
@@ -655,7 +670,7 @@ Store the last record's `updatedAt` timestamp as a watermark and use it as the s
 - **Use the delta sync pattern for production integrations.** Filter by `updatedAt` range and paginate to keep your system in sync without full re-scans.
 - **Use AppTokens for production access.** Generate KS via `appToken.startSession` with HMAC — keep admin secrets off application servers.
 
-# 14. Related Guides
+# 16. Related Guides
 
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — KS generation and management
 - **[AppTokens API](KALTURA_APPTOKENS_API.md)** — Secure server-to-server auth
