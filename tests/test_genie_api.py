@@ -84,9 +84,35 @@ def genie_post_with_ks(path, json_body=None, headers_override=None, stream=False
     return resp.json()
 
 
-TEST_QUERY = "What is Kaltura?"
-
 state = {}
+
+
+def _build_test_query():
+    """Build a test query from the actual content in the Genie category."""
+    cat_id = GENIE_CATEGORY_ID
+    if not cat_id:
+        return "What is this about?"
+    try:
+        from test_helpers import kaltura_post
+        result = kaltura_post("baseEntry", "list", {
+            "filter[objectType]": "KalturaBaseEntryFilter",
+            "filter[categoriesIdsMatchOr]": cat_id,
+            "filter[statusEqual]": 2,
+            "pager[pageSize]": 1,
+        })
+        entries = result.get("objects", [])
+        if entries:
+            name = entries[0].get("name", "")
+            state["test_entry_id"] = entries[0]["id"]
+            state["test_entry_name"] = name
+            return f"Tell me about {name}" if name else "What is this about?"
+    except Exception:
+        pass
+    return "What is this about?"
+
+
+TEST_QUERY = _build_test_query()
+print(f"  Test query: {TEST_QUERY}")
 
 
 def collect_ndjson_events(resp):
