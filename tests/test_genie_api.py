@@ -7,6 +7,9 @@ Tests:
 - /assistant/converse (streaming SSE and NDJSON)
 - /assistant/converse — model_type, threadId, force_experience
 - /kmedia/start-smart-search-session + get-smart-search-session (polling, if available)
+
+Requires KALTURA_GENIE_ID in .env (the Genie workspace/configuration ID).
+The KS must include genieid:<ID> privilege for /mcp/search to find content.
 """
 
 import sys
@@ -16,7 +19,70 @@ import json
 import requests
 
 sys.path.insert(0, os.path.dirname(__file__))
-from test_helpers import TestRunner, genie_post, KS, PARTNER_ID
+from test_helpers import TestRunner, PARTNER_ID, SERVICE_URL, GENIE_BASE_URL
+
+GENIE_ID = os.environ.get("KALTURA_GENIE_ID", "")
+GENIE_CATEGORY_ID = os.environ.get("KALTURA_GENIE_CATEGORY_ID", "")
+ADMIN_SECRET = os.environ.get("KALTURA_ADMIN_SECRET", "")
+USER_ID = os.environ.get("KALTURA_USER_ID", "")
+
+
+def _generate_genie_ks():
+    """Generate a KS with genieid privilege for Genie API access."""
+    if not ADMIN_SECRET:
+        print("ERROR: KALTURA_ADMIN_SECRET required for Genie tests")
+        sys.exit(1)
+    privs = "disableentitlement"
+    if GENIE_ID:
+        privs += f",genieid:{GENIE_ID}"
+    if GENIE_CATEGORY_ID:
+        privs += f",geniecategoryid:{GENIE_CATEGORY_ID}"
+    resp = requests.post(
+        f"{SERVICE_URL}/service/session/action/start",
+        data={
+            "format": 1,
+            "partnerId": PARTNER_ID,
+            "secret": ADMIN_SECRET,
+            "type": 2,
+            "userId": USER_ID,
+            "expiry": 86400,
+            "privileges": privs,
+        },
+        timeout=15,
+    )
+    resp.raise_for_status()
+    ks = resp.json()
+    if isinstance(ks, dict) and ks.get("objectType") == "KalturaAPIException":
+        print(f"ERROR: session.start failed: {ks.get('message')}")
+        sys.exit(1)
+    return ks
+
+
+GENIE_KS = _generate_genie_ks()
+print(f"  Genie KS generated (genieid={GENIE_ID or 'none'}, "
+      f"categoryid={GENIE_CATEGORY_ID or 'none'}): {GENIE_KS[:30]}...")
+
+
+def genie_post_with_ks(path, json_body=None, headers_override=None, stream=False, timeout=30):
+    """POST to Genie API with the Genie-specific KS."""
+    headers = {
+        "Authorization": f"KS {GENIE_KS}",
+        "Content-Type": "application/json",
+    }
+    if headers_override:
+        headers.update(headers_override)
+    resp = requests.post(
+        f"{GENIE_BASE_URL}{path}",
+        headers=headers,
+        json=json_body or {},
+        stream=stream,
+        timeout=timeout,
+    )
+    resp.raise_for_status()
+    if stream:
+        return resp
+    return resp.json()
+
 
 TEST_QUERY = "What is Kaltura?"
 
@@ -45,12 +111,15 @@ def main():
 
     def test_mcp_search_text_only():
         """Test /mcp/search with query + include_sources=false → returns text."""
-        result = genie_post("/mcp/search", {
+        result = genie_post_with_ks("/mcp/search", {
             "query": TEST_QUERY,
             "include_sources": False,
         })
-        assert result.get("status") == "success", \
-            f"Expected status=success. Got: {result}. If knowledge base returns 'error', verify entries are indexed in the Genie workspace."
+        assert result.get("status") == "success", (
+            f"Expected status=success. Got: {result}. "
+            f"KS privileges: genieid={GENIE_ID or 'none'}, geniecategoryid={GENIE_CATEGORY_ID or 'none'}. "
+            f"The Genie indexer may need to be triggered — verify the workspace has indexed entries."
+        )
         data = result["data"]
         assert "text" in data, f"Expected 'text' in data. Keys: {list(data.keys())}"
         print(f"    text: {len(data['text'])} chars")
@@ -60,7 +129,7 @@ def main():
 
     def test_mcp_search_with_sources():
         """Test /mcp/search with query + include_sources=true → returns chapters with entry IDs."""
-        result = genie_post("/mcp/search", {
+        result = genie_post_with_ks("/mcp/search", {
             "query": TEST_QUERY,
             "include_sources": True,
         })
@@ -87,7 +156,7 @@ def main():
 
     def test_mcp_search_minimal():
         """Test /mcp/search with just query (no include_sources) — verify default behavior."""
-        result = genie_post("/mcp/search", {
+        result = genie_post_with_ks("/mcp/search", {
             "query": TEST_QUERY,
         })
         assert result.get("status") == "success", \
@@ -107,7 +176,7 @@ def main():
 
     def test_converse_ndjson():
         """Test /assistant/converse with sse=false (NDJSON)."""
-        resp = genie_post("/assistant/converse", {
+        resp = genie_post_with_ks("/assistant/converse", {
             "userMessage": TEST_QUERY,
             "sse": False,
         }, headers_override={"Accept": "application/x-ndjson"}, stream=True, timeout=300)
@@ -134,7 +203,7 @@ def main():
         last_err = None
         for attempt in range(2):
             try:
-                resp = genie_post("/assistant/converse", {
+                resp = genie_post_with_ks("/assistant/converse", {
                     "userMessage": TEST_QUERY,
                     "sse": True,
                 }, headers_override={"Accept": "text/event-stream"}, stream=True, timeout=300)
@@ -300,7 +369,7 @@ def main():
 
     def test_converse_model_type_fast():
         """Test model_type=fast produces a valid response."""
-        resp = genie_post("/assistant/converse", {
+        resp = genie_post_with_ks("/assistant/converse", {
             "userMessage": TEST_QUERY,
             "sse": False,
             "model_type": "fast",
@@ -321,7 +390,7 @@ def main():
 
     def test_converse_model_type_smart():
         """Test model_type=smart produces a valid response."""
-        resp = genie_post("/assistant/converse", {
+        resp = genie_post_with_ks("/assistant/converse", {
             "userMessage": TEST_QUERY,
             "sse": False,
             "model_type": "smart",
@@ -339,7 +408,7 @@ def main():
         if not thread_id:
             print("    No threadId from previous test — skipping")
             return
-        resp = genie_post("/assistant/converse", {
+        resp = genie_post_with_ks("/assistant/converse", {
             "userMessage": "Tell me more about the video platform",
             "sse": False,
             "threadId": thread_id,
@@ -366,7 +435,7 @@ def main():
         if not thread_id:
             print("    No threadId — skipping")
             return
-        resp = genie_post("/assistant/converse", {
+        resp = genie_post_with_ks("/assistant/converse", {
             "userMessage": "What features does it offer?",
             "sse": False,
             "threadId": thread_id,
@@ -399,7 +468,7 @@ def main():
     def test_start_smart_search_session():
         """Start a smart search session (may return 404 if not available on this deployment)."""
         try:
-            result = genie_post("/kmedia/start-smart-search-session", {
+            result = genie_post_with_ks("/kmedia/start-smart-search-session", {
                 "schemaVersion": 1,
                 "data": {"question": TEST_QUERY},
             })
@@ -432,7 +501,7 @@ def main():
         final_result = None
 
         while elapsed < max_wait:
-            result = genie_post("/kmedia/get-smart-search-session", {
+            result = genie_post_with_ks("/kmedia/get-smart-search-session", {
                 "schemaVersion": 1,
                 "data": {
                     "sessionId": state["search_session_id"],
