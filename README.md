@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/zoharbabin/kaltura-api-guides?label=Release)](https://github.com/zoharbabin/kaltura-api-guides/releases/latest)
 [![Guides](https://img.shields.io/badge/Guides-45-green.svg)](#guides)
-[![Tests](https://img.shields.io/badge/Live--Tested-820_tests-brightgreen.svg)](#guides)
+[![Tests](https://img.shields.io/badge/Live--Tested-862_tests-brightgreen.svg)](#guides)
 [![llms.txt](https://img.shields.io/badge/llms.txt-available-purple.svg)](llms.txt)
 [![Agent Skill](https://img.shields.io/badge/Agent_Skill-kaltura--api-orange.svg)](.agents/skills/kaltura-api/SKILL.md)
 [![Docs Site](https://img.shields.io/badge/Docs-GitHub_Pages-blue.svg)](https://zoharbabin.github.io/kaltura-api-guides/)
@@ -38,7 +38,7 @@ These guides are optimized for AI agent consumption through multiple discovery m
 | [REACH API](KALTURA_REACH_API.md) | Governed enrichment services marketplace: captions, translation, moderation, 22+ services | 35 tests |
 | [REACH — AI Clips](KALTURA_REACH_API.md) | AI clip generation via Content Lab / REACH | 15 tests |
 | [Agents Manager API](KALTURA_AGENTS_MANAGER_API.md) | Automated content processing agents | 15 tests |
-| [AI Genie API](KALTURA_AI_GENIE_API.md) | Conversational AI search and RAG | 17 tests |
+| [AI Genie API](KALTURA_AI_GENIE_API.md) | Conversational AI search and RAG | 37 tests |
 | [Events Platform API](KALTURA_EVENTS_PLATFORM_API.md) | Virtual events, sessions, speakers, templates | 25 tests |
 | [App Registry API](KALTURA_APP_REGISTRY_API.md) | Register and manage application instances | 20 tests |
 | [User Profile API](KALTURA_USER_PROFILE_API.md) | Per-app user profiles, event attendance lifecycle | 30 tests |
