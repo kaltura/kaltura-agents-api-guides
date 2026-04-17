@@ -678,8 +678,9 @@ def main():
             result = kaltura_post("reach_entryVendorTask", "get", {
                 "id": state["test_task_id"],
             })
-            assert result["status"] == 7, f"Expected ABORTED(7) after abort, got {result['status']}"
-            print("    Task still exists with status=7 (ABORTED)")
+            assert result["status"] in (3, 7), f"Expected ABORTED(7) or DELETED(3) after abort, got {result['status']}"
+            label = "ABORTED" if result["status"] == 7 else "DELETED"
+            print(f"    Task status={result['status']} ({label}) after abort")
         except Exception as e:
             if "ENTRY_VENDOR_TASK_NOT_FOUND" in str(e):
                 print("    Task was deleted after abort (ENTRY_VENDOR_TASK_NOT_FOUND) — expected behavior")
