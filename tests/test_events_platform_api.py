@@ -733,6 +733,25 @@ def _cleanup_event_categories(event_id):
             name = cat.get("name", "")
             if name.startswith(f"{event_id}EP"):
                 _delete_category_tree(cat["id"])
+            elif name == "ep_media_account":
+                _delete_ep_media_account_if_empty(cat["id"])
+    except Exception:
+        pass
+
+
+def _delete_ep_media_account_if_empty(cat_id):
+    """Delete the ep_media_account category if it has no remaining children."""
+    try:
+        children = kaltura_post("category", "list", {
+            "filter[objectType]": "KalturaCategoryFilter",
+            "filter[parentIdEqual]": cat_id,
+            "pager[pageSize]": 1,
+        })
+        if children.get("totalCount", 0) == 0:
+            kaltura_post("category", "delete", {
+                "id": cat_id,
+                "moveEntriesToParentCategory": 1,
+            })
     except Exception:
         pass
 
