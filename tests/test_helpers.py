@@ -101,11 +101,17 @@ def kaltura_post(service, action, params=None):
     data = {"ks": KS, "format": 1}
     if params:
         data.update(params)
-    resp = requests.post(
-        f"{SERVICE_URL}/service/{service}/action/{action}",
-        data=data,
-        timeout=30,
-    )
+    url = f"{SERVICE_URL}/service/{service}/action/{action}"
+    for attempt in range(3):
+        try:
+            resp = requests.post(url, data=data, timeout=30)
+            break
+        except requests.exceptions.Timeout:
+            if attempt < 2:
+                import time as _t
+                _t.sleep(2)
+                continue
+            raise
     resp.raise_for_status()
     result = resp.json()
     if isinstance(result, dict) and result.get("objectType") == "KalturaAPIException":
