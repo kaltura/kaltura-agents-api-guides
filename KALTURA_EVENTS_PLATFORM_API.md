@@ -8,7 +8,7 @@ The Virtual Events Platform has a dedicated modern REST API (OAS 3.0) for creati
 **Regions:** NVP (default), EU (`irp2`), DE (`frp2`)  
 
 
-# 1. When to Use This Guide
+# 1. When to Use
 
 - **Event producers** creating and managing virtual town halls, webinars, and hybrid conferences programmatically  
 - **Enterprise communications teams** scheduling recurring all-hands meetings with session tracks and speaker management  

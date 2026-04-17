@@ -8,7 +8,7 @@ The Auth Broker is a standalone microservice for managing SSO authentication via
 **Regions:** NVP (default `nvp1`), EU (`irp2`), DE (`frp2`)  
 
 
-# 1. When to Use This Guide
+# 1. When to Use
 
 - **IT security teams** integrating Kaltura with enterprise SAML or OAuth2/OIDC identity providers for single sign-on  
 - **Platform administrators** configuring federated authentication across multiple video portals and applications  

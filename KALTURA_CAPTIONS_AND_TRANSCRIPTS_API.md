@@ -10,7 +10,7 @@ The Captions & Transcripts API manages subtitle files, closed captions, and tran
 **Important:** These are plugin services. The service names use underscore-prefixed compound names: `caption_captionAsset`, `caption_captionParams`.  
 
 
-# 1. When to Use This Guide
+# 1. When to Use
 
 - **Accessibility compliance teams** ensuring all video content meets WCAG, ADA, Section 508, or CVAA captioning requirements  
 - **Content teams** adding searchable captions and transcripts to improve video discoverability across libraries  

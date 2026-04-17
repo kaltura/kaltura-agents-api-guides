@@ -22,7 +22,7 @@ The Game Services (SCM) API powers engagement mechanics for virtual events and l
 | `scheduledGameObject` | create, update, list, delete | Scheduled status transitions |
 
 
-# 1. When to Use This Guide
+# 1. When to Use
 
 - **Learning and development teams** driving training completion through leaderboards, badges, and certificates  
 - **Event organizers** increasing attendee engagement with real-time scoring and achievement mechanics  

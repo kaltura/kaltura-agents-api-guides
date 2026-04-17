@@ -8,7 +8,7 @@ The User Management API covers the core user identity layer: creating and managi
 **Services:** `user` (22 actions), `userRole` (6 actions), `group_group` (CRUD), `groupUser` (5 actions)  
 
 
-# 1. When to Use This Guide
+# 1. When to Use
 
 - **IT and identity teams** provisioning Kaltura user accounts as part of employee onboarding or offboarding automation  
 - **SSO integration projects** syncing user records from SAML/OIDC identity providers into Kaltura  

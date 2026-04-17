@@ -15,7 +15,7 @@ Report playback and engagement events back to Kaltura's analytics system. The st
 | Player Analytics Plugin | Built-in event reporting in Kaltura Player v7 (reference implementation) |
 
 
-# 1. When to Use This Guide
+# 1. When to Use
 
 - **Custom player developers** reporting playback events from non-Kaltura players to feed Kaltura analytics  
 - **Application teams** tracking viewer behavior, page interactions, and CTA clicks alongside video events  

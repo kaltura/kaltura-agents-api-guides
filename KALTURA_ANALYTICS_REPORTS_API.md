@@ -17,7 +17,7 @@ Pull analytics data out of Kaltura — content performance, viewer engagement, e
 | `beacon` | `list` | Stream health diagnostics and encoder data |
 
 
-# 1. When to Use This Guide
+# 1. When to Use
 
 - **Executive dashboards** surfacing content performance, viewer engagement, and platform usage at a glance  
 - **Content strategists** measuring play counts, watch-through rates, and drop-off points to optimize video libraries  

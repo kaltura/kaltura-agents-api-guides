@@ -24,7 +24,7 @@ Embed Kaltura's PlayKit player in web applications using iframe or dynamic JavaS
 - **Session management:** See [Session Guide](KALTURA_SESSION_GUIDE.md) for KS generation and privilege scoping.
 
 
-# 3. When to use which embed
+# 3. Embed Type Comparison
 
 - **Iframe embed** – Simplest drop-in, ideal for quick embedding where the host page manages layout only. Works well for sites that restrict JavaScript to first-party code. Control the configuration passed to the player by adding query string params.  
 - **Dynamic JS (PlayKit)** – recommended when you need **runtime config**, **start time**, **programmatic control**, or richer integrations. 
