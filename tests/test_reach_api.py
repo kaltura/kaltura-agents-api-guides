@@ -533,6 +533,8 @@ def main():
         result = kaltura_post("media", "list", {
             "filter[statusEqual]": 2,
             "filter[mediaTypeEqual]": 1,
+            "filter[orderBy]": "-plays",
+            "filter[playsGreaterThanOrEqual]": 1,
             "pager[pageSize]": 1,
         })
         assert result["totalCount"] > 0, "No ready entries found in the account"

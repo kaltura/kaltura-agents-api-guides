@@ -306,18 +306,29 @@ def main():
     # ════════════════════════════════════════════
 
     def test_find_ready_entry():
-        """Find a ready entry for delivery tests (our uploads may still be processing)."""
+        """Find a ready entry for delivery tests (prefer own URL-import entry)."""
+        url_id = state.get("url_entry_id")
+        if url_id:
+            for attempt in range(24):
+                entry = kaltura_post("media", "get", {"entryId": url_id})
+                if entry.get("status") == 2:
+                    state["ready_entry_id"] = entry["id"]
+                    state["ready_partner_id"] = str(entry.get("partnerId", PARTNER_ID))
+                    print(f"    Ready entry (own import): {entry['id']} — {entry.get('name', '?')}")
+                    return
+                time.sleep(5)
         result = kaltura_post("media", "list", {
-            "filter[statusEqual]": 2,  # READY
-            "filter[mediaTypeEqual]": 1,  # Video
+            "filter[statusEqual]": 2,
+            "filter[mediaTypeEqual]": 1,
             "filter[orderBy]": "-plays",
+            "filter[playsGreaterThanOrEqual]": 1,
             "pager[pageSize]": 1,
         })
         assert result["totalCount"] > 0, "No ready video entries found for delivery tests"
         entry = result["objects"][0]
         state["ready_entry_id"] = entry["id"]
         state["ready_partner_id"] = str(entry.get("partnerId", PARTNER_ID))
-        print(f"    Ready entry: {entry['id']} — {entry.get('name', '?')} (partner={state['ready_partner_id']})")
+        print(f"    Ready entry (fallback): {entry['id']} — {entry.get('name', '?')}")
 
     runner.run_test("Find ready entry for delivery tests", test_find_ready_entry)
 
