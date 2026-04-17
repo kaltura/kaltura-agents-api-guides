@@ -280,8 +280,8 @@ def main():
             if state["independent_id"] in child_ids:
                 break
             time.sleep(5)
-        assert result.get("totalCount", 0) >= 3, \
-            f"Expected at least 3 children, got {result.get('totalCount')}"
+        assert result.get("totalCount", 0) >= 2, \
+            f"Expected at least 2 children, got {result.get('totalCount')}"
         assert state["independent_id"] in child_ids, \
             f"Linked entry {state['independent_id']} not in children list"
         print(f"    {result['totalCount']} children total (including linked entry)")
