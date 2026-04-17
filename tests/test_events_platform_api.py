@@ -630,38 +630,130 @@ def main():
 
 
 def _delete_event(event_id):
-    """Delete an event and its auto-created category tree.
+    """Delete an event and ALL its auto-created resources.
 
-    The Events Platform auto-creates root categories for each event:
-      {eventId}EP{hex}  (main tree with site/channels/playlists/etc.)
-      ep_agenda_{eventId}
-      ep_private_{eventId}
-    events/delete removes the event record but does NOT cascade-delete
-    these categories.
+    The Events Platform auto-creates when you create an event:
+    - Categories: ep_media_event_{eventId}, ep_private_{eventId}, {eventId}EP{hex}
+    - Entries: Thumbnail_Space_Blue, Main Stage Webcast, Banner_Discovery_Blue,
+      Email_Banner_Blue_new, Event default logo, Breakout Room, *_studio, etc.
+    events/delete removes the event record but does NOT cascade-delete these.
     """
     try:
         events_post("/events/delete", {"id": event_id})
     except Exception:
         pass
-    # Find and delete auto-created root categories by searching parentId=0
-    # and filtering by event ID in the name
+    _cleanup_event_entries(event_id)
+    _cleanup_event_categories(event_id)
+
+
+def _find_event_categories(event_id):
+    """Find all auto-created categories for an event. Returns list of (id, fullName).
+
+    Events Platform creates three top-level category trees:
+    - ep_media_account > ep_media_event_{eventId}  (media library)
+    - ep_private_{eventId}                          (private data)
+    - {eventId}EP{hex} > site, playlists, ...       (site structure)
+    """
+    found = []
+    for pattern in [f"ep_media_account>ep_media_event_{event_id}",
+                    f"ep_private_{event_id}",
+                    f"ep_agenda_{event_id}"]:
+        try:
+            result = kaltura_post("category", "list", {
+                "filter[objectType]": "KalturaCategoryFilter",
+                "filter[fullNameStartsWith]": pattern,
+                "pager[pageSize]": 50,
+            })
+            for cat in result.get("objects", []):
+                found.append((cat["id"], cat.get("fullName", cat.get("name", ""))))
+        except Exception:
+            pass
     try:
         result = kaltura_post("category", "list", {
             "filter[objectType]": "KalturaCategoryFilter",
             "filter[parentIdEqual]": 0,
-            "pager[pageSize]": 500,
+            "pager[pageSize]": 200,
         })
         for cat in result.get("objects", []):
             name = cat.get("name", "")
-            if name.startswith(f"{event_id}EP") or name == f"ep_agenda_{event_id}" or name == f"ep_private_{event_id}":
-                try:
-                    # Delete root category — Kaltura cascades to children
-                    kaltura_post("category", "delete", {
-                        "id": cat["id"],
-                        "moveEntriesToParentCategory": 1,
-                    })
-                except Exception:
-                    pass
+            if name.startswith(f"{event_id}EP"):
+                found.append((cat["id"], name))
+    except Exception:
+        pass
+    return found
+
+
+def _cleanup_event_entries(event_id):
+    """Delete auto-created entries for an event via its categories.
+
+    Events Platform puts template entries (Thumbnail_Space_Blue, etc.)
+    into event-specific categories. We find entries through the categories
+    rather than by name to avoid accidentally matching other events.
+    """
+    categories = _find_event_categories(event_id)
+    deleted_entries = set()
+    for cat_id, cat_name in categories:
+        try:
+            result = kaltura_post("baseEntry", "list", {
+                "filter[objectType]": "KalturaBaseEntryFilter",
+                "filter[categoriesIdsMatchOr]": str(cat_id),
+                "filter[statusIn]": "0,1,2,4,5,6,7",
+                "pager[pageSize]": 200,
+            })
+            for entry in result.get("objects", []):
+                eid = entry["id"]
+                if eid not in deleted_entries:
+                    try:
+                        kaltura_post("baseEntry", "delete", {"entryId": eid})
+                        deleted_entries.add(eid)
+                    except Exception:
+                        pass
+        except Exception:
+            pass
+
+
+def _cleanup_event_categories(event_id):
+    """Delete auto-created categories for an event (deepest first)."""
+    categories = _find_event_categories(event_id)
+    for cat_id, _ in reversed(categories):
+        try:
+            kaltura_post("category", "delete", {
+                "id": cat_id,
+                "moveEntriesToParentCategory": 1,
+            })
+        except Exception:
+            pass
+    try:
+        result = kaltura_post("category", "list", {
+            "filter[objectType]": "KalturaCategoryFilter",
+            "filter[parentIdEqual]": 0,
+            "pager[pageSize]": 200,
+        })
+        for cat in result.get("objects", []):
+            name = cat.get("name", "")
+            if name.startswith(f"{event_id}EP"):
+                _delete_category_tree(cat["id"])
+    except Exception:
+        pass
+
+
+def _delete_category_tree(cat_id):
+    """Recursively delete a category and all its children (leaves first)."""
+    try:
+        children = kaltura_post("category", "list", {
+            "filter[objectType]": "KalturaCategoryFilter",
+            "filter[parentIdEqual]": cat_id,
+            "pager[pageSize]": 200,
+        })
+        for child in children.get("objects", []):
+            _delete_category_tree(child["id"])
+    except Exception:
+        pass
+    try:
+        kaltura_post("category", "delete", {
+            "id": cat_id,
+            "moveEntriesToParentCategory": 1,
+        })
     except Exception:
         pass
 

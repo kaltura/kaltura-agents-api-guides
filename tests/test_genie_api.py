@@ -49,20 +49,12 @@ def main():
             "query": TEST_QUERY,
             "include_sources": False,
         })
-        status = result.get("status")
-        assert status in ("success", "error"), f"Expected status success or error, got: {result}"
-        data = result.get("data", {})
-        if status == "error" and isinstance(data, str):
-            print(f"    Knowledge base empty: {data[:120]}")
-            return
+        assert result.get("status") == "success", \
+            f"Expected status=success. Got: {result}. If knowledge base returns 'error', verify entries are indexed in the Genie workspace."
+        data = result["data"]
         assert "text" in data, f"Expected 'text' in data. Keys: {list(data.keys())}"
-        has_chapters = "chapters" in data
-        if len(data["text"]) > 0 and "couldn't find" not in data["text"].lower():
-            print(f"    text: {len(data['text'])} chars, has chapters: {has_chapters}")
-            print(f"    Preview: {data['text'][:150]}...")
-        else:
-            print(f"    No relevant content in knowledge base (expected for fresh accounts)")
-            print(f"    Response: {data['text'][:120]}...")
+        print(f"    text: {len(data['text'])} chars")
+        print(f"    Preview: {data['text'][:150]}...")
 
     runner.run_test("/mcp/search — query + include_sources=false (text only)", test_mcp_search_text_only)
 
@@ -72,12 +64,9 @@ def main():
             "query": TEST_QUERY,
             "include_sources": True,
         })
-        status = result.get("status")
-        assert status in ("success", "error"), f"Expected status success or error, got: {result}"
-        data = result.get("data", {})
-        if status == "error" and isinstance(data, str):
-            print(f"    Knowledge base empty: {data[:120]}")
-            return
+        assert result.get("status") == "success", \
+            f"Expected status=success. Got: {result}. Verify entries are indexed in the Genie workspace."
+        data = result["data"]
         if "chapters" in data and len(data.get("chapters", [])) > 0:
             chapters = data["chapters"]
             for ch in chapters[:3]:
@@ -101,12 +90,9 @@ def main():
         result = genie_post("/mcp/search", {
             "query": TEST_QUERY,
         })
-        status = result.get("status")
-        assert status in ("success", "error"), f"Expected status success or error, got: {result}"
-        data = result.get("data", {})
-        if status == "error" and isinstance(data, str):
-            print(f"    Knowledge base empty: {data[:120]}")
-            return
+        assert result.get("status") == "success", \
+            f"Expected status=success. Got: {result}. Verify entries are indexed in the Genie workspace."
+        data = result["data"]
         has_text = "text" in data
         has_chapters = "chapters" in data
         print(f"    Default (no include_sources): has_text={has_text}, has_chapters={has_chapters}")
