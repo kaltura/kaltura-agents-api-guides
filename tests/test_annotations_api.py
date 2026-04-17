@@ -18,6 +18,8 @@ def _find_ready_entry():
     result = kaltura_post("baseEntry", "list", {
         "filter[statusEqual]": 2,
         "filter[mediaTypeEqual]": 1,
+        "filter[orderBy]": "-plays",
+        "filter[playsGreaterThanOrEqual]": 1,
         "pager[pageSize]": 1,
     })
     entries = result.get("objects", [])
