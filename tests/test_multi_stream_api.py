@@ -163,12 +163,16 @@ def main():
 
     def test_list_children():
         """List children using parentEntryIdEqual filter."""
-        result = kaltura_post("baseEntry", "list", {
-            "filter[parentEntryIdEqual]": state["parent_id"],
-        })
+        for attempt in range(12):
+            result = kaltura_post("baseEntry", "list", {
+                "filter[parentEntryIdEqual]": state["parent_id"],
+            })
+            child_ids = [obj["id"] for obj in result.get("objects", [])]
+            if state["child1_id"] in child_ids:
+                break
+            time.sleep(5)
         assert result.get("totalCount", 0) >= 1, \
             f"Expected at least 1 child, got totalCount={result.get('totalCount')}"
-        child_ids = [obj["id"] for obj in result.get("objects", [])]
         assert state["child1_id"] in child_ids, \
             f"Child {state['child1_id']} not in list: {child_ids}"
         print(f"    Found {result['totalCount']} child(ren): {child_ids}")
