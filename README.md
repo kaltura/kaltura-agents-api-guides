@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/zoharbabin/kaltura-api-guides?label=Release)](https://github.com/zoharbabin/kaltura-api-guides/releases/latest)
 [![Guides](https://img.shields.io/badge/Guides-45-green.svg)](#guides)
-[![Tests](https://img.shields.io/badge/Live--Tested-843_tests-brightgreen.svg)](#guides)
+[![Tests](https://img.shields.io/badge/Live--Tested-820_tests-brightgreen.svg)](#guides)
 [![llms.txt](https://img.shields.io/badge/llms.txt-available-purple.svg)](llms.txt)
 [![Agent Skill](https://img.shields.io/badge/Agent_Skill-kaltura--api-orange.svg)](.agents/skills/kaltura-api/SKILL.md)
 [![Docs Site](https://img.shields.io/badge/Docs-GitHub_Pages-blue.svg)](https://zoharbabin.github.io/kaltura-api-guides/)
