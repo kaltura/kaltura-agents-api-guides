@@ -94,6 +94,7 @@ MESSAGING_URL = os.environ.get("KALTURA_MESSAGING_URL", "https://messaging.nvp1.
 AUTH_BROKER_URL = os.environ.get("KALTURA_AUTH_BROKER_URL", "https://auth.nvp1.ovp.kaltura.com/api/v1")
 REPORTS_URL = os.environ.get("KALTURA_REPORTS_URL", "https://reports.nvp1.ovp.kaltura.com")
 SCM_URL = os.environ.get("KALTURA_SCM_URL", "https://scm.nvp1.ovp.kaltura.com/api/v1")
+VOD_AVATAR_URL = os.environ.get("KALTURA_VOD_AVATAR_URL", "https://video-avatar.nvp1.ovp.kaltura.com/api/v1")
 
 
 def kaltura_post(service, action, params=None):
@@ -203,6 +204,25 @@ def reports_post(path, json_body=None, timeout=30):
 def scm_post(controller, action, json_body=None, timeout=30):
     """POST to Game Services (SCM) API. Returns parsed JSON."""
     return bearer_post(SCM_URL, f"/{controller}/{action}", json_body, timeout=timeout)
+
+
+def vod_avatar_post(service, action, json_body=None, timeout=30, raw=False):
+    """POST to VOD Avatar API. Returns parsed JSON or raw response."""
+    headers = {
+        "Authorization": f"Bearer {KS}",
+        "Content-Type": "application/json",
+    }
+    resp = requests.post(
+        f"{VOD_AVATAR_URL}/{service}/{action}",
+        headers=headers,
+        json=json_body or {},
+        timeout=timeout,
+    )
+    if raw:
+        resp.raise_for_status()
+        return resp
+    resp.raise_for_status()
+    return resp.json()
 
 
 def agents_post(path, json_body=None):
