@@ -103,7 +103,14 @@ Every request uses:
 - No special privilege strings are needed (no `disableentitlement` or custom privileges)  
 - Both `type=0` (USER) and `type=2` (ADMIN) sessions work — there is no session-type check  
 - Data isolation is per-user: an admin KS does **not** grant cross-user visibility in this service  
-- The partner account must have the VOD Avatar feature enabled — contact your Kaltura account manager if avatar or video endpoints return authorization errors  
+- The partner account must have the VOD Avatar feature enabled. Use `partner/checkConfiguration` to verify:
+  ```bash
+  curl -s -X POST "$AVATAR_API/partner/checkConfiguration" \
+    -H "Authorization: Bearer $KS" \
+    -H "Content-Type: application/json" \
+    -d '{}'
+  ```
+  The response lists prerequisite checks with `valid: true/false`. The `source-only-conversion-profile` check must be valid. Contact your Kaltura account manager if checks fail  
 - If the KS contains a `urirestrict` privilege, the restricted URI pattern must match the API path  
 
 
@@ -297,6 +304,12 @@ Each element in the `scenes` array represents one segment of the video. A video 
 |-------|------|----------|-------------|
 | `entryId` | string | yes (if broll provided) | Kaltura entry ID of the background video to display behind the avatar |
 | `startTime` | number | yes (if broll provided) | Start time in seconds within the background video. The clip plays from this point for the duration of the scene's narration |
+
+**B-roll source limits:**
+- A single video project can reference **at most 5 unique b-roll source entries** across all scenes. Exceeding this limit causes a `TOO_MANY_SOURCES` error. The same entry can be reused across multiple scenes with different `startTime` values without counting as additional sources  
+- B-roll entries must have at least one **audio track**. Videos exported from tools like PowerPoint or screen recorders sometimes lack audio — add a silent audio track before uploading (e.g., `ffmpeg -i input.mp4 -f lavfi -i anullsrc=channel_layout=stereo:sample_rate=44100 -c:v copy -c:a aac -shortest output.mp4`)  
+- B-roll entries must use a **standard frame rate** (25 or 30 fps). PowerPoint exports often use 600fps or other non-standard rates that cause generation failures. Re-encode to a standard rate before uploading (e.g., `ffmpeg -i input.mp4 -r 25 -c:v libx264 -profile:v main -c:a aac output.mp4`)  
+- Every scene with narration text is processed — scenes with **empty narration** are silently skipped, which can cause the video to hang in `generating` status indefinitely. Always provide narration text for every scene
 
 ### Response Fields
 
@@ -524,8 +537,8 @@ curl -s -X POST "$AVATAR_API/video/generate" \
 
 The generate action:
 1. Transitions the video status to `generating`  
-2. For each scene: generates TTS audio via ElevenLabs, then renders the avatar video  
-3. Stitches all scene videos together with green-screen replacement and resolution normalization (1920×1080)  
+2. **Scene generation (parallel):** For each scene, generates TTS audio, then renders the avatar video. Full-screen scenes use the VOD Avatar HD model. B-roll scenes use a speech-to-video pipeline that generates the avatar speech clip separately  
+3. **Aggregation:** Stitches all scene videos together. For b-roll scenes, the background video is clipped at the specified `startTime` for the narration duration, and the avatar is composited as an overlay with green-screen replacement. All scenes are normalized to 1920×1080  
 4. Uploads the final video as a Kaltura media entry  
 5. Sets `entryId` on the video and transitions to `ready`  
 
@@ -557,11 +570,20 @@ while true; do
 done
 ```
 
-Generation time depends on the number of scenes and narration length. Expect 1–5 minutes for typical videos.
+Generation time depends on the number of scenes and narration length. Expect 2–10 minutes for typical videos. The process has two phases: scene generation (avatar TTS + rendering for each scene, runs in parallel) and aggregation (stitching scenes together with b-roll compositing). The `entryId` field appears on the video object once aggregation begins — its presence indicates scene generation succeeded and stitching is underway.
+
+**Generation error diagnostics:**  
+When generation fails, the status becomes `generate-error` with **no error message or detail** in the API response — the actual failure reason exists only in server-side logs. Common causes:
+- A b-roll entry has no audio track or uses a non-standard frame rate (see b-roll requirements in section 6)  
+- A b-roll entry's `startTime` + narration duration exceeds the source video length  
+- The rendering service is temporarily unavailable (retry after a few minutes)  
+- More than 5 unique b-roll source entries were referenced  
+
+If generation fails consistently, test with a minimal 1-scene full-screen video to isolate whether the issue is service-wide or content-specific.
 
 ## Reset Status After Error
 
-If composition or generation fails, reset the status to allow retrying:
+If composition or generation fails, reset the status to allow editing and retrying:
 
 ```bash
 curl -s -X POST "$AVATAR_API/video/resetStatus" \
@@ -574,6 +596,8 @@ curl -s -X POST "$AVATAR_API/video/resetStatus" \
 - `compose-error` → resets to `draft`  
 - `generate-error` → resets to `composed` (if previously composed) or `draft`  
 - Other statuses → returns `CANNOT_RESET_STATUS`  
+
+After resetting, you can modify scenes via `video/update` and call `video/generate` again. The previous `entryId` (if any) is retained — a new generation overwrites it with a fresh entry.
 
 
 # 10. Complete Server-Side Workflow
@@ -862,7 +886,7 @@ workspace.kill();
 | `SCENE_NOT_FOUND` | Scene index out of range | Check scene count in the video |
 | `SCENE_EMPTY_NARRATION` | Scene has no narration text | Add narration text before previewing audio |
 | `CAPTIONS_NOT_FOUND` | Source entries have no captions | Add captions/transcripts to source entries before composing |
-| `TOO_MANY_SOURCES` | More than 5 source entries | Reduce to 5 or fewer entry IDs |
+| `TOO_MANY_SOURCES` | More than 5 unique b-roll source entries across all scenes | Consolidate scenes to use at most 5 distinct `entryId` values. The same entry can appear in multiple scenes at different `startTime` offsets |
 | `AVATAR_NOT_FOUND` | Invalid avatar ID | Create an avatar with `avatar.upsert` first |
 | `AVATAR_TEMPLATE_NOT_FOUND` | Invalid template ID | Use an ID from `avatarTemplate.list` |
 | `BACKGROUND_NOT_FOUND` | Invalid library background ID | Use a valid background ID from the asset library |
@@ -873,7 +897,7 @@ workspace.kill();
 
 - **Blank studio** — Verify the KS is valid and `partnerId` is a number (not string). Check browser console for API errors  
 - **No avatars available** — The account needs VOD Avatar feature provisioning  
-- **Generation fails** — Ensure the KS is valid and not expired. If generation repeatedly fails, contact your Kaltura account manager to verify the VOD Avatar rendering pipeline is provisioned  
+- **Generation fails** — The `generate-error` status provides no error detail. Isolate the cause: test a minimal 1-scene full-screen video first. If that fails, the rendering service is temporarily unavailable — retry later. If only complex videos fail, check b-roll entries for missing audio tracks, non-standard frame rates, or exceeding the 5-source limit  
 - **KS expiry** — Update reactively: `workspace.session.setData(prev => ({ ...prev, ks: "new-ks" }))`  
 
 
@@ -883,9 +907,11 @@ workspace.kill();
 - **Set `partnerId` as a number.** The VOD Avatar widget requires `partnerId` as a number type, not a string  
 - **Ensure captions before composing.** Source entries need captions or transcripts for AI composition. Use [REACH](KALTURA_REACH_API.md) to add captions first  
 - **Poll at 10-second intervals.** The widget uses 10-second polling; match this in server-side integrations  
-- **Handle error states.** Use `resetStatus` to recover from `compose-error` or `generate-error` before retrying  
+- **Handle error states.** Use `resetStatus` to recover from `compose-error` or `generate-error`, then modify scenes and retry  
 - **Preview audio before generating.** Use `previewAudio` to verify narration quality — generation is more expensive  
-- **Limit source entries.** AI composition accepts at most 5 source entries. Select the most relevant content  
+- **Stay within 5 unique b-roll sources.** Both AI composition and manual storyboards are limited to 5 unique b-roll entry IDs across all scenes. Reuse entries at different `startTime` values to stay within the limit  
+- **Prepare b-roll entries.** Ensure all b-roll source videos have an audio track and use standard frame rates (25 or 30 fps). Re-encode PowerPoint exports and screen recordings before uploading  
+- **Provide narration in every scene.** Scenes with empty narration text are silently skipped during generation, which can cause the video to hang indefinitely  
 - **Process generated videos.** The resulting Kaltura entry can be enriched via [REACH](KALTURA_REACH_API.md) (captions, translation), [Content Lab](KALTURA_CONTENT_LAB_API.md) (chapters, summaries), or [Agents](KALTURA_AGENTS_MANAGER_API.md) (automated workflows)  
 - **Use HTTPS.** The Unisphere loader and all widget bundles require HTTPS  
 
