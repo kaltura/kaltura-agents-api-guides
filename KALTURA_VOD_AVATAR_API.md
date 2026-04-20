@@ -309,7 +309,8 @@ Each element in the `scenes` array represents one segment of the video. A video 
 - A single video project can reference **at most 5 unique b-roll source entries** across all scenes. Exceeding this limit causes a `TOO_MANY_SOURCES` error. The same entry can be reused across multiple scenes with different `startTime` values without counting as additional sources  
 - B-roll entries must have at least one **audio track**. Videos exported from tools like PowerPoint or screen recorders sometimes lack audio — add a silent audio track before uploading (e.g., `ffmpeg -i input.mp4 -f lavfi -i anullsrc=channel_layout=stereo:sample_rate=44100 -c:v copy -c:a aac -shortest output.mp4`)  
 - B-roll entries must use a **standard frame rate** (25 or 30 fps). PowerPoint exports often use 600fps or other non-standard rates that cause generation failures. Re-encode to a standard rate before uploading (e.g., `ffmpeg -i input.mp4 -r 25 -c:v libx264 -profile:v main -c:a aac output.mp4`)  
-- Every scene with narration text is processed — scenes with **empty narration** are silently skipped, which can cause the video to hang in `generating` status indefinitely. Always provide narration text for every scene
+- Every scene with narration text is processed — scenes with **empty narration** are silently skipped, which can cause the video to hang in `generating` status indefinitely. Always provide narration text for every scene  
+- Each scene's narration must produce at least **~1.5 seconds of audio** after text-to-speech conversion. Very short phrases (1–2 words like "Hello" or "Thanks") cause a silent `generate-error`. Use at least one complete sentence per scene
 
 ### Response Fields
 
@@ -537,7 +538,7 @@ curl -s -X POST "$AVATAR_API/video/generate" \
 
 The generate action:
 1. Transitions the video status to `generating`  
-2. **Scene generation (parallel):** For each scene, generates TTS audio, then renders the avatar video. Full-screen scenes use the VOD Avatar HD model. B-roll scenes use a speech-to-video pipeline that generates the avatar speech clip separately  
+2. **Scene generation (parallel):** For each scene, generates TTS audio, then renders the avatar video. Full-screen and b-roll scenes are rendered by separate backend services  
 3. **Aggregation:** Stitches all scene videos together. For b-roll scenes, the background video is clipped at the specified `startTime` for the narration duration, and the avatar is composited as an overlay with green-screen replacement. All scenes are normalized to 1920×1080  
 4. Uploads the final video as a Kaltura media entry  
 5. Sets `entryId` on the video and transitions to `ready`  
@@ -570,16 +571,17 @@ while true; do
 done
 ```
 
-Generation time depends on the number of scenes and narration length. Expect 2–10 minutes for typical videos. The process has two phases: scene generation (avatar TTS + rendering for each scene, runs in parallel) and aggregation (stitching scenes together with b-roll compositing). The `entryId` field appears on the video object once aggregation begins — its presence indicates scene generation succeeded and stitching is underway.
+Generation time depends on the number of scenes, narration length, and current queue depth. Simple videos (1–3 full-screen scenes) typically complete in 2–5 minutes. Complex videos with many b-roll scenes can take 10–30 minutes or more. The process has two phases: scene generation (TTS + avatar rendering for each scene, runs in parallel) and aggregation (stitching scenes together with b-roll compositing). The `entryId` field appears on the video object once aggregation begins — its presence indicates scene generation succeeded and stitching is underway.
 
 **Generation error diagnostics:**  
 When generation fails, the status becomes `generate-error` with **no error message or detail** in the API response — the actual failure reason exists only in server-side logs. Common causes:
+- **Narration too short** — A scene's narration produces less than ~1.5 seconds of TTS audio. Use at least one complete sentence per scene  
 - A b-roll entry has no audio track or uses a non-standard frame rate (see b-roll requirements in section 6)  
 - A b-roll entry's `startTime` + narration duration exceeds the source video length  
 - The rendering service is temporarily unavailable (retry after a few minutes)  
 - More than 5 unique b-roll source entries were referenced  
 
-If generation fails consistently, test with a minimal 1-scene full-screen video to isolate whether the issue is service-wide or content-specific.
+**Isolating failures:** If generation fails, test with a minimal 1-scene full-screen video first. If that succeeds but b-roll videos fail, the issue is b-roll-specific — check b-roll entry requirements (audio track, frame rate, duration). If even the 1-scene full-screen test fails, the issue is service-wide or the narration is too short.
 
 ## Reset Status After Error
 
@@ -911,7 +913,7 @@ workspace.kill();
 - **Preview audio before generating.** Use `previewAudio` to verify narration quality — generation is more expensive  
 - **Stay within 5 unique b-roll sources.** Both AI composition and manual storyboards are limited to 5 unique b-roll entry IDs across all scenes. Reuse entries at different `startTime` values to stay within the limit  
 - **Prepare b-roll entries.** Ensure all b-roll source videos have an audio track and use standard frame rates (25 or 30 fps). Re-encode PowerPoint exports and screen recordings before uploading  
-- **Provide narration in every scene.** Scenes with empty narration text are silently skipped during generation, which can cause the video to hang indefinitely  
+- **Write at least one full sentence per scene.** Scenes with empty narration are silently skipped (can hang the video), and very short narration (1–2 words) fails because the TTS audio is too short for the rendering model. One complete sentence is the safe minimum  
 - **Process generated videos.** The resulting Kaltura entry can be enriched via [REACH](KALTURA_REACH_API.md) (captions, translation), [Content Lab](KALTURA_CONTENT_LAB_API.md) (chapters, summaries), or [Agents](KALTURA_AGENTS_MANAGER_API.md) (automated workflows)  
 - **Use HTTPS.** The Unisphere loader and all widget bundles require HTTPS  
 
@@ -920,9 +922,12 @@ workspace.kill();
 
 | Region | Server-Side API | Widget URL |
 |--------|----------------|------------|
-| NVP1 (US, default) | `https://video-avatar.nvp1.ovp.kaltura.com/api/v1` | `https://unisphere.nvp1.ovp.kaltura.com/v1` |
-| IRP2 (EU) | `https://video-avatar.irp2.ovp.kaltura.com/api/v1` | `https://unisphere.irp2.ovp.kaltura.com/v1` |
-| FRP2 (DE) | `https://video-avatar.frp2.ovp.kaltura.com/api/v1` | `https://unisphere.frp2.ovp.kaltura.com/v1` |
+| NVP1 (US East, default) | `https://video-avatar.nvp1.ovp.kaltura.com/api/v1` | `https://unisphere.nvp1.ovp.kaltura.com/v1` |
+| IRP2 (EU West) | `https://video-avatar.irp2.ovp.kaltura.com/api/v1` | `https://unisphere.irp2.ovp.kaltura.com/v1` |
+| FRP2 (EU Central) | `https://video-avatar.frp2.ovp.kaltura.com/api/v1` | `https://unisphere.frp2.ovp.kaltura.com/v1` |
+| CAP2 (Canada) | `https://video-avatar.cap2.ovp.kaltura.com/api/v1` | `https://unisphere.cap2.ovp.kaltura.com/v1` |
+| SGP2 (Singapore) | `https://video-avatar.sgp2.ovp.kaltura.com/api/v1` | `https://unisphere.sgp2.ovp.kaltura.com/v1` |
+| SYP2 (Australia) | `https://video-avatar.syp2.ovp.kaltura.com/api/v1` | `https://unisphere.syp2.ovp.kaltura.com/v1` |
 
 
 # 15. Related Guides
