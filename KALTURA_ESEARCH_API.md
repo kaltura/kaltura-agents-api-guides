@@ -444,13 +444,13 @@ Use these values in the `sortField` property of `KalturaESearchOrderByItem`:
 
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — Generate the KS required for all eSearch calls
 - **[AppTokens](KALTURA_APPTOKENS_API.md)** — Secure KS generation for production integrations
-- **[Upload & Delivery](KALTURA_UPLOAD_AND_DELIVERY_API.md)** — Upload content that becomes searchable via eSearch
+- **[Upload & Ingestion](KALTURA_UPLOAD_AND_INGESTION_API.md)** — Upload content that becomes searchable via eSearch
 - **[Player Embed](KALTURA_PLAYER_EMBED_GUIDE.md)** — Embed search results for playback
 - **[REACH](KALTURA_REACH_API.md)** — Enrichment services: captions, metadata, tagging, and more (improves search quality)
 - **[AI Genie](KALTURA_AI_GENIE_API.md)** — Conversational AI search (uses eSearch internally for RAG)
 - **[Multi-Stream](KALTURA_MULTI_STREAM_API.md)** — Search for parent entries; use `parentEntryIdEqual` filter to find child entries
 - **[Webhooks](KALTURA_WEBHOOKS_API.md)** — Trigger notifications based on content events (search results inform webhook conditions)
-- **[Categories & Access Control API](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md)** — Category-based filtering and entitlements that affect search result visibility
+- **[Categories & Entitlements API](KALTURA_CATEGORIES_AND_ENTITLEMENTS_API.md)** — Category-based filtering and entitlements that affect search result visibility
 - **[Custom Metadata API](KALTURA_CUSTOM_METADATA_API.md)** — Custom metadata schemas searchable via `KalturaESearchEntryMetadataItem`
 - **[Captions & Transcripts API](KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md)** — Caption assets searchable via `KalturaESearchCaptionItem`
 - **[API Getting Started](KALTURA_API_GETTING_STARTED.md)** — Foundation guide covering content model and API patterns

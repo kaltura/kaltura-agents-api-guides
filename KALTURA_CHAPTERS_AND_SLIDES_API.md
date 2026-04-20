@@ -254,4 +254,5 @@ Chapter titles and slide OCR text are indexed in eSearch. Use `KalturaESearchCue
 - [REACH API](KALTURA_REACH_API.md) — AI-powered chaptering (serviceFeature=5)
 - [Content Lab API](KALTURA_CONTENT_LAB_API.md) — AI chapter generation widget
 - [Multi-Stream API](KALTURA_MULTI_STREAM_API.md) — Dual-screen entries with slide/camera sync
-- [Upload & Delivery API](KALTURA_UPLOAD_AND_DELIVERY_API.md) — Upload token workflow for slide images
+- [Upload & Ingestion API](KALTURA_UPLOAD_AND_INGESTION_API.md) — Upload token workflow for slide images
+- [Thumbnail API](KALTURA_THUMBNAIL_API.md) — thumbAsset CRUD for slide thumbnails

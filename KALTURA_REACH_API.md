@@ -1117,7 +1117,7 @@ For human captioning, use the `notes` field on the task to provide terminology g
 
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — Generate the KS required for all REACH API calls
 - **[AppTokens](KALTURA_APPTOKENS_API.md)** — Secure server-to-server auth for production REACH integrations
-- **[Upload & Delivery](KALTURA_UPLOAD_AND_DELIVERY_API.md)** — Upload content before ordering REACH enrichment services
+- **[Upload & Ingestion](KALTURA_UPLOAD_AND_INGESTION_API.md)** — Upload content before ordering REACH enrichment services
 - **[eSearch](KALTURA_ESEARCH_API.md)** — Search entries enriched by REACH-generated captions, metadata, and tags
 - **[AI Genie](KALTURA_AI_GENIE_API.md)** — Conversational AI that benefits from REACH-generated transcripts and enrichment
 - **[Player Embed](KALTURA_PLAYER_EMBED_GUIDE.md)** — Play entries with REACH-generated captions, translations, and audio descriptions

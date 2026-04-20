@@ -931,12 +931,12 @@ curl -X POST "$KALTURA_SERVICE_URL/service/eventnotification_eventnotificationte
 
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — KS generation and management
 - **[AppTokens API](KALTURA_APPTOKENS_API.md)** — Secure server-to-server auth
-- **[Upload & Delivery API](KALTURA_UPLOAD_AND_DELIVERY_API.md)** — Content upload and delivery (entries that trigger webhooks)
+- **[Upload & Ingestion](KALTURA_UPLOAD_AND_INGESTION_API.md)** — Content upload and ingestion (entries that trigger webhooks)
 - **[REACH API](KALTURA_REACH_API.md)** — Enrichment services marketplace: captions, translation, moderation, and more (ENTRY_VENDOR_TASK events)
 - **[Agents Manager API](KALTURA_AGENTS_MANAGER_API.md)** — Automated content processing (alternative to webhooks for content workflows)
 - **[Messaging API](KALTURA_MESSAGING_API.md)** — Template-based email messaging with delivery tracking, engagement analytics, and unsubscribe management (shared delivery infrastructure for email notifications; use directly for application-triggered emails)
 - **[User Management API](KALTURA_USER_MANAGEMENT_API.md)** — User event notifications (user creation, role changes)
-- **[Categories & Access Control API](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md)** — Category event notifications (category membership changes, access control updates)
+- **[Categories & Entitlements API](KALTURA_CATEGORIES_AND_ENTITLEMENTS_API.md)** — Category event notifications (category membership changes, entitlement updates)
 - **[Custom Metadata API](KALTURA_CUSTOM_METADATA_API.md)** — Metadata change events (OBJECT_ADDED, OBJECT_DATA_CHANGED, OBJECT_DELETED) that trigger webhook notifications
 - **[Captions & Transcripts API](KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md)** — Caption asset events that trigger webhook notifications
 - **[Distribution](KALTURA_DISTRIBUTION_API.md)** — Trigger notifications on distribution status changes

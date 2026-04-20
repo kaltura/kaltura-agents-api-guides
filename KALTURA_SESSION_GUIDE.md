@@ -329,7 +329,8 @@ These IDs appear in logs and system metadata. Customer accounts always have posi
 
 - **[API Getting Started](KALTURA_API_GETTING_STARTED.md)** — API structure, first call, multirequest batching, error handling
 - **[AppTokens API](KALTURA_APPTOKENS_API.md)** — Secure server-to-server auth without sharing admin secrets (HMAC-based KS generation)
-- **[Upload & Delivery](KALTURA_UPLOAD_AND_DELIVERY_API.md)** — Upload content and construct playback URLs (requires KS)
+- **[Upload & Ingestion](KALTURA_UPLOAD_AND_INGESTION_API.md)** — Upload content and manage entries (requires KS)
+- **[Content Delivery](KALTURA_CONTENT_DELIVERY_API.md)** — Construct playback and download URLs (requires KS)
 - **[eSearch](KALTURA_ESEARCH_API.md)** — Search entries, categories, users (requires KS)
 - **[Player Embed](KALTURA_PLAYER_EMBED_GUIDE.md)** — Embed the player with KS for access-controlled content
 - **[REACH](KALTURA_REACH_API.md)** — Enrichment services marketplace: captions, translation, moderation, AI analysis, and more (requires KS)
@@ -342,7 +343,8 @@ These IDs appear in logs and system metadata. Customer accounts always have posi
 - **[Messaging](KALTURA_MESSAGING_API.md)** — Template-based email messaging (Bearer KS)
 - **[Webhooks](KALTURA_WEBHOOKS_API.md)** — Event-driven HTTP callbacks and email notifications (requires KS)
 - **[User Management API](KALTURA_USER_MANAGEMENT_API.md)** — Provision users and assign roles before creating sessions
-- **[Categories & Access Control API](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md)** — Category entitlements and access control profiles (related to `disableentitlement` / `enableentitlement` KS privileges)
+- **[Categories & Entitlements API](KALTURA_CATEGORIES_AND_ENTITLEMENTS_API.md)** — Category entitlements and membership (related to `disableentitlement` / `enableentitlement` KS privileges)
+- **[Access Control API](KALTURA_ACCESS_CONTROL_API.md)** — Access control profiles and rules for restricting content access
 - **[Analytics Reports](KALTURA_ANALYTICS_REPORTS_API.md)** — `appId` privilege tags analytics per-application
 - **[Custom Metadata](KALTURA_CUSTOM_METADATA_API.md)** — KS required for metadata profile management
 - **[Distribution](KALTURA_DISTRIBUTION_API.md)** — Admin KS required for distribution profile management

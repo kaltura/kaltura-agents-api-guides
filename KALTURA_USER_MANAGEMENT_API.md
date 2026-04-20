@@ -725,6 +725,6 @@ Returns a job ID. Retrieve the CSV file when the job completes using `user.serve
 - **[Messaging API](KALTURA_MESSAGING_API.md)** — Email messaging to users and groups
 - **[Webhooks API](KALTURA_WEBHOOKS_API.md)** — Event notifications targeting users and groups
 - **[Events Platform API](KALTURA_EVENTS_PLATFORM_API.md)** — Virtual events with team members (userId in KS required)
-- **[Categories & Access Control API](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md)** — Content organization with user-based category membership and entitlements
+- **[Categories & Entitlements API](KALTURA_CATEGORIES_AND_ENTITLEMENTS_API.md)** — Content organization with user-based category membership and entitlements
 - **[Multi-Account Management](KALTURA_MULTI_ACCOUNT_MANAGEMENT_API.md)** — User management across parent/child accounts
 - **[Analytics Reports](KALTURA_ANALYTICS_REPORTS_API.md)** — `ANALYTICS_BASE` role permission for analytics access

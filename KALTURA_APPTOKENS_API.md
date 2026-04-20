@@ -493,7 +493,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/appToken/action/delete" \
 # 12. Related Guides
 
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — KS generation, privileges, and session management
-- **[Upload & Delivery Guide](KALTURA_UPLOAD_AND_DELIVERY_API.md)** — Use AppToken-generated KS for uploads
+- **[Upload & Ingestion](KALTURA_UPLOAD_AND_INGESTION_API.md)** — Use AppToken-generated KS for uploads
 - **[eSearch Guide](KALTURA_ESEARCH_API.md)** — Use AppToken-generated KS for search
 - **[User Management API](KALTURA_USER_MANAGEMENT_API.md)** — User roles and permissions that AppTokens scope to via `setrole` privileges
 - **[Player Embed](KALTURA_PLAYER_EMBED_GUIDE.md)** — Generate scoped player KS via AppToken flow

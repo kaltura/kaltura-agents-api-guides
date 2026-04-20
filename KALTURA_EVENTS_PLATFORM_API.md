@@ -723,7 +723,7 @@ curl -X POST "$KALTURA_EVENTS_API_URL/events/delete" \
 
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — Generate the KS needed for Bearer auth (must include `userId`)
 - **[AppTokens Guide](KALTURA_APPTOKENS_API.md)** — Secure token-based auth for integrations
-- **[Upload & Delivery Guide](KALTURA_UPLOAD_AND_DELIVERY_API.md)** — Upload logo/banner assets for events
+- **[Upload & Ingestion Guide](KALTURA_UPLOAD_AND_INGESTION_API.md)** — Upload logo/banner assets for events
 - **[Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md)** — Embed event recordings
 - **[REACH Guide](KALTURA_REACH_API.md)** — Enrichment services: auto-caption, translate, and enrich event session recordings
 - **[Agents Manager](KALTURA_AGENTS_MANAGER_API.md)** — Auto-process event content with triggers and actions

@@ -6,7 +6,7 @@ labels: bug
 ---
 
 **Which guide?**
-<!-- e.g., KALTURA_UPLOAD_AND_DELIVERY_API.md -->
+<!-- e.g., KALTURA_UPLOAD_AND_INGESTION_API.md -->
 
 **What's wrong?**
 <!-- Describe the error — wrong parameter, incorrect response, outdated endpoint, etc. -->

@@ -726,12 +726,13 @@ Use quartile tracking for custom engagement analytics, completion-gated content 
 
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — Generate KS for access-controlled player embeds
 - **[AppTokens](KALTURA_APPTOKENS_API.md)** — Secure KS generation for production player integrations
-- **[Upload & Delivery](KALTURA_UPLOAD_AND_DELIVERY_API.md)** — Upload content and get playManifest URLs for playback
+- **[Content Delivery](KALTURA_CONTENT_DELIVERY_API.md)** — playManifest URLs, delivery profiles, and CDN configuration for playback
 - **[eSearch](KALTURA_ESEARCH_API.md)** — Search for entries to embed in the player
 - **[REACH](KALTURA_REACH_API.md)** — Add captions and translations that appear in the player
 - **[Events Platform](KALTURA_EVENTS_PLATFORM_API.md)** — Create events with live webcast sessions (played via embedded player)
 - **[Multi-Stream](KALTURA_MULTI_STREAM_API.md)** — Dual Screen / multi-screen entries for PiP and Side-by-Side playback
-- **[Categories & Access Control API](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md)** — Access control profiles for restricting player playback (geo, domain, IP, scheduling)
+- **[Access Control API](KALTURA_ACCESS_CONTROL_API.md)** — Access control profiles for restricting player playback (geo, domain, IP, scheduling)
+- **[Categories & Entitlements API](KALTURA_CATEGORIES_AND_ENTITLEMENTS_API.md)** — Category entitlements affecting content visibility
 - **[API Getting Started](KALTURA_API_GETTING_STARTED.md)** — Foundation guide covering content model and API patterns
 - **[Captions & Transcripts](KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md)** — Caption assets displayed in the player transcript plugin
 - **[Analytics Reports](KALTURA_ANALYTICS_REPORTS_API.md)** — Player events feed analytics reports  

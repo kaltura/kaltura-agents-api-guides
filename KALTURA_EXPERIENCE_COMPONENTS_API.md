@@ -101,7 +101,7 @@ Each standalone guide includes component-specific error handling. Common pattern
 - **[Embeddable Analytics](KALTURA_ANALYTICS_EMBED_API.md)** — Analytics dashboards via iframe  
 - **[Unisphere Framework](KALTURA_UNISPHERE_FRAMEWORK_API.md)** — The micro-frontend framework powering Genie, Media Manager, Content Lab, and other composable experiences  
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — KS generation and privilege management for component authentication  
-- **[Upload & Delivery](KALTURA_UPLOAD_AND_DELIVERY_API.md)** — Content lifecycle after Express Recorder creates entries  
+- **[Upload & Ingestion](KALTURA_UPLOAD_AND_INGESTION_API.md)** — Content lifecycle after Express Recorder creates entries  
 - **[Captions & Transcripts](KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md)** — Caption asset CRUD for Captions Editor prerequisites  
 - **[AI Genie API](KALTURA_AI_GENIE_API.md)** — Server-side Genie HTTP API for custom integrations  
 - **[Events Platform](KALTURA_EVENTS_PLATFORM_API.md)** — Virtual events where CnC and Player are embedded together  

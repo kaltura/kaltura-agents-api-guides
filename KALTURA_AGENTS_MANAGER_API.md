@@ -527,10 +527,10 @@ In addition to the API, agents can be configured through Kaltura's management in
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — Generate the KS needed for Bearer auth
 - **[AppTokens](KALTURA_APPTOKENS_API.md)** — Secure server-to-server auth for agent automation services
 - **[REACH](KALTURA_REACH_API.md)** — Enrichment services marketplace (captions, translation, moderation, and 20+ services) powering agent actions
-- **[Upload & Delivery](KALTURA_UPLOAD_AND_DELIVERY_API.md)** — Upload content that triggers agent processing
+- **[Upload & Ingestion](KALTURA_UPLOAD_AND_INGESTION_API.md)** — Upload content that triggers agent processing
 - **[AI Genie](KALTURA_AI_GENIE_API.md)** — Conversational AI search over content processed by agents
 - **[eSearch](KALTURA_ESEARCH_API.md)** — Search entries to find content for agent processing
 - **[Webhooks](KALTURA_WEBHOOKS_API.md)** — HTTP callbacks for agent execution events
-- **[Categories & Access Control API](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md)** — Category-based agent triggers (filter agents to fire only for entries in specific categories)
+- **[Categories & Entitlements API](KALTURA_CATEGORIES_AND_ENTITLEMENTS_API.md)** — Category-based agent triggers (filter agents to fire only for entries in specific categories)
 - **[Events Platform](KALTURA_EVENTS_PLATFORM_API.md)** — Agent triggers can respond to event lifecycle changes
 - **[Custom Metadata](KALTURA_CUSTOM_METADATA_API.md)** — Agent actions can update custom metadata fields

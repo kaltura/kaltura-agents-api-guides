@@ -62,7 +62,9 @@ jobs:
             tests/test_session_api.py \
             tests/test_apptokens_api.py \
             tests/test_esearch_api.py \
-            tests/test_upload_delivery_api.py \
+            tests/test_upload_and_ingestion_api.py \
+            tests/test_content_delivery_api.py \
+            tests/test_thumbnail_api.py \
             tests/test_player_embed_api.py \
             tests/test_reach_api.py \
             tests/test_clips_api.py \
@@ -76,7 +78,8 @@ jobs:
             tests/test_multi_stream_api.py \
             tests/test_user_management_api.py \
             tests/test_auth_broker_api.py \
-            tests/test_categories_access_control_api.py \
+            tests/test_categories_entitlements_api.py \
+            tests/test_access_control_api.py \
             tests/test_custom_metadata_api.py \
             tests/test_captions_transcripts_api.py \
             tests/test_analytics_reports_api.py \

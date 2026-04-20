@@ -386,7 +386,7 @@ Set the `serverUrl` in the workspace configuration to match your Kaltura account
 
 - **[Unisphere Framework](KALTURA_UNISPHERE_FRAMEWORK_API.md)** — The micro-frontend framework that powers this widget: loader, workspace lifecycle, services, multi-runtime composition  
 - **[Experience Components Overview](KALTURA_EXPERIENCE_COMPONENTS_API.md)** — Index of all embeddable components with shared guidelines  
-- **[Upload & Delivery](KALTURA_UPLOAD_AND_DELIVERY_API.md)** — Content lifecycle and upload mechanics used internally by the Media Manager  
-- **[Categories & Access Control](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md)** — Category hierarchy and membership for scoping the media library  
+- **[Upload & Ingestion](KALTURA_UPLOAD_AND_INGESTION_API.md)** — Content lifecycle and upload mechanics used internally by the Media Manager  
+- **[Categories & Entitlements](KALTURA_CATEGORIES_AND_ENTITLEMENTS_API.md)** — Category hierarchy and membership for scoping the media library  
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — KS generation and privilege management  
 - **[AppTokens API](KALTURA_APPTOKENS_API.md)** — Production token management for secure KS generation  

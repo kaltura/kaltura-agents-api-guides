@@ -2,8 +2,8 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/zoharbabin/kaltura-api-guides?label=Release)](https://github.com/zoharbabin/kaltura-api-guides/releases/latest)
-[![Guides](https://img.shields.io/badge/Guides-45-green.svg)](#guides)
-[![Tests](https://img.shields.io/badge/Live--Tested-879_tests-brightgreen.svg)](#guides)
+[![Guides](https://img.shields.io/badge/Guides-48-green.svg)](#guides)
+[![Tests](https://img.shields.io/badge/Live--Tested-912_tests-brightgreen.svg)](#guides)
 [![llms.txt](https://img.shields.io/badge/llms.txt-available-purple.svg)](llms.txt)
 [![Agent Skill](https://img.shields.io/badge/Agent_Skill-kaltura--api-orange.svg)](.agents/skills/kaltura-api/SKILL.md)
 [![Docs Site](https://img.shields.io/badge/Docs-GitHub_Pages-blue.svg)](https://zoharbabin.github.io/kaltura-api-guides/)
@@ -33,7 +33,9 @@ These guides are optimized for AI agent consumption through multiple discovery m
 | [Session (KS) Guide](KALTURA_SESSION_GUIDE.md) | Kaltura Session generation and management | 13 tests |
 | [AppTokens API](KALTURA_APPTOKENS_API.md) | Secure server-to-server auth without admin secrets | 17 tests |
 | [eSearch API](KALTURA_ESEARCH_API.md) | Unified search across entries, captions, metadata | 19 tests |
-| [Upload & Delivery API](KALTURA_UPLOAD_AND_DELIVERY_API.md) | Upload, chunked ingest, playback URLs, thumbnails | 34 tests |
+| [Upload & Ingestion API](KALTURA_UPLOAD_AND_INGESTION_API.md) | Upload, chunked ingest, entry CRUD, flavors, attachments | 25 tests |
+| [Content Delivery API](KALTURA_CONTENT_DELIVERY_API.md) | playManifest, raw serve, download, delivery profiles, CDN, access control | 13 tests |
+| [Thumbnail & Image API](KALTURA_THUMBNAIL_API.md) | Dynamic thumbnail URL (31 params), thumbAsset CRUD, thumbParams | 18 tests |
 | [Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md) | Player v7 embed (iframe + JavaScript) | 14 tests |
 | [REACH API](KALTURA_REACH_API.md) | Governed enrichment services marketplace: captions, translation, moderation, 22+ services | 35 tests |
 | [REACH — AI Clips](KALTURA_REACH_API.md) | AI clip generation via Content Lab / REACH | 15 tests |
@@ -47,7 +49,8 @@ These guides are optimized for AI agent consumption through multiple discovery m
 | [Multi-Stream API](KALTURA_MULTI_STREAM_API.md) | Dual/multi-screen video entries | 23 tests |
 | [User Management API](KALTURA_USER_MANAGEMENT_API.md) | User CRUD, roles (RBAC), groups, login management | 25 tests |
 | [Auth Broker API](KALTURA_AUTH_BROKER_API.md) | SSO/SAML auth profiles, app subscriptions, SPA proxy | 13 tests |
-| [Categories & Access Control API](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md) | Category hierarchy, membership, entitlement, access control profiles | 28 tests |
+| [Access Control API](KALTURA_ACCESS_CONTROL_API.md) | Access control profiles, rules, conditions, scheduling, entry assignment | 17 tests |
+| [Categories & Entitlements API](KALTURA_CATEGORIES_AND_ENTITLEMENTS_API.md) | Category hierarchy, membership, content assignment, privacy, entitlements | 23 tests |
 | [Custom Metadata API](KALTURA_CUSTOM_METADATA_API.md) | XSD schemas, metadata profiles, appinfo annotations, XSLT transforms | 24 tests |
 | [Captions & Transcripts API](KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md) | Caption assets (SRT/VTT/DFXP), transcripts, multi-language, REACH | 36 tests |
 | [Analytics Reports API](KALTURA_ANALYTICS_REPORTS_API.md) | Reports, CSV exports, live analytics, stream health | 35 tests |
@@ -94,7 +97,7 @@ cp .env.example .env
 
 ```bash
 # Run a specific test
-python3 tests/test_upload_delivery_api.py
+python3 tests/test_upload_and_ingestion_api.py
 
 # Run all tests
 cd tests

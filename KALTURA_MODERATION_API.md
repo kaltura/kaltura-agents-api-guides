@@ -621,9 +621,9 @@ Cross-reference: [REACH API Guide](KALTURA_REACH_API.md) for profile and rule co
 | Guide | Relationship |
 |-------|-------------|
 | [REACH API](KALTURA_REACH_API.md) | AI moderation tasks are REACH vendor tasks with serviceFeature=15 |
-| [Categories & Access Control](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md) | Category moderation, categoryEntry.activate/reject |
+| [Categories & Entitlements](KALTURA_CATEGORIES_AND_ENTITLEMENTS_API.md) | Category moderation, categoryEntry.activate/reject |
 | [Webhooks](KALTURA_WEBHOOKS_API.md) | HTTP notifications on moderation status changes |
-| [Upload & Delivery](KALTURA_UPLOAD_AND_DELIVERY_API.md) | Entry moderation status enum, media lifecycle |
+| [Upload & Ingestion](KALTURA_UPLOAD_AND_INGESTION_API.md) | Entry moderation status enum, media lifecycle |
 | [Player Embed](KALTURA_PLAYER_EMBED_GUIDE.md) | playkit-js-moderation plugin configuration |
 | [User Management](KALTURA_USER_MANAGEMENT_API.md) | Moderation permissions, user.notifyBan |
 | [Agents Manager](KALTURA_AGENTS_MANAGER_API.md) | Automation rules can trigger moderation workflows |

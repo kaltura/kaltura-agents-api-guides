@@ -385,7 +385,9 @@ export KALTURA_ADMIN_SECRET="YOUR_ADMIN_SECRET"
 
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — Deep dive into KS types, creation methods, privileges, and security
 - **[AppTokens](KALTURA_APPTOKENS_API.md)** — Production authentication without exposing secrets
-- **[Upload & Delivery](KALTURA_UPLOAD_AND_DELIVERY_API.md)** — Upload content, manage flavors, thumbnails, and delivery
+- **[Upload & Ingestion](KALTURA_UPLOAD_AND_INGESTION_API.md)** — Upload content, manage flavors and attachments
+- **[Content Delivery](KALTURA_CONTENT_DELIVERY_API.md)** — playManifest URLs, delivery profiles, CDN, access control
+- **[Thumbnail API](KALTURA_THUMBNAIL_API.md)** — Dynamic thumbnail URL, thumbAsset CRUD, thumbParams
 - **[eSearch](KALTURA_ESEARCH_API.md)** — Full-text search across your content library
 - **[Player Embed](KALTURA_PLAYER_EMBED_GUIDE.md)** — Embed the video player in web applications
 - **[Guide Map](GUIDE_MAP.md)** — Full dependency graph and "I want to..." decision tree

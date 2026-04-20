@@ -13,7 +13,9 @@ Kaltura API Guides/
 ├── KALTURA_SESSION_GUIDE.md               # KS generation and management
 ├── KALTURA_APPTOKENS_API.md               # Secure auth with AppTokens
 ├── KALTURA_ESEARCH_API.md                 # Unified search
-├── KALTURA_UPLOAD_AND_DELIVERY_API.md     # Upload, ingest, playback URLs
+├── KALTURA_UPLOAD_AND_INGESTION_API.md     # Upload, ingest, entry CRUD, flavors, attachments
+├── KALTURA_CONTENT_DELIVERY_API.md        # playManifest, serve, download, delivery profiles, CDN, access control
+├── KALTURA_THUMBNAIL_API.md               # Dynamic thumbnail URL, thumbAsset, thumbParams
 ├── KALTURA_PLAYER_EMBED_GUIDE.md          # Player v7 embed (iframe + JS)
 ├── KALTURA_REACH_API.md                   # Enrichment services marketplace: 22+ services, machine + human, 80+ languages
 ├── KALTURA_AGENTS_MANAGER_API.md          # Automated content processing
@@ -26,7 +28,8 @@ Kaltura API Guides/
 ├── KALTURA_WEBHOOKS_API.md                # HTTP webhooks & email via Messaging Service
 ├── KALTURA_USER_MANAGEMENT_API.md         # User CRUD, roles (RBAC), groups
 ├── KALTURA_AUTH_BROKER_API.md             # SSO/SAML auth profiles, app subscriptions
-├── KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md  # Categories, membership, access control
+├── KALTURA_ACCESS_CONTROL_API.md              # Access control profiles, rules, conditions
+├── KALTURA_CATEGORIES_AND_ENTITLEMENTS_API.md # Categories, membership, entitlements
 ├── KALTURA_CUSTOM_METADATA_API.md         # XSD schemas, metadata profiles, XSLT transforms
 ├── KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md # Caption assets, transcripts, multi-language, REACH
 ├── KALTURA_ANALYTICS_REPORTS_API.md       # Reports, CSV exports, live analytics, stream health
@@ -209,7 +212,8 @@ Agents building on Kaltura should use platform services rather than reimplementi
 | User registration & attendance | User Profile API (per-app profiles) | `KALTURA_USER_PROFILE_API.md` |
 | User provisioning & RBAC | User Management API (users, roles, groups) | `KALTURA_USER_MANAGEMENT_API.md` |
 | SSO/SAML authentication | Auth Broker API (IdP config, app subscriptions) | `KALTURA_AUTH_BROKER_API.md` |
-| Content organization | Categories & Access Control (hierarchy, entitlement) | `KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md` |
+| Content organization | Categories & Entitlements (hierarchy, membership) | `KALTURA_CATEGORIES_AND_ENTITLEMENTS_API.md` |
+| Access control rules | Access Control (profiles, conditions, restrictions) | `KALTURA_ACCESS_CONTROL_API.md` |
 | Custom metadata schemas | Custom Metadata API (XSD schemas, appinfo, XSLT) | `KALTURA_CUSTOM_METADATA_API.md` |
 | Captions & transcripts | Captions & Transcripts API (SRT/VTT/DFXP, REACH) | `KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md` |
 | Content distribution | Distribution connectors (YouTube, Facebook, FTP, cross-Kaltura) | `KALTURA_DISTRIBUTION_API.md` |

@@ -21,7 +21,9 @@ Guides for getting content into the platform and enriching it with AI.
 
 | Guide | Subcategory | What You Learn |
 |-------|-------------|---------------|
-| [Upload & Delivery](KALTURA_UPLOAD_AND_DELIVERY_API.md) | Capturing & Ingestion | Upload, transcode, thumbnails, chunked upload, delivery URLs |
+| [Upload & Ingestion](KALTURA_UPLOAD_AND_INGESTION_API.md) | Capturing & Ingestion | Upload, transcode, chunked upload, entry CRUD, flavors, attachments |
+| [Content Delivery](KALTURA_CONTENT_DELIVERY_API.md) | Capturing & Ingestion | playManifest, raw serve, download, delivery profiles, CDN, access control |
+| [Thumbnail API](KALTURA_THUMBNAIL_API.md) | Capturing & Ingestion | Dynamic thumbnail URL, thumbAsset CRUD, thumbParams |
 | [Multi-Stream](KALTURA_MULTI_STREAM_API.md) | Editing & Personalization | Dual-screen / PIP multi-camera entries |
 | [Captions & Transcripts](KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md) | Editing & Personalization | Caption asset CRUD, formats, serving, search |
 | [Custom Metadata](KALTURA_CUSTOM_METADATA_API.md) | Editing & Personalization | XSD schemas, structured XML metadata on entries |
@@ -42,7 +44,8 @@ Guides for organizing content, managing users, controlling access, and connectin
 | Guide | Subcategory | What You Learn |
 |-------|-------------|---------------|
 | [eSearch](KALTURA_ESEARCH_API.md) | Content Management | Full-text search across entries, captions, metadata |
-| [Categories & Access Control](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md) | Content Management | Content organization, entitlements, permissions |
+| [Categories & Entitlements](KALTURA_CATEGORIES_AND_ENTITLEMENTS_API.md) | Content Management | Category hierarchy, membership, content assignment, entitlements |
+| [Access Control](KALTURA_ACCESS_CONTROL_API.md) | Content Management | Access control profiles, rules, conditions, scheduling |
 | [User Management](KALTURA_USER_MANAGEMENT_API.md) | Identity & Access | User CRUD, roles, RBAC |
 | [Auth Broker (SSO)](KALTURA_AUTH_BROKER_API.md) | Identity & Access | SAML/OIDC identity provider integration |
 | [Multi-Account Management](KALTURA_MULTI_ACCOUNT_MANAGEMENT_API.md) | Administration | Sub-accounts, cross-account auth, aggregated analytics |
@@ -123,7 +126,8 @@ graph TD
 
     %% Management
     ES["eSearch"]
-    CA["Categories & Access Control"]
+    CA["Categories & Entitlements"]
+    ACL["Access Control"]
     UM["User Management"]
     AB["Auth Broker SSO"]
     MA["Multi-Account Management"]
@@ -135,6 +139,7 @@ graph TD
 
     KS --> ES
     KS --> CA
+    KS --> ACL
     KS --> UM
     AT --> AB
     KS --> MA
@@ -222,7 +227,7 @@ Blue = Foundation | Purple = Creation | Orange = Management | Green = Experience
 |------|-----------|
 | Make my first API call | [API Getting Started](KALTURA_API_GETTING_STARTED.md) |
 | Authenticate securely in production | [AppTokens](KALTURA_APPTOKENS_API.md) |
-| Upload and transcode video | [Upload & Delivery](KALTURA_UPLOAD_AND_DELIVERY_API.md) |
+| Upload and transcode video | [Upload & Ingestion](KALTURA_UPLOAD_AND_INGESTION_API.md) |
 | Embed a video player | [Player Embed](KALTURA_PLAYER_EMBED_GUIDE.md) |
 | Search my content library | [eSearch](KALTURA_ESEARCH_API.md) |
 | Add captions or transcripts | [Captions & Transcripts](KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md) |
@@ -246,7 +251,7 @@ Blue = Foundation | Purple = Creation | Orange = Management | Green = Experience
 | React to content events | [Webhooks](KALTURA_WEBHOOKS_API.md) |
 | Set up SSO/SAML | [Auth Broker](KALTURA_AUTH_BROKER_API.md) |
 | Add custom fields to entries | [Custom Metadata](KALTURA_CUSTOM_METADATA_API.md) |
-| Control who sees what | [Categories & Access Control](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md) |
+| Control who sees what | [Access Control](KALTURA_ACCESS_CONTROL_API.md), [Categories & Entitlements](KALTURA_CATEGORIES_AND_ENTITLEMENTS_API.md) |
 | Moderate content (flag, approve, reject) | [Moderation](KALTURA_MODERATION_API.md) |
 | Screen content with AI for policy violations | [Moderation](KALTURA_MODERATION_API.md) |
 | Add chapters to video | [Chapters & Slides](KALTURA_CHAPTERS_AND_SLIDES_API.md) |
@@ -256,5 +261,5 @@ Blue = Foundation | Purple = Creation | Orange = Management | Green = Experience
 | Sync slides with video playback | [Chapters & Slides](KALTURA_CHAPTERS_AND_SLIDES_API.md) |
 | Add code markers or view-change commands | [Code, Event & Session CPs](KALTURA_CODE_CUE_POINTS_API.md) |
 | Understand cue point types and base service | [Cue Points Hub](KALTURA_CUE_POINTS_API.md) |
-| Generate thumbnails | [Upload & Delivery](KALTURA_UPLOAD_AND_DELIVERY_API.md) (section 6) |
+| Generate thumbnails | [Thumbnail API](KALTURA_THUMBNAIL_API.md) |
 | Add gamification | [Gamification](KALTURA_GAMIFICATION_API.md) |

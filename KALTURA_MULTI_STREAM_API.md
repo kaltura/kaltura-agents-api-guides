@@ -18,7 +18,7 @@ Create synchronized multi-stream entries for dual-screen playback — Picture-in
 - A KS with appropriate privileges (see [Session Guide](KALTURA_SESSION_GUIDE.md))
 - A player with the Dual Screen plugin enabled (see [Section 5](#5-player-setup))
 - Video files that are in sync (same duration, same starting point)
-- For uploading new files, see the [Upload & Delivery Guide](KALTURA_UPLOAD_AND_DELIVERY_API.md)
+- For uploading new files, see the [Upload & Ingestion Guide](KALTURA_UPLOAD_AND_INGESTION_API.md)
 
 
 # 1. Multi-Stream Architecture
@@ -46,7 +46,7 @@ Key behaviors:
 
 # 2. Create a Multi-Stream Entry Set
 
-This workflow creates a parent entry and links child entries to it. For the upload steps (`uploadToken.add`, `uploadToken.upload`, `media.add`, `media.addContent`), see the [Upload & Delivery Guide](KALTURA_UPLOAD_AND_DELIVERY_API.md) for full details including chunked/resumable uploads.
+This workflow creates a parent entry and links child entries to it. For the upload steps (`uploadToken.add`, `uploadToken.upload`, `media.add`, `media.addContent`), see the [Upload & Ingestion Guide](KALTURA_UPLOAD_AND_INGESTION_API.md) for full details including chunked/resumable uploads.
 
 ## 2.1 Create the Parent Entry
 
@@ -451,7 +451,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/media/action/delete" \
 # 11. Related Guides
 
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — Generate the KS needed for API auth
-- **[Upload & Delivery Guide](KALTURA_UPLOAD_AND_DELIVERY_API.md)** — Full upload lifecycle (chunked, resumable, import from URL)
+- **[Upload & Ingestion Guide](KALTURA_UPLOAD_AND_INGESTION_API.md)** — Full upload lifecycle (chunked, resumable, import from URL)
 - **[Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md)** — Embed the Dual Screen player
 - **[eSearch Guide](KALTURA_ESEARCH_API.md)** — Search for parent entries (use `parentEntryIdEqual` filter to find child entries)
 - **[Webhooks API](KALTURA_WEBHOOKS_API.md)** — Get notified when entries finish processing (HTTP callbacks)

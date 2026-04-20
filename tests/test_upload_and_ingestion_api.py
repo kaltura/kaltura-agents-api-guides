@@ -1,23 +1,22 @@
 #!/usr/bin/env python3
 """
-End-to-end validation of the Upload, Ingest & Content Delivery API.
+End-to-end validation of the Upload & Ingestion API.
 
-Covers: uploadToken lifecycle, single-shot upload, chunked upload,
-media entry creation, addContent, addFromUrl, flavor assets,
-thumbnail URLs, playManifest URLs, and cleanup.
+Covers: uploadToken lifecycle, single-shot upload, chunked upload with resume,
+media entry creation (add, addContent, addFromUrl, update, delete),
+entry status polling, flavor asset listing, attachmentAsset CRUD.
 """
 
 import sys
 import os
 import time
 import tempfile
+import io
 import requests
 
 sys.path.insert(0, os.path.dirname(__file__))
 from test_helpers import kaltura_post, TestRunner, PARTNER_ID, KS, SERVICE_URL
 
-# A small publicly accessible video for addFromUrl testing
-# Using a Kaltura sample video (very small, guaranteed available)
 SAMPLE_VIDEO_URL = os.environ.get(
     "KALTURA_TEST_VIDEO_URL",
     "https://cdnapisec.kaltura.com/p/811441/sp/81144100/playManifest/entryId/1_uoup50ye/format/url/protocol/https"
@@ -27,7 +26,7 @@ state = {}
 
 
 def main():
-    runner = TestRunner("Upload, Ingest & Content Delivery API Validation")
+    runner = TestRunner("Upload & Ingestion API Validation")
 
     # ════════════════════════════════════════════
     # Phase 1: Upload Token Lifecycle
@@ -55,7 +54,6 @@ def main():
             "uploadTokenId": state["token_id"],
         })
         assert result["id"] == state["token_id"]
-        # Token may be PENDING(0) or already PARTIAL(1)
         assert result["status"] in (0, 1, 2), f"Unexpected status: {result['status']}"
         print(f"    Token status={result['status']}, uploadedFileSize={result.get('uploadedFileSize', 0)}")
 
@@ -64,11 +62,9 @@ def main():
     def test_upload_token_list():
         """List upload tokens and verify our token appears."""
         result = kaltura_post("uploadToken", "list", {
-            "filter[statusEqual]": 0,  # PENDING
+            "filter[statusEqual]": 0,
         })
         assert result.get("totalCount", 0) >= 1, "No pending tokens found"
-        token_ids = [t["id"] for t in result.get("objects", [])]
-        # Our token should be in the list (may not be on first page if many tokens)
         print(f"    Found {result['totalCount']} pending token(s)")
 
     runner.run_test("uploadToken.list — list pending tokens", test_upload_token_list)
@@ -80,7 +76,7 @@ def main():
     def test_create_test_file():
         """Create a small test file for upload."""
         tf = tempfile.NamedTemporaryFile(delete=False, suffix=".bin", prefix="kaltura_test_")
-        tf.write(b"KALTURA_API_TEST_" * 64)  # 1088 bytes
+        tf.write(b"KALTURA_API_TEST_" * 64)
         tf.close()
         state["test_file"] = tf.name
         state["test_file_size"] = os.path.getsize(tf.name)
@@ -90,7 +86,6 @@ def main():
 
     def test_single_shot_upload():
         """Upload the test file in a single request."""
-        # Create a fresh token for this upload
         token = kaltura_post("uploadToken", "add", {
             "uploadToken[fileName]": "test_single_shot.bin",
             "uploadToken[fileSize]": state["test_file_size"],
@@ -112,7 +107,6 @@ def main():
                 timeout=30,
             )
             resp.raise_for_status()
-            # Upload response may not be JSON — verify via token get instead
             try:
                 result = resp.json()
                 if isinstance(result, dict) and "id" in result:
@@ -122,7 +116,6 @@ def main():
             except Exception:
                 pass
 
-        # Verify upload succeeded via token get
         result = kaltura_post("uploadToken", "get", {
             "uploadTokenId": token["id"],
         })
@@ -134,16 +127,14 @@ def main():
 
     def test_verify_single_upload_token():
         """Verify the token reached FULL_UPLOAD after single-shot."""
-        # Poll briefly if needed
         for attempt in range(5):
             result = kaltura_post("uploadToken", "get", {
                 "uploadTokenId": state["single_token_id"],
             })
-            if result["status"] == 2:  # FULL_UPLOAD
+            if result["status"] == 2:
                 print(f"    Token FULL_UPLOAD: uploadedFileSize={result['uploadedFileSize']}")
                 return
             time.sleep(1)
-        # Accept status 1 (PARTIAL) or 2 (FULL) — server may auto-finalize differently
         assert result["status"] in (1, 2), f"Unexpected status: {result['status']}"
         print(f"    Token status={result['status']}, uploadedFileSize={result.get('uploadedFileSize')}")
 
@@ -156,8 +147,7 @@ def main():
     def test_create_larger_file():
         """Create a slightly larger file for chunked upload testing."""
         tf = tempfile.NamedTemporaryFile(delete=False, suffix=".bin", prefix="kaltura_chunk_test_")
-        # Write ~10KB (enough to chunk into at least 2 pieces)
-        tf.write(b"KALTURA_CHUNK_TEST_DATA_" * 500)  # 12,000 bytes
+        tf.write(b"KALTURA_CHUNK_TEST_DATA_" * 500)
         tf.close()
         state["chunk_file"] = tf.name
         state["chunk_file_size"] = os.path.getsize(tf.name)
@@ -173,7 +163,7 @@ def main():
         })
         state["chunk_token_id"] = token["id"]
 
-        chunk_size = 5000  # Small chunks for testing
+        chunk_size = 5000
         file_size = state["chunk_file_size"]
         offset = 0
         chunk_count = 0
@@ -217,7 +207,6 @@ def main():
                 })
             except Exception as e:
                 if "UPLOAD_TOKEN_NOT_FOUND" in str(e):
-                    # Token may have been auto-consumed/finalized
                     print(f"    Token auto-consumed (not found) — upload succeeded")
                     return
                 raise
@@ -225,7 +214,6 @@ def main():
                 print(f"    FULL_UPLOAD confirmed: {result['uploadedFileSize']} bytes")
                 return
             time.sleep(1)
-        # Accept status 1 or 2
         assert result["status"] in (1, 2), f"Unexpected status: {result['status']}"
         print(f"    Status={result['status']}, uploadedFileSize={result.get('uploadedFileSize')}")
 
@@ -240,7 +228,7 @@ def main():
         ts = int(time.time())
         result = kaltura_post("media", "add", {
             "entry[objectType]": "KalturaMediaEntry",
-            "entry[mediaType]": 1,  # Video
+            "entry[mediaType]": 1,
             "entry[name]": f"API_DOC_VALIDATION_UPLOAD_{ts}",
             "entry[description]": "Test entry for upload API validation. Safe to delete.",
             "entry[tags]": "api-test,upload,validation",
@@ -302,152 +290,13 @@ def main():
     runner.run_test("media.addFromUrl — import video from URL", test_add_from_url)
 
     # ════════════════════════════════════════════
-    # Phase 6: Delivery — Thumbnails & playManifest
-    # ════════════════════════════════════════════
-
-    def test_find_ready_entry():
-        """Find a ready entry for delivery tests (prefer own URL-import entry)."""
-        url_id = state.get("url_entry_id")
-        if url_id:
-            for attempt in range(24):
-                entry = kaltura_post("media", "get", {"entryId": url_id})
-                if entry.get("status") == 2:
-                    state["ready_entry_id"] = entry["id"]
-                    state["ready_partner_id"] = str(entry.get("partnerId", PARTNER_ID))
-                    print(f"    Ready entry (own import): {entry['id']} — {entry.get('name', '?')}")
-                    return
-                time.sleep(5)
-        result = kaltura_post("media", "list", {
-            "filter[statusEqual]": 2,
-            "filter[mediaTypeEqual]": 1,
-            "filter[orderBy]": "-plays",
-            "filter[playsGreaterThanOrEqual]": 1,
-            "pager[pageSize]": 1,
-        })
-        assert result["totalCount"] > 0, "No ready video entries found for delivery tests"
-        entry = result["objects"][0]
-        state["ready_entry_id"] = entry["id"]
-        state["ready_partner_id"] = str(entry.get("partnerId", PARTNER_ID))
-        print(f"    Ready entry (fallback): {entry['id']} — {entry.get('name', '?')}")
-
-    runner.run_test("Find ready entry for delivery tests", test_find_ready_entry)
-
-    def test_thumbnail_default():
-        """Verify the default thumbnail URL returns an image."""
-        pid = state["ready_partner_id"]
-        url = f"https://cdnapisec.kaltura.com/p/{pid}/thumbnail/entry_id/{state['ready_entry_id']}"
-        resp = requests.get(url, timeout=15, allow_redirects=True)
-        assert resp.status_code == 200, f"Thumbnail returned {resp.status_code}"
-        content_type = resp.headers.get("Content-Type", "")
-        assert "image" in content_type, f"Expected image, got {content_type}"
-        assert len(resp.content) > 100, "Thumbnail too small"
-        print(f"    Default thumbnail: {len(resp.content)} bytes, {content_type}")
-
-    runner.run_test("Thumbnail API — default thumbnail", test_thumbnail_default)
-
-    def test_thumbnail_with_params():
-        """Verify thumbnail with specific dimensions and time."""
-        pid = state["ready_partner_id"]
-        url = (f"https://cdnapisec.kaltura.com/p/{pid}/thumbnail/entry_id/"
-               f"{state['ready_entry_id']}/width/320/height/180/vid_sec/5")
-        resp = requests.get(url, timeout=15, allow_redirects=True)
-        assert resp.status_code == 200, f"Thumbnail returned {resp.status_code}"
-        content_type = resp.headers.get("Content-Type", "")
-        assert "image" in content_type, f"Expected image, got {content_type}"
-        print(f"    Sized thumbnail (320x180@5s): {len(resp.content)} bytes, {content_type}")
-
-    runner.run_test("Thumbnail API — sized thumbnail at specific second", test_thumbnail_with_params)
-
-    def test_play_manifest_hls():
-        """Verify HLS playManifest URL returns a valid response."""
-        pid = state["ready_partner_id"]
-        # Include KS for access-controlled content
-        url = (f"https://cdnapisec.kaltura.com/p/{pid}/sp/{pid}00/"
-               f"playManifest/entryId/{state['ready_entry_id']}/format/applehttp/protocol/https"
-               f"/ks/{KS}")
-        resp = requests.get(url, timeout=15, allow_redirects=True)
-        assert resp.status_code == 200, f"playManifest HLS returned {resp.status_code}"
-        text = resp.text
-        assert "#EXTM3U" in text or resp.headers.get("Content-Type", "").startswith("application/"), \
-            f"Response doesn't look like HLS manifest"
-        print(f"    HLS manifest: {len(text)} chars")
-
-    runner.run_test("playManifest — HLS (applehttp) streaming URL", test_play_manifest_hls)
-
-    def test_play_manifest_download():
-        """Verify download format returns a downloadable response."""
-        pid = state["ready_partner_id"]
-        # Include KS for access-controlled content
-        url = (f"https://cdnapisec.kaltura.com/p/{pid}/sp/{pid}00/"
-               f"playManifest/entryId/{state['ready_entry_id']}/format/download/protocol/https"
-               f"/flavorParamIds/0/ks/{KS}")
-        resp = requests.head(url, timeout=15, allow_redirects=True)
-        assert resp.status_code in (200, 301, 302, 303), \
-            f"playManifest download returned {resp.status_code}"
-        print(f"    Download URL: status={resp.status_code}")
-
-    runner.run_test("playManifest — download URL", test_play_manifest_download)
-
-    # ════════════════════════════════════════════
-    # Phase 7: Flavor Assets
-    # ════════════════════════════════════════════
-
-    def test_flavor_asset_list():
-        """List flavor assets for the ready entry."""
-        result = kaltura_post("flavorAsset", "list", {
-            "filter[entryIdEqual]": state["ready_entry_id"],
-        })
-        assert result.get("totalCount", 0) > 0, "No flavor assets found"
-        flavors = result["objects"]
-        state["flavors"] = flavors
-        ready_flavors = [f for f in flavors if f.get("status") == 2]
-        print(f"    {result['totalCount']} flavor(s), {len(ready_flavors)} ready:")
-        for f in ready_flavors[:3]:
-            print(f"      {f['id']}: {f.get('width','?')}x{f.get('height','?')} "
-                  f"@ {f.get('bitrate','?')}kbps, original={f.get('isOriginal', False)}")
-
-    runner.run_test("flavorAsset.list — list transcoded flavors", test_flavor_asset_list)
-
-    def test_flavor_asset_get_url():
-        """Get download URL for a specific flavor asset."""
-        ready_flavors = [f for f in state.get("flavors", []) if f.get("status") == 2]
-        if not ready_flavors:
-            raise Exception("No ready flavors to get URL for")
-
-        flavor_id = ready_flavors[0]["id"]
-        result = kaltura_post("flavorAsset", "getUrl", {
-            "id": flavor_id,
-        })
-        # Result is a string URL
-        assert isinstance(result, str) and result.startswith("http"), \
-            f"Expected URL string, got: {result}"
-        print(f"    Flavor {flavor_id} URL: {result[:100]}...")
-
-    runner.run_test("flavorAsset.getUrl — get download URL for flavor", test_flavor_asset_get_url)
-
-    # ════════════════════════════════════════════
-    # Phase 8: Entry downloadUrl property
-    # ════════════════════════════════════════════
-
-    def test_entry_download_url():
-        """Verify the entry's downloadUrl property."""
-        result = kaltura_post("media", "get", {
-            "entryId": state["ready_entry_id"],
-        })
-        download_url = result.get("downloadUrl", "")
-        assert download_url.startswith("http"), f"Expected URL, got: {download_url}"
-        print(f"    downloadUrl: {download_url[:100]}...")
-
-    runner.run_test("media.get — downloadUrl property", test_entry_download_url)
-
-    # ════════════════════════════════════════════
-    # Phase 9: media.update and media.delete
+    # Phase 6: Entry CRUD Operations
     # ════════════════════════════════════════════
 
     def test_media_update():
         """Update entry metadata."""
         if not state.get("entry_id"):
-            raise Exception("No entry_id available (media.add may have failed)")
+            raise RuntimeError("No entry_id available")
         ts = int(time.time())
         result = kaltura_post("media", "update", {
             "entryId": state["entry_id"],
@@ -477,8 +326,158 @@ def main():
 
     runner.run_test("media.list — filter by tags", test_media_list_filter)
 
+    def test_media_count():
+        """Count entries matching a filter."""
+        result = kaltura_post("media", "count", {
+            "filter[tagsMultiLikeOr]": "api-test",
+        })
+        assert isinstance(result, int) or isinstance(result, float), \
+            f"Expected integer count, got: {type(result)}"
+        print(f"    media.count with tag 'api-test': {result}")
+
+    runner.run_test("media.count — count matching entries", test_media_count)
+
+    def test_base_entry_get_by_ids():
+        """Batch retrieve multiple entries."""
+        ids = []
+        if state.get("entry_id"):
+            ids.append(state["entry_id"])
+        if state.get("url_entry_id"):
+            ids.append(state["url_entry_id"])
+        if not ids:
+            raise RuntimeError("No entry IDs available")
+        result = kaltura_post("baseEntry", "getByIds", {
+            "entryIds": ",".join(ids),
+        })
+        if isinstance(result, list):
+            assert len(result) == len(ids), f"Expected {len(ids)} entries, got {len(result)}"
+            print(f"    Retrieved {len(result)} entries via getByIds")
+        else:
+            print(f"    getByIds response: {str(result)[:200]}")
+
+    runner.run_test("baseEntry.getByIds — batch retrieve", test_base_entry_get_by_ids)
+
     # ════════════════════════════════════════════
-    # Phase 10: Cleanup
+    # Phase 7: Flavor Assets
+    # ════════════════════════════════════════════
+
+    def test_find_ready_entry():
+        """Find a ready entry for flavor tests."""
+        url_id = state.get("url_entry_id")
+        if url_id:
+            for attempt in range(24):
+                entry = kaltura_post("media", "get", {"entryId": url_id})
+                if entry.get("status") == 2:
+                    state["ready_entry_id"] = entry["id"]
+                    print(f"    Ready entry (own import): {entry['id']}")
+                    return
+                time.sleep(5)
+        result = kaltura_post("media", "list", {
+            "filter[statusEqual]": 2,
+            "filter[mediaTypeEqual]": 1,
+            "filter[orderBy]": "-plays",
+            "filter[playsGreaterThanOrEqual]": 1,
+            "pager[pageSize]": 1,
+        })
+        assert result["totalCount"] > 0, "No ready entries found"
+        entry = result["objects"][0]
+        state["ready_entry_id"] = entry["id"]
+        print(f"    Ready entry (fallback): {entry['id']}")
+
+    runner.run_test("Find ready entry for flavor tests", test_find_ready_entry)
+
+    def test_flavor_asset_list():
+        """List flavor assets for the ready entry."""
+        result = kaltura_post("flavorAsset", "list", {
+            "filter[entryIdEqual]": state["ready_entry_id"],
+        })
+        assert result.get("totalCount", 0) > 0, "No flavor assets found"
+        flavors = result["objects"]
+        state["flavors"] = flavors
+        ready_flavors = [f for f in flavors if f.get("status") == 2]
+        print(f"    {result['totalCount']} flavor(s), {len(ready_flavors)} ready")
+
+    runner.run_test("flavorAsset.list — list transcoded flavors", test_flavor_asset_list)
+
+    # ════════════════════════════════════════════
+    # Phase 8: Attachment Assets
+    # ════════════════════════════════════════════
+
+    def test_attachment_asset_add():
+        """Create an attachment asset on a media entry."""
+        entry_id = state.get("ready_entry_id")
+        if not entry_id:
+            raise RuntimeError("No ready entry")
+        result = kaltura_post("attachment_attachmentAsset", "add", {
+            "entryId": entry_id,
+            "attachmentAsset[objectType]": "KalturaAttachmentAsset",
+            "attachmentAsset[title]": "Test Document",
+            "attachmentAsset[format]": 3,
+            "attachmentAsset[tags]": "test-attachment",
+        })
+        assert "id" in result, f"No attachmentAsset ID: {result}"
+        state["attachment_id"] = result["id"]
+        runner.register_cleanup(f"attachmentAsset {result['id']}",
+                                lambda: _delete_attachment_asset(result["id"]))
+        print(f"    AttachmentAsset: {result['id']}, format={result.get('format')}")
+
+    runner.run_test("attachmentAsset.add — create attachment", test_attachment_asset_add)
+
+    def test_attachment_asset_set_content():
+        """Upload content to an attachment asset."""
+        att_id = state.get("attachment_id")
+        if not att_id:
+            raise RuntimeError("No attachmentAsset ID")
+        token = kaltura_post("uploadToken", "add", {
+            "uploadToken[fileName]": "notes.txt",
+            "uploadToken[fileSize]": 26,
+        })
+        token_id = token["id"]
+        upload_url = f"{SERVICE_URL}/service/uploadToken/action/upload"
+        resp = requests.post(upload_url, data={
+            "ks": KS, "format": "1", "uploadTokenId": token_id, "resume": "false",
+        }, files={"fileData": ("notes.txt", io.BytesIO(b"Test attachment content.\n"), "text/plain")})
+        assert resp.status_code == 200
+        result = kaltura_post("attachment_attachmentAsset", "setContent", {
+            "id": att_id,
+            "contentResource[objectType]": "KalturaUploadedFileTokenResource",
+            "contentResource[token]": token_id,
+        })
+        assert result.get("id") == att_id
+        print(f"    Set content on attachmentAsset {att_id}")
+
+    runner.run_test("attachmentAsset.setContent — upload attachment file", test_attachment_asset_set_content)
+
+    def test_attachment_asset_list():
+        """List attachment assets for an entry."""
+        entry_id = state.get("ready_entry_id")
+        if not entry_id:
+            raise RuntimeError("No ready entry")
+        result = kaltura_post("attachment_attachmentAsset", "list", {
+            "filter[entryIdEqual]": entry_id,
+        })
+        assert "objects" in result
+        assert result.get("totalCount", 0) > 0, "Expected at least one attachment"
+        print(f"    Found {result['totalCount']} attachment(s)")
+
+    runner.run_test("attachmentAsset.list — list attachments for entry", test_attachment_asset_list)
+
+    def test_attachment_asset_get_url():
+        """Get download URL for an attachment."""
+        att_id = state.get("attachment_id")
+        if not att_id:
+            raise RuntimeError("No attachmentAsset ID")
+        result = kaltura_post("attachment_attachmentAsset", "getUrl", {
+            "id": att_id,
+        })
+        assert isinstance(result, str) and result.startswith("http"), \
+            f"Expected URL, got: {result}"
+        print(f"    Attachment URL: {result[:100]}...")
+
+    runner.run_test("attachmentAsset.getUrl — get download URL", test_attachment_asset_get_url)
+
+    # ════════════════════════════════════════════
+    # Phase 9: Cleanup
     # ════════════════════════════════════════════
 
     def test_delete_upload_token():
@@ -507,201 +506,7 @@ def main():
     runner.run_test("Cleanup — remove temp files", test_cleanup_temp_files)
 
     # ════════════════════════════════════════════
-    # Phase 6: thumbAsset API (Stored Thumbnails)
-    # ════════════════════════════════════════════
-
-    def test_thumb_asset_generate():
-        """Capture a thumbnail from a video at a specific offset."""
-        entry_id = state.get("ready_entry_id")
-        if not entry_id:
-            raise RuntimeError("No ready entry for thumbAsset tests")
-        result = kaltura_post("thumbAsset", "generate", {
-            "entryId": entry_id,
-            "thumbParams[objectType]": "KalturaThumbParams",
-            "thumbParams[videoOffset]": 3,
-        })
-        assert "id" in result, f"No thumbAsset ID returned: {result}"
-        state["thumb_asset_id"] = result["id"]
-        runner.register_cleanup(f"thumbAsset {result['id']}",
-                                lambda: _delete_thumb_asset(result["id"]))
-        print(f"    ThumbAsset: {result['id']}, entryId={result.get('entryId')}")
-
-    runner.run_test("thumbAsset.generate — capture frame from video", test_thumb_asset_generate)
-
-    def test_thumb_asset_get():
-        """Retrieve a specific thumbnail asset."""
-        thumb_id = state.get("thumb_asset_id")
-        if not thumb_id:
-            raise RuntimeError("No thumbAsset ID")
-        result = kaltura_post("thumbAsset", "get", {
-            "thumbAssetId": thumb_id,
-        })
-        assert result.get("id") == thumb_id, f"Expected {thumb_id}, got {result.get('id')}"
-        assert result.get("objectType") == "KalturaThumbAsset"
-        print(f"    ThumbAsset: {result['id']}, status={result.get('status')}, width={result.get('width')}")
-
-    runner.run_test("thumbAsset.get — retrieve thumbnail asset", test_thumb_asset_get)
-
-    def test_thumb_asset_set_as_default():
-        """Set a thumbnail as the entry's default."""
-        thumb_id = state.get("thumb_asset_id")
-        if not thumb_id:
-            raise RuntimeError("No thumbAsset ID")
-        result = kaltura_post("thumbAsset", "setAsDefault", {
-            "thumbAssetId": thumb_id,
-        })
-        # setAsDefault returns void on success — no error means success
-        print(f"    Set thumbAsset {thumb_id} as default")
-
-    runner.run_test("thumbAsset.setAsDefault — set default thumbnail", test_thumb_asset_set_as_default)
-
-    def test_thumb_asset_list():
-        """List all thumbnails for an entry."""
-        entry_id = state.get("ready_entry_id")
-        if not entry_id:
-            raise RuntimeError("No ready entry for thumbAsset list")
-        result = kaltura_post("thumbAsset", "list", {
-            "filter[entryIdEqual]": entry_id,
-        })
-        assert "objects" in result, f"Expected objects array: {result}"
-        assert result.get("totalCount", 0) > 0, f"Expected at least one thumbAsset, got {result.get('totalCount')}"
-        thumb_ids = [t["id"] for t in result["objects"]]
-        print(f"    Found {result['totalCount']} thumbAssets: {', '.join(thumb_ids)}")
-
-    runner.run_test("thumbAsset.list — list thumbnails for entry", test_thumb_asset_list)
-
-    def test_thumb_asset_add_upload():
-        """Upload a custom thumbnail image via uploadToken."""
-        entry_id = state.get("ready_entry_id")
-        if not entry_id:
-            raise RuntimeError("No ready entry")
-        # Create a minimal 1x1 PNG (67 bytes)
-        import base64
-        png_data = base64.b64decode(
-            "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
-        )
-        # Step 1: Create upload token
-        token = kaltura_post("uploadToken", "add", {
-            "uploadToken[fileName]": "thumb_test.png",
-            "uploadToken[fileSize]": len(png_data),
-        })
-        token_id = token["id"]
-        runner.register_cleanup(f"thumb upload token {token_id}",
-                                lambda: _delete_token(token_id))
-        # Step 2: Upload the PNG
-        import io
-        upload_url = f"{SERVICE_URL}/service/uploadToken/action/upload"
-        resp = requests.post(upload_url, data={
-            "ks": KS, "format": "1", "uploadTokenId": token_id, "resume": "false",
-        }, files={"fileData": ("thumb_test.png", io.BytesIO(png_data), "image/png")})
-        assert resp.status_code == 200
-        # Step 3: Create thumbAsset
-        thumb = kaltura_post("thumbAsset", "add", {
-            "entryId": entry_id,
-            "thumbAsset[objectType]": "KalturaThumbAsset",
-            "thumbAsset[tags]": "test-uploaded",
-        })
-        assert "id" in thumb, f"No thumbAsset ID: {thumb}"
-        state["uploaded_thumb_id"] = thumb["id"]
-        runner.register_cleanup(f"uploaded thumbAsset {thumb['id']}",
-                                lambda: _delete_thumb_asset(thumb["id"]))
-        # Step 4: Attach content
-        kaltura_post("thumbAsset", "setContent", {
-            "id": thumb["id"],
-            "contentResource[objectType]": "KalturaUploadedFileTokenResource",
-            "contentResource[token]": token_id,
-        })
-        print(f"    Uploaded thumbAsset: {thumb['id']} (via token {token_id})")
-
-    runner.run_test("thumbAsset.add + setContent — upload custom thumbnail", test_thumb_asset_add_upload)
-
-    def test_thumb_asset_delete():
-        """Delete a thumbnail asset."""
-        thumb_id = state.get("uploaded_thumb_id")
-        if not thumb_id:
-            raise RuntimeError("No uploaded thumbAsset to delete")
-        kaltura_post("thumbAsset", "delete", {"thumbAssetId": thumb_id})
-        # Verify deletion
-        try:
-            kaltura_post("thumbAsset", "get", {"thumbAssetId": thumb_id})
-            raise AssertionError(f"thumbAsset {thumb_id} still exists after delete")
-        except Exception as e:
-            if "THUMB_ASSET_ID_NOT_FOUND" in str(e) or "not found" in str(e).lower():
-                print(f"    Deleted thumbAsset {thumb_id} (confirmed not found)")
-            else:
-                raise
-
-    runner.run_test("thumbAsset.delete — remove thumbnail asset", test_thumb_asset_delete)
-
-    # ════════════════════════════════════════════
-    # Phase 7: attachmentAsset API
-    # ════════════════════════════════════════════
-
-    def test_attachment_asset_add():
-        """Create an attachment asset on a media entry."""
-        entry_id = state.get("ready_entry_id")
-        if not entry_id:
-            raise RuntimeError("No ready entry for attachmentAsset tests")
-        result = kaltura_post("attachment_attachmentAsset", "add", {
-            "entryId": entry_id,
-            "attachmentAsset[objectType]": "KalturaAttachmentAsset",
-            "attachmentAsset[title]": "Test Document",
-            "attachmentAsset[format]": 3,  # DOCUMENT
-            "attachmentAsset[tags]": "test-attachment",
-        })
-        assert "id" in result, f"No attachmentAsset ID: {result}"
-        state["attachment_id"] = result["id"]
-        runner.register_cleanup(f"attachmentAsset {result['id']}",
-                                lambda: _delete_attachment_asset(result["id"]))
-        print(f"    AttachmentAsset: {result['id']}, format={result.get('format')}")
-
-    runner.run_test("attachmentAsset.add — create attachment", test_attachment_asset_add)
-
-    def test_attachment_asset_set_content():
-        """Upload content to an attachment asset."""
-        att_id = state.get("attachment_id")
-        if not att_id:
-            raise RuntimeError("No attachmentAsset ID")
-        # Create upload token with a small text file
-        token = kaltura_post("uploadToken", "add", {
-            "uploadToken[fileName]": "notes.txt",
-            "uploadToken[fileSize]": 26,
-        })
-        token_id = token["id"]
-        import io
-        upload_url = f"{SERVICE_URL}/service/uploadToken/action/upload"
-        resp = requests.post(upload_url, data={
-            "ks": KS, "format": "1", "uploadTokenId": token_id, "resume": "false",
-        }, files={"fileData": ("notes.txt", io.BytesIO(b"Test attachment content.\n"), "text/plain")})
-        assert resp.status_code == 200
-        # Attach content to asset
-        result = kaltura_post("attachment_attachmentAsset", "setContent", {
-            "id": att_id,
-            "contentResource[objectType]": "KalturaUploadedFileTokenResource",
-            "contentResource[token]": token_id,
-        })
-        assert result.get("id") == att_id
-        print(f"    Set content on attachmentAsset {att_id} (via token {token_id})")
-
-    runner.run_test("attachmentAsset.setContent — upload attachment file", test_attachment_asset_set_content)
-
-    def test_attachment_asset_list():
-        """List attachment assets for an entry."""
-        entry_id = state.get("ready_entry_id")
-        if not entry_id:
-            raise RuntimeError("No ready entry")
-        result = kaltura_post("attachment_attachmentAsset", "list", {
-            "filter[entryIdEqual]": entry_id,
-        })
-        assert "objects" in result, f"Expected objects array: {result}"
-        assert result.get("totalCount", 0) > 0, f"Expected at least one attachment, got {result.get('totalCount')}"
-        att_ids = [a["id"] for a in result["objects"]]
-        print(f"    Found {result['totalCount']} attachments: {', '.join(att_ids)}")
-
-    runner.run_test("attachmentAsset.list — list attachments for entry", test_attachment_asset_list)
-
-    # ════════════════════════════════════════════
-    # Cleanup & Summary
+    # Final Cleanup & Summary
     # ════════════════════════════════════════════
 
     keep = "--keep" in sys.argv
@@ -733,13 +538,6 @@ def _delete_entry(entry_id):
         pass
 
 
-def _delete_thumb_asset(thumb_id):
-    try:
-        kaltura_post("thumbAsset", "delete", {"thumbAssetId": thumb_id})
-    except Exception:
-        pass
-
-
 def _delete_attachment_asset(att_id):
     try:
         kaltura_post("attachment_attachmentAsset", "delete", {"id": att_id})
@@ -749,6 +547,6 @@ def _delete_attachment_asset(att_id):
 
 if __name__ == "__main__":
     print(f"\n{'='*60}")
-    print("  KALTURA UPLOAD & DELIVERY — End-to-End API Validation")
+    print("  KALTURA UPLOAD & INGESTION — End-to-End API Validation")
     print(f"{'='*60}\n")
     main()

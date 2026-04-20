@@ -1355,7 +1355,7 @@ Use `delta` for incremental activities where each occurrence adds points (booth 
 Event sponsors need measurable engagement data to justify renewal. Organize sponsor content by category, track booth page visits via analytics events, score engagement on a per-sponsor leaderboard, and generate per-sponsor reports.
 
 **Workflow:**
-1. Create a category per sponsor using the [Categories & Access Control API](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md)
+1. Create a category per sponsor using the [Categories & Entitlements API](KALTURA_CATEGORIES_AND_ENTITLEMENTS_API.md)
 2. Create leaderboard rules with `categories` conditions scoping to each sponsor's category
 3. Track booth page engagement via `analytics.trackEvent` (eventType 10003 for page loads)
 4. Pull per-sponsor analytics via `report.getTable` with `categoriesIdsIn` filter
@@ -1414,7 +1414,7 @@ curl -s -X POST "$KALTURA_SCM_URL/report/generate" \
 
 The `categories` condition on the rule ensures only content within the sponsor's category contributes engagement points. Combine the gamification `userScore` report with the API v3 `report.getTable` data (reportType 38 = Top Content) to build a comprehensive sponsor ROI package showing both engagement scores and detailed viewing analytics.
 
-> **See also:** [Categories & Access Control](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md) for sponsor category setup, [Events Collection](KALTURA_ANALYTICS_EVENTS_COLLECTION_API.md) for analytics event tracking, [Analytics Reports](KALTURA_ANALYTICS_REPORTS_API.md) for report.getTable usage, [Events Platform](KALTURA_EVENTS_PLATFORM_API.md) for virtual event structure.
+> **See also:** [Categories & Entitlements](KALTURA_CATEGORIES_AND_ENTITLEMENTS_API.md) for sponsor category setup, [Events Collection](KALTURA_ANALYTICS_EVENTS_COLLECTION_API.md) for analytics event tracking, [Analytics Reports](KALTURA_ANALYTICS_REPORTS_API.md) for report.getTable usage, [Events Platform](KALTURA_EVENTS_PLATFORM_API.md) for virtual event structure.
 
 ## 15.8 Employee Onboarding Gamification
 
@@ -1534,7 +1534,7 @@ curl -s -X POST "$KALTURA_SCM_URL/report/generate" \
 
 The 90-day window on the leaderboard defines the cohort period. Each onboarding module maps to a category, so rules can target specific modules. The badge requires both watching all sessions (`countUnique` on `entryId`) and passing the quiz (`count` on `quizSubmitted`), ensuring comprehensive completion before awarding the milestone.
 
-> **See also:** [Categories & Access Control](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md) for organizing onboarding modules by category, [User Management](KALTURA_USER_MANAGEMENT_API.md) for managing new hire user accounts and group assignments.
+> **See also:** [Categories & Entitlements](KALTURA_CATEGORIES_AND_ENTITLEMENTS_API.md) for organizing onboarding modules by category, [User Management](KALTURA_USER_MANAGEMENT_API.md) for managing new hire user accounts and group assignments.
 
 ## 15.9 Customer Education Academy with Badges
 
@@ -1606,7 +1606,7 @@ curl -s -X POST "$KALTURA_SCM_URL/report/generate" \
 
 Each badge requires both content consumption (`countUnique` ensures the customer watched distinct courses, not the same one repeatedly) and quiz completion (`count` on `quizSubmitted`). The `userBadge/list` response includes per-rule `rulesData` with `progress` and `completed` fields, so your application can render a progress bar per badge. Export the `userBadge` report to your CRM to trigger follow-up workflows when customers achieve certifications.
 
-> **See also:** [Categories & Access Control](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md) for product area category structure, [eSearch](KALTURA_ESEARCH_API.md) for searching entries and users by badge-related metadata.
+> **See also:** [Categories & Entitlements](KALTURA_CATEGORIES_AND_ENTITLEMENTS_API.md) for product area category structure, [eSearch](KALTURA_ESEARCH_API.md) for searching entries and users by badge-related metadata.
 
 ## 15.10 Team-Based Competitions
 
@@ -1711,6 +1711,6 @@ The `filterPaths: ["company"]` setting on the sub-leaderboard groups users by th
 - **[Webhooks](KALTURA_WEBHOOKS_API.md)** — Event notifications on gamification state changes  
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — Admin KS as Bearer token; `GAME_BASE`/`GAME_MANAGE` permissions  
 - **[Custom Metadata](KALTURA_CUSTOM_METADATA_API.md)** — `metadataProfileId` on certificates for PDF generation context  
-- **[Categories & Access Control](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md)** — Category IDs in rule conditions for content scoping  
+- **[Categories & Entitlements](KALTURA_CATEGORIES_AND_ENTITLEMENTS_API.md)** — Category IDs in rule conditions for content scoping  
 - **[eSearch](KALTURA_ESEARCH_API.md)** — Search entries and users by badge-related metadata
 - **[Quiz API](KALTURA_QUIZ_API.md)** — Interactive video quizzes that feed gamification scoring rules

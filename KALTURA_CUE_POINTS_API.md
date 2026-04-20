@@ -434,6 +434,6 @@ Ad, Annotation, Code, Thumb, and Quiz cue points support custom metadata profile
 - [Captions & Transcripts](KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md) — Caption assets (related but separate from cue points)
 - [Multi-Stream API](KALTURA_MULTI_STREAM_API.md) — Dual-screen entries with slide/camera sync
 - [Custom Metadata API](KALTURA_CUSTOM_METADATA_API.md) — Attaching structured metadata to cue points
-- [Upload & Delivery API](KALTURA_UPLOAD_AND_DELIVERY_API.md) — Thumbnail assets for slide images
+- [Thumbnail API](KALTURA_THUMBNAIL_API.md) — Thumbnail assets for slide images
 - [Analytics Reports API](KALTURA_ANALYTICS_REPORTS_API.md) — Quiz reports and engagement analytics
 - [Gamification API](KALTURA_GAMIFICATION_API.md) — Quiz scores as gamification inputs

@@ -75,9 +75,12 @@ nav:
       - AppTokens API: KALTURA_APPTOKENS_API.md
       - Auth Broker (SSO/SAML): KALTURA_AUTH_BROKER_API.md
   - Content Management:
-      - Upload & Delivery: KALTURA_UPLOAD_AND_DELIVERY_API.md
+      - Upload & Ingestion: KALTURA_UPLOAD_AND_INGESTION_API.md
+      - Content Delivery: KALTURA_CONTENT_DELIVERY_API.md
+      - Thumbnail API: KALTURA_THUMBNAIL_API.md
       - eSearch: KALTURA_ESEARCH_API.md
-      - Categories & Access Control: KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md
+      - Access Control: KALTURA_ACCESS_CONTROL_API.md
+      - Categories & Entitlements: KALTURA_CATEGORIES_AND_ENTITLEMENTS_API.md
       - Custom Metadata: KALTURA_CUSTOM_METADATA_API.md
       - Captions & Transcripts: KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md
       - Multi-Stream: KALTURA_MULTI_STREAM_API.md

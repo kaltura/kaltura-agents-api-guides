@@ -297,7 +297,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/caption_captionAsset/action/setConten
 | `contentResource[objectType]` | string | Yes | `KalturaUploadedFileTokenResource` for upload token |
 | `contentResource[token]` | string | Yes | Upload token ID (from `uploadToken.upload`) |
 
-See [Upload & Delivery API](KALTURA_UPLOAD_AND_DELIVERY_API.md) for upload token details.
+See [Upload & Ingestion API](KALTURA_UPLOAD_AND_INGESTION_API.md) for upload token details.
 
 ## 5.6 Upload Content (Remote URL)
 
@@ -1146,7 +1146,7 @@ Bulk list entries → check caption presence per entry → report gaps → order
 - **[REACH API](KALTURA_REACH_API.md)** — Enrichment services marketplace: captioning, translation, dubbing, moderation, and 20+ services with automation rules
 - **[eSearch API](KALTURA_ESEARCH_API.md)** — Caption search with `KalturaESearchCaptionItem`, timestamp deep-linking
 - **[Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md)** — Caption display, track selection, transcript plugin
-- **[Upload & Delivery API](KALTURA_UPLOAD_AND_DELIVERY_API.md)** — Upload tokens for `KalturaUploadedFileTokenResource`
+- **[Upload & Ingestion API](KALTURA_UPLOAD_AND_INGESTION_API.md)** — Upload tokens for `KalturaUploadedFileTokenResource`
 - **[Webhooks API](KALTURA_WEBHOOKS_API.md)** — Caption asset events: `OBJECT_ADDED`, `OBJECT_DATA_CHANGED`, `OBJECT_DELETED`
 - **[Custom Metadata API](KALTURA_CUSTOM_METADATA_API.md)** — Structured metadata (separate from timed text)
 - **[Agents Manager API](KALTURA_AGENTS_MANAGER_API.md)** — Automated caption workflows via AI agents

@@ -912,7 +912,7 @@ curl -X POST "$KALTURA_GENIE_URL/feedback/add" \
 - **[AppTokens](KALTURA_APPTOKENS_API.md)** — Secure KS generation for production Genie integrations
 - **[eSearch](KALTURA_ESEARCH_API.md)** — Structured search (Genie uses vector search internally; use eSearch when you need precise metadata filters)
 - **[REACH](KALTURA_REACH_API.md)** — Enrich content with captions/transcripts that Genie indexes for better answers
-- **[Upload & Delivery](KALTURA_UPLOAD_AND_DELIVERY_API.md)** — Upload content that becomes searchable via Genie
+- **[Upload & Ingestion](KALTURA_UPLOAD_AND_INGESTION_API.md)** — Upload content that becomes searchable via Genie
 - **[Agents Manager](KALTURA_AGENTS_MANAGER_API.md)** — Automate content enrichment to improve Genie's knowledge base
 - **[Events Platform](KALTURA_EVENTS_PLATFORM_API.md)** — Genie can search event-related content
 - **[Genie Widget](KALTURA_GENIE_WIDGET_API.md)** — Genie conversational AI widget embed (client-side UI)  

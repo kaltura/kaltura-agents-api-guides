@@ -111,11 +111,17 @@ Read the relevant guide when you need to implement a specific capability:
 
 ### Content Management
 
-- **[Upload & Delivery API](../../../KALTURA_UPLOAD_AND_DELIVERY_API.md)** — Chunked/resumable uploads, import-from-URL, playback URLs (HLS/DASH), dynamic thumbnail API (27 params), thumbAsset CRUD, attachmentAsset for non-media files, flavor assets, download links, CSV export. Start here for any content ingestion workflow.
+- **[Upload & Ingestion API](../../../KALTURA_UPLOAD_AND_INGESTION_API.md)** — Chunked/resumable uploads, import-from-URL, entry CRUD, flavor assets, attachmentAsset for non-media files, CSV export. Start here for any content ingestion workflow.
+
+- **[Content Delivery API](../../../KALTURA_CONTENT_DELIVERY_API.md)** — playManifest URLs (HLS/DASH), raw serve, download links, delivery profiles, CDN configuration, access control for playback.
+
+- **[Thumbnail API](../../../KALTURA_THUMBNAIL_API.md)** — Dynamic thumbnail URL (27 params), thumbAsset CRUD, thumbParams templates.
 
 - **[eSearch API](../../../KALTURA_ESEARCH_API.md)** — Full-text search across entries, captions, metadata, categories, and users. Supports AND/OR/NOT operators, nested filters, highlighting, facets, and sorting.
 
-- **[Categories & Access Control API](../../../KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md)** — Hierarchical content taxonomy via `category` service, membership and entitlement via `categoryUser`, content assignment via `categoryEntry`, and `accessControlProfile` rules (geo/IP/domain/scheduling restrictions). Accounts with entitlement enabled require `disableentitlement` KS privilege for cross-category operations.
+- **[Categories & Entitlements API](../../../KALTURA_CATEGORIES_AND_ENTITLEMENTS_API.md)** — Hierarchical content taxonomy via `category` service, membership and entitlement via `categoryUser`, content assignment via `categoryEntry`. Accounts with entitlement enabled require `disableentitlement` KS privilege for cross-category operations.
+
+- **[Access Control API](../../../KALTURA_ACCESS_CONTROL_API.md)** — `accessControlProfile` rules with conditions (geo/IP/domain/scheduling restrictions) and actions (block/preview/limit flavors). Assign profiles to entries to enforce playback and access restrictions.
 
 - **[Custom Metadata API](../../../KALTURA_CUSTOM_METADATA_API.md)** — XSD-based metadata schemas via `metadata_metadataProfile` plugin service with Kaltura-native types (textType, dateType, objectType, listType) and `<appinfo>` annotations for KMC rendering. Per-object structured metadata CRUD via `metadata_metadata` with optimistic locking, XSLT transformation pipeline, and eSearch integration via `KalturaESearchEntryMetadataItem`.
 

@@ -514,7 +514,7 @@ Combine syndication with [webhooks](KALTURA_WEBHOOKS_API.md) for proactive cache
 
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — KS generation and management
 - **[Content Distribution API](KALTURA_DISTRIBUTION_API.md)** — Push content to external platforms via connectors (push model vs syndication's pull model)
-- **[Upload & Delivery API](KALTURA_UPLOAD_AND_DELIVERY_API.md)** — Content upload, flavors, and delivery (entries that appear in feeds)
+- **[Upload & Ingestion API](KALTURA_UPLOAD_AND_INGESTION_API.md)** — Content upload, flavors, and ingestion (entries that appear in feeds)
 - **[Webhooks API](KALTURA_WEBHOOKS_API.md)** — Event-driven automation (trigger feed cache refresh on content events)
-- **[Categories & Access Control API](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md)** — Content organization (used in feed entry filtering)
+- **[Categories & Entitlements API](KALTURA_CATEGORIES_AND_ENTITLEMENTS_API.md)** — Content organization (used in feed entry filtering)
 - **[eSearch API](KALTURA_ESEARCH_API.md)** — Full-text search (alternative to feed-based content discovery)

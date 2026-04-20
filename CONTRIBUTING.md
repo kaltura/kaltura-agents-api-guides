@@ -41,7 +41,7 @@ cp .env.example .env
 # Fill in your Kaltura credentials
 
 # Run one test
-python3 test_upload_delivery_api.py
+python3 test_upload_and_ingestion_api.py
 
 # Run all tests
 for f in test_*.py; do echo "=== $f ===" && python3 "$f" && echo "PASS" || echo "FAIL"; done

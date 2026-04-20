@@ -1233,7 +1233,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getCsvFromStringParams"
 
 Students with low quartile completion on key lectures are candidates for early intervention. Parse the `count_plays_25` through `count_plays_100` columns from the drop-off report to identify where students disengage.
 
-See also: [Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md) for embedded player analytics events, [Categories & Access Control Guide](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md) for course category setup.
+See also: [Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md) for embedded player analytics events, [Categories & Entitlements Guide](KALTURA_CATEGORIES_AND_ENTITLEMENTS_API.md) for course category setup.
 
 ## 15.12 Investor Relations Webcast Analytics
 
@@ -1340,7 +1340,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getTable" \
 
 Run the same `reportType=2` query with Variant A's date range, then compare the `count_plays / count_loads` ratio. A higher ratio indicates the thumbnail is more effective at converting impressions to plays. For statistically significant results, run each variant for at least 7 days with comparable traffic.
 
-See also: [Upload & Delivery Guide](KALTURA_UPLOAD_AND_DELIVERY_API.md) for thumbnail management.
+See also: [Thumbnail API](KALTURA_THUMBNAIL_API.md) for thumbnail management.
 
 ## 15.14 Webhook-Triggered Automated Reporting
 
@@ -1463,7 +1463,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getCsvFromStringParams"
 
 This pipeline automates the full content lifecycle from upload through performance monitoring, using webhooks to chain together processing, enrichment, and analytics-driven optimization.
 
-1. **Upload content** via chunked upload or `addFromUrl` [Upload & Delivery](KALTURA_UPLOAD_AND_DELIVERY_API.md)
+1. **Upload content** via chunked upload or `addFromUrl` [Upload & Ingestion](KALTURA_UPLOAD_AND_INGESTION_API.md)
 2. **Webhook fires on ENTRY_READY** when transcoding completes, triggering the enrichment pipeline [Webhooks](KALTURA_WEBHOOKS_API.md)
 3. **Auto-process via REACH and AI Agents** — the webhook handler submits the entry for captioning, translation, and AI-generated metadata [REACH](KALTURA_REACH_API.md), [Agents Manager](KALTURA_AGENTS_MANAGER_API.md)
 4. **Webhook fires on task completion** when captions and metadata are ready, confirming enrichment is complete [Webhooks](KALTURA_WEBHOOKS_API.md)
@@ -1573,12 +1573,13 @@ curl -o crm_lead_export.csv "$CSV_URL"
 - **[User Profile](KALTURA_USER_PROFILE_API.md)** — `reports/eventDataStats` for attendance stats; registration reports via Reports Microservice
 - **[Messaging](KALTURA_MESSAGING_API.md)** — `message/stats` for delivery statistics
 - **[REACH](KALTURA_REACH_API.md)** — `entryVendorTask.list` for task monitoring; `exportToCsv` for batch CSV
-- **[Upload & Delivery](KALTURA_UPLOAD_AND_DELIVERY_API.md)** — `baseEntry.exportToCsv` for bulk content export; thumbnail generation for report dashboards
+- **[Upload & Ingestion](KALTURA_UPLOAD_AND_INGESTION_API.md)** — `baseEntry.exportToCsv` for bulk content export
+- **[Thumbnail API](KALTURA_THUMBNAIL_API.md)** — Thumbnail generation for report dashboards
 - **[User Management](KALTURA_USER_MANAGEMENT_API.md)** — `ANALYTICS_BASE` role permission gates analytics access
 - **[Webhooks](KALTURA_WEBHOOKS_API.md)** — Trigger automated reporting on content events
 - **[eSearch](KALTURA_ESEARCH_API.md)** — Enrich analytics data with entry metadata, tags, categories
 - **[Captions & Transcripts](KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md)** — Caption coverage auditing (eSearch + captionAsset.list for accessibility dashboards)
-- **[Categories & Access Control](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md)** — `categoriesIdsIn` filter for content library scoping
+- **[Categories & Entitlements](KALTURA_CATEGORIES_AND_ENTITLEMENTS_API.md)** — `categoriesIdsIn` filter for content library scoping
 - **[Gamification](KALTURA_GAMIFICATION_API.md)** — Analytics events feed the gamification rules engine
 - **[Multi-Account Management](KALTURA_MULTI_ACCOUNT_MANAGEMENT_API.md)** — Cross-account analytics with multi-account report types (20001+)
 - **[Distribution](KALTURA_DISTRIBUTION_API.md)** — Distribution status tracking via analytics reports

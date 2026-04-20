@@ -148,5 +148,5 @@ component.instance.addEventListener('error', function(e) {
 
 - **[Experience Components Overview](KALTURA_EXPERIENCE_COMPONENTS_API.md)** — Index of all embeddable components with shared guidelines  
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — KS generation and privilege management  
-- **[Upload & Delivery](KALTURA_UPLOAD_AND_DELIVERY_API.md)** — Content lifecycle after the recorder creates entries  
+- **[Upload & Ingestion](KALTURA_UPLOAD_AND_INGESTION_API.md)** — Content lifecycle after the recorder creates entries  
 - **[Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md)** — Embed playback for recorded content

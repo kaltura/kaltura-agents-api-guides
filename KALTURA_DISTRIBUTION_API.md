@@ -1455,9 +1455,9 @@ Combine distribution with [webhooks](KALTURA_WEBHOOKS_API.md) for event-driven p
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — KS generation and management
 - **[AppTokens API](KALTURA_APPTOKENS_API.md)** — Secure server-to-server auth for automated distribution workflows
 - **[Syndication Feeds API](KALTURA_SYNDICATION_API.md)** — Generate RSS/MRSS/iTunes/Roku feeds for external platforms to pull (pull model vs distribution's push model)
-- **[Upload & Delivery API](KALTURA_UPLOAD_AND_DELIVERY_API.md)** — Content upload, flavors, and delivery (entries and assets that feed distribution)
+- **[Upload & Ingestion](KALTURA_UPLOAD_AND_INGESTION_API.md)** — Content upload, flavors, and ingestion (entries and assets that feed distribution)
 - **[Webhooks API](KALTURA_WEBHOOKS_API.md)** — Event-driven automation (trigger distribution on content events)
 - **[Custom Metadata API](KALTURA_CUSTOM_METADATA_API.md)** — Structured metadata schemas (metadata mapped to distribution provider fields)
 - **[Captions & Transcripts API](KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md)** — Caption assets included in distribution (Cross-Kaltura distributes captions)
-- **[Categories & Access Control API](KALTURA_CATEGORIES_AND_ACCESS_CONTROL_API.md)** — Content organization (used in distribution conditions)
+- **[Categories & Entitlements API](KALTURA_CATEGORIES_AND_ENTITLEMENTS_API.md)** — Content organization (used in distribution conditions)
 - **[Analytics Reports API](KALTURA_ANALYTICS_REPORTS_API.md)** — Engagement analytics for distributed content
