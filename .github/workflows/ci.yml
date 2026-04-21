@@ -41,6 +41,6 @@ jobs:
             --exclude 'events-api\.nvp1'
             --exclude 'agents-manager\.nvp1'
             --exclude 'genie\.nvp1'
-            --exclude 'zoharbabin\.github\.io'
+            --exclude 'kaltura\.github\.io'
             '**/*.md'
           fail: true

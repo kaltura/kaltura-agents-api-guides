@@ -36,7 +36,7 @@ Actionable checklist for getting maximum reach for the Kaltura API Guides.
 
 ### GitHub Optimization
 
-- [x] **GitHub Pages** — MkDocs Material site deployed at `zoharbabin.github.io/kaltura-api-guides/` with Kaltura branding, dark/light mode, search, and auto-deploy via GitHub Actions.
+- [x] **GitHub Pages** — MkDocs Material site deployed at `kaltura.github.io/kaltura-agents-api-guides/` with Kaltura branding, dark/light mode, search, and auto-deploy via GitHub Actions.
 
 - [x] **v1.0.0 Release** — Created with initial release notes. Project now has 38 guides with 758 live-validated tests.
 

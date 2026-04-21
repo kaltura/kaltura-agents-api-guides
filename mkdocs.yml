@@ -1,14 +1,14 @@
 site_name: Kaltura API Guides
-site_url: https://zoharbabin.github.io/kaltura-api-guides/
+site_url: https://kaltura.github.io/kaltura-agents-api-guides/
 site_description: >-
   Kaltura — The Agentic Digital Experience Platform. Live-tested API guides
   for AI agents and developers. 38 guides covering authentication, content
   management, search, playback, AI services, virtual events, experience
   components, analytics, distribution, and more — with 758 companion tests
   validated against the live Kaltura API.
-site_author: Zohar Babin
-repo_url: https://github.com/zoharbabin/kaltura-api-guides
-repo_name: zoharbabin/kaltura-api-guides
+site_author: Kaltura Inc.
+repo_url: https://github.com/kaltura/kaltura-agents-api-guides
+repo_name: kaltura/kaltura-agents-api-guides
 edit_uri: edit/main/
 
 docs_dir: docs
