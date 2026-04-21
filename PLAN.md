@@ -1,8 +1,33 @@
 # Kaltura API Guides — Roadmap
 
-**Current state:** 45 guides, 862 live-tested assertions, 4-tier flywheel structure.  
+**Current state:** 48 guides, 912 live-tested assertions, 4-tier flywheel structure.  
 Completed guide details are in [README.md](README.md). Test inventory is in each `tests/test_*.py` file.
 
+## Audit Findings (2026-04-21)
+
+Gaps and improvements identified from a full documentation set audit:
+
+### Stale Numbers
+- ~~PLAN.md, SKILL.md, mkdocs.yml, context7.json had outdated guide/test counts~~ — Fixed
+- README.md Distribution row said 84 tests, actual is 83 (40+43) — Fixed
+
+### Missing from mkdocs.yml Nav
+- ~~7 guides (Cue Points hub + 5 type guides + Moderation) missing from docs site navigation~~ — Fixed
+
+### Missing Required Sections (per AGENTS.md)
+- **Missing Prerequisites section:** Annotations, Multi-Stream, REACH, Thumbnail, Agents Manager (H2 not numbered H1), AI Genie (not numbered)
+- **Missing Best Practices section:** eSearch, Experience Components
+- **Non-standard header block:** Content Delivery (no Format line), Thumbnail (no Base URL/Format), VOD Avatar (non-standard Base URL label)
+
+### Negative Framing (should rewrite positively)
+- 8 guides with 6+ instances: Session Guide, VOD Avatar, Analytics Embed, REACH, AppTokens, Captions & Transcripts, Custom Metadata, Thumbnail
+
+### Missing Business Context / Use Cases
+- **Annotations** — technical-only, needs real-world scenarios (in-video discussions, peer review, content commenting)
+- **Multi-Account Management** — no "When to Use" section, needs parent-child hierarchy use cases (multi-tenant SaaS, white-label portals, departmental isolation)
+- **REACH** — platform benefits described but needs concrete enrichment scenarios (auto-caption all uploads, localize to 30 languages, compliance transcripts)
+
+---
 
 ## Tier 1 — Critical Gaps (Core Video Operations)
 
@@ -61,29 +86,9 @@ These are fundamental video platform operations that virtually every integration
 
 ---
 
-### `KALTURA_THUMBNAIL_API.md`
+### ~~`KALTURA_THUMBNAIL_API.md`~~ — COMPLETED
 
-**Why:** Every integration that displays video thumbnails uses the Thumbnail Transformation API. The programmatic `thumbAsset` and `thumbParams` services enable automated thumbnail management, timed captures, strips, and on-the-fly transformations via URL parameters.
-
-**Scope:**
-- `thumbAsset.add` / `addFromImage` / `addFromUrl` / `generate` / `regenerate` / `setAsDefault` / `serve` / `getUrl` / `list` / `delete` — full thumbnail asset lifecycle
-- `thumbParams.add` / `update` / `get` / `list` / `delete` — thumbnail generation parameter templates
-- Thumbnail Transformation URL API: `/p/{pid}/thumbnail/entry_id/{eid}/width/{w}/height/{h}/vid_sec/{s}/type/{t}/...`
-- URL parameters: `width`, `height`, `vid_sec` (capture time), `type` (1=resize, 2=crop), `quality`, `src_x`, `src_y`, `crop_provider`, `bg_color`
-- Thumbnail strips: generating sprite sheets for scrubbing
-- `thumbAsset.generateByEntryId` — batch thumbnail generation
-- Default thumbnail selection and override
-
-**Research needed:**
-- Full URL transformation parameter list
-- Thumbnail strip/sprite generation — API-driven or automatic?
-- `crop_provider` options
-- Thumbnail caching/invalidation behavior
-- Maximum dimensions and quality settings
-
-**Dependencies:** Upload & Delivery (basic thumbnail upload already covered)
-
-**Estimated tests:** 20–30
+**Status:** Published with 18 tests. Covers dynamic thumbnail URL (31 params), thumbAsset CRUD, thumbParams templates.
 
 ---
 

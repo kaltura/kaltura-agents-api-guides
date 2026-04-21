@@ -56,7 +56,7 @@ These guides are optimized for AI agent consumption through multiple discovery m
 | [Analytics Reports API](KALTURA_ANALYTICS_REPORTS_API.md) | Reports, CSV exports, live analytics, stream health | 35 tests |
 | [Analytics Events Collection API](KALTURA_ANALYTICS_EVENTS_COLLECTION_API.md) | Playback/engagement event collection, stats.collect, trackEvent | 16 tests |
 | [Gamification API](KALTURA_GAMIFICATION_API.md) | Leaderboards, badges, certificates, lead scoring, rules engine | 47 tests |
-| [Content Distribution API](KALTURA_DISTRIBUTION_API.md) | Push content to YouTube, Facebook, FTP, cross-Kaltura via connectors | 84 tests |
+| [Content Distribution API](KALTURA_DISTRIBUTION_API.md) | Push content to YouTube, Facebook, FTP, cross-Kaltura via connectors | 83 tests |
 | [Syndication Feeds API](KALTURA_SYNDICATION_API.md) | RSS/MRSS/iTunes/Roku feeds for external platforms to pull | 14 tests |
 | [Experience Components API](KALTURA_EXPERIENCE_COMPONENTS_API.md) | Index of all embeddable components with shared guidelines | 26 tests |
 | [Express Recorder API](KALTURA_EXPRESS_RECORDER_API.md) | Browser-based WebRTC video, audio, and screen recording | — |
