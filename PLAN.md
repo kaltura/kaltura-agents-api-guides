@@ -9,7 +9,7 @@ Gaps and improvements identified from a full documentation set audit:
 
 ### Stale Numbers
 - ~~PLAN.md, SKILL.md, mkdocs.yml, context7.json had outdated guide/test counts~~ — Fixed
-- README.md Distribution row said 84 tests, actual is 83 (40+43) — Fixed
+- README.md Distribution row said 84 tests, actual is 83 (40 + 43) — Fixed
 
 ### Missing from mkdocs.yml Nav
 - ~~7 guides (Cue Points hub + 5 type guides + Moderation) missing from docs site navigation~~ — Fixed
