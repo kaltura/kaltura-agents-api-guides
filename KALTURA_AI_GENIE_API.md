@@ -24,51 +24,16 @@ Genie streams **structured generative answers** (flashcards, follow-ups, sources
 
 > **Client-Side Widget Embed:** To embed the Genie conversational UI directly in a web page (the most common integration pattern), see the [Genie Widget Guide](KALTURA_GENIE_WIDGET_API.md). This guide covers the server-side HTTP API for building custom integrations and backend workflows.
 
-## Auth & Headers
-
-**Base URL** (may differ based on your account region/deployment)
-- `https://genie.nvp1.ovp.kaltura.com`
-
-**Auth header**
-```
-Authorization: KS <YOUR_KS>
-```
-
-WebSocket connections also accept auth via query parameter: `?ks=<YOUR_KS>`
-
 ## KS Privileges
 
-The KS passed to Genie (whether via the widget or the HTTP API) is typically visible client-side. Generate a **USER session** (type=0) with these privileges:
+The KS passed to Genie requires the same privilege set whether used via the widget or the HTTP API. See the [Genie Widget Guide — Section 5: KS Requirements](KALTURA_GENIE_WIDGET_API.md) for the full list of required privileges, the curl example for generating the KS, and the privacy context explanation.
 
-```
-setrole:PLAYBACK_BASE_ROLE,
-sview:*,
-appid:<APP_NAME-APP_DOMAIN>,
-sessionid:<GUID>
-```
+**Additional HTTP-API-specific privileges:**
+
+These privileges apply only to server-side API integrations and are not part of the standard widget KS:
 
 | Privilege | Purpose |
 |-----------|---------|
-| `setrole:PLAYBACK_BASE_ROLE` | Restricts the KS to playback-only operations — recommended since the KS is exposed client-side |
-| `sview:*` | Lets Genie return playable clips; your **entitlements** still gate access per user and privacy context |
-| `appid:<APP_NAME-APP_DOMAIN>` | Identifies the application in analytics |
-| `sessionid:<GUID>` | Unique session identifier for tracking |
-
-**Entitlement-protected content:** If Genie indexes content protected by entitlements, add the privacy context to the KS privileges:
-
-```
-enableentitlement,privacycontext:<GENIE_ENABLED_CATEGORY_PRIVACY_CONTEXT>
-```
-
-The privacy context should match the category Genie indexes for your account.
-
-**Genie-specific privileges:**
-
-| Privilege | Purpose |
-|-----------|---------|
-| `genieid:<GENIE_ID>` | Select a specific Genie workspace when your account has multiple. Omit to use the account default |
-| `geniecategoryid:<CATEGORY_ID>` | Limit Genie queries to content published in the specified category only |
-| `genieancestorid:<CATEGORY_ID>` | Limit Genie queries to content in the specified category or any of its descendants |
 | `genieentryids:<ID1,ID2,...>` | Whitelist specific entry IDs for search — only these entries will be queryable |
 | `agentid:<ID>` | Select a specific agent configuration |
 | `geniegpcid:<ID>` | Select a partner config by its database ID directly |
@@ -327,7 +292,7 @@ A parser should:
 
 A bidirectional WebSocket connection for real-time chat with abort support. Uses the same streaming event format as the HTTP `/assistant/converse` endpoint.
 
-**Auth:** `Authorization: KS <token>` header (preferred) or `?ks=<token>` query parameter. Authentication is validated **before** the WebSocket connection is accepted — invalid credentials result in a close with code 1008 (Policy Violation).
+**Auth:** `Authorization: KS <token>` header (preferred) or `?ks=<token>` query parameter. WebSocket connections accept auth via either method. Authentication is validated **before** the WebSocket connection is accepted — invalid credentials result in a close with code 1008 (Policy Violation).
 
 ## Client Events
 
