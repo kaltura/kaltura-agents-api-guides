@@ -28,3 +28,4 @@
 | CategoryEntryStatus 1/2 swapped | Agent filters for ACTIVE entries but gets PENDING, or vice versa | 1=PENDING, 2=ACTIVE (not the reverse). Verify all status enums against `api_v3/api_schema.php` |
 | Passing string booleans to filter parameters | `"true"` silently ignored — API expects `KalturaNullableBoolean` integers | Use `-1`=null, `0`=false, `1`=true for boolean filter fields |
 | Cleanup registered after assertions in tests | Assertion failure skips cleanup, leaking resources | Register cleanup immediately after resource creation, before any assertions |
+| Editing a guide without re-reading it first | Agent relies on stale memory from earlier in a long conversation — adds duplicate sections, misses existing content, overwrites recent changes | Always `Read` the guide file before any `Edit`. Check the `<!-- Sections: ... -->` comment at the top for a quick structural overview |

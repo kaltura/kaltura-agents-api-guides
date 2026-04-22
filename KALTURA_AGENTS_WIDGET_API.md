@@ -6,6 +6,8 @@ The Agents Widget is a Unisphere component that provides a UI for managing autom
 **Auth:** KS passed via runtime settings  
 **Format:** ES module JavaScript embed (Unisphere runtime)  
 
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Architecture | 4.Embedding | 5.Runtime Settings | 6.Runtime API | 7.KS Requirements | 8.Error Handling | 9.Best Practices | 10.Multi-Region | 11.Related Guides -->
+
 
 # 1. When to Use
 

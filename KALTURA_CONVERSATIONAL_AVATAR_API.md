@@ -8,6 +8,8 @@ The Conversational Avatar embed provides AI-powered video avatars that hold real
 
 Kaltura also offers a full Avatar SDK (`@unisphere/models-sdk-js`) for direct WebRTC rendering, text-to-speech control (`sayText`, `sayAudio`, `interrupt`), session management, and backend API integration. The full SDK renders a `<video>` element directly in your DOM via WebRTC (no iframe) and supports both frontend-only and backend-controlled architectures. This guide covers the iframe-based conversational widget embed.
 
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Embedding | 4.Configuration | 5.Lifecycle and Events | 6.Methods | 7.Error Handling | 8.Best Practices | 9.Related Guides -->
+
 
 # 1. When to Use
 

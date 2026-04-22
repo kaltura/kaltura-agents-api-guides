@@ -14,6 +14,8 @@ This guide covers two integration paths:
 
 For **real-time conversational avatars** that hold live AI-powered conversations, see the [Conversational Avatar Embed](KALTURA_CONVERSATIONAL_AVATAR_API.md).
 
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Architecture | 4.Auth & Headers | 5.Avatar Templates & Configuration | 6.Video Project Management | 7.AI Composition | 8.Audio Preview | 9.Video Generation | 10.Complete Server-Side Workflow | 1.Create an avatar with a color background | 2.Create a video project with scenes | 3.Preview audio for the first scene | 4.Generate the video | 5.Poll until ready | 6.Get the generated Kaltura entry ID | 1.Create (or reuse) an avatar | 2.Create a video with manually authored scenes mixing two source entries | 3.Preview a b-roll scene's narration audio before committing to generation | 4.Generate — skips compose entirely, goes straight from draft to generating | 5.Poll until ready | 11.Widget Embedding | 12.Error Handling | 13.Best Practices | 14.Multi-Region | 15.Related Guides -->
+
 
 # 1. When to Use
 

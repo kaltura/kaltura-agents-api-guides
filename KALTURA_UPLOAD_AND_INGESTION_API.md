@@ -6,6 +6,8 @@ This guide covers the complete lifecycle of getting content into Kaltura: creati
 **Auth:** All requests require a valid KS (see [Session Guide](KALTURA_SESSION_GUIDE.md))  
 **Format:** Form-encoded POST, `format=1` for JSON responses  
 
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Upload Lifecycle Overview | 4.Upload Token API | 5.Creating Media Entries | 6.Entry CRUD Operations | 7.Cross-Type Entry Operations (baseEntry) | 8.Non-Media Entry Types | 9.Flavor Assets (Transcoded Renditions) | 10.Attachment Assets (Non-Media File Attachments) | 11.Bulk Upload | 12.Complete Example -- Chunked Upload Workflow | 13.Error Handling | 14.Best Practices | 15.Related Guides -->
+
 
 # 1. When to Use
 

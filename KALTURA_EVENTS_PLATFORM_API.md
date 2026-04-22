@@ -7,6 +7,8 @@ The Virtual Events Platform has a dedicated modern REST API (OAS 3.0) for creati
 **Format:** JSON request/response bodies, all endpoints use POST  
 **Regions:** NVP (default), EU (`irp2`), DE (`frp2`)  
 
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Authentication | 4.Regional Endpoints | 5.Events API | 6.Sessions API | 7.Team Members API | 8.Event Templates | 9.Event Status Values | 10.Complete Example — Event Lifecycle | 11.Error Handling | 12.Best Practices | 13.Related Guides -->
+
 
 # 1. When to Use
 

@@ -11,6 +11,8 @@ auto-created by the media server during live streaming.
 **Service:** `cuepoint_cuepoint` (shared with all cue point types)  
 **Prerequisite:** [Cue Points Hub](KALTURA_CUE_POINTS_API.md) for base cue point concepts and shared CRUD
 
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Code Cue Points | 4.Event Cue Points | 5.Session Cue Points | 6.Player Integration | 7.Searching | 8.Error Handling | 9.Best Practices | 10.Related Guides -->
+
 
 # 1. When to Use
 

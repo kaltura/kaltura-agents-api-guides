@@ -9,6 +9,8 @@ A user has one profile per app — the same `userId` can have separate profiles 
 **Format:** JSON request/response bodies, all endpoints use POST  
 **Regions:** NVP (default `nvp1`), EU (`irp2`), DE (`frp2`)  
 
+<!-- Sections: 1.When to Use | 2.Authentication | 3.Prerequisites | 4.User Profile Entity | 5.Attendance Status Lifecycle | 6.Create a User Profile | 7.Bulk Create User Profiles | 8.Get a User Profile | 9.Update a User Profile | 10.List User Profiles | 11.Delete a User Profile | 12.Reports | 13.Error Handling | 14.Common Integration Patterns | 1.Register the app in App Registry (one-time setup) | 2.Create user profile when they register | 3.Confirm attendance | 4.Mark as attended (during event — triggers firstAttendedStatusTime) | 5.Get attendance stats | 15.Registration Reports (Reports Service) | 16.Best Practices | 17.Related Guides -->
+
 
 # 1. When to Use
 

@@ -10,6 +10,8 @@ on the entry and a user-entry service for tracking attempts and scores.
 **Services:** `quiz_quiz`, `cuepoint_cuepoint`, `userEntry`, `report`  
 **Prerequisite:** [Cue Points Hub](KALTURA_CUE_POINTS_API.md) for base cue point concepts and shared CRUD
 
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Quiz Lifecycle | 4.Mark an Entry as a Quiz | 5.Quiz Configuration (KalturaQuiz) | 6.Quiz Service Actions | 7.Question Types | 8.Question Fields | 9.Viewer Quiz Flow | 10.Answer Fields | 11.Quiz User Entry | 12.Scoring Models | 13.Quiz Reports | 14.Player IVQ Plugin | 15.Quiz Generation via REACH / Content Lab | 16.Gamification Integration | 17.Searching Quiz Content | 18.Error Handling | 19.Best Practices | 20.Related Guides -->
+
 
 # 1. When to Use
 

@@ -14,6 +14,8 @@ Report playback and engagement events back to Kaltura's analytics system. The st
 | `analytics.trackEvent` | Application-level event tracking (separate analytics server) |
 | Player Analytics Plugin | Built-in event reporting in Kaltura Player v7 (reference implementation) |
 
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Authentication | 4.Player Event Types | 5.stats.collect | 1.Widget loaded | 2.Media loaded | 3.Play | 4.Quartiles (25%, 50%, 75%, 100%) | 6.analytics.trackEvent | 7.Event Reporting Protocol | 8.Server-Side Collection | 1.Generate a KS with userId for per-user attribution | 2.Report playback events via stats.collect | 9.Custom Event Context | 10.Verification | 1.Send events | 2.Wait for propagation (for testing; production dashboards handle this automatically) | 3.Verify in reports | 11.Error Handling | 12.Common Integration Patterns | 13.Best Practices | 14.Related Guides -->
+
 
 # 1. When to Use
 

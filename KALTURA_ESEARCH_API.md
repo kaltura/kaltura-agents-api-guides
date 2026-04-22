@@ -6,6 +6,8 @@ Kaltura's eSearch API, powered by Elasticsearch, provides flexible full-text sea
 **Auth:** KS passed as `ks` parameter in POST form data (see [Session Guide](KALTURA_SESSION_GUIDE.md))  
 **Format:** Form-encoded POST (`application/x-www-form-urlencoded`), `format=1` for JSON responses  
 
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.API Endpoint & Structure | 4.Authentication | 5.Core Request Parameters & Objects | 6.Search Item (`searchItems`) Deep Dive | 7.API Response Format (JSON) | 8.Capabilities & Scenarios (with Curl Examples) | 9.Advanced Topics & Use Cases | 10.Edge Cases & Best Practices | 11.Key Objects & Enums Quick Reference | 12.Error Handling | 13.Related Guides -->
+
 # 1. When to Use
 
 - **Content discovery platforms** need fast, full-text search across video libraries with faceted filtering by media type, tags, categories, and custom metadata.  

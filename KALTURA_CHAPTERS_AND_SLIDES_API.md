@@ -11,6 +11,8 @@ Slides sync presentation images with playback for dual-screen experiences.
 **objectType:** `KalturaThumbCuePoint`  
 **Prerequisite:** [Cue Points Hub](KALTURA_CUE_POINTS_API.md) for base cue point concepts and shared CRUD
 
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Sub-Types | 4.Fields (in addition to base) | 5.Create a Chapter | 6.Create a Slide Marker | 7.Attaching Slide Images (timedThumbAsset) | 8.How Slides Are Created | 9.Filtering by Sub-Type | 10.Player Integration | 11.REACH / Content Lab Chapter Generation | 12.Searching Chapters and Slides | 13.Error Handling | 14.Best Practices | 15.Related Guides -->
+
 
 # 1. When to Use
 

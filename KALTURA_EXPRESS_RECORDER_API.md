@@ -6,6 +6,8 @@ The Express Recorder provides browser-based WebRTC recording — video, audio, a
 **Auth:** KS passed via config object  
 **Format:** JavaScript embed  
 
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Embedding | 4.Configuration | 5.Events | 6.Methods | 7.Error Handling | 8.Best Practices | 9.Related Guides -->
+
 
 # 1. When to Use
 

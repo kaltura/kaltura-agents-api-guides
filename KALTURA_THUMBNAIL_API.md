@@ -6,6 +6,8 @@ This guide covers generating and managing thumbnails and images: the URL-based d
 **API Base:** `$SERVICE_URL` (default: `https://www.kaltura.com/api_v3`)  
 **Auth:** Thumbnail URLs work without KS for public entries. Access-controlled entries require `/ks/{KS}` appended to the URL.  
 
+<!-- Sections: 1.When to Use | 2.Dynamic Thumbnail API (URL-Based) | 3.thumbAsset API (Stored Thumbnails) | 4.thumbParams API (Thumbnail Templates) | 5.When to Use Which | 6.Error Handling | 7.Best Practices | 8.Related Guides -->
+
 
 # 1. When to Use
 

@@ -6,6 +6,8 @@ The Embeddable Analytics widget provides analytics visualization dashboards that
 **Auth:** ADMIN KS (type=2) passed via postMessage  
 **Format:** iframe embed with postMessage protocol  
 
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Embedding | 4.Initialization Protocol | 5.Init Payload Reference | 6.Message Types | 7.Navigation Paths | 8.Date Filters | 9.viewsConfig — Controlling Dashboard Widgets | 10.Handling Drill-Down Navigation | 11.KS Requirements | 12.Error Handling | 13.Best Practices | 14.Complete Integration Example | 15.Programmatic Alternative | 16.Related Guides -->
+
 
 # 1. When to Use
 

@@ -8,6 +8,8 @@ and use built-in services for theming, inter-runtime communication, and analytic
 **Auth:** KS passed via workspace session config or per-runtime settings  
 **Format:** ES module JavaScript embed  
 
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Architecture Overview | 4.Embedding a Workspace | 5.Workspace Configuration | 6.Authentication | 7.Available Experiences | 8.Media Manager | 9.Built-in Services | 10.Workspace API | 11.Custom Theming | 12.Player Integration | 13.Building Custom Experiences | 14.Multi-Region | 15.Error Handling | 16.Best Practices | 17.Related Guides -->
+
 
 # 1. When to Use
 

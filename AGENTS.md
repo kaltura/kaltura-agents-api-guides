@@ -269,11 +269,18 @@ ci: add commitlint and release-please workflows
 
 Releases are automated via release-please. Push conventional commits → release-please opens a release PR → merge it to cut a release with auto-generated notes.
 
+## Editing an Existing Guide
+
+1. **Read the file first.** Always `Read` the guide file before making any edit — your memory of file contents from earlier in the conversation is unreliable after context compaction.
+2. **Check the section index.** Each guide has a `<!-- Sections: ... -->` HTML comment near the top listing all sections. Use it to understand what exists before adding or modifying sections.
+3. **Run the companion test.** After any edit, run `python3 tests/test_{name}_api.py` to verify the guide is still accurate.
+4. **Update cross-references.** If the edit changes section numbers, titles, or adds new content, update GUIDE_MAP.md, README.md, PLAN.md, SKILL.md, llms.txt, and context7.json as needed.
+
 ## Adding a New Guide
 
 1. **Research.** Explore the API surface — endpoints, params, response schemas, auth. Test calls live.
 2. **Verify accessibility.** Test every action you plan to document with a customer account KS. Exclude actions that return `SERVICE_FORBIDDEN` or require partner-level permissions beyond standard KS privileges. `disableentitlement` bypasses content entitlement checks; partner-level service restrictions remain in force regardless.
-3. **Write the guide.** Follow the header block, numbered sections, curl examples, Related Guides structure.
+3. **Write the guide.** Follow the header block, numbered sections, curl examples, Related Guides structure. Include a `<!-- Sections: ... -->` HTML comment after the header block listing all section numbers and titles.
 4. **Create the test file.** `tests/test_{name}.py` — cover every documented endpoint with real API calls.
 5. **Run tests.** All tests must pass against the live API. Tests must succeed with actual successful API responses — not by catching expected errors.
 6. **Cross-reference.** Add to Related Guides sections of existing guides where relevant. Link only to published guides in this repository.

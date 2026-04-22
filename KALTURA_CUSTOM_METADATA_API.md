@@ -9,6 +9,8 @@ The Custom Metadata API lets you define XSD-based schemas (metadata profiles) an
 
 **Important:** These are plugin services. The service names use underscore-prefixed compound names: `metadata_metadataProfile`, `metadata_metadata`.  
 
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Authentication | 4.Metadata Profiles (Schemas) | 5.XSD Schema Design | 6.Metadata Instances (CRUD) | 7.XSLT Transformation Pipeline | 8.Metadata on Different Object Types | 9.Search Integration | 10.Metadata in Distribution (MRSS) | 11.Common Integration Patterns | 12.Business Use Cases | 13.Error Handling | 14.Best Practices | 15.Related Guides -->
+
 
 # 1. When to Use
 

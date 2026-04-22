@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'REMINDER: Did you Read this file in the current context? If not, Read it now before editing. Guide files change frequently.'",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -7,6 +7,8 @@ Syndication feeds generate RSS/MRSS/XML feeds that external platforms pull via H
 **Format:** Form-encoded POST, `format=1` for JSON responses  
 **Service:** `syndicationFeed`  
 
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Core Concepts | 4.syndicationFeed.add | 5.syndicationFeed.get | 6.syndicationFeed.list | 7.syndicationFeed.update | 8.syndicationFeed.delete | 9.syndicationFeed.getEntryCount | 10.Feed URL & XML Output | 11.Entry Filtering | 12.Feed Caching & Performance | 13.Error Handling | 14.Best Practices | 15.Common Integration Patterns | 16.API Actions Reference | 17.Related Guides -->
+
 
 # 1. When to Use
 

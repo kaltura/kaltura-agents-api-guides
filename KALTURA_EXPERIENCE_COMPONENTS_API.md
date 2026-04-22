@@ -6,6 +6,8 @@ Experience Components are front-end embeddable apps and widgets that simplify bu
 **Auth:** KS passed via config object, URL parameter, or SDK constructor  
 **Format:** JavaScript embed, iframe embed, or SDK  
 
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Components | 4.Component Summaries | 5.Shared Best Practices | 6.Error Handling Overview | 7.Related Guides -->
+
 
 # 1. When to Use
 

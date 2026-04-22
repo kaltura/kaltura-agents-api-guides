@@ -16,6 +16,8 @@ Pull analytics data out of Kaltura — content performance, viewer engagement, e
 | `stats` | `collect` | Server-side statistics collection |
 | `beacon` | `list` | Stream health diagnostics and encoder data |
 
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Authentication | 4.Report Response Format | 5.report.getTable | 6.report.getTotal | 7.report.getGraphs | 8.Multi-Request Batching | 9.CSV Exports | 10.Reports Microservice | 11.Live Analytics | 12.Report Types Reference | 13.Filter Fields Reference | 14.Error Handling & Permissions | 15.Common Integration Patterns | 16.Best Practices | 17.Related Guides -->
+
 
 # 1. When to Use
 

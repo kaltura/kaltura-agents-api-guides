@@ -6,6 +6,8 @@ The Captions Editor (Captions Studio) provides an interactive caption editing in
 **Auth:** KS passed via URL parameter  
 **Format:** iframe embed  
 
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Embedding via iframe | 4.URL Parameters | 5.Workflow | 6.Editor Features | 7.Host-Page Integration | 8.Error Handling | 9.Best Practices | 10.Related Guides -->
+
 
 # 1. When to Use
 

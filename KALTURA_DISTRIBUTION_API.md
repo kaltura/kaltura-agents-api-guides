@@ -7,6 +7,8 @@ Kaltura's content distribution system pushes media to external platforms (YouTub
 **Format:** Form-encoded POST, `format=1` for JSON responses  
 **Services:** `contentDistribution_distributionProvider`, `contentDistribution_distributionProfile`, `contentDistribution_entryDistribution`, `contentDistribution_genericDistributionProvider`, `contentDistribution_genericDistributionProviderAction`  
 
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Core Concepts | 4.Distribution Providers | 5.Distribution Profile Management | 6.Entry Distribution Lifecycle | 7.Distribution Triggers & Automation | 8.Distribution Connector Reference | 9.MRSS & Field Configuration | 10.Building a Custom Connector | 11.Status & Error Reference | 12.Error Handling | 13.Best Practices | 14.Common Integration Patterns | 15.API Actions Reference | 16.Related Guides -->
+
 
 # 1. When to Use
 

@@ -9,6 +9,8 @@ The Captions & Transcripts API manages subtitle files, closed captions, and tran
 
 **Important:** These are plugin services. The service names use underscore-prefixed compound names: `caption_captionAsset`, `caption_captionParams`.  
 
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Authentication | 4.Caption Formats | 5.Caption Asset CRUD | 6.Serving Captions | 7.Caption Parameters (Templates) | 8.Transcripts | 9.Multi-Language Workflows | 10.Caption Search | 11.Player Integration | 12.Auto-Captioning & Automation | 13.Accessibility Compliance | 14.Business Use Cases | 15.Error Handling | 16.Best Practices | 17.Related Guides -->
+
 
 # 1. When to Use
 

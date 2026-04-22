@@ -6,6 +6,8 @@ Content Lab is a Unisphere widget for AI-powered content repurposing. It generat
 **Auth:** KS passed via runtime settings  
 **Format:** ES module JavaScript embed (Unisphere runtime)  
 
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Architecture | 4.Embedding | 5.Application Runtime Settings | 6.AI Consent Runtime Settings | 7.Runtime API | 8.KS Requirements | 9.Error Handling | 10.Best Practices | 11.Multi-Region | 12.Related Guides -->
+
 
 # 1. When to Use
 

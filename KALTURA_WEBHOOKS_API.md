@@ -7,6 +7,8 @@ Kaltura's event notification system sends real-time HTTP webhooks or emails when
 **Format:** Form-encoded POST, `format=1` for JSON responses  
 **Service:** `eventnotification_eventnotificationtemplate` (plugin service — all lowercase with plugin prefix)  
 
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Core Concepts | 4.Discover System Templates | 5.Clone a System Template | 6.Create an HTTP Webhook Template | 7.Webhook Signing (HMAC Verification) | 8.Webhook Payload Structure (Verified via Live Delivery) | 9.Email Notifications via the Messaging Service | 10.Template CRUD Operations | 11.Manual Dispatch | 12.Common Integration Patterns | 13.API Actions Reference | 14.Error Handling | 15.Best Practices | 16.Related Guides -->
+
 
 # 1. When to Use
 

@@ -6,6 +6,8 @@ Application Tokens provide secure, scoped API access without exposing admin secr
 **Auth:** Admin KS for token management; widget session + HMAC for `startSession`  
 **Format:** Form-encoded POST, `format=1` for JSON responses  
 
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Why AppTokens Instead of Admin Secrets | 4.AppToken Object (KalturaAppToken) | 5.AppToken CRUD Operations | 6.Starting a Session with AppToken (HMAC Flow) | 7.Privilege Reference | 8.Token Rotation Pattern | 9.Hash Types | 10.Error Handling | 11.Best Practices | 12.Related Guides -->
+
 
 # 1. When to Use
 

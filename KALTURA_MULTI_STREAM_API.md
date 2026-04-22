@@ -20,6 +20,8 @@ Create synchronized multi-stream entries for dual-screen playback — Picture-in
 - Video files that are in sync (same duration, same starting point)
 - For uploading new files, see the [Upload & Ingestion Guide](KALTURA_UPLOAD_AND_INGESTION_API.md)
 
+<!-- Sections: 1.Multi-Stream Architecture | 2.Create a Multi-Stream Entry Set | 3.Link an Existing Entry as a Child | 4.Verify and List Multi-Stream Entries | 5.Player v7 Dual Screen Setup | 6.Playback Behavior | 7.Complete Example — Multi-Stream Lifecycle | 8.API Reference | 9.Error Handling | 10.Best Practices | 11.Related Guides -->
+
 
 # 1. Multi-Stream Architecture
 

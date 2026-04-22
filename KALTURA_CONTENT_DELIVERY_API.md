@@ -6,6 +6,8 @@ This guide covers delivering content to viewers: constructing playManifest URLs 
 **CDN Base:** `https://cdnapisec.kaltura.com` (or your account's CDN host)  
 **Auth:** Public entries work without KS. Access-controlled entries require a KS appended to the URL.  
 
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.playManifest — Adaptive Streaming | 4.Raw Serve URL — Direct File Access | 5.Download Endpoint | 6.Flavor Asset Delivery | 7.Delivery Profiles | 8.CDN URL Tokenization | 9.Access Control on Delivery | 10.Complete Delivery Workflow | 11.Error Handling | 12.Best Practices | 13.Related Guides -->
+
 
 # 1. When to Use
 

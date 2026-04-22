@@ -73,6 +73,8 @@ The privacy context should match the category Genie indexes for your account.
 | `agentid:<ID>` | Select a specific agent configuration |
 | `geniegpcid:<ID>` | Select a partner config by its database ID directly |
 
+<!-- Sections: 1.Architecture Overview | 2.Stateless RAG Search | 3.Streaming Conversation | 4.WebSocket Chat | 5.Thread Management | 6.Message Management | 7.Feedback | 8.Suggested Questions | 9.Status & Configuration | 10.Integration Flow | 11.Error Handling | 12.Best Practices | 13.Related Guides -->
+
 # 1. Architecture Overview
 
 ## Indexing Pipeline

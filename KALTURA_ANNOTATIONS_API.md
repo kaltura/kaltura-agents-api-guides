@@ -11,6 +11,8 @@ Use annotations for timestamped comments, notes, and clickable regions on video.
 **objectType:** `KalturaAnnotation`  
 **Prerequisite:** [Cue Points Hub](KALTURA_CUE_POINTS_API.md) for base cue point concepts and shared CRUD
 
+<!-- Sections: 1.When to Use Annotations | 2.Fields (in addition to base) | 3.Create an Annotation | 4.Threaded Annotations | 5.Hotspot Pattern | 6.searchableOnEntry Flag | 7.Annotation Service Note | 8.Player Integration | 9.Searching Annotations | 10.Error Handling | 11.Best Practices | 12.Related Guides -->
+
 
 # 1. When to Use Annotations
 

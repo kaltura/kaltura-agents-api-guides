@@ -19,6 +19,8 @@ The Agents Manager lets you create **automated content-processing agents** that 
 - Have a Kaltura account with the Agents Manager capability enabled
 - Have relevant REACH enrichment services provisioned on your account (see [REACH Guide](KALTURA_REACH_API.md))
 
+<!-- Sections: 1.Discover Available Action Types | 2.Create a Trigger | 3.Create Actions | 4.Create an Agent | 5.List Agents | 6.Delete Resources | 7.Execution Tracking | 8.Error Handling | 9.Best Practices | 10.Related Guides -->
+
 
 ## Key Benefits
 

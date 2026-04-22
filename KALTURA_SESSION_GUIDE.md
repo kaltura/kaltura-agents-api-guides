@@ -6,6 +6,8 @@ Generate, use, and rotate Kaltura Sessions (KS) — the signed, time-limited tok
 **Auth:** KS passed as `ks` parameter in POST form data, or as embed URL parameter  
 **Format:** Form-encoded POST, `format=1` for JSON responses  
 
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.What is a KS and when to use which flow | 4.Common security practices | 5.REST API Recipes | 6.Passing the KS to APIs and the Player | 7.Privileges: what to actually use | 8.Renewal, caching, and fallback | 9.Error Handling | 10.Entitlements & KS Privileges Patterns | 11.Best Practices | 12.Related Guides -->
+
 
 # 1. When to Use
 

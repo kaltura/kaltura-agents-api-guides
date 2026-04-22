@@ -23,6 +23,8 @@ Content-Type: application/x-www-form-urlencoded
 
 All parameters are passed as form data. Always include `ks=<YOUR_KS>` and `format=1` (JSON response).
 
+<!-- Sections: 1.List Available Catalog Items | 2.Get REACH Profile | 3.Create a Task (Order a Service) | 4.Check Task Status | 5.List Tasks | 6.Manage Tasks | 7.Best Practices | 8.Error Handling | 9.Related Guides -->
+
 
 ## What REACH Provides
 

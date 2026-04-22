@@ -6,6 +6,8 @@ Kaltura's multi-account model enables organizations to create and manage hierarc
 **Auth:** Admin KS on the parent account for management operations  
 **Format:** Form-encoded POST, `format=1` for JSON responses  
 
+<!-- Sections: 1.When to Use Multi-Account Management | 2.Prerequisites | 3.Sub-Account Creation | 4.Sub-Account Management | 5.Cross-Account Authentication | 6.Cross-Account Analytics | 7.Error Handling | 8.Best Practices | 9.Related Guides -->
+
 
 # 1. When to Use Multi-Account Management
 

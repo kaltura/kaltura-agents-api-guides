@@ -7,6 +7,8 @@ The Auth Broker is a standalone microservice for managing SSO authentication via
 **Format:** JSON request/response bodies, all endpoints use POST (except SAML metadata which is GET)  
 **Regions:** NVP (default `nvp1`), EU (`irp2`), DE (`frp2`)  
 
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Authentication | 4.Architecture Overview | 5.Auth Profile CRUD | 6.Attribute Mapping | 7.Group Sync | 8.App Subscription CRUD | 9.SSO Login Flow | 10.SPA Proxy | 11.SAML SP Metadata | 12.Multi-SSO Configuration | 13.Shared User Model | 14.Error Handling | 15.Best Practices | 16.Related Guides -->
+
 
 # 1. When to Use
 

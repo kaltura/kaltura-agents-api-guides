@@ -7,6 +7,8 @@ The Messaging API enables sending personalized, template-based email communicati
 **Format:** JSON request/response bodies, all endpoints use POST  
 **Regions:** NVP (default `nvp1`), EU (`irp2`), DE (`frp2`)  
 
+<!-- Sections: 1.When to Use | 2.Authentication | 3.Email Template Entity | 4.Token Types | 5.Manage Email Templates | 6.Send Messages | 7.Message Lifecycle | 8.Track Messages | 9.Delivery Reports | 10.Unsubscribe Management | 11.Email Provider Configuration | 12.Domain Configuration | 13.Error Handling | 14.Common Integration Patterns | 15.Best Practices | 16.Related Guides -->
+
 
 # 1. When to Use
 

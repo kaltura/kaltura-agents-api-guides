@@ -7,6 +7,8 @@ The Access Control API manages content access restrictions through profiles, rul
 **Format:** Form-encoded POST, `format=1` for JSON responses  
 **Service:** `accessControlProfile` (5 actions)
 
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Authentication | 4.Access Control Model | 5.KalturaAccessControlProfile Object | 6.Profile CRUD | 7.Rule Conditions | 8.Rule Actions | 9.Access Control Contexts | 10.Scheduling vs Access Control | 11.Assigning Profiles to Entries | 12.Business Scenarios | 13.Error Handling | 14.Best Practices | 15.Related Guides -->
+
 
 # 1. When to Use
 

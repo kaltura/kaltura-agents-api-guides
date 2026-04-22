@@ -7,6 +7,8 @@ The User Management API covers the core user identity layer: creating and managi
 **Format:** Form-encoded POST, `format=1` for JSON responses  
 **Services:** `user` (22 actions), `userRole` (6 actions), `group_group` (CRUD), `groupUser` (5 actions)  
 
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Authentication | 4.KalturaUser Object | 5.User Provisioning Pathways | 6.User CRUD | 7.Login & Credentials | 8.User Roles (RBAC) | 9.Groups | 10.Bulk Operations | 11.Error Handling | 12.Best Practices | 13.Related Guides -->
+
 
 # 1. When to Use
 

@@ -6,6 +6,8 @@ Kaltura Genie provides a conversational AI search widget that lets users ask nat
 **Auth:** KS passed via runtime settings  
 **Format:** ES module JavaScript embed  
 
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Embedding | 4.Configuration | 5.KS Requirements | 6.Container CSS | 7.Custom Theming | 8.Initial Questions | 9.Source URL and Share URL Callbacks | 10.Supported Languages | 11.Workspace Lifecycle | 12.Server-Side API | 13.Player Integration | 14.Error Handling | 15.Best Practices | 16.Related Guides -->
+
 
 # 1. When to Use
 
@@ -17,94 +19,127 @@ Kaltura Genie provides a conversational AI search widget that lets users ask nat
 
 # 2. Prerequisites
 
-- **Kaltura Session (KS)** — A USER KS (type=0) with `setrole:PLAYBACK_BASE_ROLE` and `sview:*` privileges is recommended for the Genie widget. The KS is visible client-side, so generate it on your backend. See the [Session Guide](KALTURA_SESSION_GUIDE.md) for KS generation details.  
+- **Kaltura Session (KS)** — A USER KS (type=0) with all required privileges (see section 5). The KS is visible client-side, so generate it on your backend. Privileges include `setrole:PLAYBACK_BASE_ROLE`, `sview:*`, `enableentitlement`, `privacycontext`, `genieid`, and several others — all are required for correct operation. See the [Session Guide](KALTURA_SESSION_GUIDE.md) for KS generation details.  
 - **Genie feature enabled** — The account must have Genie (AI Search) enabled and configured. The account must have indexed content for Genie to search.  
 - **Partner-specific Genie URL** — The Genie widget loads via the Unisphere loader from your region's endpoint (e.g., `https://unisphere.nvp1.ovp.kaltura.com/v1` for US). Match the `serverUrl` and `kalturaServerURI` to your Kaltura account region.  
 
 
 # 3. Embedding
 
-Load the Unisphere loader as an ES module and call `loader()` with your configuration:
+The Genie widget is embedded in two phases: (1) initialize the Unisphere loader, then (2) load and mount the Genie runtime.
 
 ```html
-<div id="class-genie-container"></div>
+<div id="classgenie"></div>
+
+<!-- Phase 1: Initialize the Unisphere loader -->
 <script type="module">
-  import { loader } from "https://unisphere.nvp1.ovp.kaltura.com/v1/loader/index.esm.js";
+  import { loader } from
+    "https://unisphere.nvp1.ovp.kaltura.com/v1/loader/index.esm.js";
 
-  const options = {
-    appId: "my-app",
-    appVersion: "1.0.0",
+  loader({
     serverUrl: "https://unisphere.nvp1.ovp.kaltura.com/v1",
-    ui: {
-      theme: "light",
-      language: "en-US"
-    },
-    runtimes: [{
-      widgetName: "unisphere.widget.genie",
-      runtimeName: "chat",
-      settings: {
-        kalturaServerURI: "https://www.kaltura.com",
-        ks: "$KALTURA_KS",
-        partnerId: "$KALTURA_PARTNER_ID"
-      },
-      visuals: [{
-        type: "page",
-        target: "class-genie-container",
-        settings: {}
-      }]
-    }]
-  };
-  const workspace = await loader(options);
+    ui: { theme: "light", language: "en" }
+  });
+</script>
 
-  // Get the runtime instance for programmatic interaction (see section 11)
-  const genie = await workspace.getRuntimeAsync("unisphere.widget.genie", "chat");
+<!-- Phase 2: Load the Genie runtime and mount it -->
+<script>
+  function waitForUnisphere() {
+    return new Promise(function(resolve) {
+      if (window.unisphere && window.unisphere.instancesManager) {
+        resolve(window.unisphere.instancesManager.get);
+      } else {
+        var handler = function() {
+          document.removeEventListener("unisphere-ready", handler);
+          resolve(window.unisphere.instancesManager.get);
+        };
+        document.addEventListener("unisphere-ready", handler);
+      }
+    });
+  }
+
+  waitForUnisphere().then(function(get) {
+    get("").then(function(workspace) {
+      workspace.loadRuntime("unisphere.widget.genie", "application", {
+        genieServerUrl: "https://genie.nvp1.ovp.kaltura.com",
+        ks: "$KALTURA_KS",
+        pid: "$KALTURA_PARTNER_ID",
+        uiConfId: "$KALTURA_PLAYER_ID",
+        widgetId: "",
+        kalturaServerURI: "https://cdnapisec.kaltura.com"
+      }).then(function(result) {
+        result.runtime.assignArea("classgenie");
+      });
+    });
+  });
 </script>
 ```
 
-The container `<div>` must have an `id` attribute matching the `target` value in the visuals config. The widget renders inside this container and fills the available space.
+**How it works:**
+
+1. The ES module `loader()` call initializes the Unisphere framework with server URL and UI settings. It does not load any runtimes yet.  
+2. The `unisphere-ready` DOM event fires once the framework is initialized. The `waitForUnisphere()` helper resolves with the workspace getter function.  
+3. `get("")` retrieves the default workspace instance.  
+4. `workspace.loadRuntime()` loads the Genie widget with its settings (KS, partner ID, Genie server URL).  
+5. `runtime.assignArea()` mounts the widget into the container `<div>` matching the given `id`.
+
+The container `<div>` must have an `id` attribute matching the value passed to `assignArea()`. The widget renders inside this container and fills the available space.
 
 
 # 4. Configuration
 
-## Top-Level Options
+## Loader Options
+
+These are passed to the `loader()` call in Phase 1:
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `appId` | string | yes | Unique identifier for your application instance (e.g., `"my-portal"`) |
-| `appVersion` | string | yes | Your application version (e.g., `"1.0.0"`) — useful for tracking and debugging |
 | `serverUrl` | string | yes | Unisphere server URL: `https://unisphere.nvp1.ovp.kaltura.com/v1` |
 | `ui.theme` | string or object | yes | `"light"`, `"dark"`, or a custom theme object (see section 7) |
 | `ui.language` | string | no | UI language code (e.g., `"en-US"`, `"he-IL"`) — see section 10 for supported languages |
-| `runtimes` | array | yes | Array of runtime configurations (one entry for Genie) |
 
-## Runtime Settings
+## Runtime Settings (loadRuntime parameters)
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `widgetName` | string | yes | Must be `"unisphere.widget.genie"` |
-| `runtimeName` | string | yes | Must be `"chat"` |
-| `settings.kalturaServerURI` | string | yes | Kaltura API endpoint (e.g., `https://www.kaltura.com`). Use your region's endpoint if applicable (e.g., `https://api.irp2.ovp.kaltura.com` for EU) |
-| `settings.ks` | string | yes | Kaltura Session — must be a USER session (type=0). See section 5 |
-| `settings.partnerId` | string | yes | Your Kaltura partner ID. Also accepted as `pid` |
-| `settings.uiConfId` | string | no | UI Configuration ID for advanced customization |
-| `settings.getSourceUrl` | function | no | Callback receiving `{ entryId, startTime }` — return a URL to the entry in your application. Omit or return empty string if your app has no entry page |
-| `settings.shareUrl.queryParam` | string | no | URL query parameter name for conversation sharing (e.g., `"mid"`) |
-| `settings.shareUrl.createUrl` | function | no | Callback receiving `{ messageId }` — return a shareable URL for the conversation |
-
-## Visuals
+The third argument to `workspace.loadRuntime("unisphere.widget.genie", "application", settings)` accepts:
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `visuals[].type` | string | yes | Currently only `"page"` is supported |
-| `visuals[].target` | string | yes | The `id` attribute of the container `<div>` where the widget renders |
-| `visuals[].settings` | object | yes | Pass an empty object `{}` — reserved for future visual type settings |
-| `visuals[].settings.customization.initialPage.title` | string | no | Title displayed on the initial landing page (e.g., `"Ask Anything"`) |
-| `visuals[].settings.customization.initialPage.initialQuestions` | array | no | Pre-populated question suggestions — see section 8 |
+| `genieServerUrl` | string | yes | Genie backend URL: `https://genie.nvp1.ovp.kaltura.com` (use your region's endpoint) |
+| `kalturaServerURI` | string | yes | Kaltura CDN API endpoint: `https://cdnapisec.kaltura.com` (use your region's endpoint if applicable) |
+| `ks` | string | yes | Kaltura Session — must be a USER session (type=0) with all required privileges. See section 5 |
+| `pid` | string | yes | Your Kaltura partner ID. Also accepted as `partnerId` |
+| `uiConfId` | string | no | UI Configuration ID for player and widget customization |
+| `widgetId` | string | no | Widget instance identifier (pass `""` for default) |
+| `getSourceUrl` | function | no | Callback receiving `{ entryId, startTime }` — return a URL to the entry in your application. Omit or return empty string if your app has no entry page |
+| `shareUrl.queryParam` | string | no | URL query parameter name for conversation sharing (e.g., `"mid"`) |
+| `shareUrl.createUrl` | function | no | Callback receiving `{ messageId }` — return a shareable URL for the conversation |
+
+## Mounting
+
+After `loadRuntime()` resolves, call `runtime.assignArea(targetId)` to mount the widget into a container `<div>`:
+
+```javascript
+workspace.loadRuntime("unisphere.widget.genie", "application", settings)
+  .then(function(result) {
+    result.runtime.assignArea("classgenie");
+  });
+```
+
+The `targetId` must match the `id` attribute of the container `<div>`.
+
+## Customization via assignArea
+
+Pass an optional settings object to `assignArea()` for visual customization:
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `customization.initialPage.title` | string | Title displayed on the initial landing page (e.g., `"Ask Anything"`) |
+| `customization.initialPage.initialQuestions` | array | Pre-populated question suggestions — see section 8 |
 
 
 # 5. KS Requirements
 
-The KS passed to the Genie widget is visible client-side. Generate it as a **USER session** (type=0) on your backend:
+The KS passed to the Genie widget is visible client-side. Generate it as a **USER session** (type=0) on your backend with all required privileges:
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/session/action/start" \
@@ -114,33 +149,41 @@ curl -X POST "$KALTURA_SERVICE_URL/service/session/action/start" \
   -d "type=0" \
   -d "userId=user@example.com" \
   -d "expiry=86400" \
-  -d "privileges=setrole:PLAYBACK_BASE_ROLE,sview:*,appid:my-app-my-domain.com,sessionid:$(uuidgen)"
+  -d "privileges=setrole:PLAYBACK_BASE_ROLE,sview:*,eventsessioncontextid:*,privacycontext:$PRIVACY_CONTEXT,enableentitlement,appid:$APP_ID,virtualeventid:$VIRTUAL_EVENT_ID,restrictexplicitliveview:*,searchcontext:kms_esearch_history_global_context,genieid:$GENIE_ID"
 ```
 
-**Recommended privileges:**
+**Required privileges:**
 
 | Privilege | Purpose |
 |-----------|---------|
-| `setrole:PLAYBACK_BASE_ROLE` | Restricts the KS to playback-only operations — recommended since the KS is exposed client-side |
-| `sview:*` | Allows Genie to return playable clips. Entitlements still gate per-user access |
-| `appid:<APP_NAME-APP_DOMAIN>` | Identifies the application in analytics |
-| `sessionid:<GUID>` | Unique session identifier for tracking |
+| `setrole:PLAYBACK_BASE_ROLE` | Restricts the KS to playback-only operations — the KS is exposed client-side |
+| `sview:*` | Allows Genie to return playable clips from search results |
+| `enableentitlement` | Activates entitlement checks so Genie respects content permissions |
+| `privacycontext:<PRIVACY_CONTEXT>` | Specifies which entitlement context applies to this session. The privacy context determines which content the user can access — Genie queries are filtered through this context. Use the privacy context value configured on your categories (see the [Categories & Entitlements Guide](KALTURA_CATEGORIES_AND_ENTITLEMENTS_API.md) for details on privacy contexts and how they control content visibility) |
+| `appid:<APP_NAME>` | Identifies the application in analytics (e.g., `eventplatform-6500332.events.kaltura.com`) |
+| `virtualeventid:<EVENT_ID>` | Associates the session with a specific virtual event for event-scoped Genie queries |
+| `eventsessioncontextid:*` | Grants access to event session context data used by Genie for event-aware responses |
+| `restrictexplicitliveview:*` | Enforces explicit live content view restrictions |
+| `searchcontext:<CONTEXT>` | Sets the search context for eSearch queries (e.g., `kms_esearch_history_global_context` for global search history) |
+| `genieid:<GENIE_ID>` | Selects the specific Genie workspace configuration for this session |
 
-**Optional Genie-specific privileges:**
+All privilege values are account-specific and site-specific. Obtain the correct values from your Kaltura account configuration.
+
+**Content scoping privileges (optional):**
 
 | Privilege | Purpose |
 |-----------|---------|
-| `genieid:<GENIE_ID>` | Select a specific Genie configuration when your account has multiple. Omit to use the default |
 | `geniecategoryid:<CATEGORY_ID>` | Limit Genie queries to content published in the specified category only |
 | `genieancestorid:<CATEGORY_ID>` | Limit Genie queries to content in the specified category or any of its descendants |
+| `sessionid:<GUID>` | Unique session identifier for analytics tracking |
 
-**Entitlement-protected content:** If Genie indexes content protected by entitlements, add the privacy context to the KS privileges:
+## Privacy Context and Entitlements
 
-```
-enableentitlement,privacycontext:<PRIVACY_CONTEXT>
-```
+The `privacycontext` privilege is critical for Genie to return correct results. Without the correct privacy context, Genie either returns no results (content is filtered out by entitlement checks) or returns content the user should not see (entitlement checks are bypassed).
 
-If only authenticated users access Genie, specify the `userId` when creating the KS to enable per-user entitlement checks.
+The privacy context value is defined on your category entitlement settings. Each category with entitlements enabled has a `privacyContext` string that identifies the access boundary. When a KS includes `enableentitlement,privacycontext:<VALUE>`, the Kaltura API filters all content queries — including Genie's vector search — to return only entries the user is entitled to within that context.
+
+For a complete explanation of privacy contexts, category entitlements, and how they interact with content access, see the [Categories & Entitlements Guide](KALTURA_CATEGORIES_AND_ENTITLEMENTS_API.md).
 
 See the [Session Guide](KALTURA_SESSION_GUIDE.md) for KS generation details and the [AppTokens Guide](KALTURA_APPTOKENS_API.md) for production token management.
 
@@ -245,25 +288,21 @@ const options = {
 
 # 8. Initial Questions
 
-Pre-populate the landing page with suggested questions using the `initialQuestions` array in the visuals settings:
+Pre-populate the landing page with suggested questions by passing a customization object to `assignArea()`:
 
 ```javascript
-visuals: [{
-  type: "page",
-  target: "class-genie-container",
-  settings: {
-    customization: {
-      initialPage: {
-        title: "Ask Anything",
-        initialQuestions: [
-          { text: "How do I set up account alerts?", answerType: "flashcards" },
-          { text: "What security features are available?", answerType: "flashcards" },
-          { text: "How do I manage my profile settings?", answerType: "flashcards" }
-        ]
-      }
+result.runtime.assignArea("classgenie", {
+  customization: {
+    initialPage: {
+      title: "Ask Anything",
+      initialQuestions: [
+        { text: "How do I set up account alerts?", answerType: "flashcards" },
+        { text: "What security features are available?", answerType: "flashcards" },
+        { text: "How do I manage my profile settings?", answerType: "flashcards" }
+      ]
     }
   }
-}]
+});
 ```
 
 Each question object has:  
@@ -273,24 +312,29 @@ Each question object has:
 
 # 9. Source URL and Share URL Callbacks
 
-Provide callbacks to integrate Genie with your application's navigation and sharing:
+Provide callbacks in the `loadRuntime` settings to integrate Genie with your application's navigation and sharing:
 
 ```javascript
-settings: {
+workspace.loadRuntime("unisphere.widget.genie", "application", {
+  genieServerUrl: "https://genie.nvp1.ovp.kaltura.com",
+  ks: "$KALTURA_KS",
+  pid: "$KALTURA_PARTNER_ID",
+  kalturaServerURI: "https://cdnapisec.kaltura.com",
+
   // Deep-link to video entries in your application
-  getSourceUrl: ({ entryId, startTime }) => {
-    return `https://my-portal.example.com/watch?entry=${entryId}&st=${startTime}`;
+  getSourceUrl: function(params) {
+    return "https://my-portal.example.com/watch?entry=" + params.entryId + "&st=" + params.startTime;
   },
   // Enable conversation sharing
   shareUrl: {
     queryParam: "mid",
-    createUrl: ({ messageId }) => {
-      const url = new URL(window.location.href);
-      url.searchParams.set("mid", messageId);
+    createUrl: function(params) {
+      var url = new URL(window.location.href);
+      url.searchParams.set("mid", params.messageId);
       return url.toString();
     }
   }
-}
+});
 ```
 
 - **`getSourceUrl`** — Called when Genie displays source entry links in answers. Return a URL to the entry page in your application at the specified `startTime`. Return an empty string or omit the callback entirely if your application does not have entry pages.  
@@ -322,37 +366,32 @@ Short codes (e.g., `"en"`, `"he"`) are also accepted.
 
 # 11. Workspace Lifecycle
 
-The `loader()` function returns a workspace object for managing the Genie runtime:
+The `loader()` call initializes the Unisphere framework. Access the workspace via the `unisphere-ready` event:
 
 ```javascript
-const workspace = await loader(options);
+waitForUnisphere().then(function(get) {
+  get("").then(function(workspace) {
+    // workspace is ready — load runtimes, refresh KS, or clean up
+  });
+});
 ```
 
 ## Workspace Methods
 
 | Method | Returns | Description |
 |--------|---------|-------------|
-| `getRuntime(widgetName, runtimeName)` | runtime | Get the Genie runtime synchronously. Returns `null` if not yet loaded |
-| `getRuntimeAsync(widgetName, runtimeName)` | Promise&lt;runtime&gt; | Get the Genie runtime asynchronously. Resolves when the runtime finishes loading |
+| `loadRuntime(widgetName, runtimeName, settings)` | Promise&lt;{ runtime }&gt; | Load a widget runtime with the given settings. Call `runtime.assignArea(targetId)` to mount it |
 | `session.setData(updater)` | void | Update the workspace session. Use to refresh an expired KS without reloading the page |
-| `kill()` | void | Destroy the workspace, release the Genie runtime, and remove rendered DOM elements. Call when navigating away from the page |
-
-## Get Runtime Instance
-
-```javascript
-// Synchronous (returns null if not yet loaded)
-const genie = workspace.getRuntime("unisphere.widget.genie", "chat");
-
-// Asynchronous (waits for load)
-const genie = await workspace.getRuntimeAsync("unisphere.widget.genie", "chat");
-```
+| `kill()` | void | Destroy the workspace, release all runtimes, and remove rendered DOM elements. Call when navigating away from the page |
 
 ## KS Refresh
 
 The widget does not automatically renew expired sessions. Refresh the KS without reloading:
 
 ```javascript
-workspace.session.setData(prev => ({ ...prev, ks: "new-ks-token" }));
+workspace.session.setData(function(prev) {
+  return Object.assign({}, prev, { ks: "new-ks-token" });
+});
 ```
 
 ## Cleanup
@@ -440,7 +479,7 @@ player.addEventListener('GENIE_OPEN_MANUAL', function(e) {
 </script>
 ```
 
-The `fallbackToPlayerKS: true` setting uses the player's provider KS for Genie authentication. If you need a separate KS with different privileges (e.g., `setrole:PLAYBACK_BASE_ROLE,sview:*` for Genie), pass it via the `ks` parameter instead.
+The `fallbackToPlayerKS: true` setting uses the player's provider KS for Genie authentication. The player KS must include all required Genie privileges (see section 5). If the player KS has different privileges, pass a dedicated Genie KS via the `ks` parameter instead.
 
 
 # 14. Error Handling
@@ -449,13 +488,14 @@ The `fallbackToPlayerKS: true` setting uses the player's provider KS for Genie a
 - **ES module import failure** — The Genie widget loads as an ES module (`type="module"`). Verify your page uses HTTPS and the browser supports ES modules. The `import` statement requires a script tag with `type="module"`.  
 - **KS expiry** — The widget does not automatically renew expired sessions. Use `workspace.session.setData()` to refresh the KS before it expires (see section 11). Generate a KS with sufficient expiry for the expected session duration.  
 - **Genie not configured for account** — If the widget loads but returns no results, verify that Genie (AI Search) is enabled and configured for your Kaltura account. The account must have indexed content for Genie to search.  
-- **Entitlement-protected content not appearing** — If Genie returns fewer results than expected, verify the KS includes `enableentitlement,privacycontext:<PRIVACY_CONTEXT>` for entitlement-protected content (see section 5).  
+- **Entitlement-protected content not appearing** — If Genie returns no results or fewer results than expected, verify the KS includes all required privileges (see section 5). The most common cause is a missing or incorrect `privacycontext` — this must match the privacy context value configured on your categories. See the [Categories & Entitlements Guide](KALTURA_CATEGORIES_AND_ENTITLEMENTS_API.md) for how to look up the correct privacy context value.  
 
 
 # 15. Best Practices
 
-- **Generate the KS server-side.** The Genie widget KS is visible client-side — generate USER sessions (type=0) with `setrole:PLAYBACK_BASE_ROLE` on your backend. Never embed admin secrets in client-side code.  
-- **Scope content with category privileges.** Use `geniecategoryid` or `genieancestorid` KS privileges to limit queries to relevant content rather than exposing the entire library.  
+- **Generate the KS server-side with all required privileges.** The Genie widget KS is visible client-side — generate USER sessions (type=0) on your backend with the full privilege set documented in section 5. Missing privileges cause silent failures (empty results, broken features).  
+- **Use the correct privacy context.** The `privacycontext` privilege must match the value configured on your category entitlements. An incorrect privacy context causes Genie to return no results even when content is indexed. See the [Categories & Entitlements Guide](KALTURA_CATEGORIES_AND_ENTITLEMENTS_API.md).  
+- **Scope content with category privileges.** Use `geniecategoryid` or `genieancestorid` KS privileges to further limit queries to relevant content within the entitlement boundary.  
 - **Size the container explicitly.** The widget fills the available space in the container `<div>` — set explicit `width` and `height` via CSS.  
 - **Use HTTPS.** The embed URL and all component URLs must use HTTPS for ES module imports and secure media access.  
 - **Clean up on navigation.** Call `workspace.kill()` when the user navigates away from the Genie page to release all runtimes and remove rendered DOM elements (see section 11).  
@@ -467,5 +507,6 @@ The `fallbackToPlayerKS: true` setting uses the player's provider KS for Genie a
 - **[Unisphere Framework](KALTURA_UNISPHERE_FRAMEWORK_API.md)** — The micro-frontend framework that powers this widget: loader, workspace lifecycle, services, multi-runtime composition  
 - **[Experience Components Overview](KALTURA_EXPERIENCE_COMPONENTS_API.md)** — Index of all embeddable components with shared guidelines  
 - **[AI Genie API](KALTURA_AI_GENIE_API.md)** — Server-side Genie HTTP API for custom integrations (RAG search, streaming conversations, threads, feedback)  
+- **[Categories & Entitlements API](KALTURA_CATEGORIES_AND_ENTITLEMENTS_API.md)** — Privacy contexts, category entitlements, and content visibility rules that govern Genie search results  
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — KS generation and privilege management  
 - **[AppTokens API](KALTURA_APPTOKENS_API.md)** — Production token management for secure KS generation

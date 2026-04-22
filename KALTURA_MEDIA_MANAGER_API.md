@@ -6,6 +6,8 @@ The Media Manager is a Unisphere widget for browsing, selecting, and uploading K
 **Auth:** KS passed via workspace session or per-runtime settings  
 **Format:** ES module JavaScript embed (Unisphere runtime)  
 
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Embedding | 4.Configuration | 5.Visual Types | 6.Modes | 7.Runtime API | 8.Switching Categories at Runtime | 9.Upload Flow | 10.KS Requirements | 11.Container CSS | 12.Error Handling | 13.Best Practices | 14.Multi-Region | 15.Related Guides -->
+
 
 # 1. When to Use
 

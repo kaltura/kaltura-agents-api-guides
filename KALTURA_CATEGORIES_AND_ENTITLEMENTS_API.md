@@ -7,6 +7,8 @@ The Categories & Entitlements API covers content organization and user-based con
 **Format:** Form-encoded POST, `format=1` for JSON responses  
 **Services:** `category` (11 actions), `categoryUser` (10 actions), `categoryEntry` (9 actions)  
 
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Authentication | 4.KalturaCategory Object | 5.Category CRUD | 6.Category Hierarchy | 7.Category Membership (categoryUser) | 8.Content Assignment (categoryEntry) | 9.Entitlement System | 10.Bulk Operations | 11.Error Handling | 12.Best Practices | 13.Related Guides -->
+
 
 # 1. When to Use
 

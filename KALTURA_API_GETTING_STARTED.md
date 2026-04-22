@@ -6,6 +6,8 @@ The Kaltura platform exposes 100+ REST API services, a dozen client libraries, s
 **Auth:** All requests require a Kaltura Session (KS) — see [Session Guide](KALTURA_SESSION_GUIDE.md) for details  
 **Format:** Form-encoded or JSON POST, `format=1` for JSON responses  
 
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.API Request Structure | 4.Endpoints & Regions | 5.Content Model: Entries and Assets | 6.Your First API Call | 7.Client Libraries | 8.Multirequest — Batching API Calls | 9.Error Handling | 10.Best Practices | 11.Shell Variables | 12.Related Guides -->
+
 
 # 1. When to Use
 

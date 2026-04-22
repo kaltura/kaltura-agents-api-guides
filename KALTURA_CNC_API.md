@@ -6,6 +6,8 @@ The Chat & Collaborate (CnC) component provides real-time communication and audi
 **Auth:** Managed by the Events Platform — CnC uses the event session's authentication context  
 **Format:** Embedded automatically within Kaltura event pages  
 
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Features | 4.Integration | 5.Data Access | 6.Error Handling | 7.Best Practices | 8.Related Guides -->
+
 
 # 1. When to Use
 

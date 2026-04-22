@@ -11,6 +11,8 @@ and overlay ad insertion.
 **objectType:** `KalturaAdCuePoint`  
 **Prerequisite:** [Cue Points Hub](KALTURA_CUE_POINTS_API.md) for base cue point concepts and shared CRUD
 
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Ad Types | 4.Fields (in addition to base) | 5.Protocol Types | 6.Ad Placement | 7.Create a Mid-Roll Ad | 8.Create an Overlay Ad | 9.Protocol Immutability | 10.Player Ad Plugin Integration | 11.Searching Ad Cue Points | 12.Error Handling | 13.Best Practices | 14.Related Guides -->
+
 
 # 1. When to Use
 

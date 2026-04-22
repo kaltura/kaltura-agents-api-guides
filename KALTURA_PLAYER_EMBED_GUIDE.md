@@ -6,6 +6,8 @@ Embed Kaltura's PlayKit player in web applications using iframe or dynamic JavaS
 **Auth:** Optional KS for access-controlled content (see [Session Guide](KALTURA_SESSION_GUIDE.md))  
 **Format:** HTML embed (iframe) or JavaScript SDK (PlayKit)  
 
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Embed Type Comparison | 4.Kaltura Player Iframe Embed | 5.Dynamic JS (PlayKit) embed | 6.JS Control (Play/Pause/Seek/Volume) | 7.Server-Side KS for Player | 8.Playback Progress Tracking (Quartile Events) | 9.Error Handling | 10.Best Practices | 11.Related Guides -->
+
 
 # 1. When to Use
 

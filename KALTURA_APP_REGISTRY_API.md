@@ -9,6 +9,8 @@ When you create a virtual event through the Events Platform, an app is automatic
 **Format:** JSON request/response bodies, all endpoints use POST  
 **Regions:** NVP (default `nvp1`), EU (`irp2`), DE (`frp2`)  
 
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Authentication | 4.App Entity | 5.Register an App | 6.Get an App | 7.Update an App | 8.Delete an App | 9.Enable / Disable an App | 10.List Apps | 11.Find Apps by Organization Domain | 12.Versioning | 13.Error Handling | 14.Common Integration Patterns | 15.Best Practices | 16.Related Guides -->
+
 
 # 1. When to Use
 

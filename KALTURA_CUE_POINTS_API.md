@@ -14,6 +14,8 @@ implementation details — see section 5 for links.
 **Format:** `format=1` for JSON responses  
 **Times:** All `startTime` and `endTime` values are in **milliseconds**
 
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Architecture Overview | 4.Base Cue Point Service | 5.Cue Point Types | 6.Protocols: REST API vs Live Push | 7.Applications | 8.eSearch Integration | 9.Player Plugin Ecosystem | 10.Bulk Operations | 11.Error Handling | 12.Best Practices | 13.Related Guides -->
+
 
 # 1. When to Use
 

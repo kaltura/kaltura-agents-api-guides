@@ -6,6 +6,8 @@ Moderation lets administrators and AI engines review content before it becomes v
 **Auth:** KS (admin session for approve/reject; user or widget session for flagging)  
 **Format:** All requests use `format=1` for JSON responses  
 
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Architecture | 4.Entry Moderation Status | 5.User Flagging | 6.Moderator Actions | 7.AI Moderation via REACH | 8.Moderation Policies and Rules | 9.Category Moderation | 10.Player Integration | 11.Permissions | 12.Notifications | 13.REACH Automation Rules | 14.Error Handling | 15.Best Practices | 16.Related Guides -->
+
 
 # 1. When to Use
 
