@@ -12,6 +12,8 @@
 
 4. **Update cross-references.** When adding or modifying a guide, also update: GUIDE_MAP.md, README.md (table + badges), PLAN.md, SKILL.md, llms.txt, context7.json.
 
+5. **Release workflow.** After pushing to main, check for open release-please PRs (`gh pr list --label "autorelease: pending"`). If the user asked to release, merge the PR to complete the release. If not, alert the user that a release PR is pending.
+
 ## Guide Structure (all guides follow this)
 
 - Header block: `# Title`, description, `**Base URL:**`, `**Auth:**`, `**Format:**`
