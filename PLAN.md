@@ -1,6 +1,6 @@
 # Kaltura API Guides — Roadmap
 
-**Current state:** 48 guides, 912 live-tested assertions, 4-tier flywheel structure.  
+**Current state:** 48 guides, 918 live-tested assertions, 4-tier flywheel structure.  
 Completed guide details are in [README.md](README.md). Test inventory is in each `tests/test_*.py` file.
 
 ## Audit Findings (2026-04-21)
@@ -16,7 +16,7 @@ Gaps and improvements identified from a full documentation set audit:
 
 ### Missing Required Sections (per AGENTS.md)
 - **Missing Prerequisites section:** Annotations, Multi-Stream, REACH, Thumbnail, Agents Manager (H2 not numbered H1), AI Genie (not numbered)
-- **Missing Best Practices section:** eSearch, Experience Components
+- ~~**Missing Best Practices section:** eSearch, Experience Components~~ — Fixed
 - **Non-standard header block:** Content Delivery (no Format line), Thumbnail (no Base URL/Format), VOD Avatar (non-standard Base URL label)
 
 ### Negative Framing (should rewrite positively)

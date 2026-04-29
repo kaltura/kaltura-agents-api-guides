@@ -6,7 +6,7 @@
   "packages": {
     ".": {
       "release-type": "simple",
-      "changelog-path": "CHANGELOG.md",
+      "skip-changelog": true,
       "skip-github-release": false,
       "draft": false,
       "changelog-sections": [

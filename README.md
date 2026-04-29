@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/kaltura/kaltura-agents-api-guides?label=Release)](https://github.com/kaltura/kaltura-agents-api-guides/releases/latest)
 [![Guides](https://img.shields.io/badge/Guides-48-green.svg)](#guides)
-[![Tests](https://img.shields.io/badge/Live--Tested-912_tests-brightgreen.svg)](#guides)
+[![Tests](https://img.shields.io/badge/Live--Tested-918_tests-brightgreen.svg)](#guides)
 [![llms.txt](https://img.shields.io/badge/llms.txt-available-purple.svg)](llms.txt)
 [![Agent Skill](https://img.shields.io/badge/Agent_Skill-kaltura--api-orange.svg)](.agents/skills/kaltura-api/SKILL.md)
 [![Docs Site](https://img.shields.io/badge/Docs-GitHub_Pages-blue.svg)](https://kaltura.github.io/kaltura-agents-api-guides/)
@@ -32,13 +32,13 @@ These guides are optimized for AI agent consumption through multiple discovery m
 | [API Getting Started](KALTURA_API_GETTING_STARTED.md) | API structure, first call, multirequest batching, error handling | 13 tests |
 | [Session (KS) Guide](KALTURA_SESSION_GUIDE.md) | Kaltura Session generation and management | 13 tests |
 | [AppTokens API](KALTURA_APPTOKENS_API.md) | Secure server-to-server auth without admin secrets | 17 tests |
-| [eSearch API](KALTURA_ESEARCH_API.md) | Unified search across entries, captions, metadata | 19 tests |
+| [eSearch API](KALTURA_ESEARCH_API.md) | Unified search across entries, captions, metadata | 25 tests |
 | [Upload & Ingestion API](KALTURA_UPLOAD_AND_INGESTION_API.md) | Upload, chunked ingest, entry CRUD, flavors, attachments | 25 tests |
 | [Content Delivery API](KALTURA_CONTENT_DELIVERY_API.md) | playManifest, raw serve, download, delivery profiles, CDN, access control | 13 tests |
 | [Thumbnail & Image API](KALTURA_THUMBNAIL_API.md) | Dynamic thumbnail URL (31 params), thumbAsset CRUD, thumbParams | 18 tests |
 | [Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md) | Player v7 embed (iframe + JavaScript) | 14 tests |
 | [REACH API](KALTURA_REACH_API.md) | Governed enrichment services marketplace: captions, translation, moderation, 22+ services | 35 tests |
-| [REACH — AI Clips](KALTURA_REACH_API.md) | AI clip generation via Content Lab / REACH | 15 tests |
+| [REACH — AI Clips](KALTURA_CONTENT_LAB_API.md) | AI clip generation workflow via REACH enrichment services | 15 tests |
 | [Agents Manager API](KALTURA_AGENTS_MANAGER_API.md) | Automated content processing agents | 15 tests |
 | [AI Genie API](KALTURA_AI_GENIE_API.md) | Conversational AI search and RAG | 37 tests |
 | [Events Platform API](KALTURA_EVENTS_PLATFORM_API.md) | Virtual events, sessions, speakers, templates | 25 tests |
@@ -115,16 +115,17 @@ for f in test_*.py; do echo "=== $f ===" && python3 "$f" && echo "PASS" || echo 
 
 ```
 ├── .agents/skills/kaltura-api/  # Agent Skill (agentskills.io)
-├── KALTURA_*_API.md             # API guides
+├── KALTURA_*_API.md             # 48 API guides
 ├── KALTURA_*_GUIDE.md           # Non-API documentation
-├── AGENTS.md                    # AI agent project instructions
-├── context7.json                # Context7 indexing config
-├── llms.txt                     # LLM-readable index
+├── AGENTS.md                    # Full project standards and conventions
+├── GUIDE_MAP.md                 # Flywheel structure, dependency graph, decision tree
 ├── PLAN.md                      # Roadmap and full API landscape
+├── context7.json                # Context7 MCP indexing config
+├── llms.txt                     # LLM-readable index (llmstxt.org)
 └── tests/
     ├── .env.example             # Template for API credentials
     ├── test_helpers.py          # Shared test utilities
-    └── test_*_api.py            # Per-guide test scripts
+    └── test_*_api.py            # 48 per-guide test scripts (918 tests)
 ```
 
 ## Contributing
@@ -143,10 +144,11 @@ All contributions that improve accuracy and coverage are appreciated.
 
 See [PLAN.md](PLAN.md) for the full Kaltura API landscape and prioritized list of upcoming guides, including:
 
+- Transcoding & Flavors
+- Clipping & Trimming
 - Live Streaming
 - Playlists
 - Scheduling
-- Cue Points & Interactive Video ✓ (hub + 5 dedicated type guides)
 
 ## License
 

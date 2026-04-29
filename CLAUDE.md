@@ -12,7 +12,7 @@
 
 4. **Update cross-references.** When adding or modifying a guide, also update: GUIDE_MAP.md, README.md (table + badges), PLAN.md, SKILL.md, llms.txt, context7.json.
 
-5. **Release workflow.** After pushing to main, check for open release-please PRs (`gh pr list --label "autorelease: pending"`). If the user asked to release, merge the PR to complete the release. If not, alert the user that a release PR is pending.
+5. **Release workflow.** After pushing to main, check for open release-please PRs (`gh pr list --label "autorelease: pending"`). If the user asked to release, merge the PR to complete the release, then delete the `release-please--branches--main` remote branch and prune local refs. If not releasing, alert the user that a release PR is pending.
 
 ## Guide Structure (all guides follow this)
 
@@ -23,10 +23,15 @@
 - `# N-1. Best Practices`
 - `# N. Related Guides`
 
+## Current State
+
+48 guides, 918 live tests, 48 test files. Version managed by release-please (no CHANGELOG.md — release notes are on GitHub Releases). Commit messages must follow Conventional Commits and stay under 72 characters in the header.
+
 ## Quick References
 
 - Full standards: [AGENTS.md](AGENTS.md)
 - Guide navigation: [GUIDE_MAP.md](GUIDE_MAP.md)
+- Roadmap: [PLAN.md](PLAN.md)
 - Common mistakes: [.claude/rules/common-pitfalls.md](.claude/rules/common-pitfalls.md)
 - Test patterns: [.claude/rules/test-standards.md](.claude/rules/test-standards.md)
 - All guides use `curl` with `$KALTURA_SERVICE_URL`, `$KALTURA_KS`, `$KALTURA_PARTNER_ID`
