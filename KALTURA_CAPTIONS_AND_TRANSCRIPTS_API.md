@@ -868,8 +868,8 @@ Search results include `KalturaESearchCaptionItemData` with timestamp informatio
 | Field | Description |
 |-------|-------------|
 | `line` | Matched caption text |
-| `startsAt` | Start timestamp (seconds) |
-| `endsAt` | End timestamp (seconds) |
+| `startsAt` | Start timestamp (integer, milliseconds) |
+| `endsAt` | End timestamp (integer, milliseconds) |
 | `captionAssetId` | Caption asset containing the match |
 | `label` | Caption track label |
 | `language` | Caption language |
@@ -899,13 +899,13 @@ Operator `2` = OR (match entries where captions OR title contain "tutorial"). Se
 
 ## 10.4 Deep-Linking to Video Moments
 
-Use `startsAt` from caption search results to deep-link to the exact video position:
+Use `startsAt` from caption search results to deep-link to the exact video position. Since `startsAt` is in milliseconds and the player expects seconds, divide by 1000:
 
 ```
-https://player.kaltura.com/p/{partnerId}/sp/{partnerId}00/embedIframeJs/uiconf_id/{playerId}/partner_id/{partnerId}?iframeembed=true&entry_id={entryId}&mediaProxy.mediaPlayFrom={startsAt}
+https://player.kaltura.com/p/{partnerId}/sp/{partnerId}00/embedIframeJs/uiconf_id/{playerId}/partner_id/{partnerId}?iframeembed=true&entry_id={entryId}&mediaProxy.mediaPlayFrom={startsAt/1000}
 ```
 
-Or use the Player JS API: `player.currentTime = startsAt;`
+Or use the Player JS API: `player.currentTime = startsAt / 1000;`
 
 
 # 11. Player Integration

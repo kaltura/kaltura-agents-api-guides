@@ -299,9 +299,9 @@ def main():
             "searchParams[searchOperator][searchItems][0][itemType]": 2,
             "searchParams[searchOperator][objectType]": "KalturaESearchEntryOperator",
             "searchParams[objectType]": "KalturaESearchEntryParams",
-            "searchParams[aggregations][0][objectType]": "KalturaESearchEntryAggregationItem",
-            "searchParams[aggregations][0][fieldName]": "media_type",
-            "searchParams[aggregations][0][size]": 10,
+            "searchParams[aggregations][aggregations][0][objectType]": "KalturaESearchEntryAggregationItem",
+            "searchParams[aggregations][aggregations][0][fieldName]": "media_type",
+            "searchParams[aggregations][aggregations][0][size]": 10,
             "pager[pageSize]": 1,
         })
         assert "aggregations" in result or "objects" in result, \
@@ -448,7 +448,164 @@ def main():
     runner.run_test("searchEntry — response structure matches docs", test_response_structure)
 
     # ════════════════════════════════════════════
-    # Phase 7: Error Handling
+    # Phase 7: Abstract vs Concrete Types, JSON Body, Caption Timestamps
+    # ════════════════════════════════════════════
+
+    def test_abstract_orderby_fails():
+        """Abstract KalturaESearchOrderByItem returns OBJECT_TYPE_ABSTRACT error."""
+        data = {"ks": KS, "format": 1}
+        data.update({
+            "searchParams[searchOperator][searchItems][0][objectType]": "KalturaESearchUnifiedItem",
+            "searchParams[searchOperator][searchItems][0][searchTerm]": "test",
+            "searchParams[searchOperator][searchItems][0][itemType]": 2,
+            "searchParams[searchOperator][objectType]": "KalturaESearchEntryOperator",
+            "searchParams[objectType]": "KalturaESearchEntryParams",
+            "searchParams[orderBy][orderItems][0][objectType]": "KalturaESearchOrderByItem",
+            "searchParams[orderBy][orderItems][0][sortField]": "created_at",
+            "searchParams[orderBy][orderItems][0][sortOrder]": "desc",
+        })
+        resp = requests.post(
+            f"{SERVICE_URL}/service/elasticsearch_esearch/action/searchEntry",
+            data=data, timeout=30,
+        )
+        result = resp.json()
+        assert result.get("code") == "OBJECT_TYPE_ABSTRACT", \
+            f"Expected OBJECT_TYPE_ABSTRACT, got: {result.get('code', result)}"
+        print(f"    Abstract type correctly rejected: {result['message']}")
+
+    runner.run_test("orderBy — abstract KalturaESearchOrderByItem fails", test_abstract_orderby_fails)
+
+    def test_concrete_orderby_works():
+        """Concrete KalturaESearchEntryOrderByItem succeeds for entry search."""
+        result = esearch_post("searchEntry", {
+            "searchParams[searchOperator][searchItems][0][objectType]": "KalturaESearchUnifiedItem",
+            "searchParams[searchOperator][searchItems][0][searchTerm]": "test",
+            "searchParams[searchOperator][searchItems][0][itemType]": 2,
+            "searchParams[searchOperator][objectType]": "KalturaESearchEntryOperator",
+            "searchParams[objectType]": "KalturaESearchEntryParams",
+            "searchParams[orderBy][orderItems][0][objectType]": "KalturaESearchEntryOrderByItem",
+            "searchParams[orderBy][orderItems][0][sortField]": "created_at",
+            "searchParams[orderBy][orderItems][0][sortOrder]": "desc",
+            "pager[pageSize]": 2,
+        })
+        assert "totalCount" in result, f"Expected results, got error: {result}"
+        print(f"    Concrete EntryOrderByItem: totalCount={result['totalCount']}")
+
+    runner.run_test("orderBy — concrete KalturaESearchEntryOrderByItem works", test_concrete_orderby_works)
+
+    def test_aggregation_correct_path():
+        """Aggregations require double nesting: searchParams[aggregations][aggregations][0]."""
+        result = esearch_post("searchEntry", {
+            "searchParams[searchOperator][searchItems][0][objectType]": "KalturaESearchEntryItem",
+            "searchParams[searchOperator][searchItems][0][itemType]": 4,
+            "searchParams[searchOperator][searchItems][0][fieldName]": "tags",
+            "searchParams[searchOperator][objectType]": "KalturaESearchEntryOperator",
+            "searchParams[objectType]": "KalturaESearchEntryParams",
+            "searchParams[aggregations][aggregations][0][objectType]": "KalturaESearchEntryAggregationItem",
+            "searchParams[aggregations][aggregations][0][fieldName]": "media_type",
+            "searchParams[aggregations][aggregations][0][size]": 10,
+            "pager[pageSize]": 1,
+        })
+        assert "aggregations" in result and result["aggregations"], \
+            f"Aggregations missing with correct path: {list(result.keys())}"
+        buckets = result["aggregations"][0].get("buckets", [])
+        assert len(buckets) > 0, "Expected at least one aggregation bucket"
+        print(f"    Correct aggregation path: {len(buckets)} bucket(s)")
+
+    runner.run_test("aggregations — correct double-nested path returns buckets", test_aggregation_correct_path)
+
+    def test_aggregation_wrong_path_silent():
+        """Single-level aggregation path silently returns no aggregations."""
+        result = esearch_post("searchEntry", {
+            "searchParams[searchOperator][searchItems][0][objectType]": "KalturaESearchEntryItem",
+            "searchParams[searchOperator][searchItems][0][itemType]": 4,
+            "searchParams[searchOperator][searchItems][0][fieldName]": "tags",
+            "searchParams[searchOperator][objectType]": "KalturaESearchEntryOperator",
+            "searchParams[objectType]": "KalturaESearchEntryParams",
+            "searchParams[aggregations][0][objectType]": "KalturaESearchEntryAggregationItem",
+            "searchParams[aggregations][0][fieldName]": "media_type",
+            "searchParams[aggregations][0][size]": 10,
+            "pager[pageSize]": 1,
+        })
+        has_aggs = "aggregations" in result and result["aggregations"]
+        assert not has_aggs, \
+            f"Single-level aggregation path should return no aggregations, but got: {result.get('aggregations')}"
+        print("    Wrong path (single-level) correctly returns no aggregations")
+
+    runner.run_test("aggregations — wrong single-level path returns nothing", test_aggregation_wrong_path_silent)
+
+    def test_caption_timestamps():
+        """Caption search returns startsAt/endsAt as integers in milliseconds."""
+        result = esearch_post("searchEntry", {
+            "searchParams[searchOperator][searchItems][0][objectType]": "KalturaESearchCaptionItem",
+            "searchParams[searchOperator][searchItems][0][searchTerm]": "the",
+            "searchParams[searchOperator][searchItems][0][itemType]": 2,
+            "searchParams[searchOperator][searchItems][0][fieldName]": "content",
+            "searchParams[searchOperator][searchItems][0][addHighlight]": "true",
+            "searchParams[searchOperator][objectType]": "KalturaESearchEntryOperator",
+            "searchParams[objectType]": "KalturaESearchEntryParams",
+            "pager[pageSize]": 1,
+        })
+        if result["totalCount"] > 0 and result.get("objects"):
+            obj = result["objects"][0]
+            for item_data in obj.get("itemsData", []):
+                if item_data.get("itemsType") == "caption":
+                    items = item_data.get("items", [])
+                    if items:
+                        item = items[0]
+                        starts_at = item.get("startsAt")
+                        ends_at = item.get("endsAt")
+                        assert isinstance(starts_at, int), \
+                            f"startsAt should be int, got {type(starts_at).__name__}: {starts_at}"
+                        assert isinstance(ends_at, int), \
+                            f"endsAt should be int, got {type(ends_at).__name__}: {ends_at}"
+                        assert ends_at > starts_at, \
+                            f"endsAt ({ends_at}) should be > startsAt ({starts_at})"
+                        print(f"    Caption timestamps: startsAt={starts_at}ms ({starts_at/1000:.1f}s), "
+                              f"endsAt={ends_at}ms ({ends_at/1000:.1f}s)")
+                    break
+            else:
+                print("    No caption itemsData found")
+        else:
+            print("    No captioned entries found (skipping timestamp validation)")
+
+    runner.run_test("caption search — startsAt/endsAt are int milliseconds", test_caption_timestamps)
+
+    def test_json_body_search():
+        """JSON body with Content-Type: application/json produces identical results."""
+        import json as json_mod
+        json_body = {
+            "ks": KS,
+            "format": 1,
+            "searchParams": {
+                "objectType": "KalturaESearchEntryParams",
+                "searchOperator": {
+                    "objectType": "KalturaESearchEntryOperator",
+                    "operator": 2,
+                    "searchItems": [{
+                        "objectType": "KalturaESearchUnifiedItem",
+                        "searchTerm": "test",
+                        "itemType": 2
+                    }]
+                }
+            },
+            "pager": {"pageSize": 3}
+        }
+        resp = requests.post(
+            f"{SERVICE_URL}/service/elasticsearch_esearch/action/searchEntry",
+            json=json_body, timeout=30,
+        )
+        resp.raise_for_status()
+        result = resp.json()
+        assert "totalCount" in result, f"JSON body failed: {result}"
+        assert result.get("objectType") != "KalturaAPIException", \
+            f"JSON body returned error: {result.get('message')}"
+        print(f"    JSON body: totalCount={result['totalCount']}")
+
+    runner.run_test("searchEntry — JSON body (Content-Type: application/json)", test_json_body_search)
+
+    # ════════════════════════════════════════════
+    # Phase 8: Error Handling
     # ════════════════════════════════════════════
 
     def test_invalid_object_type():

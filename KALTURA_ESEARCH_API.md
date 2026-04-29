@@ -6,7 +6,7 @@ Kaltura's eSearch API, powered by Elasticsearch, provides flexible full-text sea
 **Auth:** KS passed as `ks` parameter in POST form data (see [Session Guide](KALTURA_SESSION_GUIDE.md))  
 **Format:** Form-encoded POST (`application/x-www-form-urlencoded`), `format=1` for JSON responses  
 
-<!-- Sections: 1.When to Use | 2.Prerequisites | 3.API Endpoint & Structure | 4.Authentication | 5.Core Request Parameters & Objects | 6.Search Item (`searchItems`) Deep Dive | 7.API Response Format (JSON) | 8.Capabilities & Scenarios (with Curl Examples) | 9.Advanced Topics & Use Cases | 10.Edge Cases & Best Practices | 11.Key Objects & Enums Quick Reference | 12.Error Handling | 13.Related Guides -->
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.API Endpoint & Structure | 4.Authentication | 5.Core Request Parameters & Objects | 6.Search Item (`searchItems`) Deep Dive | 7.API Response Format (JSON) | 8.Capabilities & Scenarios (with Curl Examples) | 9.Advanced Topics & Use Cases | 10.Edge Cases & Best Practices | 11.Key Objects & Enums Quick Reference | 12.Agent / LLM Integration Notes | 13.Error Handling | 14.Related Guides -->
 
 # 1. When to Use
 
@@ -59,10 +59,10 @@ Requests are built using specific Kaltura objects passed as form parameters.
             * `3` (`NOT_OP`): Excludes items matching the nested conditions (typically used within an AND/OR operator).
         * `searchItems` (Array): An array of one or more Search Item objects (see Section 7) defining the specific criteria.
     * **`orderBy`** (Object `KalturaESearchOrderBy`, optional): Defines sorting.
-        * `orderItems` (Array of `KalturaESearchOrderByItem`): Each item specifies:
+        * `orderItems` (Array): Each item specifies sorting. Use the **concrete** type for the search action: `KalturaESearchEntryOrderByItem` for `searchEntry`, `KalturaESearchCategoryOrderByItem` for `searchCategory`, `KalturaESearchUserOrderByItem` for `searchUser`, `KalturaESearchGroupOrderByItem` for `searchGroup`. The abstract `KalturaESearchOrderByItem` returns `OBJECT_TYPE_ABSTRACT`.
             * `sortField` (Enum, e.g., `KalturaESearchEntryOrderByFieldName`): Field like `created_at`, `plays`, `name`, `last_played_at`.
             * `sortOrder` (Enum `KalturaESearchSortOrder`): `asc` or `desc`.
-    * **`aggregations`** (Object `KalturaESearchAggregation`, optional): Defines aggregations (see Example G in Section 9).
+    * **`aggregations`** (Object `KalturaESearchAggregation`, optional): Defines aggregations (see Example G in Section 8). Note the double nesting: `searchParams[aggregations][aggregations][0]` — the outer `aggregations` is the container object, the inner `aggregations` is the array of items.
         * `aggregations` (Array of `KalturaESearchAggregationItem`): Each item specifies:
             * `fieldName` (Enum, e.g., `KalturaESearchEntryAggregateByFieldName`): Field to group by, like `media_type`.
             * `size` (Integer): Max number of aggregation buckets to return.
@@ -260,6 +260,7 @@ Examples pipe to `jq` for readability.
 **G. Aggregation & Sorting**
 * **Goal:** Find "visual studio code", aggregate by `media_type`, sort by `last_played_at` (desc).
 * **Capability:** Aggregation, Sorting.
+* **Important:** The `orderBy` items must use the concrete type `KalturaESearchEntryOrderByItem` for entry search (not the abstract `KalturaESearchOrderByItem`, which returns `OBJECT_TYPE_ABSTRACT`). Similarly, the `aggregations` array is nested inside the `aggregations` container: `searchParams[aggregations][aggregations][0]`.
 * **Curl:**
     ```bash
     curl -X POST "$KALTURA_SERVICE_URL/service/elasticsearch_esearch/action/searchEntry" \
@@ -269,14 +270,49 @@ Examples pipe to `jq` for readability.
     -d "searchParams[searchOperator][searchItems][0][itemType]=2" \
     -d "searchParams[searchOperator][objectType]=KalturaESearchEntryOperator" \
     -d "searchParams[objectType]=KalturaESearchEntryParams" \
-    -d "searchParams[aggregations][0][objectType]=KalturaESearchEntryAggregationItem" \
-    -d "searchParams[aggregations][0][fieldName]=media_type" \
-    -d "searchParams[aggregations][0][size]=10" \
-    -d "searchParams[orderBy][orderItems][0][objectType]=KalturaESearchOrderByItem" \
+    -d "searchParams[aggregations][aggregations][0][objectType]=KalturaESearchEntryAggregationItem" \
+    -d "searchParams[aggregations][aggregations][0][fieldName]=media_type" \
+    -d "searchParams[aggregations][aggregations][0][size]=10" \
+    -d "searchParams[orderBy][orderItems][0][objectType]=KalturaESearchEntryOrderByItem" \
     -d "searchParams[orderBy][orderItems][0][sortField]=last_played_at" \
     -d "searchParams[orderBy][orderItems][0][sortOrder]=desc" \
     -d "format=1" | jq .
     ```
+
+**Equivalent nested JSON (for SDK / agent integration):**
+```json
+{
+  "ks": "$KALTURA_KS",
+  "format": 1,
+  "searchParams": {
+    "objectType": "KalturaESearchEntryParams",
+    "searchOperator": {
+      "objectType": "KalturaESearchEntryOperator",
+      "operator": 2,
+      "searchItems": [{
+        "objectType": "KalturaESearchUnifiedItem",
+        "searchTerm": "visual studio code",
+        "itemType": 2
+      }]
+    },
+    "orderBy": {
+      "orderItems": [{
+        "objectType": "KalturaESearchEntryOrderByItem",
+        "sortField": "last_played_at",
+        "sortOrder": "desc"
+      }]
+    },
+    "aggregations": {
+      "aggregations": [{
+        "objectType": "KalturaESearchEntryAggregationItem",
+        "fieldName": "media_type",
+        "size": 10
+      }]
+    }
+  },
+  "pager": {"pageSize": 10}
+}
+```
 
 # 9. Advanced Topics & Use Cases
 
@@ -331,6 +367,23 @@ Examples pipe to `jq` for readability.
     ```
 
     All four actions (`searchEntry`, `searchCategory`, `searchUser`, `searchGroup`) return the same response structure: `{ objects: [...], totalCount, objectType }`. Each object is wrapped in `{ object, itemsData, highlight }`.
+* **Caption Timestamps for Clip Playback:**
+    * **Use Case:** "Play the part where they discuss training programs" — find the exact timestamp range within a video.
+    * **How:** Use `KalturaESearchCaptionItem` with `fieldName=content`, `addHighlight=true`. The response's `itemsData[].items[]` array contains `KalturaESearchCaptionItemData` objects with `startsAt` and `endsAt` fields (integers in **milliseconds**). Use the first match's `startsAt` as clip start and the last match's `endsAt` as clip end. Divide by 1000 to get seconds.
+    * **Curl:**
+        ```bash
+        curl -X POST "$KALTURA_SERVICE_URL/service/elasticsearch_esearch/action/searchEntry" \
+        -d "ks=$KALTURA_KS" \
+        -d "searchParams[searchOperator][searchItems][0][objectType]=KalturaESearchCaptionItem" \
+        -d "searchParams[searchOperator][searchItems][0][searchTerm]=training programs" \
+        -d "searchParams[searchOperator][searchItems][0][itemType]=2" \
+        -d "searchParams[searchOperator][searchItems][0][fieldName]=content" \
+        -d "searchParams[searchOperator][searchItems][0][addHighlight]=true" \
+        -d "searchParams[searchOperator][objectType]=KalturaESearchEntryOperator" \
+        -d "searchParams[objectType]=KalturaESearchEntryParams" \
+        -d "format=1" | jq '.objects[0].itemsData[] | select(.itemsType=="caption") | .items[] | {startsAt, endsAt, content}'
+        ```
+    * **Response excerpt:** `{"startsAt": 16700, "endsAt": 20600, "content": "...training programs..."}` — clip from 16.7s to 20.6s.
 * **Nested Queries:**
     * **Use Case:** Combining complex AND/OR/NOT logic as shown in Scenario E.
     * **How:** Place a `KalturaESearchEntryOperator` (or similar) within the `searchItems` array of another operator. This allows nesting conditions (e.g., `A AND (B OR (NOT C))`).
@@ -343,6 +396,10 @@ Examples pipe to `jq` for readability.
 * **Partial vs. Exact Match:** `PARTIAL` (`itemType=2`) is powerful due to synonyms but might return less precise results than `EXACT_MATCH` (`itemType=1`). Choose based on the desired recall vs. precision. Use `ignoreSynonym=true` in `searchParams` to disable synonym expansion if needed.
 * **NOT Operator Shorthand:** Use the `!` prefix in `freeText` (e.g., `searchTerm=!excluded`) to exclude matches. For structured queries, use `KalturaESearchOperatorType` with `NOT_OP` (`3`).
 * **Performance:** Unified searches (`KalturaESearchUnifiedItem`) are convenient but can be slower than targeted searches using specific `fieldName`s (like `NAME` or `CAPTIONS_CONTENT`) because they query more fields. Optimize by specifying fields when possible.
+* **Abstract vs. Concrete Types:** Several Kaltura object types are abstract base classes that cannot be used directly in API calls. Using an abstract type returns `OBJECT_TYPE_ABSTRACT`. For `orderBy`, use `KalturaESearchEntryOrderByItem` (not `KalturaESearchOrderByItem`). For aggregations, use `KalturaESearchEntryAggregationItem` (not `KalturaESearchAggregationItem`). Each search action (entry, category, user, group) has its own concrete types.
+* **Aggregation Path Nesting:** The aggregations parameter has double nesting: `searchParams[aggregations][aggregations][0]`. The outer `aggregations` is the `KalturaESearchAggregation` container object; the inner `aggregations` is the array property holding the items. Using `searchParams[aggregations][0]` (single level) silently returns no aggregations.
+* **Caption Timestamps Are Milliseconds:** `startsAt` and `endsAt` in `KalturaESearchCaptionItemData` are integers in milliseconds (e.g., `16700` = 16.7 seconds). Divide by 1000 for seconds.
+* **JSON Body Support:** The API v3 backend accepts both `application/x-www-form-urlencoded` (bracket notation) and `application/json` (nested objects) with identical results. JSON is easier for programmatic construction and SDK integration.
 * **Schema Reference:** The Kaltura API schema (XML) is the definitive source for all object structures, properties, enums, and their exact names. Refer to it frequently.
 
 # 11. Key Objects & Enums Quick Reference
@@ -427,7 +484,23 @@ Use these values in the `sortField` property of `KalturaESearchOrderByItem`:
 | `end_date` | Scheduling end date |
 | `last_played_at` | Last playback date |
 
-# 12. Error Handling
+# 12. Agent / LLM Integration Notes
+
+When exposing eSearch to an LLM via agent tools:
+
+* **Accept nested JSON, flatten to bracket notation.** LLMs naturally generate nested JSON objects: `{"searchParams": {"searchOperator": {"objectType": "...", "searchItems": [...]}}}`. Auto-flatten to `searchParams[searchOperator][searchItems][0][objectType]=...` at the tool layer. Alternatively, send the JSON body directly with `Content-Type: application/json` — the API accepts both formats with identical results.
+
+* **Split into simple + advanced tools.** Provide a simple `search(query, page_size, order_by)` tool for keyword searches (90% of requests) and an advanced `search(search_params)` tool for caption timestamps, date ranges, and complex logic. Both call the same underlying API.
+
+* **Return the full API response.** Never strip `itemsData`, `highlight`, or `aggregations` — the LLM needs these for diverse use cases: caption timestamps for clip playback, match context for summarization, faceted counts for dashboard queries.
+
+* **Use concrete objectTypes for orderBy.** `KalturaESearchOrderByItem` is abstract and returns `OBJECT_TYPE_ABSTRACT`. Use `KalturaESearchEntryOrderByItem` for entry search, `KalturaESearchCategoryOrderByItem` for category search, `KalturaESearchUserOrderByItem` for user search, `KalturaESearchGroupOrderByItem` for group search.
+
+* **Caption timestamps for clip playback.** When an LLM searches captions, the `itemsData[].items[]` array contains `KalturaESearchCaptionItemData` objects with `startsAt` and `endsAt` in milliseconds. Use these to seek a player to the exact moment a topic is discussed.
+
+* **Aggregation double nesting.** The aggregations parameter path is `searchParams[aggregations][aggregations][0]` — easy for an LLM to get wrong. The simple tool should handle common aggregations (by media type, by category) without exposing this complexity.
+
+# 13. Error Handling
 
 * Check the HTTP status code first.
 * If the status is not 200, parse the JSON error response. Key fields are usually:
@@ -442,7 +515,7 @@ Use these values in the `sortField` property of `KalturaESearchOrderByItem`:
 **Retry strategy:** For transient errors (HTTP 5xx, `ESEARCH_SERVICE_DOWN`, timeouts), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (`INVALID_KS`, `ELASTIC_SEARCH_QUERY_NOT_VALID`, permission errors), fix the request before retrying — these will not resolve on their own.
 
 
-# 13. Related Guides
+# 14. Related Guides
 
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — Generate the KS required for all eSearch calls
 - **[AppTokens](KALTURA_APPTOKENS_API.md)** — Secure KS generation for production integrations
