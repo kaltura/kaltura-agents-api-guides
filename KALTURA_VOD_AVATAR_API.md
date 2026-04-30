@@ -278,7 +278,7 @@ echo "Video ID: $VIDEO_ID"
 
 ### Scene Object
 
-Each element in the `scenes` array represents one segment of the video. A video can have up to **20 scenes**.
+Each element in the `scenes` array represents one segment of the video.
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
@@ -307,12 +307,19 @@ Each element in the `scenes` array represents one segment of the video. A video 
 | `entryId` | string | yes (if broll provided) | Kaltura entry ID of the background video to display behind the avatar |
 | `startTime` | number | yes (if broll provided) | Start time in seconds within the background video. The clip plays from this point for the duration of the scene's narration |
 
-**B-roll source limits:**
-- A single video project can reference **at most 5 unique b-roll source entries** across all scenes. Exceeding this limit causes a `TOO_MANY_SOURCES` error. The same entry can be reused across multiple scenes with different `startTime` values without counting as additional sources  
-- B-roll entries must have at least one **audio track**. Videos exported from tools like PowerPoint or screen recorders sometimes lack audio — add a silent audio track before uploading (e.g., `ffmpeg -i input.mp4 -f lavfi -i anullsrc=channel_layout=stereo:sample_rate=44100 -c:v copy -c:a aac -shortest output.mp4`)  
+**B-roll constraints:**
+- The same entry can be reused across multiple scenes with different `startTime` values — each reuse does not count as an additional source  
 - B-roll entries must use a **standard frame rate** (25 or 30 fps). PowerPoint exports often use 600fps or other non-standard rates that cause generation failures. Re-encode to a standard rate before uploading (e.g., `ffmpeg -i input.mp4 -r 25 -c:v libx264 -profile:v main -c:a aac output.mp4`)  
-- Every scene with narration text is processed — scenes with **empty narration** are silently skipped, which can cause the video to hang in `generating` status indefinitely. Always provide narration text for every scene  
-- Each scene's narration must produce at least **~1.5 seconds of audio** after text-to-speech conversion. Very short phrases (1–2 words like "Hello" or "Thanks") cause a silent `generate-error`. Use at least one complete sentence per scene
+- Kaltura's transcoding pipeline adds an audio track to video-only uploads, so entries uploaded through the standard upload workflow (uploadToken → media.add → media.addContent) are always compatible with the Avatar renderer  
+- The `broll` object is stored on the scene regardless of `layoutType` — you can pre-configure B-roll data and switch `layoutType` to `"broll"` later via `video/update` without re-specifying the entry  
+
+**Narration constraints:**
+- Empty narration text (`""`) is **rejected** at `video/add` time with a validation error. Omitting the `narration` object entirely is accepted, but scenes without narration may be skipped during generation  
+- Each scene's narration must produce at least **~1.5 seconds of audio** after text-to-speech conversion. Very short phrases (1–2 words like "Hello" or "Thanks") produce only ~0.4s of TTS audio and cause a silent `generate-error`. Use at least one complete sentence per scene  
+
+**TTS speaking rate:**
+- The text-to-speech engine speaks at approximately **2.4 words/second** (measured average across varying sentence lengths). When writing narration for B-roll scenes, calculate the maximum safe word count as: `available_clip_duration × 2.1` (using a 15% safety buffer)  
+- Use `video/previewAudio` to verify the actual TTS duration for critical scenes before generating
 
 ### Response Fields
 
@@ -469,7 +476,7 @@ curl -s -X POST "$AVATAR_API/video/compose" \
 | `id` | string | yes | Video project ID |
 | `formatType` | string | yes | `"session-highlights"` or `"video-explainer"` (see below) |
 | `duration` | number | yes | Target video duration in seconds. Min: 1, max: 1200 (20 minutes) |
-| `entryIds` | array | yes | Kaltura entry IDs with captions to analyze. Max: 5 entries |
+| `entryIds` | array | yes | Kaltura entry IDs with captions to analyze |
 | `userBrief` | string | no | Describes the video goals, style, or focus areas for the AI |
 | `generateName` | boolean | no | Auto-generate a video name from the content |
 
@@ -577,13 +584,11 @@ Generation time depends on the number of scenes, narration length, and current q
 
 **Generation error diagnostics:**  
 When generation fails, the status becomes `generate-error` with **no error message or detail** in the API response — the actual failure reason exists only in server-side logs. Common causes:
-- **Narration too short** — A scene's narration produces less than ~1.5 seconds of TTS audio. Use at least one complete sentence per scene  
-- A b-roll entry has no audio track or uses a non-standard frame rate (see b-roll requirements in section 6)  
-- A b-roll entry's `startTime` + narration duration exceeds the source video length  
+- **Narration too short** — A scene's narration produces less than ~1.5 seconds of TTS audio (fewer than ~4 words). Use at least one complete sentence per scene  
+- A b-roll entry uses a non-standard frame rate (see b-roll requirements in section 6)  
 - The rendering service is temporarily unavailable (retry after a few minutes)  
-- More than 5 unique b-roll source entries were referenced  
 
-**Isolating failures:** If generation fails, test with a minimal 1-scene full-screen video first. If that succeeds but b-roll videos fail, the issue is b-roll-specific — check b-roll entry requirements (audio track, frame rate, duration). If even the 1-scene full-screen test fails, the issue is service-wide or the narration is too short.
+**Isolating failures:** If generation fails, test with a minimal 1-scene full-screen video first. If that succeeds but b-roll videos fail, the issue is b-roll-specific — check b-roll entry frame rate and confirm the entry is in `status=2` (Ready). If even the 1-scene full-screen test fails, the issue is service-wide or the narration is too short.
 
 ## Reset Status After Error
 
@@ -872,7 +877,7 @@ workspace.kill();
 
 - **Auto-save:** Scene edits are auto-saved after a 5-second debounce  
 - **Polling:** The widget polls `video.get` every 10 seconds during generation  
-- **Max scenes:** 20 scenes per video  
+- **Max scenes:** The widget enforces 20 scenes in its UI  
 - **Default avatar:** `jane` template with `#CEEEDB` background  
 
 
@@ -882,7 +887,7 @@ workspace.kill();
 
 | Error Code | Meaning | Resolution |
 |------------|---------|------------|
-| `VIDEO_IS_PROCESSING` | Scenes cannot be modified while composing or generating | Wait for the current operation to complete |
+| `VIDEO_IS_PROCESSING` | Scenes cannot be modified while composing or generating (name and metadata updates are still allowed) | Wait for the current operation to complete |
 | `VIDEO_CANNOT_COMPOSE` | Video status does not allow composition | Use `resetStatus` if in error state, or wait for current operation |
 | `VIDEO_CANNOT_GENERATE` | Video status does not allow generation | Ensure video is in `draft` or `composed` status |
 | `VIDEO_IS_BEING_GENERATED` | A generation is already in progress | Wait for it to complete |
@@ -890,7 +895,7 @@ workspace.kill();
 | `SCENE_NOT_FOUND` | Scene index out of range | Check scene count in the video |
 | `SCENE_EMPTY_NARRATION` | Scene has no narration text | Add narration text before previewing audio |
 | `CAPTIONS_NOT_FOUND` | Source entries have no captions | Add captions/transcripts to source entries before composing |
-| `TOO_MANY_SOURCES` | More than 5 unique b-roll source entries across all scenes | Consolidate scenes to use at most 5 distinct `entryId` values. The same entry can appear in multiple scenes at different `startTime` offsets |
+| `TOO_MANY_SOURCES` | Too many unique b-roll source entries across all scenes | Reduce the number of distinct `entryId` values. Reuse entries at different `startTime` offsets instead of adding new sources |
 | `AVATAR_NOT_FOUND` | Invalid avatar ID | Create an avatar with `avatar.upsert` first |
 | `AVATAR_TEMPLATE_NOT_FOUND` | Invalid template ID | Use an ID from `avatarTemplate.list` |
 | `BACKGROUND_NOT_FOUND` | Invalid library background ID | Use a valid background ID from the asset library |
@@ -913,9 +918,11 @@ workspace.kill();
 - **Poll at 10-second intervals.** The widget uses 10-second polling; match this in server-side integrations  
 - **Handle error states.** Use `resetStatus` to recover from `compose-error` or `generate-error`, then modify scenes and retry  
 - **Preview audio before generating.** Use `previewAudio` to verify narration quality — generation is more expensive  
-- **Stay within 5 unique b-roll sources.** Both AI composition and manual storyboards are limited to 5 unique b-roll entry IDs across all scenes. Reuse entries at different `startTime` values to stay within the limit  
-- **Prepare b-roll entries.** Ensure all b-roll source videos have an audio track and use standard frame rates (25 or 30 fps). Re-encode PowerPoint exports and screen recordings before uploading  
-- **Write at least one full sentence per scene.** Scenes with empty narration are silently skipped (can hang the video), and very short narration (1–2 words) fails because the TTS audio is too short for the rendering model. One complete sentence is the safe minimum  
+- **Reuse b-roll entries at different start times.** The same entry at different `startTime` offsets gives visual variety without adding sources. Prefer fewer entries with longer durations for maximum reuse  
+- **Prepare b-roll entries.** Ensure all b-roll source videos use standard frame rates (25 or 30 fps). Re-encode PowerPoint exports and screen recordings before uploading. Kaltura's transcoding pipeline handles codec conversion and adds audio tracks automatically  
+- **Write at least one full sentence per scene.** Empty narration text is rejected at `video/add` time. Very short narration (1–2 words) produces less than 0.5 seconds of TTS audio and causes `generate-error`. One complete sentence (~4+ words) is the safe minimum  
+- **Budget narration for b-roll scenes.** TTS speaks at ~2.4 words/second. For b-roll scenes, keep word count below `(clip_duration - startTime) × 2.1` to leave a safety margin. Use `previewAudio` and `ffprobe` to verify actual TTS duration for scenes close to the budget  
+- **Use long KS expiry for generation.** Generation can take 10–20 minutes for complex videos. Use 86400s (24h) expiry to prevent mid-generation KS expiration  
 - **Process generated videos.** The resulting Kaltura entry can be enriched via [REACH](KALTURA_REACH_API.md) (captions, translation), [Content Lab](KALTURA_CONTENT_LAB_API.md) (chapters, summaries), or [Agents](KALTURA_AGENTS_MANAGER_API.md) (automated workflows)  
 - **Use HTTPS.** The Unisphere loader and all widget bundles require HTTPS  
 
