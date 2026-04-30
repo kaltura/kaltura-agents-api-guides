@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/kaltura/kaltura-agents-api-guides?label=Release)](https://github.com/kaltura/kaltura-agents-api-guides/releases/latest)
 [![Guides](https://img.shields.io/badge/Guides-48-green.svg)](#guides)
-[![Tests](https://img.shields.io/badge/Live--Tested-918_tests-brightgreen.svg)](#guides)
+[![Tests](https://img.shields.io/badge/Live--Tested-926_tests-brightgreen.svg)](#guides)
 [![llms.txt](https://img.shields.io/badge/llms.txt-available-purple.svg)](llms.txt)
 [![Agent Skill](https://img.shields.io/badge/Agent_Skill-kaltura--api-orange.svg)](.agents/skills/kaltura-api/SKILL.md)
 [![Docs Site](https://img.shields.io/badge/Docs-GitHub_Pages-blue.svg)](https://kaltura.github.io/kaltura-agents-api-guides/)
@@ -45,7 +45,7 @@ These guides are optimized for AI agent consumption through multiple discovery m
 | [App Registry API](KALTURA_APP_REGISTRY_API.md) | Register and manage application instances | 20 tests |
 | [User Profile API](KALTURA_USER_PROFILE_API.md) | Per-app user profiles, event attendance lifecycle | 30 tests |
 | [Messaging API](KALTURA_MESSAGING_API.md) | Template-based email messaging, delivery tracking, unsubscribe management | 22 tests |
-| [Webhooks API](KALTURA_WEBHOOKS_API.md) | HTTP webhooks and email notifications on content events | 34 tests |
+| [Event Notifications API](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md) | HTTP webhooks and email event notifications | 42 tests |
 | [Multi-Stream API](KALTURA_MULTI_STREAM_API.md) | Dual/multi-screen video entries | 23 tests |
 | [User Management API](KALTURA_USER_MANAGEMENT_API.md) | User CRUD, roles (RBAC), groups, login management | 25 tests |
 | [Auth Broker API](KALTURA_AUTH_BROKER_API.md) | SSO/SAML auth profiles, app subscriptions, SPA proxy | 13 tests |
@@ -125,7 +125,7 @@ for f in test_*.py; do echo "=== $f ===" && python3 "$f" && echo "PASS" || echo 
 └── tests/
     ├── .env.example             # Template for API credentials
     ├── test_helpers.py          # Shared test utilities
-    └── test_*_api.py            # 48 per-guide test scripts (918 tests)
+    └── test_*_api.py            # 48 per-guide test scripts (926 tests)
 ```
 
 ## Contributing

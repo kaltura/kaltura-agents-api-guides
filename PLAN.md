@@ -1,6 +1,6 @@
 # Kaltura API Guides — Roadmap
 
-**Current state:** 48 guides, 918 live-tested assertions, 4-tier flywheel structure.  
+**Current state:** 48 guides, 926 live-tested assertions, 4-tier flywheel structure.  
 Completed guide details are in [README.md](README.md). Test inventory is in each `tests/test_*.py` file.
 
 ## Audit Findings (2026-04-21)

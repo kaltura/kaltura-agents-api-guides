@@ -59,7 +59,7 @@ CATEGORIES = {
     "Analytics & Events": [
         "KALTURA_ANALYTICS_REPORTS_API.md",
         "KALTURA_ANALYTICS_EVENTS_COLLECTION_API.md",
-        "KALTURA_WEBHOOKS_API.md",
+        "KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md",
     ],
     "Experiences": [
         "KALTURA_PLAYER_EMBED_GUIDE.md",

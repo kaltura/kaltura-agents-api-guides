@@ -52,7 +52,7 @@ Guides for organizing content, managing users, controlling access, and connectin
 | [Analytics Reports](KALTURA_ANALYTICS_REPORTS_API.md) | Intelligence | Pull reports: content, engagement, cross-account |
 | [Analytics Events Collection](KALTURA_ANALYTICS_EVENTS_COLLECTION_API.md) | Intelligence | Push playback and engagement events |
 | [Moderation](KALTURA_MODERATION_API.md) | Content Management | Content flagging, approve/reject queue, AI moderation via REACH |
-| [Webhooks](KALTURA_WEBHOOKS_API.md) | Orchestration | Real-time HTTP callbacks on content events |
+| [Event Notifications (Webhooks & Email)](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md) | Orchestration | HTTP webhooks and email alerts triggered by content/user events |
 | [App Registry](KALTURA_APP_REGISTRY_API.md) | Orchestration | Application instance registration and configuration |
 | [Messaging](KALTURA_MESSAGING_API.md) | Orchestration | Template-based email communications |
 
@@ -133,7 +133,7 @@ graph TD
     MA["Multi-Account Management"]
     AR["Analytics Reports"]
     AE["Analytics Events"]
-    WH["Webhooks"]
+    WH["Event Notifications"]
     APR["App Registry"]
     MSG["Messaging"]
 
@@ -244,11 +244,14 @@ Blue = Foundation | Purple = Creation | Orange = Management | Green = Experience
 | Embed analytics dashboards | [Embeddable Analytics](KALTURA_ANALYTICS_EMBED_API.md) |
 | Edit captions visually | [Captions Editor](KALTURA_CAPTIONS_EDITOR_API.md) |
 | Create a virtual event | [Events Platform](KALTURA_EVENTS_PLATFORM_API.md) |
-| Send email notifications | [Messaging](KALTURA_MESSAGING_API.md) |
+| Send templated email campaigns | [Messaging](KALTURA_MESSAGING_API.md) |
+| Send email alerts when events occur | [Event Notifications](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md) |
 | Get analytics data | [Analytics Reports](KALTURA_ANALYTICS_REPORTS_API.md) |
 | Distribute to YouTube/Roku | [Distribution](KALTURA_DISTRIBUTION_API.md) or [Syndication](KALTURA_SYNDICATION_API.md) |
 | Manage sub-accounts | [Multi-Account Management](KALTURA_MULTI_ACCOUNT_MANAGEMENT_API.md) |
-| React to content events | [Webhooks](KALTURA_WEBHOOKS_API.md) |
+| React to content events (webhooks) | [Event Notifications](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md) |
+| Set up HTTP callbacks / webhooks | [Event Notifications](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md) |
+| Trigger actions when metadata/fields change | [Event Notifications](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md) |
 | Set up SSO/SAML | [Auth Broker](KALTURA_AUTH_BROKER_API.md) |
 | Add custom fields to entries | [Custom Metadata](KALTURA_CUSTOM_METADATA_API.md) |
 | Control who sees what | [Access Control](KALTURA_ACCESS_CONTROL_API.md), [Categories & Entitlements](KALTURA_CATEGORIES_AND_ENTITLEMENTS_API.md) |

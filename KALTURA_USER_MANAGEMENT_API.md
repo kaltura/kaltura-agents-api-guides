@@ -549,7 +549,7 @@ Use this role ID with the `setrole:ROLE_ID` KS privilege (see [Session Guide](KA
 
 # 9. Groups
 
-Groups are virtual users (`type=200`) that hold membership via the `groupUser` service. Use groups as recipients in the [Messaging API](KALTURA_MESSAGING_API.md), notification targets in the [Webhooks API](KALTURA_WEBHOOKS_API.md), or for content entitlement via category membership.
+Groups are virtual users (`type=200`) that hold membership via the `groupUser` service. Use groups as recipients in the [Messaging API](KALTURA_MESSAGING_API.md), notification targets in the [Webhooks API](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md), or for content entitlement via category membership.
 
 ## 9.1 Create a Group
 
@@ -713,7 +713,7 @@ Returns a job ID. Retrieve the CSV file when the job completes using `user.serve
 - **Scope roles with least privilege.** Create custom roles with only the permissions needed. Start from `BASE_USER_SESSION_PERMISSION` and add specific permissions. Use `userRole.clone` to customize built-in roles without modifying originals.
 - **Prefer `setrole` over `isAdmin`.** Instead of making users admin, create a scoped role and use `setrole:ROLE_ID` in KS privileges (see [Session Guide](KALTURA_SESSION_GUIDE.md)) to limit what a session can do.
 - **Clean up user profiles before deleting users.** Deleting a KalturaUser cascades to all User Profiles. If you need to preserve profile data or control the order, delete profiles first via the [User Profile API](KALTURA_USER_PROFILE_API.md).
-- **Use groups for batch operations.** Create groups and use them as recipients in [Messaging](KALTURA_MESSAGING_API.md) and notification targets in [Webhooks](KALTURA_WEBHOOKS_API.md) rather than managing individual user lists.
+- **Use groups for batch operations.** Create groups and use them as recipients in [Messaging](KALTURA_MESSAGING_API.md) and notification targets in [Webhooks](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md) rather than managing individual user lists.
 - **Use `groupUser.sync` for SSO group management.** When integrating with an IdP that provides group claims, use sync to keep Kaltura groups in lockstep with the IdP rather than manual add/delete.
 
 
@@ -725,7 +725,7 @@ Returns a job ID. Retrieve the CSV file when the job completes using `user.serve
 - **[User Profile API](KALTURA_USER_PROFILE_API.md)** — Per-app user profiles, event registration and attendance (depends on KalturaUser existing)
 - **[App Registry API](KALTURA_APP_REGISTRY_API.md)** — Application instance registration (apps reference users)
 - **[Messaging API](KALTURA_MESSAGING_API.md)** — Email messaging to users and groups
-- **[Webhooks API](KALTURA_WEBHOOKS_API.md)** — Event notifications targeting users and groups
+- **[Webhooks API](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md)** — Event notifications targeting users and groups
 - **[Events Platform API](KALTURA_EVENTS_PLATFORM_API.md)** — Virtual events with team members (userId in KS required)
 - **[Categories & Entitlements API](KALTURA_CATEGORIES_AND_ENTITLEMENTS_API.md)** — Content organization with user-based category membership and entitlements
 - **[Multi-Account Management](KALTURA_MULTI_ACCOUNT_MANAGEMENT_API.md)** — User management across parent/child accounts

@@ -1070,6 +1070,6 @@ done
 - **[REACH Guide](KALTURA_REACH_API.md)** -- Enrichment services for uploaded content (captions, translation, moderation)  
 - **[Agents Manager](KALTURA_AGENTS_MANAGER_API.md)** -- Auto-process uploaded content (triggers on ENTRY_READY)  
 - **[Multi-Stream](KALTURA_MULTI_STREAM_API.md)** -- Create synchronized dual/multi-screen entries  
-- **[Webhooks API](KALTURA_WEBHOOKS_API.md)** -- Get notified when entries finish processing  
+- **[Webhooks API](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md)** -- Get notified when entries finish processing  
 - **[Distribution](KALTURA_DISTRIBUTION_API.md)** -- Distribute uploaded content to external platforms  
 - **[Moderation API](KALTURA_MODERATION_API.md)** -- Content moderation workflows  

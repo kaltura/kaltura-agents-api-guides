@@ -456,6 +456,6 @@ curl -X POST "$KALTURA_SERVICE_URL/service/media/action/delete" \
 - **[Upload & Ingestion Guide](KALTURA_UPLOAD_AND_INGESTION_API.md)** — Full upload lifecycle (chunked, resumable, import from URL)
 - **[Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md)** — Embed the Dual Screen player
 - **[eSearch Guide](KALTURA_ESEARCH_API.md)** — Search for parent entries (use `parentEntryIdEqual` filter to find child entries)
-- **[Webhooks API](KALTURA_WEBHOOKS_API.md)** — Get notified when entries finish processing (HTTP callbacks)
+- **[Webhooks API](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md)** — Get notified when entries finish processing (HTTP callbacks)
 - **[REACH Guide](KALTURA_REACH_API.md)** — Enrichment services: auto-caption, translate, and enrich parent and child streams
 - **[Agents Manager](KALTURA_AGENTS_MANAGER_API.md)** — Automate processing of multi-stream content

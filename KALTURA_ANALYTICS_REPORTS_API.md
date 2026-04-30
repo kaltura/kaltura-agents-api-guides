@@ -1183,7 +1183,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getTable" \
   -d "responseOptions[delimiter]=|"
 ```
 
-After ranking, submit the highest-traffic entries to REACH for automatic captioning (see [REACH Guide](KALTURA_REACH_API.md) section on `entryVendorTask.add`). Track caption completion through webhooks on `ENTRY_VENDOR_TASK_STATUS_CHANGED` events (see [Webhooks Guide](KALTURA_WEBHOOKS_API.md)), then re-run the eSearch query to update the coverage dashboard.
+After ranking, submit the highest-traffic entries to REACH for automatic captioning (see [REACH Guide](KALTURA_REACH_API.md) section on `entryVendorTask.add`). Track caption completion through webhooks on `ENTRY_VENDOR_TASK_STATUS_CHANGED` events (see [Webhooks Guide](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md)), then re-run the eSearch query to update the coverage dashboard.
 
 See also: [eSearch Guide](KALTURA_ESEARCH_API.md) for advanced search operators, [Captions & Transcripts Guide](KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md) for caption management.
 
@@ -1392,7 +1392,7 @@ curl -o weekly_report.csv "$CSV_URL"
 
 For real-time alerting: when the webhook endpoint receives an event, call `report.getTable` with `reportType=35` (uniqueUsersPlay) to check concurrent viewer count. If the count drops below a threshold, send an alert via the Messaging service (see [Messaging Guide](KALTURA_MESSAGING_API.md)). For enriched compliance reports, use `report.getCsvFromStringParams` with IDs 3006-3008 to include user metadata.
 
-See also: [Webhooks Guide](KALTURA_WEBHOOKS_API.md) for event notification template configuration, [Messaging Guide](KALTURA_MESSAGING_API.md) for alert delivery.
+See also: [Webhooks Guide](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md) for event notification template configuration, [Messaging Guide](KALTURA_MESSAGING_API.md) for alert delivery.
 
 ## 15.15 Cross-Guide Workflow: Full Event Lifecycle
 
@@ -1405,7 +1405,7 @@ This master workflow demonstrates how the Analytics Reports, Events Collection, 
 3. **Set up analytics dashboards** by creating report filters scoped to the event's `virtualEventId` [Analytics Reports]
 4. **Register attendees** and assign them to user groups for segmented reporting [User Profile](KALTURA_USER_PROFILE_API.md)
 5. **Send invitations** with personalized join links via the messaging system [Messaging](KALTURA_MESSAGING_API.md)
-6. **Configure webhooks** to fire on session start/end for automated metric collection [Webhooks](KALTURA_WEBHOOKS_API.md)
+6. **Configure webhooks** to fire on session start/end for automated metric collection [Webhooks](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md)
 
 ### During the Event
 
@@ -1466,9 +1466,9 @@ curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getCsvFromStringParams"
 This pipeline automates the full content lifecycle from upload through performance monitoring, using webhooks to chain together processing, enrichment, and analytics-driven optimization.
 
 1. **Upload content** via chunked upload or `addFromUrl` [Upload & Ingestion](KALTURA_UPLOAD_AND_INGESTION_API.md)
-2. **Webhook fires on ENTRY_READY** when transcoding completes, triggering the enrichment pipeline [Webhooks](KALTURA_WEBHOOKS_API.md)
+2. **Webhook fires on ENTRY_READY** when transcoding completes, triggering the enrichment pipeline [Webhooks](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md)
 3. **Auto-process via REACH and AI Agents** — the webhook handler submits the entry for captioning, translation, and AI-generated metadata [REACH](KALTURA_REACH_API.md), [Agents Manager](KALTURA_AGENTS_MANAGER_API.md)
-4. **Webhook fires on task completion** when captions and metadata are ready, confirming enrichment is complete [Webhooks](KALTURA_WEBHOOKS_API.md)
+4. **Webhook fires on task completion** when captions and metadata are ready, confirming enrichment is complete [Webhooks](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md)
 5. **Player fires playback events** as viewers watch the content — play, quartile, seek, and buffer events flow automatically into analytics [Events Collection](KALTURA_ANALYTICS_EVENTS_COLLECTION_API.md)
 6. **Analytics accumulate** over the monitoring window — plays, watch time, engagement rate, drop-off patterns build up in the reporting pipeline [Analytics Reports]
 7. **Scheduled report check** runs `report.getTable` to evaluate content performance against thresholds — if engagement rate falls below target, send an alert via Messaging [Analytics Reports], [Messaging](KALTURA_MESSAGING_API.md)
@@ -1517,7 +1517,7 @@ This pipeline connects event engagement data to CRM systems for sales follow-up,
 4. **Custom engagement events tracked** via `analytics.trackEvent` — CTA clicks, resource downloads, meeting requests, and demo sign-ups [Events Collection](KALTURA_ANALYTICS_EVENTS_COLLECTION_API.md)
 5. **Lead scoring report classifies attendees** into Hot/Warm/Cold tiers based on cumulative gamification score — Hot leads (top 10%) are flagged for immediate sales outreach [Gamification](KALTURA_GAMIFICATION_API.md)
 6. **User Reactions Report (ID 4021)** provides per-attendee interaction detail — poll responses, Q&A questions, reactions — enriching the CRM contact record [Analytics Reports]
-7. **Push to CRM** via CSV export or webhook — `getUrlForReportAsCsv` generates a downloadable file for batch import, or a webhook endpoint receives real-time score updates [Analytics Reports], [Webhooks](KALTURA_WEBHOOKS_API.md)
+7. **Push to CRM** via CSV export or webhook — `getUrlForReportAsCsv` generates a downloadable file for batch import, or a webhook endpoint receives real-time score updates [Analytics Reports], [Webhooks](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md)
 8. **Ongoing sync** — replay viewers continue accumulating engagement, and scheduled report runs update CRM records weekly [Analytics Reports]
 
 ```bash
@@ -1578,7 +1578,7 @@ curl -o crm_lead_export.csv "$CSV_URL"
 - **[Upload & Ingestion](KALTURA_UPLOAD_AND_INGESTION_API.md)** — `baseEntry.exportToCsv` for bulk content export
 - **[Thumbnail API](KALTURA_THUMBNAIL_API.md)** — Thumbnail generation for report dashboards
 - **[User Management](KALTURA_USER_MANAGEMENT_API.md)** — `ANALYTICS_BASE` role permission gates analytics access
-- **[Webhooks](KALTURA_WEBHOOKS_API.md)** — Trigger automated reporting on content events
+- **[Webhooks](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md)** — Trigger automated reporting on content events
 - **[eSearch](KALTURA_ESEARCH_API.md)** — Enrich analytics data with entry metadata, tags, categories
 - **[Captions & Transcripts](KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md)** — Caption coverage auditing (eSearch + captionAsset.list for accessibility dashboards)
 - **[Categories & Entitlements](KALTURA_CATEGORIES_AND_ENTITLEMENTS_API.md)** — `categoriesIdsIn` filter for content library scoping

@@ -932,7 +932,7 @@ Each rule has **conditions** (when to trigger) and **actions** (what to order):
 
 ### Configure Rules via Boolean Event Notification Templates
 
-Boolean event notification templates (see [Webhooks API](KALTURA_WEBHOOKS_API.md)) define reusable condition logic — "entry tags match a pattern", "entry status changed to READY", "metadata field contains a value". They evaluate conditions and return true/false only — they serve as filters, not dispatchers. REACH rules reference them by ID.
+Boolean event notification templates (see [Webhooks API](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md)) define reusable condition logic — "entry tags match a pattern", "entry status changed to READY", "metadata field contains a value". They evaluate conditions and return true/false only — they serve as filters, not dispatchers. REACH rules reference them by ID.
 
 **Step 1: Discover available Boolean system templates**
 
@@ -1124,7 +1124,7 @@ For human captioning, use the `notes` field on the task to provide terminology g
 - **[AI Genie](KALTURA_AI_GENIE_API.md)** — Conversational AI that benefits from REACH-generated transcripts and enrichment
 - **[Player Embed](KALTURA_PLAYER_EMBED_GUIDE.md)** — Play entries with REACH-generated captions, translations, and audio descriptions
 - **[Agents Manager](KALTURA_AGENTS_MANAGER_API.md)** — Automate REACH tasks with event-driven agents
-- **[Webhooks API](KALTURA_WEBHOOKS_API.md)** — Boolean templates as REACH automation rule conditions; HTTP callbacks for task completion events
+- **[Webhooks API](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md)** — Boolean templates as REACH automation rule conditions; HTTP callbacks for task completion events
 - **[Captions & Transcripts API](KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md)** — Caption assets created and managed by REACH tasks; format conversion, multi-language workflows
 - **[Custom Metadata API](KALTURA_CUSTOM_METADATA_API.md)** — Custom metadata schemas for content enrichment
 - **[Analytics Reports](KALTURA_ANALYTICS_REPORTS_API.md)** — Monitor REACH task volumes and costs via reports  

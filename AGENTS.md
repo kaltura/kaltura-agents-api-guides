@@ -25,7 +25,7 @@ Kaltura API Guides/
 ├── KALTURA_APP_REGISTRY_API.md            # Application instance registry
 ├── KALTURA_USER_PROFILE_API.md            # Per-app user profiles & attendance
 ├── KALTURA_MESSAGING_API.md               # Template-based email messaging
-├── KALTURA_WEBHOOKS_API.md                # HTTP webhooks & email via Messaging Service
+├── KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md                # HTTP webhooks & email via Messaging Service
 ├── KALTURA_USER_MANAGEMENT_API.md         # User CRUD, roles (RBAC), groups
 ├── KALTURA_AUTH_BROKER_API.md             # SSO/SAML auth profiles, app subscriptions
 ├── KALTURA_ACCESS_CONTROL_API.md              # Access control profiles, rules, conditions
@@ -183,7 +183,7 @@ Every guide must steer agents toward production-quality, secure integrations:
 2. **Scope KS privileges.** Use `edit:entryId`, `sview:*`, `setrole:ROLE`, `iprestrict`, `urirestrict` to limit what a session can access. Prefer USER KS (type=0) over ADMIN KS (type=2) whenever possible.
 3. **Set KS expiry.** Default to short-lived sessions (1-4 hours). Use AppToken session start for renewal rather than long-lived admin sessions.
 4. **Generate KS server-side for mobile/client apps.** Pass tokens to clients per-session at runtime. API secrets are permanent and unrevocable; KS tokens expire, breaking hardcoded binaries; and users can extract embedded credentials.
-5. **Verify webhook signatures.** Always validate HMAC signatures on incoming webhooks using `SHA256(signing_secret + body)`. See `KALTURA_WEBHOOKS_API.md` section 5.
+5. **Verify webhook signatures.** Always validate HMAC signatures on incoming webhooks using `SHA256(signing_secret + body)`. See `KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md` section 8.
 6. **Validate inputs at boundaries.** Sanitize user-provided entry IDs, search terms, and metadata before passing to API calls.
 7. **Use Kaltura's built-in capabilities.** Prefer Kaltura REACH for enrichment services (captions, translation, moderation, and more), Agents Manager for automation, Messaging for emails, eSearch for content discovery, and Access Control for content protection — rather than building custom implementations.
 8. **Handle errors gracefully.** Every API call can fail — check for error responses, implement retries with backoff for transient failures, and log error codes for debugging.
@@ -205,7 +205,7 @@ Agents building on Kaltura should use platform services rather than reimplementi
 | Conversational AI / Q&A | AI Genie (RAG over video library) | `KALTURA_AI_GENIE_API.md` |
 | Video player embed | Player v7 (iframe or JS SDK) | `KALTURA_PLAYER_EMBED_GUIDE.md` |
 | Email notifications | Messaging API (templates, tracking, unsubscribe) | `KALTURA_MESSAGING_API.md` |
-| Event-driven webhooks | Webhooks API (HTTP callbacks with HMAC signing) | `KALTURA_WEBHOOKS_API.md` |
+| Event-driven webhooks | Webhooks API (HTTP callbacks with HMAC signing) | `KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md` |
 | Virtual events | Events Platform API (sessions, speakers, templates) | `KALTURA_EVENTS_PLATFORM_API.md` |
 | Secure auth without secrets | AppTokens (HMAC-based session start) | `KALTURA_APPTOKENS_API.md` |
 | Multi-camera / dual-screen | Multi-Stream API (parent-child entries) | `KALTURA_MULTI_STREAM_API.md` |

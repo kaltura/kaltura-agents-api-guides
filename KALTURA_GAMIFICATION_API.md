@@ -1710,7 +1710,7 @@ The `filterPaths: ["company"]` setting on the sub-leaderboard groups users by th
 - **[Analytics Reports](KALTURA_ANALYTICS_REPORTS_API.md)** — User Reactions Report (ID 4021) for granular per-user engagement data  
 - **[Events Collection](KALTURA_ANALYTICS_EVENTS_COLLECTION_API.md)** — Playback events (`viewPeriod`) feed leaderboard and badge rules  
 - **[Messaging](KALTURA_MESSAGING_API.md)** — Certificate download email delivery; winner notification emails  
-- **[Webhooks](KALTURA_WEBHOOKS_API.md)** — Event notifications on gamification state changes  
+- **[Webhooks](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md)** — Event notifications on gamification state changes  
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — Admin KS as Bearer token; `GAME_BASE`/`GAME_MANAGE` permissions  
 - **[Custom Metadata](KALTURA_CUSTOM_METADATA_API.md)** — `metadataProfileId` on certificates for PDF generation context  
 - **[Categories & Entitlements](KALTURA_CATEGORIES_AND_ENTITLEMENTS_API.md)** — Category IDs in rule conditions for content scoping  

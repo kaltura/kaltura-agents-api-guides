@@ -532,7 +532,7 @@ In addition to the API, agents can be configured through Kaltura's management in
 - **[Upload & Ingestion](KALTURA_UPLOAD_AND_INGESTION_API.md)** — Upload content that triggers agent processing
 - **[AI Genie](KALTURA_AI_GENIE_API.md)** — Conversational AI search over content processed by agents
 - **[eSearch](KALTURA_ESEARCH_API.md)** — Search entries to find content for agent processing
-- **[Webhooks](KALTURA_WEBHOOKS_API.md)** — HTTP callbacks for agent execution events
+- **[Webhooks](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md)** — HTTP callbacks for agent execution events
 - **[Categories & Entitlements API](KALTURA_CATEGORIES_AND_ENTITLEMENTS_API.md)** — Category-based agent triggers (filter agents to fire only for entries in specific categories)
 - **[Events Platform](KALTURA_EVENTS_PLATFORM_API.md)** — Agent triggers can respond to event lifecycle changes
 - **[Custom Metadata](KALTURA_CUSTOM_METADATA_API.md)** — Agent actions can update custom metadata fields

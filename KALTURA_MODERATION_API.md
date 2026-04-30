@@ -572,7 +572,7 @@ Flagging (`baseEntry.flag`) does not require moderation permissions — it works
 
 Monitor moderation status changes with event notification HTTP templates. The `moderationStatus` column is tracked — any change fires `OBJECT_CHANGED` event notifications configured for the entry object type.
 
-Cross-reference: [Webhooks Guide](KALTURA_WEBHOOKS_API.md) for configuring HTTP notification templates.
+Cross-reference: [Webhooks Guide](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md) for configuring HTTP notification templates.
 
 
 # 13. REACH Automation Rules
@@ -624,7 +624,7 @@ Cross-reference: [REACH API Guide](KALTURA_REACH_API.md) for profile and rule co
 |-------|-------------|
 | [REACH API](KALTURA_REACH_API.md) | AI moderation tasks are REACH vendor tasks with serviceFeature=15 |
 | [Categories & Entitlements](KALTURA_CATEGORIES_AND_ENTITLEMENTS_API.md) | Category moderation, categoryEntry.activate/reject |
-| [Webhooks](KALTURA_WEBHOOKS_API.md) | HTTP notifications on moderation status changes |
+| [Webhooks](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md) | HTTP notifications on moderation status changes |
 | [Upload & Ingestion](KALTURA_UPLOAD_AND_INGESTION_API.md) | Entry moderation status enum, media lifecycle |
 | [Player Embed](KALTURA_PLAYER_EMBED_GUIDE.md) | playkit-js-moderation plugin configuration |
 | [User Management](KALTURA_USER_MANAGEMENT_API.md) | Moderation permissions, user.notifyBan |

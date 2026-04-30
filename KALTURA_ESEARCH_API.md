@@ -524,7 +524,7 @@ When exposing eSearch to an LLM via agent tools:
 - **[REACH](KALTURA_REACH_API.md)** — Enrichment services: captions, metadata, tagging, and more (improves search quality)
 - **[AI Genie](KALTURA_AI_GENIE_API.md)** — Conversational AI search (uses eSearch internally for RAG)
 - **[Multi-Stream](KALTURA_MULTI_STREAM_API.md)** — Search for parent entries; use `parentEntryIdEqual` filter to find child entries
-- **[Webhooks](KALTURA_WEBHOOKS_API.md)** — Trigger notifications based on content events (search results inform webhook conditions)
+- **[Webhooks](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md)** — Trigger notifications based on content events (search results inform webhook conditions)
 - **[Categories & Entitlements API](KALTURA_CATEGORIES_AND_ENTITLEMENTS_API.md)** — Category-based filtering and entitlements that affect search result visibility
 - **[Custom Metadata API](KALTURA_CUSTOM_METADATA_API.md)** — Custom metadata schemas searchable via `KalturaESearchEntryMetadataItem`
 - **[Captions & Transcripts API](KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md)** — Caption assets searchable via `KalturaESearchCaptionItem`

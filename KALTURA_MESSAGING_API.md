@@ -1130,7 +1130,7 @@ Users who unsubscribe from the `"event-updates"` group will be automatically exc
 - **[App Registry API](KALTURA_APP_REGISTRY_API.md)** — App GUID management (required for templates and messages)
 - **[User Profile API](KALTURA_USER_PROFILE_API.md)** — User registration data (triggers messaging workflows)
 - **[Events Platform API](KALTURA_EVENTS_PLATFORM_API.md)** — Virtual events (messaging for event communications)
-- **[Webhooks API](KALTURA_WEBHOOKS_API.md)** — Event-driven HTTP callbacks; email notifications are delivered via the Messaging Service
+- **[Webhooks API](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md)** — Event-driven HTTP callbacks; email notifications are delivered via the Messaging Service
 - **[User Management API](KALTURA_USER_MANAGEMENT_API.md)** — Manage recipient users and groups for targeted messaging
 - **[Analytics Reports](KALTURA_ANALYTICS_REPORTS_API.md)** — `message/stats` for delivery statistics
 - **[Gamification](KALTURA_GAMIFICATION_API.md)** — Messaging events can trigger gamification rules

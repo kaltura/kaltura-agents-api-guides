@@ -1156,7 +1156,7 @@ Use a metadata field to trigger automated workflows via webhooks:
 3. In the webhook handler, check the field value and trigger processing
 4. Update the metadata field to track completion
 
-See [Webhooks API](KALTURA_WEBHOOKS_API.md) for event notification configuration.
+See [Webhooks API](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md) for event notification configuration.
 
 ## 11.3 Bulk Metadata Retrieval
 
@@ -1287,7 +1287,7 @@ A `LegalHold` (listType yes/no) field prevents automated deletion. `ComplianceSt
 # 15. Related Guides
 
 - **[eSearch API](KALTURA_ESEARCH_API.md)** — Search metadata with `KalturaESearchEntryMetadataItem`, cross-field queries
-- **[Webhooks API](KALTURA_WEBHOOKS_API.md)** — Metadata change events: `OBJECT_ADDED`, `OBJECT_DATA_CHANGED`, `OBJECT_DELETED`, `OBJECT_UPDATED`
+- **[Webhooks API](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md)** — Metadata change events: `OBJECT_ADDED`, `OBJECT_DATA_CHANGED`, `OBJECT_DELETED`, `OBJECT_UPDATED`
 - **[Categories & Entitlements API](KALTURA_CATEGORIES_AND_ENTITLEMENTS_API.md)** — Category metadata (objectType=2), category hierarchy and membership
 - **[Access Control API](KALTURA_ACCESS_CONTROL_API.md)** — Metadata conditions in access control rules
 - **[User Management API](KALTURA_USER_MANAGEMENT_API.md)** — User metadata (objectType=3)

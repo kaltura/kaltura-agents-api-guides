@@ -826,7 +826,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/bulk/action/get" \
 - **[User Management API](KALTURA_USER_MANAGEMENT_API.md)** -- Users for category membership (`categoryUser` references KalturaUser IDs)  
 - **[eSearch API](KALTURA_ESEARCH_API.md)** -- Search entries by category assignment, search categories  
 - **[Agents Manager API](KALTURA_AGENTS_MANAGER_API.md)** -- `ENTRY_ADDED_TO_CATEGORY` trigger for AI agent workflows  
-- **[Webhooks API](KALTURA_WEBHOOKS_API.md)** -- Category event notifications (category created, entry assigned, etc.)  
+- **[Webhooks API](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md)** -- Category event notifications (category created, entry assigned, etc.)  
 - **[Moderation API](KALTURA_MODERATION_API.md)** -- Content moderation queue and approval workflows  
 - **[Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md)** -- Entitlement determines content visibility in player; access control affects playback  
 - **[Content Delivery API](KALTURA_CONTENT_DELIVERY_API.md)** -- Delivery URLs where access control is enforced  

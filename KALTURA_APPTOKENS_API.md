@@ -501,7 +501,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/appToken/action/delete" \
 - **[Player Embed](KALTURA_PLAYER_EMBED_GUIDE.md)** — Generate scoped player KS via AppToken flow
 - **[REACH](KALTURA_REACH_API.md)** — Scoped tokens for enrichment service workflows (captions, translation, moderation, and more)
 - **[Events Platform](KALTURA_EVENTS_PLATFORM_API.md)** — Bearer KS for events API calls
-- **[Webhooks](KALTURA_WEBHOOKS_API.md)** — AppToken-based KS for webhook handler authentication
+- **[Webhooks](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md)** — AppToken-based KS for webhook handler authentication
 - **[Analytics Reports](KALTURA_ANALYTICS_REPORTS_API.md)** — Analytics-scoped tokens for reporting dashboards
 - **[Distribution](KALTURA_DISTRIBUTION_API.md)** — Scoped tokens for distribution automation
 - **[Auth Broker](KALTURA_AUTH_BROKER_API.md)** — SSO-integrated token management

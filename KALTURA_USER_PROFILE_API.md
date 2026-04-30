@@ -1020,7 +1020,7 @@ curl -s -X POST "$KALTURA_SERVICE_URL/service/report/action/getCsvFromStringPara
 - **[AppTokens API](KALTURA_APPTOKENS_API.md)** — Secure server-to-server auth
 - **[Events Platform API](KALTURA_EVENTS_PLATFORM_API.md)** — Virtual events (complementary to user profile management)
 - **[Messaging API](KALTURA_MESSAGING_API.md)** — Template-based email messaging (triggered by user profile events)
-- **[Webhooks API](KALTURA_WEBHOOKS_API.md)** — Event-driven HTTP callbacks for user and content events
+- **[Webhooks API](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md)** — Event-driven HTTP callbacks for user and content events
 - **[eSearch API](KALTURA_ESEARCH_API.md)** — Search entries and users across your account
 - **[User Management API](KALTURA_USER_MANAGEMENT_API.md)** — Core user CRUD, roles, and groups (the account-level user records that User Profile extends per-app)
 - **[Analytics Reports](KALTURA_ANALYTICS_REPORTS_API.md)** — `reports/eventDataStats` for attendance analytics

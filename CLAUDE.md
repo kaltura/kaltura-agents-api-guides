@@ -25,7 +25,7 @@
 
 ## Current State
 
-48 guides, 918 live tests, 48 test files. Version managed by release-please (no CHANGELOG.md — release notes are on GitHub Releases). Commit messages must follow Conventional Commits and stay under 72 characters in the header.
+48 guides, 926 live tests, 48 test files. Version managed by release-please (no CHANGELOG.md — release notes are on GitHub Releases). Commit messages must follow Conventional Commits and stay under 72 characters in the header.
 
 ## Quick References
 

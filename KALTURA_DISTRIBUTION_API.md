@@ -1405,7 +1405,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution
 
 ## 14.5 Webhook-Triggered Distribution
 
-Combine distribution with [webhooks](KALTURA_WEBHOOKS_API.md) for event-driven publishing. Set up a webhook that fires when entry metadata changes, then programmatically manage distribution updates:
+Combine distribution with [webhooks](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md) for event-driven publishing. Set up a webhook that fires when entry metadata changes, then programmatically manage distribution updates:
 
 1. Create a webhook template for `OBJECT_DATA_CHANGED` on `ENTRY` objects
 2. In your webhook handler, check if the entry has active distributions
@@ -1458,7 +1458,7 @@ Combine distribution with [webhooks](KALTURA_WEBHOOKS_API.md) for event-driven p
 - **[AppTokens API](KALTURA_APPTOKENS_API.md)** — Secure server-to-server auth for automated distribution workflows
 - **[Syndication Feeds API](KALTURA_SYNDICATION_API.md)** — Generate RSS/MRSS/iTunes/Roku feeds for external platforms to pull (pull model vs distribution's push model)
 - **[Upload & Ingestion](KALTURA_UPLOAD_AND_INGESTION_API.md)** — Content upload, flavors, and ingestion (entries and assets that feed distribution)
-- **[Webhooks API](KALTURA_WEBHOOKS_API.md)** — Event-driven automation (trigger distribution on content events)
+- **[Webhooks API](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md)** — Event-driven automation (trigger distribution on content events)
 - **[Custom Metadata API](KALTURA_CUSTOM_METADATA_API.md)** — Structured metadata schemas (metadata mapped to distribution provider fields)
 - **[Captions & Transcripts API](KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md)** — Caption assets included in distribution (Cross-Kaltura distributes captions)
 - **[Categories & Entitlements API](KALTURA_CATEGORIES_AND_ENTITLEMENTS_API.md)** — Content organization (used in distribution conditions)

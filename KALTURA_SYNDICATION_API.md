@@ -497,7 +497,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/syndicationFeed/action/add" \
 
 ## 15.4 Webhook-Triggered Feed Refresh
 
-Combine syndication with [webhooks](KALTURA_WEBHOOKS_API.md) for proactive cache management. Set up a webhook that fires when new content is published, then programmatically add `&limit=N` to your feed URL to trigger a 30-minute cache window — ensuring external platforms see new content sooner than the default 24-hour cache.
+Combine syndication with [webhooks](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md) for proactive cache management. Set up a webhook that fires when new content is published, then programmatically add `&limit=N` to your feed URL to trigger a 30-minute cache window — ensuring external platforms see new content sooner than the default 24-hour cache.
 
 
 # 16. API Actions Reference
@@ -517,6 +517,6 @@ Combine syndication with [webhooks](KALTURA_WEBHOOKS_API.md) for proactive cache
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — KS generation and management
 - **[Content Distribution API](KALTURA_DISTRIBUTION_API.md)** — Push content to external platforms via connectors (push model vs syndication's pull model)
 - **[Upload & Ingestion API](KALTURA_UPLOAD_AND_INGESTION_API.md)** — Content upload, flavors, and ingestion (entries that appear in feeds)
-- **[Webhooks API](KALTURA_WEBHOOKS_API.md)** — Event-driven automation (trigger feed cache refresh on content events)
+- **[Webhooks API](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md)** — Event-driven automation (trigger feed cache refresh on content events)
 - **[Categories & Entitlements API](KALTURA_CATEGORIES_AND_ENTITLEMENTS_API.md)** — Content organization (used in feed entry filtering)
 - **[eSearch API](KALTURA_ESEARCH_API.md)** — Full-text search (alternative to feed-based content discovery)

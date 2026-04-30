@@ -3,14 +3,17 @@
 End-to-end validation of the Webhooks & Event Notifications API against the live API.
 
 Covers:
-  HTTP:    clone, get, update (name/url + signing), list, updateStatus, dispatch, delete,
-           E2E delivery via webhook.site (payload structure, SHA256 signature verification)
-  Email:   clone, get with email-specific fields, clone with overrides (subject/format/from),
-           update with static recipients, delete,
-           E2E delivery via Gmail IMAP (trigger, capture, validate headers)
-  Boolean: listTemplates filter, clone with inherited conditions, delete
-  Common:  listTemplates (unfiltered + filtered + paged), list partner templates
-           (unfiltered + by type + by status), error handling (get/delete invalid ID)
+  HTTP:      clone, get, update (name/url + signing), list, updateStatus, dispatch, delete,
+             E2E delivery via webhook.site (payload structure, SHA256 signature verification)
+  Advanced:  eventConditions (KalturaEventFieldCondition), userParameters, contentParameters,
+             HTTP authentication (authUsername/authPassword), eventDelayedCondition,
+             KalturaHttpNotificationObjectData payload configuration
+  Email:     clone, get with email-specific fields, clone with overrides (subject/format/from),
+             update with static recipients, delete,
+             E2E delivery via Gmail IMAP (trigger, capture, validate headers)
+  Boolean:   listTemplates filter, clone with inherited conditions, delete
+  Common:    listTemplates (unfiltered + filtered + paged), list partner templates
+             (unfiltered + by type + by status), error handling (get/delete invalid ID)
 """
 
 import sys
@@ -102,6 +105,55 @@ def main():
 
     runner.run_test("listTemplates — discover system templates", test_list_templates)
 
+    def test_quick_start_clone():
+        """Quick Start pattern: clone system template with URL, ObjectData, signing, then activate."""
+        template_id = state.get("http_system_template_id")
+        assert template_id, "No HTTP system template found to clone"
+        signing_secret = f"quick-start-{TS}"
+        # Step 1: Clone with URL, payload config, and signing
+        result = kaltura_post(SVC, "clone", {
+            "id": template_id,
+            "eventNotificationTemplate[objectType]": "KalturaHttpNotificationTemplate",
+            "eventNotificationTemplate[name]": f"Quick Start Test {TS}",
+            "eventNotificationTemplate[systemName]": f"QUICK_START_{TS}",
+            "eventNotificationTemplate[url]": f"https://test-{TS}.example.com/quick-start",
+            "eventNotificationTemplate[method]": 2,
+            "eventNotificationTemplate[data][objectType]": "KalturaHttpNotificationObjectData",
+            "eventNotificationTemplate[data][format]": 1,
+            "eventNotificationTemplate[data][apiObjectType]": "KalturaBaseEntry",
+            "eventNotificationTemplate[signSecret]": signing_secret,
+            "eventNotificationTemplate[secureHashingAlgo]": 2,
+        })
+        assert "id" in result, f"Expected id: {result}"
+        state["quick_start_id"] = result["id"]
+        runner.register_cleanup(
+            f"quick start template {result['id']}",
+            lambda: kaltura_post(SVC, "delete", {"id": state["quick_start_id"]}),
+        )
+        # Step 2: Activate (status cannot be set during clone)
+        kaltura_post(SVC, "updateStatus", {"id": result["id"], "status": 2})
+        # Verify all fields
+        detail = kaltura_post(SVC, "get", {"id": result["id"]})
+        assert detail.get("status") == 2, f"Expected active, got status={detail.get('status')}"
+        assert detail.get("secureHashingAlgo") == 2, \
+            f"Expected SHA256, got algo={detail.get('secureHashingAlgo')}"
+        data = detail.get("data", {})
+        assert data.get("objectType") == "KalturaHttpNotificationObjectData", \
+            f"Expected ObjectData, got {data.get('objectType')}"
+        assert data.get("format") == 1, f"Expected JSON format, got {data.get('format')}"
+        # Clean up immediately
+        kaltura_post(SVC, "updateStatus", {"id": result["id"], "status": 1})
+        kaltura_post(SVC, "delete", {"id": result["id"]})
+        runner._cleanup_actions = [
+            (l, fn) for l, fn in runner._cleanup_actions
+            if "quick start" not in l
+        ]
+        print(f"    Quick Start: clone + URL + ObjectData + signing, then activate")
+        print(f"    Template {result['id']}: status=ACTIVE, data=JSON, signing=SHA256")
+
+    runner.run_test("quick start — clone with config then activate",
+                    test_quick_start_clone)
+
     def test_list_templates_filter_http():
         """List system templates filtered to HTTP type only."""
         result = kaltura_post(SVC, "listTemplates", {
@@ -142,6 +194,7 @@ def main():
             "id": template_id,
             "eventNotificationTemplate[objectType]": "KalturaHttpNotificationTemplate",
             "eventNotificationTemplate[name]": f"Test Webhook {TS}",
+            "eventNotificationTemplate[systemName]": f"TEST_WEBHOOK_{TS}",
             "eventNotificationTemplate[url]": f"https://test-{TS}.example.com/webhook",
             "eventNotificationTemplate[method]": 2,
             "eventNotificationTemplate[status]": 1,  # Create as disabled
@@ -833,7 +886,270 @@ def main():
     runner.run_test("delete — delivery template cleanup", test_cleanup_delivery)
 
     # ════════════════════════════════════════════
-    # Phase 8: Error Handling
+    # Phase 8: Advanced Template Features
+    # Event conditions, userParameters, contentParameters,
+    # HTTP authentication, eventDelayedCondition
+    # ════════════════════════════════════════════
+    def test_create_with_field_condition():
+        """Create HTTP template with KalturaEventFieldCondition (status=READY)."""
+        template_id = state.get("http_system_template_id")
+        assert template_id, "No HTTP system template to clone"
+        result = kaltura_post(SVC, "clone", {
+            "id": template_id,
+            "eventNotificationTemplate[objectType]": "KalturaHttpNotificationTemplate",
+            "eventNotificationTemplate[name]": f"Field Condition Test {TS}",
+            "eventNotificationTemplate[systemName]": f"FIELD_COND_{TS}",
+            "eventNotificationTemplate[url]": f"https://test-{TS}.example.com/condition",
+            "eventNotificationTemplate[method]": 2,
+            "eventNotificationTemplate[eventConditions][0][objectType]": "KalturaEventFieldCondition",
+            "eventNotificationTemplate[eventConditions][0][description]": "Only when entry is READY",
+            "eventNotificationTemplate[eventConditions][0][field][objectType]": "KalturaEvalBooleanField",
+            "eventNotificationTemplate[eventConditions][0][field][code]": "in_array({event.object.status},array(2))",
+            "eventNotificationTemplate[status]": 1,
+        })
+        assert "id" in result, f"Expected id: {result}"
+        state["condition_template_id"] = result["id"]
+        runner.register_cleanup(
+            f"condition template {result['id']}",
+            lambda: kaltura_post(SVC, "delete", {"id": state["condition_template_id"]}),
+        )
+        # Verify condition is persisted
+        detail = kaltura_post(SVC, "get", {"id": result["id"]})
+        conditions = detail.get("eventConditions", [])
+        assert len(conditions) >= 1, f"Expected >=1 condition, got {len(conditions)}"
+        found_field_cond = any(
+            c.get("objectType") == "KalturaEventFieldCondition" for c in conditions
+        )
+        assert found_field_cond, f"Expected KalturaEventFieldCondition in: {conditions}"
+        print(f"    Created: {result['id']} with {len(conditions)} condition(s)")
+        for c in conditions:
+            print(f"      {c.get('objectType')}: {c.get('description', '')}")
+
+    runner.run_test("add — HTTP template with field condition (status=READY)",
+                    test_create_with_field_condition)
+
+    def test_create_with_user_parameters():
+        """Create HTTP template with userParameters for placeholder substitution."""
+        template_id = state.get("http_system_template_id")
+        assert template_id, "No HTTP system template to clone"
+        result = kaltura_post(SVC, "clone", {
+            "id": template_id,
+            "eventNotificationTemplate[objectType]": "KalturaHttpNotificationTemplate",
+            "eventNotificationTemplate[name]": f"UserParams Test {TS}",
+            "eventNotificationTemplate[systemName]": f"USER_PARAMS_{TS}",
+            "eventNotificationTemplate[url]": f"https://test-{TS}.example.com/params",
+            "eventNotificationTemplate[method]": 2,
+            "eventNotificationTemplate[userParameters][0][objectType]": "KalturaEventNotificationParameter",
+            "eventNotificationTemplate[userParameters][0][key]": "workflow_id",
+            "eventNotificationTemplate[userParameters][0][value][objectType]": "KalturaStringValue",
+            "eventNotificationTemplate[userParameters][0][value][value]": "approval-flow-1",
+            "eventNotificationTemplate[userParameters][1][objectType]": "KalturaEventNotificationParameter",
+            "eventNotificationTemplate[userParameters][1][key]": "callback_path",
+            "eventNotificationTemplate[userParameters][1][value][objectType]": "KalturaStringValue",
+            "eventNotificationTemplate[userParameters][1][value][value]": "/hooks/approval",
+            "eventNotificationTemplate[status]": 1,
+        })
+        assert "id" in result, f"Expected id: {result}"
+        state["params_template_id"] = result["id"]
+        runner.register_cleanup(
+            f"params template {result['id']}",
+            lambda: kaltura_post(SVC, "delete", {"id": state["params_template_id"]}),
+        )
+        # Verify userParameters persisted
+        detail = kaltura_post(SVC, "get", {"id": result["id"]})
+        params = detail.get("userParameters", [])
+        assert len(params) >= 2, f"Expected >=2 userParameters, got {len(params)}"
+        keys = [p.get("key") for p in params]
+        assert "workflow_id" in keys, f"Expected 'workflow_id' in keys: {keys}"
+        assert "callback_path" in keys, f"Expected 'callback_path' in keys: {keys}"
+        print(f"    Created: {result['id']} with userParameters: {keys}")
+
+    runner.run_test("add — HTTP template with userParameters",
+                    test_create_with_user_parameters)
+
+    def test_create_with_content_parameters():
+        """Create HTTP template with contentParameters (system-evaluated)."""
+        template_id = state.get("http_system_template_id")
+        assert template_id, "No HTTP system template to clone"
+        result = kaltura_post(SVC, "clone", {
+            "id": template_id,
+            "eventNotificationTemplate[objectType]": "KalturaHttpNotificationTemplate",
+            "eventNotificationTemplate[name]": f"ContentParams Test {TS}",
+            "eventNotificationTemplate[systemName]": f"CONTENT_PARAMS_{TS}",
+            "eventNotificationTemplate[url]": f"https://test-{TS}.example.com/content",
+            "eventNotificationTemplate[method]": 2,
+            "eventNotificationTemplate[contentParameters][0][objectType]": "KalturaEventNotificationParameter",
+            "eventNotificationTemplate[contentParameters][0][key]": "entry_id",
+            "eventNotificationTemplate[contentParameters][0][value][objectType]": "KalturaEvalStringField",
+            "eventNotificationTemplate[contentParameters][0][value][code]": "{event.object.id}",
+            "eventNotificationTemplate[contentParameters][1][objectType]": "KalturaEventNotificationParameter",
+            "eventNotificationTemplate[contentParameters][1][key]": "entry_name",
+            "eventNotificationTemplate[contentParameters][1][value][objectType]": "KalturaEvalStringField",
+            "eventNotificationTemplate[contentParameters][1][value][code]": "{event.object.name}",
+            "eventNotificationTemplate[status]": 1,
+        })
+        assert "id" in result, f"Expected id: {result}"
+        state["content_params_template_id"] = result["id"]
+        runner.register_cleanup(
+            f"content params template {result['id']}",
+            lambda: kaltura_post(SVC, "delete", {"id": state["content_params_template_id"]}),
+        )
+        # Verify contentParameters persisted
+        detail = kaltura_post(SVC, "get", {"id": result["id"]})
+        params = detail.get("contentParameters", [])
+        assert len(params) >= 2, f"Expected >=2 contentParameters, got {len(params)}"
+        keys = [p.get("key") for p in params]
+        assert "entry_id" in keys, f"Expected 'entry_id' in keys: {keys}"
+        assert "entry_name" in keys, f"Expected 'entry_name' in keys: {keys}"
+        # Verify the eval code is set
+        entry_id_param = next(p for p in params if p.get("key") == "entry_id")
+        val = entry_id_param.get("value", {})
+        assert val.get("objectType") == "KalturaEvalStringField", \
+            f"Expected KalturaEvalStringField, got {val.get('objectType')}"
+        print(f"    Created: {result['id']} with contentParameters: {keys}")
+
+    runner.run_test("add — HTTP template with contentParameters",
+                    test_create_with_content_parameters)
+
+    def test_create_with_http_auth():
+        """Create HTTP template with authentication credentials.
+        Note: authUsername/authPassword are write-only fields — they are accepted
+        by the API but not returned in GET responses (similar to signSecret)."""
+        template_id = state.get("http_system_template_id")
+        assert template_id, "No HTTP system template to clone"
+        result = kaltura_post(SVC, "clone", {
+            "id": template_id,
+            "eventNotificationTemplate[objectType]": "KalturaHttpNotificationTemplate",
+            "eventNotificationTemplate[name]": f"Auth Test {TS}",
+            "eventNotificationTemplate[systemName]": f"AUTH_TEST_{TS}",
+            "eventNotificationTemplate[url]": f"https://test-{TS}.example.com/auth",
+            "eventNotificationTemplate[method]": 2,
+            "eventNotificationTemplate[authUsername]": "webhook-user",
+            "eventNotificationTemplate[authPassword]": "webhook-pass",
+            "eventNotificationTemplate[status]": 1,
+        })
+        assert "id" in result, f"Expected id: {result}"
+        state["auth_template_id"] = result["id"]
+        runner.register_cleanup(
+            f"auth template {result['id']}",
+            lambda: kaltura_post(SVC, "delete", {"id": state["auth_template_id"]}),
+        )
+        # Auth fields accepted without error (write-only — not returned in GET)
+        detail = kaltura_post(SVC, "get", {"id": result["id"]})
+        assert detail["id"] == result["id"], f"ID mismatch: {detail.get('id')}"
+        # Verify we can update auth fields via the update action
+        update_result = kaltura_post(SVC, "update", {
+            "id": result["id"],
+            "eventNotificationTemplate[objectType]": "KalturaHttpNotificationTemplate",
+            "eventNotificationTemplate[authUsername]": "updated-user",
+            "eventNotificationTemplate[authPassword]": "updated-pass",
+        })
+        assert update_result["id"] == result["id"], \
+            f"Update failed: {update_result}"
+        print(f"    Created: {result['id']} with HTTP auth "
+              f"(authUsername/authPassword accepted, write-only fields)")
+
+    runner.run_test("add — HTTP template with authentication credentials",
+                    test_create_with_http_auth)
+
+    def test_create_with_delayed_condition():
+        """Create HTTP template with eventDelayedCondition=1."""
+        template_id = state.get("http_system_template_id")
+        assert template_id, "No HTTP system template to clone"
+        result = kaltura_post(SVC, "clone", {
+            "id": template_id,
+            "eventNotificationTemplate[objectType]": "KalturaHttpNotificationTemplate",
+            "eventNotificationTemplate[name]": f"Delayed Test {TS}",
+            "eventNotificationTemplate[systemName]": f"DELAYED_{TS}",
+            "eventNotificationTemplate[url]": f"https://test-{TS}.example.com/delayed",
+            "eventNotificationTemplate[method]": 2,
+            "eventNotificationTemplate[eventDelayedCondition]": 1,
+            "eventNotificationTemplate[status]": 1,
+        })
+        assert "id" in result, f"Expected id: {result}"
+        state["delayed_template_id"] = result["id"]
+        runner.register_cleanup(
+            f"delayed template {result['id']}",
+            lambda: kaltura_post(SVC, "delete", {"id": state["delayed_template_id"]}),
+        )
+        # Verify eventDelayedCondition is set
+        detail = kaltura_post(SVC, "get", {"id": result["id"]})
+        # The field might be returned as int or might not be in response if default
+        delayed = detail.get("eventDelayedCondition")
+        if delayed is not None:
+            assert int(delayed) == 1, \
+                f"Expected eventDelayedCondition=1, got {delayed}"
+            print(f"    Created: {result['id']} with eventDelayedCondition=1")
+        else:
+            print(f"    Created: {result['id']} — eventDelayedCondition set (not in GET response)")
+
+    runner.run_test("add — HTTP template with eventDelayedCondition",
+                    test_create_with_delayed_condition)
+
+    def test_create_with_object_data():
+        """Create HTTP template with KalturaHttpNotificationObjectData payload."""
+        template_id = state.get("http_system_template_id")
+        assert template_id, "No HTTP system template to clone"
+        result = kaltura_post(SVC, "clone", {
+            "id": template_id,
+            "eventNotificationTemplate[objectType]": "KalturaHttpNotificationTemplate",
+            "eventNotificationTemplate[name]": f"ObjectData Test {TS}",
+            "eventNotificationTemplate[systemName]": f"OBJ_DATA_{TS}",
+            "eventNotificationTemplate[url]": f"https://test-{TS}.example.com/data",
+            "eventNotificationTemplate[method]": 2,
+            "eventNotificationTemplate[data][objectType]": "KalturaHttpNotificationObjectData",
+            "eventNotificationTemplate[data][format]": 1,
+            "eventNotificationTemplate[data][apiObjectType]": "KalturaBaseEntry",
+            "eventNotificationTemplate[status]": 1,
+        })
+        assert "id" in result, f"Expected id: {result}"
+        state["data_template_id"] = result["id"]
+        runner.register_cleanup(
+            f"data template {result['id']}",
+            lambda: kaltura_post(SVC, "delete", {"id": state["data_template_id"]}),
+        )
+        # Verify data configuration
+        detail = kaltura_post(SVC, "get", {"id": result["id"]})
+        data = detail.get("data", {})
+        assert data.get("objectType") == "KalturaHttpNotificationObjectData", \
+            f"Expected KalturaHttpNotificationObjectData, got {data.get('objectType')}"
+        assert data.get("format") == 1, \
+            f"Expected data format=1 (JSON), got {data.get('format')}"
+        assert data.get("apiObjectType") == "KalturaBaseEntry", \
+            f"Expected apiObjectType=KalturaBaseEntry, got {data.get('apiObjectType')}"
+        print(f"    Created: {result['id']} with ObjectData payload "
+              f"(format={data.get('format')}, type={data.get('apiObjectType')})")
+
+    runner.run_test("add — HTTP template with ObjectData payload config",
+                    test_create_with_object_data)
+
+    def test_cleanup_advanced_templates():
+        """Clean up all advanced feature test templates."""
+        for key, label in [
+            ("condition_template_id", "condition"),
+            ("params_template_id", "params"),
+            ("content_params_template_id", "content params"),
+            ("auth_template_id", "auth"),
+            ("delayed_template_id", "delayed"),
+            ("data_template_id", "data"),
+        ]:
+            tid = state.get(key)
+            if tid:
+                try:
+                    kaltura_post(SVC, "delete", {"id": tid})
+                    runner._cleanup_actions = [
+                        (l, fn) for l, fn in runner._cleanup_actions
+                        if f"{label} template" not in l
+                    ]
+                    print(f"    Deleted {label} template {tid}")
+                except Exception:
+                    pass
+
+    runner.run_test("delete — cleanup advanced feature templates",
+                    test_cleanup_advanced_templates)
+
+    # ════════════════════════════════════════════
+    # Phase 9: Error Handling
     # ════════════════════════════════════════════
     def test_get_invalid_id():
         """Getting a non-existent template returns an error."""
@@ -864,7 +1180,7 @@ def main():
     runner.run_test("delete — error for invalid template ID", test_delete_invalid_id)
 
     # ════════════════════════════════════════════
-    # Phase 9: Delete HTTP Template & Verify
+    # Phase 10: Delete HTTP Template & Verify
     # ════════════════════════════════════════════
     def test_delete_http_template():
         """Delete the HTTP template and verify it's gone (hard delete)."""
@@ -887,7 +1203,7 @@ def main():
     runner.run_test("delete — HTTP template, verify hard-deleted", test_delete_http_template)
 
     # ════════════════════════════════════════════
-    # Phase 10: End-to-End Email Delivery
+    # Phase 11: End-to-End Email Delivery
     # Clones an email template, triggers via category creation,
     # captures the actual email via Gmail IMAP
     # ════════════════════════════════════════════

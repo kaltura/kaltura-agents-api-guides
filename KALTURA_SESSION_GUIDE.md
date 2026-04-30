@@ -343,7 +343,7 @@ These IDs appear in logs and system metadata. Customer accounts always have posi
 - **[App Registry](KALTURA_APP_REGISTRY_API.md)** — Register application instances (Bearer KS)
 - **[User Profile](KALTURA_USER_PROFILE_API.md)** — Per-app user profiles and attendance (Bearer KS)
 - **[Messaging](KALTURA_MESSAGING_API.md)** — Template-based email messaging (Bearer KS)
-- **[Webhooks](KALTURA_WEBHOOKS_API.md)** — Event-driven HTTP callbacks and email notifications (requires KS)
+- **[Webhooks](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md)** — Event-driven HTTP callbacks and email notifications (requires KS)
 - **[User Management API](KALTURA_USER_MANAGEMENT_API.md)** — Provision users and assign roles before creating sessions
 - **[Categories & Entitlements API](KALTURA_CATEGORIES_AND_ENTITLEMENTS_API.md)** — Category entitlements and membership (related to `disableentitlement` / `enableentitlement` KS privileges)
 - **[Access Control API](KALTURA_ACCESS_CONTROL_API.md)** — Access control profiles and rules for restricting content access

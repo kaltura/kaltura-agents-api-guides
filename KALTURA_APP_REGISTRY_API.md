@@ -679,5 +679,5 @@ Store the last record's `updatedAt` timestamp as a watermark and use it as the s
 - **[User Profile API](KALTURA_USER_PROFILE_API.md)** — Per-app user profile management (depends on App Registry)
 - **[Events Platform API](KALTURA_EVENTS_PLATFORM_API.md)** — Virtual events (auto-creates app registrations)
 - **[Messaging API](KALTURA_MESSAGING_API.md)** — Template-based email messaging (uses appGuid for message context)
-- **[Webhooks API](KALTURA_WEBHOOKS_API.md)** — Event-driven HTTP callbacks and email notifications
+- **[Webhooks API](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md)** — Event-driven HTTP callbacks and email notifications
 - **[Auth Broker](KALTURA_AUTH_BROKER_API.md)** — App subscriptions link auth profiles to registered apps
