@@ -1,6 +1,6 @@
 ---
 name: kaltura-api
-description: Build applications on Kaltura — The Agentic Digital Experience Platform. 48 guides covering authentication (sessions, AppTokens, SSO/SAML), content management (upload, search, categories, metadata, captions), playback, AI services (captions, translation, agents, conversational AI), virtual events, user management, multi-stream, cue points & interactive video (hub + 5 dedicated type guides), content distribution, syndication feeds, analytics, gamification, webhooks, messaging, content moderation (flagging, AI-powered via REACH), experience components (Player, Express Recorder, Captions Editor, Genie Widget, Media Manager, Content Lab, Agents Widget, VOD Avatar Studio, Conversational Avatar, Chat & Collaborate, Embeddable Analytics), Unisphere framework, multi-account management. 926 tests validated against live API. API v3 (form-encoded) and modern JSON APIs with curl examples.
+description: Build applications on Kaltura — The Agentic Digital Experience Platform. 49 guides covering authentication (sessions, AppTokens, SSO/SAML), content management (upload, search, categories, metadata, captions), playback, AI services (captions, translation, agents, conversational AI), virtual events, user management, multi-stream, cue points & interactive video (hub + 5 dedicated type guides), content distribution, syndication feeds, analytics, gamification, webhooks, messaging, content moderation (flagging, AI-powered via REACH), experience components (Player, Express Recorder, Captions Editor, Genie Widget, Media Manager, Content Lab, Agents Widget, VOD Avatar Studio, Conversational Avatar, Chat & Collaborate, Embeddable Analytics), Unisphere framework, multi-account management, LTI/LMS integration. 950 tests validated against live API. API v3 (form-encoded) and modern JSON APIs with curl examples.
 ---
 
 # Kaltura API Integration
@@ -99,7 +99,7 @@ Some newer services use JSON bodies with auth headers:
 uploadToken.add → uploadToken.upload (one or more chunks) → media.add → media.addContent
 ```
 
-Shortcuts: `media.addFromUploadedFile` (create + attach in one call), `media.addFromUrl` (import from URL).
+Use `media.addContent` with the appropriate resource type: `KalturaUploadedFileTokenResource` (local upload), `KalturaUrlResource` (URL import), `KalturaEntryResource` (copy from entry).
 
 ## Capability Map — Detailed Guides
 
@@ -112,6 +112,8 @@ Read the relevant guide when you need to implement a specific capability:
 ### Content Management
 
 - **[Upload & Ingestion API](../../../KALTURA_UPLOAD_AND_INGESTION_API.md)** — Chunked/resumable uploads, import-from-URL, entry CRUD, flavor assets, attachmentAsset for non-media files, CSV export. Start here for any content ingestion workflow.
+
+- **[Video Editing API](../../../KALTURA_VIDEO_EDITING_API.md)** — Trim, clip, multi-clip concatenation, overlay (PiP), chroma-key background replacement, nested composition, caption burn-in, fade effects, dimension control, audio mixing, waveform visualization. All via operation resources with media.updateContent / media.addContent.
 
 - **[Content Delivery API](../../../KALTURA_CONTENT_DELIVERY_API.md)** — playManifest URLs (HLS/DASH), raw serve, download links, delivery profiles, CDN configuration, access control for playback.
 
@@ -205,6 +207,10 @@ Read the relevant guide when you need to implement a specific capability:
 ### Integration & Automation
 
 - **[Webhooks & Event Notifications API](../../../KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md)** — Real-time HTTP webhooks and email notifications triggered by content events (entry ready, metadata changed, caption added, REACH task completed). Clone pre-built system templates, configure webhook URLs with HMAC signing, set event conditions, and use manual dispatch for testing. Email notifications are delivered via the Messaging Service (SendGrid) with delivery tracking and engagement analytics. Uses the `eventnotification_eventnotificationtemplate` API v3 plugin service. Boolean Event Notification Templates serve as conditions for REACH Automation Rules (documented in the REACH guide).
+
+### LMS Integration
+
+- **[LTI Integration Guide](../../../KALTURA_LTI_INTEGRATION_GUIDE.md)** — Integrate Kaltura video experiences into any LMS via LTI. KAF (Kaltura Application Framework) accepts LTI 1.1 (OAuth 1.0a) and LTI 1.3 (JWT/OIDC) launches and renders modules (My Media, Media Gallery, Content Picker, Genie AI, Avatar Studio, Meeting Room) inside LMS iframes. Covers authentication flows, privacy context, deep linking, grade passback, Caliper analytics, KAF standalone (KS-SSO), and SIS provisioning via Kaltura APIs.
 
 ## Security & Best Practices
 

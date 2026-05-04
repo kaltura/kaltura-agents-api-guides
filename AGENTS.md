@@ -14,6 +14,7 @@ Kaltura API Guides/
 ├── KALTURA_APPTOKENS_API.md               # Secure auth with AppTokens
 ├── KALTURA_ESEARCH_API.md                 # Unified search
 ├── KALTURA_UPLOAD_AND_INGESTION_API.md     # Upload, ingest, entry CRUD, flavors, attachments
+├── KALTURA_VIDEO_EDITING_API.md            # Trim, clip, concat, overlay, chroma key, caption burn-in, effects
 ├── KALTURA_CONTENT_DELIVERY_API.md        # playManifest, serve, download, delivery profiles, CDN, access control
 ├── KALTURA_THUMBNAIL_API.md               # Dynamic thumbnail URL, thumbAsset, thumbParams
 ├── KALTURA_PLAYER_EMBED_GUIDE.md          # Player v7 embed (iframe + JS)
@@ -57,6 +58,7 @@ Kaltura API Guides/
 ├── KALTURA_ANNOTATIONS_API.md            # Annotations, threaded replies, hotspots, searchableOnEntry
 ├── KALTURA_AD_CUE_POINTS_API.md          # VAST/VPAID ad insertion: pre-roll, mid-roll, overlay
 ├── KALTURA_CODE_CUE_POINTS_API.md        # Code markers, view-change, forceStop, event/session cue points
+├── KALTURA_LTI_INTEGRATION_GUIDE.md      # LTI integration: KAF modules, auth flows, deep linking, grade passback
 ├── version.txt                            # Current version (managed by release-please)
 ├── release-please-config.json             # Release automation config
 ├── .release-please-manifest.json          # Version tracking for release-please
@@ -208,6 +210,7 @@ Agents building on Kaltura should use platform services rather than reimplementi
 | Event-driven webhooks | Webhooks API (HTTP callbacks with HMAC signing) | `KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md` |
 | Virtual events | Events Platform API (sessions, speakers, templates) | `KALTURA_EVENTS_PLATFORM_API.md` |
 | Secure auth without secrets | AppTokens (HMAC-based session start) | `KALTURA_APPTOKENS_API.md` |
+| Video editing (trim, clip, concat, overlay) | Video Editing API (operation resources, composition) | `KALTURA_VIDEO_EDITING_API.md` |
 | Multi-camera / dual-screen | Multi-Stream API (parent-child entries) | `KALTURA_MULTI_STREAM_API.md` |
 | User registration & attendance | User Profile API (per-app profiles) | `KALTURA_USER_PROFILE_API.md` |
 | User provisioning & RBAC | User Management API (users, roles, groups) | `KALTURA_USER_MANAGEMENT_API.md` |
@@ -235,6 +238,7 @@ Agents building on Kaltura should use platform services rather than reimplementi
 | Annotations & hotspots | Threaded annotations, hotspot pattern, searchableOnEntry | `KALTURA_ANNOTATIONS_API.md` |
 | Ad cue points | VAST/VPAID ad insertion, pre-roll/mid-roll/overlay | `KALTURA_AD_CUE_POINTS_API.md` |
 | Code, event & session markers | View-change commands, forceStop, broadcast events, sessions | `KALTURA_CODE_CUE_POINTS_API.md` |
+| LTI/LMS integration | KAF modules, LTI 1.1/1.3 auth, deep linking, grade passback, Caliper | `KALTURA_LTI_INTEGRATION_GUIDE.md` |
 
 ## Commit Messages & Versioning
 

@@ -3,7 +3,8 @@
 End-to-end validation of the Upload & Ingestion API.
 
 Covers: uploadToken lifecycle, single-shot upload, chunked upload with resume,
-media entry creation (add, addContent, addFromUrl, update, delete),
+media entry creation (add, addContent with resource types, update, delete),
+URL import via KalturaUrlResource, entry cloning via baseEntry.clone,
 entry status polling, flavor asset listing, attachmentAsset CRUD.
 """
 
@@ -271,26 +272,158 @@ def main():
     # Phase 5: Import from URL
     # ════════════════════════════════════════════
 
-    def test_add_from_url():
-        """Import a video entry from a public URL."""
+    def test_url_import_via_add_content():
+        """Import a video from URL using media.add + media.addContent with KalturaUrlResource."""
         ts = int(time.time())
-        result = kaltura_post("media", "addFromUrl", {
-            "mediaEntry[objectType]": "KalturaMediaEntry",
-            "mediaEntry[name]": f"API_DOC_VALIDATION_URL_IMPORT_{ts}",
-            "mediaEntry[mediaType]": 1,
-            "mediaEntry[description]": "Imported from URL for API validation. Safe to delete.",
-            "url": SAMPLE_VIDEO_URL,
+        entry = kaltura_post("media", "add", {
+            "entry[objectType]": "KalturaMediaEntry",
+            "entry[mediaType]": 1,
+            "entry[name]": f"API_DOC_VALIDATION_URL_IMPORT_{ts}",
+            "entry[description]": "Imported from URL for API validation. Safe to delete.",
+            "entry[tags]": "api-test,url-import,validation",
         })
-        assert "id" in result, f"addFromUrl failed: {result}"
-        state["url_entry_id"] = result["id"]
-        runner.register_cleanup(f"url entry {result['id']}",
-                                lambda: _delete_entry(result["id"]))
-        print(f"    URL import entry: {result['id']}, status={result['status']}")
+        assert "id" in entry, f"media.add failed: {entry}"
+        state["url_entry_id"] = entry["id"]
+        runner.register_cleanup(f"url entry {entry['id']}",
+                                lambda: _delete_entry(entry["id"]))
+        print(f"    Created entry: {entry['id']}, status={entry['status']}")
 
-    runner.run_test("media.addFromUrl — import video from URL", test_add_from_url)
+        result = kaltura_post("media", "addContent", {
+            "entryId": entry["id"],
+            "resource[objectType]": "KalturaUrlResource",
+            "resource[url]": SAMPLE_VIDEO_URL,
+        })
+        assert result["id"] == entry["id"]
+        assert result["status"] in (0, 1, 2, 4), f"Unexpected status after addContent: {result['status']}"
+        print(f"    addContent with KalturaUrlResource: status={result['status']}")
+
+    runner.run_test("media.addContent + KalturaUrlResource — import from URL", test_url_import_via_add_content)
 
     # ════════════════════════════════════════════
-    # Phase 6: Entry CRUD Operations
+    # Phase 6: baseEntry.clone — Deep Clone
+    # ════════════════════════════════════════════
+
+    def test_base_entry_clone():
+        """Clone an entry using baseEntry.clone (preferred method for entry duplication)."""
+        source_id = state.get("url_entry_id") or state.get("entry_id")
+        if not source_id:
+            raise RuntimeError("No source entry available for cloning")
+        result = kaltura_post("baseEntry", "clone", {
+            "entryId": source_id,
+        })
+        assert "id" in result, f"baseEntry.clone failed: {result}"
+        assert result["id"] != source_id, "Clone should have a different ID"
+        state["cloned_entry_id"] = result["id"]
+        runner.register_cleanup(f"cloned entry {result['id']}",
+                                lambda: _delete_entry(result["id"]))
+        print(f"    Cloned {source_id} → {result['id']}, status={result.get('status')}")
+
+    runner.run_test("baseEntry.clone — deep clone entry", test_base_entry_clone)
+
+    def test_base_entry_clone_exclude_flavors():
+        """Clone an entry excluding flavors (produces NO_CONTENT clone)."""
+        source_id = None
+        result = kaltura_post("media", "list", {
+            "filter[statusEqual]": 2,
+            "filter[mediaTypeEqual]": 1,
+            "filter[orderBy]": "-plays",
+            "pager[pageSize]": 1,
+        })
+        if result.get("totalCount", 0) > 0:
+            source_id = result["objects"][0]["id"]
+        if not source_id:
+            print("    SKIP: No READY entry for clone-exclude-flavors test")
+            return
+        clone = kaltura_post("baseEntry", "clone", {
+            "entryId": source_id,
+            "cloneOptions[0][objectType]": "KalturaBaseEntryCloneOptionComponent",
+            "cloneOptions[0][itemType]": 6,
+            "cloneOptions[0][rule]": 1,
+        })
+        assert "id" in clone, f"clone with exclude-flavors failed: {clone}"
+        assert clone["id"] != source_id
+        runner.register_cleanup(f"clone-no-flavors {clone['id']}",
+                                lambda: _delete_entry(clone["id"]))
+        assert clone.get("status") == 7, f"Expected NO_CONTENT (7) when flavors excluded, got {clone.get('status')}"
+        print(f"    Clone (no flavors): {clone['id']}, status={clone.get('status')} (NO_CONTENT)")
+
+    runner.run_test("baseEntry.clone — exclude flavors (NO_CONTENT)", test_base_entry_clone_exclude_flavors)
+
+    def test_base_entry_clone_with_options():
+        """Clone an entry excluding metadata and categories."""
+        source_id = state.get("cloned_entry_id") or state.get("url_entry_id")
+        if not source_id:
+            print("    SKIP: No source entry for clone-options test")
+            return
+        clone = kaltura_post("baseEntry", "clone", {
+            "entryId": source_id,
+            "cloneOptions[0][objectType]": "KalturaBaseEntryCloneOptionComponent",
+            "cloneOptions[0][itemType]": 5,
+            "cloneOptions[0][rule]": 1,
+            "cloneOptions[1][objectType]": "KalturaBaseEntryCloneOptionComponent",
+            "cloneOptions[1][itemType]": 2,
+            "cloneOptions[1][rule]": 1,
+        })
+        assert "id" in clone, f"clone with options failed: {clone}"
+        runner.register_cleanup(f"clone-no-meta {clone['id']}",
+                                lambda: _delete_entry(clone["id"]))
+        print(f"    Clone (no metadata/categories): {clone['id']}, status={clone.get('status')}")
+
+    runner.run_test("baseEntry.clone — exclude metadata+categories", test_base_entry_clone_with_options)
+
+    # ════════════════════════════════════════════
+    # Phase 7: KalturaEntryResource — Copy Content
+    # ════════════════════════════════════════════
+
+    def test_add_content_entry_resource():
+        """Create a new entry and attach content from a READY entry using KalturaEntryResource."""
+        source_id = None
+        for eid in [state.get("url_entry_id"), state.get("entry_id")]:
+            if not eid:
+                continue
+            entry = kaltura_post("media", "get", {"entryId": eid})
+            if entry.get("status") == 2:
+                source_id = eid
+                break
+        if not source_id:
+            result = kaltura_post("media", "list", {
+                "filter[statusEqual]": 2,
+                "filter[mediaTypeEqual]": 1,
+                "filter[orderBy]": "-plays",
+                "pager[pageSize]": 1,
+            })
+            if result.get("totalCount", 0) > 0:
+                source_id = result["objects"][0]["id"]
+        if not source_id:
+            print("    SKIP: No READY entry available for KalturaEntryResource test")
+            return
+
+        ts = int(time.time())
+        entry = kaltura_post("media", "add", {
+            "entry[objectType]": "KalturaMediaEntry",
+            "entry[mediaType]": 1,
+            "entry[name]": f"API_DOC_VALIDATION_ENTRY_RESOURCE_{ts}",
+            "entry[description]": "Created via KalturaEntryResource. Safe to delete.",
+            "entry[tags]": "api-test,entry-resource,validation",
+        })
+        assert "id" in entry, f"media.add failed: {entry}"
+        state["entry_resource_id"] = entry["id"]
+        runner.register_cleanup(f"entry-resource entry {entry['id']}",
+                                lambda: _delete_entry(entry["id"]))
+
+        result = kaltura_post("media", "addContent", {
+            "entryId": entry["id"],
+            "resource[objectType]": "KalturaEntryResource",
+            "resource[entryId]": source_id,
+            "resource[flavorParamsId]": 0,
+        })
+        assert result["id"] == entry["id"]
+        print(f"    addContent with KalturaEntryResource: {entry['id']} ← source {source_id}, status={result.get('status')}")
+
+    runner.run_test("media.addContent + KalturaEntryResource — copy from entry", test_add_content_entry_resource)
+
+    # ════════════════════════════════════════════
+    # Phase 8: Entry CRUD Operations
     # ════════════════════════════════════════════
 
     def test_media_update():
@@ -358,11 +491,11 @@ def main():
     runner.run_test("baseEntry.getByIds — batch retrieve", test_base_entry_get_by_ids)
 
     # ════════════════════════════════════════════
-    # Phase 7: Flavor Assets
+    # Phase 9: Flavor Assets & KalturaAssetResource
     # ════════════════════════════════════════════
 
     def test_find_ready_entry():
-        """Find a ready entry for flavor tests."""
+        """Find a ready entry for flavor and asset resource tests."""
         url_id = state.get("url_entry_id")
         if url_id:
             for attempt in range(24):
@@ -384,7 +517,7 @@ def main():
         state["ready_entry_id"] = entry["id"]
         print(f"    Ready entry (fallback): {entry['id']}")
 
-    runner.run_test("Find ready entry for flavor tests", test_find_ready_entry)
+    runner.run_test("Find ready entry for flavor/asset tests", test_find_ready_entry)
 
     def test_flavor_asset_list():
         """List flavor assets for the ready entry."""
@@ -399,8 +532,79 @@ def main():
 
     runner.run_test("flavorAsset.list — list transcoded flavors", test_flavor_asset_list)
 
+    def test_add_content_asset_resource():
+        """Create a new entry from a specific flavor asset using KalturaAssetResource."""
+        flavors = state.get("flavors", [])
+        ready_flavors = [f for f in flavors if f.get("status") == 2]
+        if not ready_flavors:
+            print("    SKIP: No ready flavor assets available for KalturaAssetResource test")
+            return
+        flavor_id = ready_flavors[0]["id"]
+        ts = int(time.time())
+        entry = kaltura_post("media", "add", {
+            "entry[objectType]": "KalturaMediaEntry",
+            "entry[mediaType]": 1,
+            "entry[name]": f"API_DOC_VALIDATION_ASSET_RESOURCE_{ts}",
+            "entry[description]": "Created via KalturaAssetResource. Safe to delete.",
+            "entry[tags]": "api-test,asset-resource,validation",
+        })
+        assert "id" in entry, f"media.add failed: {entry}"
+        state["asset_resource_entry_id"] = entry["id"]
+        runner.register_cleanup(f"asset-resource entry {entry['id']}",
+                                lambda: _delete_entry(entry["id"]))
+
+        result = kaltura_post("media", "addContent", {
+            "entryId": entry["id"],
+            "resource[objectType]": "KalturaAssetResource",
+            "resource[assetId]": flavor_id,
+        })
+        assert result["id"] == entry["id"]
+        print(f"    addContent with KalturaAssetResource: {entry['id']} ← flavor {flavor_id}, status={result.get('status')}")
+
+    runner.run_test("media.addContent + KalturaAssetResource — copy from flavor", test_add_content_asset_resource)
+
+    def test_add_content_operation_resource():
+        """Create a clip using KalturaOperationResource with KalturaClipAttributes."""
+        ready_id = state.get("ready_entry_id")
+        if not ready_id:
+            print("    SKIP: No ready entry for KalturaOperationResource test")
+            return
+        entry = kaltura_post("media", "get", {"entryId": ready_id})
+        duration_ms = int((entry.get("duration") or 10) * 1000)
+        clip_offset = 0
+        clip_duration = min(5000, duration_ms)
+
+        ts = int(time.time())
+        new_entry = kaltura_post("media", "add", {
+            "entry[objectType]": "KalturaMediaEntry",
+            "entry[mediaType]": 1,
+            "entry[name]": f"API_DOC_VALIDATION_CLIP_{ts}",
+            "entry[description]": "Created via KalturaOperationResource (clip). Safe to delete.",
+            "entry[tags]": "api-test,clip,operation-resource,validation",
+        })
+        assert "id" in new_entry, f"media.add failed: {new_entry}"
+        state["clip_entry_id"] = new_entry["id"]
+        runner.register_cleanup(f"clip entry {new_entry['id']}",
+                                lambda: _delete_entry(new_entry["id"]))
+
+        result = kaltura_post("media", "addContent", {
+            "entryId": new_entry["id"],
+            "resource[objectType]": "KalturaOperationResource",
+            "resource[resource][objectType]": "KalturaEntryResource",
+            "resource[resource][entryId]": ready_id,
+            "resource[resource][flavorParamsId]": 0,
+            "resource[operationAttributes][0][objectType]": "KalturaClipAttributes",
+            "resource[operationAttributes][0][offset]": clip_offset,
+            "resource[operationAttributes][0][duration]": clip_duration,
+        })
+        assert result["id"] == new_entry["id"]
+        assert result["status"] in (0, 1, 4), f"Expected processing status, got {result.get('status')}"
+        print(f"    KalturaOperationResource clip: {new_entry['id']} ← {ready_id}[{clip_offset}ms:{clip_duration}ms], status={result.get('status')}")
+
+    runner.run_test("media.addContent + KalturaOperationResource — create clip", test_add_content_operation_resource)
+
     # ════════════════════════════════════════════
-    # Phase 8: Attachment Assets
+    # Phase 10: Attachment Assets
     # ════════════════════════════════════════════
 
     def test_attachment_asset_add():
@@ -477,7 +681,7 @@ def main():
     runner.run_test("attachmentAsset.getUrl — get download URL", test_attachment_asset_get_url)
 
     # ════════════════════════════════════════════
-    # Phase 9: Cleanup
+    # Phase 11: Cleanup
     # ════════════════════════════════════════════
 
     def test_delete_upload_token():

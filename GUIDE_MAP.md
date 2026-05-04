@@ -24,6 +24,7 @@ Guides for getting content into the platform and enriching it with AI.
 | [Upload & Ingestion](KALTURA_UPLOAD_AND_INGESTION_API.md) | Capturing & Ingestion | Upload, transcode, chunked upload, entry CRUD, flavors, attachments |
 | [Content Delivery](KALTURA_CONTENT_DELIVERY_API.md) | Capturing & Ingestion | playManifest, raw serve, download, delivery profiles, CDN, access control |
 | [Thumbnail API](KALTURA_THUMBNAIL_API.md) | Capturing & Ingestion | Dynamic thumbnail URL, thumbAsset CRUD, thumbParams |
+| [Video Editing](KALTURA_VIDEO_EDITING_API.md) | Editing & Personalization | Trim, clip, concat, overlay, chroma key, caption burn-in, effects |
 | [Multi-Stream](KALTURA_MULTI_STREAM_API.md) | Editing & Personalization | Dual-screen / PIP multi-camera entries |
 | [Captions & Transcripts](KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md) | Editing & Personalization | Caption asset CRUD, formats, serving, search |
 | [Custom Metadata](KALTURA_CUSTOM_METADATA_API.md) | Editing & Personalization | XSD schemas, structured XML metadata on entries |
@@ -55,6 +56,7 @@ Guides for organizing content, managing users, controlling access, and connectin
 | [Event Notifications (Webhooks & Email)](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md) | Orchestration | HTTP webhooks and email alerts triggered by content/user events |
 | [App Registry](KALTURA_APP_REGISTRY_API.md) | Orchestration | Application instance registration and configuration |
 | [Messaging](KALTURA_MESSAGING_API.md) | Orchestration | Template-based email communications |
+| [LTI Integration](KALTURA_LTI_INTEGRATION_GUIDE.md) | Orchestration | LMS Extensions (KAF) via LTI: modules, auth flows, deep linking, grade passback |
 
 ## Experiences — Playback, Events & Distribution
 
@@ -102,7 +104,9 @@ graph TD
     AG["Agents Manager"]
     AI["AI Genie"]
 
+    VE["Video Editing"]
     KS --> UD
+    UD --> VE
     UD --> MS
     KS --> CT
     KS --> CM
@@ -151,6 +155,9 @@ graph TD
     KS --> WH
     KS --> APR
     KS --> MSG
+    LTI["LTI Integration"]
+    KS --> LTI
+    CA --> LTI
 
     %% Experiences
     PE["Player Embed"]
@@ -210,8 +217,8 @@ graph TD
     classDef experience fill:#50C878,color:#fff,stroke:#3A9A5A
 
     class GS,KS,AT foundation
-    class UD,MS,CT,CM,RE,AG,AI,CP,QZ,CS,AN,AD,CE creation
-    class ES,CA,UM,AB,MA,AR,AE,WH,APR,MSG,MO management
+    class UD,VE,MS,CT,CM,RE,AG,AI,CP,QZ,CS,AN,AD,CE creation
+    class ES,CA,UM,AB,MA,AR,AE,WH,APR,MSG,MO,LTI management
     class PE,EC,ER,CE,CVA,CNC,GW,EA,UF,MM,CL,AW,VA,EP,UP,GA,DI,SY experience
 ```
 
@@ -228,6 +235,7 @@ Blue = Foundation | Purple = Creation | Orange = Management | Green = Experience
 | Make my first API call | [API Getting Started](KALTURA_API_GETTING_STARTED.md) |
 | Authenticate securely in production | [AppTokens](KALTURA_APPTOKENS_API.md) |
 | Upload and transcode video | [Upload & Ingestion](KALTURA_UPLOAD_AND_INGESTION_API.md) |
+| Trim, clip, overlay, or compose video | [Video Editing](KALTURA_VIDEO_EDITING_API.md) |
 | Embed a video player | [Player Embed](KALTURA_PLAYER_EMBED_GUIDE.md) |
 | Search my content library | [eSearch](KALTURA_ESEARCH_API.md) |
 | Add captions or transcripts | [Captions & Transcripts](KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md) |
@@ -266,3 +274,4 @@ Blue = Foundation | Purple = Creation | Orange = Management | Green = Experience
 | Understand cue point types and base service | [Cue Points Hub](KALTURA_CUE_POINTS_API.md) |
 | Generate thumbnails | [Thumbnail API](KALTURA_THUMBNAIL_API.md) |
 | Add gamification | [Gamification](KALTURA_GAMIFICATION_API.md) |
+| Integrate Kaltura into an LMS via LTI | [LTI Integration](KALTURA_LTI_INTEGRATION_GUIDE.md) |

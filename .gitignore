@@ -4,3 +4,5 @@ __pycache__/
 *.pyc
 site/
 docs/
+playbooks/research/
+LTI_PLAN.md

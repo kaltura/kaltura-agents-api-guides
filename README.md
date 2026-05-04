@@ -2,8 +2,8 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/kaltura/kaltura-agents-api-guides?label=Release)](https://github.com/kaltura/kaltura-agents-api-guides/releases/latest)
-[![Guides](https://img.shields.io/badge/Guides-48-green.svg)](#guides)
-[![Tests](https://img.shields.io/badge/Live--Tested-926_tests-brightgreen.svg)](#guides)
+[![Guides](https://img.shields.io/badge/Guides-50-green.svg)](#guides)
+[![Tests](https://img.shields.io/badge/Live--Tested-960+_tests-brightgreen.svg)](#guides)
 [![llms.txt](https://img.shields.io/badge/llms.txt-available-purple.svg)](llms.txt)
 [![Agent Skill](https://img.shields.io/badge/Agent_Skill-kaltura--api-orange.svg)](.agents/skills/kaltura-api/SKILL.md)
 [![Docs Site](https://img.shields.io/badge/Docs-GitHub_Pages-blue.svg)](https://kaltura.github.io/kaltura-agents-api-guides/)
@@ -34,6 +34,7 @@ These guides are optimized for AI agent consumption through multiple discovery m
 | [AppTokens API](KALTURA_APPTOKENS_API.md) | Secure server-to-server auth without admin secrets | 17 tests |
 | [eSearch API](KALTURA_ESEARCH_API.md) | Unified search across entries, captions, metadata | 25 tests |
 | [Upload & Ingestion API](KALTURA_UPLOAD_AND_INGESTION_API.md) | Upload, chunked ingest, entry CRUD, flavors, attachments | 25 tests |
+| [Video Editing API](KALTURA_VIDEO_EDITING_API.md) | Trim, clip, concat, overlay, chroma key, caption burn-in, effects | 18 tests |
 | [Content Delivery API](KALTURA_CONTENT_DELIVERY_API.md) | playManifest, raw serve, download, delivery profiles, CDN, access control | 13 tests |
 | [Thumbnail & Image API](KALTURA_THUMBNAIL_API.md) | Dynamic thumbnail URL (31 params), thumbAsset CRUD, thumbParams | 18 tests |
 | [Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md) | Player v7 embed (iframe + JavaScript) | 14 tests |
@@ -78,6 +79,7 @@ These guides are optimized for AI agent consumption through multiple discovery m
 | [Annotations API](KALTURA_ANNOTATIONS_API.md) | Annotations, threaded replies, hotspots, searchableOnEntry | 7 tests |
 | [Ad Cue Points API](KALTURA_AD_CUE_POINTS_API.md) | VAST/VPAID ad insertion: pre-roll, mid-roll, overlay | 6 tests |
 | [Code, Event & Session Cue Points API](KALTURA_CODE_CUE_POINTS_API.md) | Code markers, view-change, forceStop, event/session cue points | 14 tests |
+| [LTI Integration Guide](KALTURA_LTI_INTEGRATION_GUIDE.md) | LMS Extensions (KAF) via LTI: modules, auth flows, deep linking, grade passback | 24 tests |
 
 ## Quick Start
 
@@ -115,17 +117,18 @@ for f in test_*.py; do echo "=== $f ===" && python3 "$f" && echo "PASS" || echo 
 
 ```
 ├── .agents/skills/kaltura-api/  # Agent Skill (agentskills.io)
-├── KALTURA_*_API.md             # 48 API guides
+├── KALTURA_*_API.md             # 49 API guides
 ├── KALTURA_*_GUIDE.md           # Non-API documentation
 ├── AGENTS.md                    # Full project standards and conventions
 ├── GUIDE_MAP.md                 # Flywheel structure, dependency graph, decision tree
 ├── PLAN.md                      # Roadmap and full API landscape
+├── playbooks/                   # Multi-API integration playbooks with sample apps
 ├── context7.json                # Context7 MCP indexing config
 ├── llms.txt                     # LLM-readable index (llmstxt.org)
 └── tests/
     ├── .env.example             # Template for API credentials
     ├── test_helpers.py          # Shared test utilities
-    └── test_*_api.py            # 48 per-guide test scripts (926 tests)
+    └── test_*_api.py            # 49 per-guide test scripts (950 tests)
 ```
 
 ## Contributing
