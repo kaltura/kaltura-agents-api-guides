@@ -1149,6 +1149,215 @@ def main():
                     test_cleanup_advanced_templates)
 
     # ════════════════════════════════════════════
+    # Phase 8b: Additional Update Paths
+    # customHeaders, DataText, DataFields, updateStatus disable,
+    # listTemplates email filter, email recipient providers
+    # ════════════════════════════════════════════
+
+    def test_list_templates_filter_email():
+        """List system templates filtered by email type."""
+        result = kaltura_post(SVC, "listTemplates", {
+            "filter[objectType]": "KalturaEventNotificationTemplateFilter",
+            "filter[typeEqual]": "emailNotification.Email",
+            "pager[objectType]": "KalturaFilterPager",
+            "pager[pageSize]": 10,
+        })
+        assert "objects" in result, f"Expected objects: {result}"
+        assert result["totalCount"] > 0, "Expected email system templates"
+        for t in result["objects"][:3]:
+            assert t.get("type") == "emailNotification.Email", \
+                f"Expected email type, got {t.get('type')}"
+        print(f"    Found {result['totalCount']} email system templates")
+
+    runner.run_test("listTemplates — filter by type=email", test_list_templates_filter_email)
+
+    def test_update_custom_headers():
+        """Update an HTTP template with custom headers via the update action."""
+        template_id = state.get("http_system_template_id")
+        assert template_id, "No HTTP system template to clone"
+        result = kaltura_post(SVC, "clone", {
+            "id": template_id,
+            "eventNotificationTemplate[objectType]": "KalturaHttpNotificationTemplate",
+            "eventNotificationTemplate[name]": f"Custom Headers Test {TS}",
+            "eventNotificationTemplate[systemName]": f"HEADERS_{TS}",
+            "eventNotificationTemplate[url]": f"https://test-{TS}.example.com/headers",
+            "eventNotificationTemplate[method]": 2,
+        })
+        assert "id" in result, f"Clone failed: {result}"
+        headers_id = result["id"]
+        state["headers_template_id"] = headers_id
+        runner.register_cleanup(
+            f"headers template {headers_id}",
+            lambda: kaltura_post(SVC, "delete", {"id": state["headers_template_id"]}),
+        )
+        update_result = kaltura_post(SVC, "update", {
+            "id": headers_id,
+            "eventNotificationTemplate[objectType]": "KalturaHttpNotificationTemplate",
+            "eventNotificationTemplate[customHeaders][0][objectType]": "KalturaKeyValue",
+            "eventNotificationTemplate[customHeaders][0][key]": "X-Source-System",
+            "eventNotificationTemplate[customHeaders][0][value]": "kaltura",
+            "eventNotificationTemplate[customHeaders][1][objectType]": "KalturaKeyValue",
+            "eventNotificationTemplate[customHeaders][1][key]": "X-Environment",
+            "eventNotificationTemplate[customHeaders][1][value]": "test",
+        })
+        headers = update_result.get("customHeaders", [])
+        assert len(headers) == 2, f"Expected 2 custom headers, got {len(headers)}"
+        keys = [h.get("key") for h in headers]
+        assert "X-Source-System" in keys, f"Missing X-Source-System in {keys}"
+        assert "X-Environment" in keys, f"Missing X-Environment in {keys}"
+        print(f"    Updated template {headers_id} with customHeaders: {keys}")
+
+    runner.run_test("update — custom headers via update action", test_update_custom_headers)
+
+    def test_update_data_text():
+        """Update an HTTP template with KalturaHttpNotificationDataText payload."""
+        headers_id = state.get("headers_template_id")
+        assert headers_id, "No template for DataText test"
+        result = kaltura_post(SVC, "update", {
+            "id": headers_id,
+            "eventNotificationTemplate[objectType]": "KalturaHttpNotificationTemplate",
+            "eventNotificationTemplate[data][objectType]": "KalturaHttpNotificationDataText",
+            "eventNotificationTemplate[data][content][objectType]": "KalturaStringValue",
+            "eventNotificationTemplate[data][content][value]": "Entry {entry_id} is ready.",
+        })
+        data = result.get("data", {})
+        assert data.get("objectType") == "KalturaHttpNotificationDataText", \
+            f"Expected DataText, got {data.get('objectType')}"
+        print(f"    Updated template {headers_id} with DataText payload")
+
+    runner.run_test("update — DataText payload via update action", test_update_data_text)
+
+    def test_update_data_fields():
+        """Update an HTTP template with KalturaHttpNotificationDataFields payload."""
+        headers_id = state.get("headers_template_id")
+        assert headers_id, "No template for DataFields test"
+        result = kaltura_post(SVC, "update", {
+            "id": headers_id,
+            "eventNotificationTemplate[objectType]": "KalturaHttpNotificationTemplate",
+            "eventNotificationTemplate[data][objectType]": "KalturaHttpNotificationDataFields",
+            "eventNotificationTemplate[data][fields][0][objectType]": "KalturaEventNotificationParameter",
+            "eventNotificationTemplate[data][fields][0][key]": "entryId",
+            "eventNotificationTemplate[data][fields][0][value][objectType]": "KalturaEvalStringField",
+            "eventNotificationTemplate[data][fields][0][value][code]": "{event.object.id}",
+            "eventNotificationTemplate[data][fields][1][objectType]": "KalturaEventNotificationParameter",
+            "eventNotificationTemplate[data][fields][1][key]": "entryStatus",
+            "eventNotificationTemplate[data][fields][1][value][objectType]": "KalturaEvalStringField",
+            "eventNotificationTemplate[data][fields][1][value][code]": "{event.object.status}",
+        })
+        data = result.get("data", {})
+        assert data.get("objectType") == "KalturaHttpNotificationDataFields", \
+            f"Expected DataFields, got {data.get('objectType')}"
+        # fields array is stored but not returned in API response (write-only, like signSecret)
+        print(f"    Updated template {headers_id} with DataFields payload (fields are write-only)")
+
+    runner.run_test("update — DataFields payload via update action", test_update_data_fields)
+
+    def test_update_status_disable():
+        """Disable a template via updateStatus (status=1)."""
+        headers_id = state.get("headers_template_id")
+        assert headers_id, "No template for disable test"
+        kaltura_post(SVC, "updateStatus", {"id": headers_id, "status": 2})
+        result = kaltura_post(SVC, "updateStatus", {"id": headers_id, "status": 1})
+        assert result.get("status") == 1, f"Expected status=1, got {result.get('status')}"
+        print(f"    Template {headers_id}: activated then disabled (status=1)")
+
+    runner.run_test("updateStatus — disable template (status=1)", test_update_status_disable)
+
+    def test_email_recipient_entry_owner():
+        """Clone an email template and update with entry-owner recipient provider."""
+        template_id = state.get("email_system_template_id")
+        if not template_id:
+            result = kaltura_post(SVC, "listTemplates", {
+                "filter[objectType]": "KalturaEventNotificationTemplateFilter",
+                "filter[typeEqual]": "emailNotification.Email",
+                "pager[objectType]": "KalturaFilterPager",
+                "pager[pageSize]": 1,
+            })
+            assert result.get("objects"), "No email system templates"
+            template_id = result["objects"][0]["id"]
+        clone = kaltura_post(SVC, "clone", {
+            "id": template_id,
+            "eventNotificationTemplate[objectType]": "KalturaEmailNotificationTemplate",
+            "eventNotificationTemplate[name]": f"Recipient Provider Test {TS}",
+            "eventNotificationTemplate[systemName]": f"RECIP_TEST_{TS}",
+        })
+        assert "id" in clone, f"Clone failed: {clone}"
+        state["recip_template_id"] = clone["id"]
+        runner.register_cleanup(
+            f"recipient test template {clone['id']}",
+            lambda: kaltura_post(SVC, "delete", {"id": state["recip_template_id"]}),
+        )
+        result = kaltura_post(SVC, "update", {
+            "id": clone["id"],
+            "eventNotificationTemplate[objectType]": "KalturaEmailNotificationTemplate",
+            "eventNotificationTemplate[to][objectType]": "KalturaEmailNotificationUserRecipientProvider",
+            "eventNotificationTemplate[to][userId][objectType]": "KalturaEvalStringField",
+            "eventNotificationTemplate[to][userId][code]": "{event.object.userId}",
+        })
+        to_field = result.get("to", {})
+        assert to_field.get("objectType") == "KalturaEmailNotificationUserRecipientProvider", \
+            f"Expected UserRecipientProvider, got {to_field.get('objectType')}"
+        print(f"    Updated template {clone['id']} with entry-owner recipient")
+
+    runner.run_test("update — email recipient: entry owner provider", test_email_recipient_entry_owner)
+
+    def test_email_recipient_category():
+        """Update email template with category-subscribers recipient provider."""
+        tid = state.get("recip_template_id")
+        assert tid, "No template for category recipient test"
+        result = kaltura_post(SVC, "update", {
+            "id": tid,
+            "eventNotificationTemplate[objectType]": "KalturaEmailNotificationTemplate",
+            "eventNotificationTemplate[to][objectType]": "KalturaEmailNotificationCategoryRecipientProvider",
+            "eventNotificationTemplate[to][categoryId][objectType]": "KalturaStringValue",
+            "eventNotificationTemplate[to][categoryId][value]": "12345",
+        })
+        to_field = result.get("to", {})
+        assert to_field.get("objectType") == "KalturaEmailNotificationCategoryRecipientProvider", \
+            f"Expected CategoryRecipientProvider, got {to_field.get('objectType')}"
+        print(f"    Updated template {tid} with category-subscribers recipient")
+
+    runner.run_test("update — email recipient: category subscribers provider",
+                    test_email_recipient_category)
+
+    def test_email_recipient_group():
+        """Update email template with group-members recipient provider."""
+        tid = state.get("recip_template_id")
+        assert tid, "No template for group recipient test"
+        result = kaltura_post(SVC, "update", {
+            "id": tid,
+            "eventNotificationTemplate[objectType]": "KalturaEmailNotificationTemplate",
+            "eventNotificationTemplate[to][objectType]": "KalturaEmailNotificationGroupRecipientProvider",
+            "eventNotificationTemplate[to][groupId][objectType]": "KalturaStringValue",
+            "eventNotificationTemplate[to][groupId][value]": "content-team",
+        })
+        to_field = result.get("to", {})
+        assert to_field.get("objectType") == "KalturaEmailNotificationGroupRecipientProvider", \
+            f"Expected GroupRecipientProvider, got {to_field.get('objectType')}"
+        print(f"    Updated template {tid} with group-members recipient")
+
+    runner.run_test("update — email recipient: group members provider",
+                    test_email_recipient_group)
+
+    def test_cleanup_additional_templates():
+        """Clean up additional test templates."""
+        for key in ["headers_template_id", "recip_template_id"]:
+            tid = state.get(key)
+            if tid:
+                try:
+                    kaltura_post(SVC, "delete", {"id": tid})
+                    runner._cleanup_actions = [
+                        (l, fn) for l, fn in runner._cleanup_actions
+                        if str(tid) not in l
+                    ]
+                    print(f"    Deleted template {tid}")
+                except Exception:
+                    pass
+
+    runner.run_test("delete — cleanup additional test templates",
+                    test_cleanup_additional_templates)
+
+    # ════════════════════════════════════════════
     # Phase 9: Error Handling
     # ════════════════════════════════════════════
     def test_get_invalid_id():
