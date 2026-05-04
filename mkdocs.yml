@@ -2,11 +2,11 @@ site_name: Kaltura API Guides
 site_url: https://kaltura.github.io/kaltura-agents-api-guides/
 site_description: >-
   Kaltura — The Agentic Digital Experience Platform. Live-tested API guides
-  for AI agents and developers. 48 guides covering authentication, content
+  for AI agents and developers. 51 guides covering authentication, content
   management, search, playback, AI services, virtual events, experience
   components, cue points & interactive video, analytics, distribution,
-  moderation, and more — with 912 companion tests validated against the
-  live Kaltura API.
+  moderation, LTI integration, and more — with 1000+ companion tests
+  validated against the live Kaltura API.
 site_author: Kaltura Inc.
 repo_url: https://github.com/kaltura/kaltura-agents-api-guides
 repo_name: kaltura/kaltura-agents-api-guides
@@ -77,6 +77,7 @@ nav:
       - Auth Broker (SSO/SAML): KALTURA_AUTH_BROKER_API.md
   - Content Management:
       - Upload & Ingestion: KALTURA_UPLOAD_AND_INGESTION_API.md
+      - Video Editing: KALTURA_VIDEO_EDITING_API.md
       - Content Delivery: KALTURA_CONTENT_DELIVERY_API.md
       - Thumbnail API: KALTURA_THUMBNAIL_API.md
       - eSearch: KALTURA_ESEARCH_API.md
@@ -88,6 +89,7 @@ nav:
       - User Management: KALTURA_USER_MANAGEMENT_API.md
   - AI Services:
       - REACH API: KALTURA_REACH_API.md
+      - "REACH — AI Clips": KALTURA_CONTENT_LAB_API.md
       - Agents Manager: KALTURA_AGENTS_MANAGER_API.md
       - AI Genie: KALTURA_AI_GENIE_API.md
   - Playback & Experiences:
@@ -96,9 +98,10 @@ nav:
       - Unisphere Framework: KALTURA_UNISPHERE_FRAMEWORK_API.md
       - Genie Widget: KALTURA_GENIE_WIDGET_API.md
       - Media Manager: KALTURA_MEDIA_MANAGER_API.md
-      - Content Lab: KALTURA_CONTENT_LAB_API.md
+      - Content Lab Widget: KALTURA_CONTENT_LAB_API.md
       - Agents Widget: KALTURA_AGENTS_WIDGET_API.md
       - VOD Avatar Studio: KALTURA_VOD_AVATAR_API.md
+      - Conversational Avatar: KALTURA_CONVERSATIONAL_AVATAR_API.md
       - Cue Points & Interactive Video: KALTURA_CUE_POINTS_API.md
       - Quiz: KALTURA_QUIZ_API.md
       - Chapters & Slides: KALTURA_CHAPTERS_AND_SLIDES_API.md
@@ -107,7 +110,6 @@ nav:
       - Code, Event & Session Cue Points: KALTURA_CODE_CUE_POINTS_API.md
       - Express Recorder: KALTURA_EXPRESS_RECORDER_API.md
       - Captions Editor: KALTURA_CAPTIONS_EDITOR_API.md
-      - Conversational Avatar: KALTURA_CONVERSATIONAL_AVATAR_API.md
       - Chat & Collaborate: KALTURA_CNC_API.md
       - Embeddable Analytics: KALTURA_ANALYTICS_EMBED_API.md
   - Events & Collaboration:
@@ -120,9 +122,10 @@ nav:
       - Analytics Reports: KALTURA_ANALYTICS_REPORTS_API.md
       - Analytics Events Collection: KALTURA_ANALYTICS_EVENTS_COLLECTION_API.md
   - Integration & Automation:
-      - Webhooks: KALTURA_WEBHOOKS_API.md
+      - Event Notifications (Webhooks): KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md
       - Content Distribution: KALTURA_DISTRIBUTION_API.md
       - Syndication Feeds: KALTURA_SYNDICATION_API.md
+      - LTI Integration: KALTURA_LTI_INTEGRATION_GUIDE.md
   - Content Moderation:
       - Moderation: KALTURA_MODERATION_API.md
   - Administration:
@@ -137,6 +140,7 @@ exclude_docs: |
   .claude/
   .cursor/
   .github/
+  playbooks/
   PROMOTION.md
   context7.json
   llms.txt
