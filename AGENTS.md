@@ -271,7 +271,7 @@ chore: update GUIDE_MAP.md and README test counts
 ci: add commitlint and release-please workflows
 ```
 
-Releases are automated via release-please. Push conventional commits → release-please opens a release PR → merge it to cut a release with auto-generated notes.
+Releases are manual via release-please. Trigger the release workflow (`gh workflow run release.yml`) → release-please opens a versioned PR → merge it to cut a release with auto-generated notes.
 
 ## Editing an Existing Guide
 

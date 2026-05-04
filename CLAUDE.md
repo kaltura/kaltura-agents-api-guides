@@ -18,7 +18,7 @@ The audience is an AI agent that reads top-to-bottom and executes. Every guide m
 
 4. **Update cross-references.** When adding or modifying a guide, also update: GUIDE_MAP.md, README.md (table + badges), PLAN.md, SKILL.md, llms.txt, context7.json.
 
-5. **Release workflow.** After pushing to main, check for open release-please PRs (`gh pr list --label "autorelease: pending"`). If the user asked to release, merge the PR to complete the release, then delete the `release-please--branches--main` remote branch and prune local refs. If not releasing, alert user that a release PR is pending.
+5. **Release workflow.** Releases are manual. When the user asks to release, trigger the workflow (`gh workflow run release.yml`), wait for the release-please PR to appear, then merge it with `gh pr merge --merge --admin --delete-branch`. Pull and prune locally after.
 
 ## Terminology (Official — from Kaltura Glossary)
 
