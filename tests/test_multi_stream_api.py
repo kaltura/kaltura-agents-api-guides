@@ -276,7 +276,7 @@ def main():
 
     def test_linked_child_in_list():
         """Verify newly linked child appears in children list."""
-        for attempt in range(12):
+        for attempt in range(24):
             result = kaltura_post("baseEntry", "list", {
                 "filter[parentEntryIdEqual]": state["parent_id"],
             })
