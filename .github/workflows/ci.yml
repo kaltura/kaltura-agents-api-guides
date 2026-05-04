@@ -42,5 +42,6 @@ jobs:
             --exclude 'agents-manager\.nvp1'
             --exclude 'genie\.nvp1'
             --exclude 'kaltura\.github\.io'
+            --exclude 'localhost'
             '**/*.md'
           fail: true

@@ -12,7 +12,7 @@ pip install flask requests
 python app.py
 ```
 
-Open http://localhost:5050 in your browser.
+Open `http://localhost:5050` in your browser.
 
 For full functionality (Content Picker return, Caliper events from KAF servers):
 
