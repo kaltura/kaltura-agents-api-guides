@@ -74,7 +74,7 @@ jobs:
             tests/test_app_registry_api.py \
             tests/test_user_profile_api.py \
             tests/test_messaging_api.py \
-            tests/test_webhooks_api.py \
+            tests/test_event_notifications_webhook_and_email_api.py \
             tests/test_multi_stream_api.py \
             tests/test_user_management_api.py \
             tests/test_auth_broker_api.py \
@@ -98,6 +98,8 @@ jobs:
             tests/test_ad_cue_points_api.py \
             tests/test_code_cue_points_api.py \
             tests/test_unisphere_framework_api.py \
+            tests/test_video_editing_api.py \
+            tests/test_lti_integration_guide.py \
           ; do
             echo ""
             echo "════════════════════════════════════════════"
