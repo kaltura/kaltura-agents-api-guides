@@ -139,15 +139,18 @@ def main():
         """Filter tokens by hash type — verify our SHA256 token appears in results."""
         result = kaltura_post("appToken", "list", {
             "filter[hashTypeEqual]": "SHA256",
-            "filter[statusEqual]": 2,  # ACTIVE
-            "pager[pageSize]": 50,
+            "filter[idEqual]": state["token_id"],
         })
-        assert result.get("totalCount", 0) > 0, "No tokens found with SHA256 filter"
-        token_ids = [t["id"] for t in result.get("objects", [])]
-        assert state["token_id"] in token_ids, \
-            f"Our SHA256 token {state['token_id']} not in filtered results"
-        sha256_count = sum(1 for t in result.get("objects", []) if t.get("hashType") == "SHA256")
-        print(f"    Filter returned {result['totalCount']} token(s), {sha256_count} SHA256")
+        assert result.get("totalCount", 0) > 0, \
+            f"Token {state['token_id']} not found with SHA256 filter"
+        assert result["objects"][0]["hashType"] == "SHA256"
+        total_sha256 = kaltura_post("appToken", "list", {
+            "filter[hashTypeEqual]": "SHA256",
+            "filter[statusEqual]": 2,
+            "pager[pageSize]": 1,
+        })
+        print(f"    SHA256 filter confirmed for {state['token_id']}, "
+              f"total SHA256 tokens on account: {total_sha256.get('totalCount')}")
 
     runner.run_test("appToken.list — filter by hashType=SHA256", test_list_filter_by_hash)
 

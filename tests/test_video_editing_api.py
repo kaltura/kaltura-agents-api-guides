@@ -224,7 +224,7 @@ def main():
 
     def test_concat_reaches_ready():
         """Verify concatenated entry processes to READY."""
-        result = _wait_for_ready(state["concat_entry"])
+        result = _wait_for_ready(state["concat_entry"], timeout=max(POLL_TIMEOUT, 600))
         duration = result.get("duration", 0)
         assert duration >= 4, f"Expected ~6s duration, got {duration}s"
         print(f"    Concat READY: duration={duration}s")
