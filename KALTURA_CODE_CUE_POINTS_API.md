@@ -53,7 +53,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/cuepoint_cuepoint/action/add" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "cuePoint[objectType]=KalturaCodeCuePoint" \
-  -d "cuePoint[entryId]=1_abc123" \
+  -d "cuePoint[entryId]=$KALTURA_ENTRY_ID" \
   -d "cuePoint[startTime]=60000" \
   -d "cuePoint[code]=show-overlay" \
   -d "cuePoint[description]=Display product details overlay"
@@ -68,7 +68,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/cuepoint_cuepoint/action/add" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "cuePoint[objectType]=KalturaCodeCuePoint" \
-  -d "cuePoint[entryId]=1_abc123" \
+  -d "cuePoint[entryId]=$KALTURA_ENTRY_ID" \
   -d "cuePoint[startTime]=50000" \
   -d "cuePoint[code]=pip-parent-in-large" \
   -d "cuePoint[tags]=change-view-mode"
@@ -92,7 +92,7 @@ The `systemName` field provides a human-readable identifier for cue points. It m
 curl -X POST "$KALTURA_SERVICE_URL/service/cuepoint_cuepoint/action/update" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "id=1_cp_id" \
+  -d "id=$CUE_POINT_ID" \
   -d "cuePoint[objectType]=KalturaCodeCuePoint" \
   -d "cuePoint[systemName]=intro-overlay"
 ```
@@ -106,7 +106,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/cuepoint_cuepoint/action/add" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "cuePoint[objectType]=KalturaCodeCuePoint" \
-  -d "cuePoint[entryId]=1_abc123" \
+  -d "cuePoint[entryId]=$KALTURA_ENTRY_ID" \
   -d "cuePoint[startTime]=55000" \
   -d "cuePoint[code]=pause-marker" \
   -d "cuePoint[forceStop]=1"
@@ -135,7 +135,7 @@ List event cue points on a live entry to detect broadcast boundaries:
 curl -X POST "$KALTURA_SERVICE_URL/service/cuepoint_cuepoint/action/list" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "filter[entryIdEqual]=1_live_entry" \
+  -d "filter[entryIdEqual]=$LIVE_ENTRY_ID" \
   -d "filter[cuePointTypeEqual]=eventCuePoint.Event"
 ```
 
@@ -164,7 +164,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/cuepoint_cuepoint/action/add" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "cuePoint[objectType]=KalturaSessionCuePoint" \
-  -d "cuePoint[entryId]=1_abc123" \
+  -d "cuePoint[entryId]=$KALTURA_ENTRY_ID" \
   -d "cuePoint[startTime]=0" \
   -d "cuePoint[endTime]=900000" \
   -d "cuePoint[name]=Opening Keynote" \
@@ -222,6 +222,6 @@ Code cue point descriptions and event/session names are indexed in eSearch. See 
 
 # 10. Related Guides
 
-- [Cue Points Hub](KALTURA_CUE_POINTS_API.md) — Base cue point concepts, shared CRUD, eSearch integration, bulk operations
-- [Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md) — Player v7 setup, dualscreen plugin configuration
-- [Multi-Stream API](KALTURA_MULTI_STREAM_API.md) — Dual-screen entries with view-change layout control
+- **[Cue Points Hub](KALTURA_CUE_POINTS_API.md)** — Base cue point concepts, shared CRUD, eSearch integration, bulk operations
+- **[Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md)** — Player v7 setup, dualscreen plugin configuration
+- **[Multi-Stream API](KALTURA_MULTI_STREAM_API.md)** — Dual-screen entries with view-change layout control

@@ -53,7 +53,7 @@ An entry becomes a quiz when you call `quiz.add`. Questions are cue points posit
 curl -X POST "$KALTURA_SERVICE_URL/service/quiz_quiz/action/add" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "entryId=1_abc123" \
+  -d "entryId=$KALTURA_ENTRY_ID" \
   -d "quiz[objectType]=KalturaQuiz" \
   -d "quiz[showResultOnAnswer]=1" \
   -d "quiz[showCorrectAfterSubmission]=1" \
@@ -115,7 +115,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/cuepoint_cuepoint/action/add" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "cuePoint[objectType]=KalturaQuestionCuePoint" \
-  -d "cuePoint[entryId]=1_abc123" \
+  -d "cuePoint[entryId]=$KALTURA_ENTRY_ID" \
   -d "cuePoint[startTime]=30000" \
   -d "cuePoint[question]=What design pattern separates object creation from usage?" \
   -d "cuePoint[questionType]=1" \
@@ -142,7 +142,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/cuepoint_cuepoint/action/add" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "cuePoint[objectType]=KalturaQuestionCuePoint" \
-  -d "cuePoint[entryId]=1_abc123" \
+  -d "cuePoint[entryId]=$KALTURA_ENTRY_ID" \
   -d "cuePoint[startTime]=20000" \
   -d "cuePoint[question]=The sky is blue." \
   -d "cuePoint[questionType]=2" \
@@ -163,7 +163,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/cuepoint_cuepoint/action/add" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "cuePoint[objectType]=KalturaQuestionCuePoint" \
-  -d "cuePoint[entryId]=1_abc123" \
+  -d "cuePoint[entryId]=$KALTURA_ENTRY_ID" \
   -d "cuePoint[startTime]=25000" \
   -d "cuePoint[question]=Pause and consider — what did you learn so far?" \
   -d "cuePoint[questionType]=3" \
@@ -179,7 +179,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/cuepoint_cuepoint/action/add" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "cuePoint[objectType]=KalturaQuestionCuePoint" \
-  -d "cuePoint[entryId]=1_abc123" \
+  -d "cuePoint[entryId]=$KALTURA_ENTRY_ID" \
   -d "cuePoint[startTime]=35000" \
   -d "cuePoint[question]=Select ALL primary colors" \
   -d "cuePoint[questionType]=4" \
@@ -203,7 +203,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/cuepoint_cuepoint/action/add" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "cuePoint[objectType]=KalturaQuestionCuePoint" \
-  -d "cuePoint[entryId]=1_abc123" \
+  -d "cuePoint[entryId]=$KALTURA_ENTRY_ID" \
   -d "cuePoint[startTime]=40000" \
   -d "cuePoint[question]=Describe the main concept in your own words" \
   -d "cuePoint[questionType]=8"
@@ -248,7 +248,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/userentry/action/add" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "userEntry[objectType]=KalturaQuizUserEntry" \
-  -d "userEntry[entryId]=1_abc123"
+  -d "userEntry[entryId]=$KALTURA_ENTRY_ID"
 ```
 
 Returns a `KalturaQuizUserEntry` with `id`, `status=1` (ACTIVE), and `version` (attempt number).
@@ -262,9 +262,9 @@ curl -X POST "$KALTURA_SERVICE_URL/service/cuepoint_cuepoint/action/add" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "cuePoint[objectType]=KalturaAnswerCuePoint" \
-  -d "cuePoint[entryId]=1_abc123" \
-  -d "cuePoint[parentId]=1_question_cp_id" \
-  -d "cuePoint[quizUserEntryId]=12345" \
+  -d "cuePoint[entryId]=$KALTURA_ENTRY_ID" \
+  -d "cuePoint[parentId]=$QUESTION_CUE_POINT_ID" \
+  -d "cuePoint[quizUserEntryId]=$QUIZ_USER_ENTRY_ID" \
   -d "cuePoint[answerKey]=1"
 ```
 
@@ -277,9 +277,9 @@ curl -X POST "$KALTURA_SERVICE_URL/service/cuepoint_cuepoint/action/add" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "cuePoint[objectType]=KalturaAnswerCuePoint" \
-  -d "cuePoint[entryId]=1_abc123" \
-  -d "cuePoint[parentId]=1_open_question_id" \
-  -d "cuePoint[quizUserEntryId]=12345" \
+  -d "cuePoint[entryId]=$KALTURA_ENTRY_ID" \
+  -d "cuePoint[parentId]=$QUESTION_CUE_POINT_ID" \
+  -d "cuePoint[quizUserEntryId]=$QUIZ_USER_ENTRY_ID" \
   -d "cuePoint[openAnswer]=The main concept is dependency injection via factory pattern."
 ```
 
@@ -289,7 +289,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/cuepoint_cuepoint/action/add" \
 curl -X POST "$KALTURA_SERVICE_URL/service/userentry/action/submitQuiz" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "id=12345"
+  -d "id=$QUIZ_USER_ENTRY_ID"
 ```
 
 Returns the `KalturaQuizUserEntry` with `score`, `calculatedScore`, and `status=quiz.3` (SUBMITTED).
@@ -350,9 +350,9 @@ curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getTable" \
   -d "format=1" \
   -d "reportType=quiz.QUIZ" \
   -d "reportInputFilter[objectType]=KalturaEndUserReportInputFilter" \
-  -d "reportInputFilter[entryIdIn]=1_abc123" \
+  -d "reportInputFilter[entryIdIn]=$KALTURA_ENTRY_ID" \
   -d "reportInputFilter[timeZoneOffset]=0" \
-  -d "objectIds=1_abc123" \
+  -d "objectIds=$KALTURA_ENTRY_ID" \
   -d "pager[pageSize]=25"
 ```
 
@@ -426,9 +426,9 @@ Quiz questions and answers are indexed in eSearch via `KalturaESearchCuePointIte
 
 # 20. Related Guides
 
-- [Cue Points Hub](KALTURA_CUE_POINTS_API.md) — Base cue point concepts, shared CRUD, eSearch integration
-- [Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md) — Player v7 setup, IVQ plugin configuration
-- [REACH API](KALTURA_REACH_API.md) — AI-powered quiz generation (serviceFeature=12)
-- [Content Lab API](KALTURA_CONTENT_LAB_API.md) — AI quiz generation widget
-- [Gamification API](KALTURA_GAMIFICATION_API.md) — Quiz scores as gamification inputs
-- [Analytics Reports API](KALTURA_ANALYTICS_REPORTS_API.md) — Quiz engagement analytics
+- **[Cue Points Hub](KALTURA_CUE_POINTS_API.md)** — Base cue point concepts, shared CRUD, eSearch integration
+- **[Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md)** — Player v7 setup, IVQ plugin configuration
+- **[REACH API](KALTURA_REACH_API.md)** — AI-powered quiz generation (serviceFeature=12)
+- **[Content Lab API](KALTURA_CONTENT_LAB_API.md)** — AI quiz generation widget
+- **[Gamification API](KALTURA_GAMIFICATION_API.md)** — Quiz scores as gamification inputs
+- **[Analytics Reports API](KALTURA_ANALYTICS_REPORTS_API.md)** — Quiz engagement analytics

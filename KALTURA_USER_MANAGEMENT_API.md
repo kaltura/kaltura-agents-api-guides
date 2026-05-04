@@ -445,7 +445,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/userRole/action/add" \
 curl -X POST "$KALTURA_SERVICE_URL/service/userRole/action/get" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "userRoleId=12345"
+  -d "userRoleId=$USER_ROLE_ID"
 ```
 
 | Parameter | Type | Required | Description |
@@ -484,7 +484,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/userRole/action/list" \
 curl -X POST "$KALTURA_SERVICE_URL/service/userRole/action/update" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "userRoleId=12345" \
+  -d "userRoleId=$USER_ROLE_ID" \
   -d "userRole[objectType]=KalturaUserRole" \
   -d "userRole[description]=Updated permissions" \
   -d "userRole[permissionNames]=BASE_USER_SESSION_PERMISSION,PLAYBACK_BASE_PERMISSION,CONTENT_MANAGE_BASE"
@@ -507,7 +507,7 @@ Fields not included remain unchanged. **Response:** Full updated `KalturaUserRol
 curl -X POST "$KALTURA_SERVICE_URL/service/userRole/action/clone" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "userRoleId=12345"
+  -d "userRoleId=$USER_ROLE_ID"
 ```
 
 | Parameter | Type | Required | Description |
@@ -522,7 +522,7 @@ Creates a copy of an existing role. Useful for customizing built-in system roles
 curl -X POST "$KALTURA_SERVICE_URL/service/userRole/action/delete" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "userRoleId=12345"
+  -d "userRoleId=$USER_ROLE_ID"
 ```
 
 | Parameter | Type | Required | Description |
@@ -541,7 +541,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/user/action/update" \
   -d "format=1" \
   -d "userId=jane.doe@example.com" \
   -d "user[objectType]=KalturaUser" \
-  -d "user[roleIds]=12345"
+  -d "user[roleIds]=$USER_ROLE_ID"
 ```
 
 Use this role ID with the `setrole:ROLE_ID` KS privilege (see [Session Guide](KALTURA_SESSION_GUIDE.md)) to create sessions that inherit the role's permissions.

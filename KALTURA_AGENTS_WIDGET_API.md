@@ -6,7 +6,7 @@ The Agents Widget is a Unisphere component that provides a UI for managing autom
 **Auth:** KS passed via runtime settings  
 **Format:** ES module JavaScript embed (Unisphere runtime)  
 
-<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Architecture | 4.Embedding | 5.Runtime Settings | 6.Runtime API | 7.KS Requirements | 8.Error Handling | 9.Best Practices | 10.Multi-Region | 11.Related Guides -->
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Architecture | 4.Embedding | 5.Runtime Settings | 6.Runtime API | 7.KS Requirements | 8.Error Handling | 9.Best Practices | 10.Related Guides -->
 
 
 # 1. When to Use
@@ -193,8 +193,7 @@ The account must have the Agents Manager capability enabled. Available actions d
 - **Match the `agentsServiceURI` to your region.** Use the correct Agents Manager endpoint for your Kaltura account region (see Multi-Region section below).  
 - **Use HTTPS.** The Unisphere loader and all widget bundles require HTTPS.  
 
-
-# 10. Multi-Region
+## Multi-Region CDN
 
 | Region | Unisphere URL | Agents Manager URL |
 |--------|--------------|-------------------|
@@ -205,7 +204,7 @@ The account must have the Agents Manager capability enabled. Available actions d
 Set both `serverUrl` and `agentsServiceURI` to match your Kaltura account region.
 
 
-# 11. Related Guides
+# 10. Related Guides
 
 - **[Agents Manager API](KALTURA_AGENTS_MANAGER_API.md)** — Server-side REST API for creating, managing, and executing agents programmatically  
 - **[Unisphere Framework](KALTURA_UNISPHERE_FRAMEWORK_API.md)** — The micro-frontend framework that powers this widget: loader, workspace lifecycle, services  

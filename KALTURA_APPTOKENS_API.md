@@ -27,15 +27,15 @@ Application Tokens provide secure, scoped API access without exposing admin secr
 
 | Concern | Admin Secret | AppToken |
 |---------|-------------|----------|
-| Revocation | Rotate the secret → breaks ALL integrations | Delete one token → only that integration loses access |
+| Revocation | Rotating the secret requires updating ALL integrations simultaneously | Delete one token → only that integration loses access |
 | Privilege scope | Full admin unless you manually restrict each KS | Baked into the token at creation time |
-| Secret exposure | Leaked secret = full account access | Leaked token = only scoped access, easily revocable |
-| Rotation | Painful (update every integration) | Create new token, distribute, delete old one |
-| Audit | Hard to tell which integration made a call | Each token has a unique ID in logs |
+| Secret exposure | Grants full account access to any holder | Grants only scoped access, easily revocable |
+| Rotation | Requires coordinated update across every integration | Create new token, distribute, delete old one |
+| Audit | All integrations share one identity in logs | Each token has a unique ID in logs |
 
 **Rule of thumb:** Use `session.start` only for internal backend tools where you control the environment. Use AppTokens for everything else — partner integrations, microservices, client apps.
 
-> **API secrets are permanent.** The `adminSecret` and `secret` for a Kaltura account cannot be regenerated, rotated, or revoked. If a secret is compromised, contact Kaltura support. This makes AppTokens essential — they can be revoked and reissued independently without affecting other integrations.
+> **API secrets are permanent.** The `adminSecret` and `secret` for a Kaltura account are fixed for the lifetime of the account. If a secret is compromised, contact Kaltura support. This makes AppTokens essential — they can be revoked and reissued independently without affecting other integrations.
 
 
 # 4. AppToken Object (KalturaAppToken)
@@ -333,7 +333,7 @@ TOKEN_HASH=$(echo -n "${WIDGET_KS}${APP_TOKEN_VALUE}" | shasum -a 512 | cut -d' 
 TOKEN_HASH=$(echo -n "${WIDGET_KS}${APP_TOKEN_VALUE}" | md5sum | cut -d' ' -f1)
 ```
 
-The `echo -n` flag is critical — it prevents a trailing newline from being included in the hash input.
+The `echo -n` flag is critical — it ensures the hash input contains only the raw concatenated string with no trailing newline.
 
 ## 6.4 Complete curl Example
 
@@ -398,7 +398,7 @@ These privileges can be set on the AppToken (`sessionPrivileges`) or passed at `
 | `edit:<entryId>` | Edit a specific entry only |
 | `download:<entryId>` | Download a specific entry |
 | `enableentitlement` | Enable entitlement checks |
-| `disableentitlement` | Disable entitlement checks (use cautiously) |
+| `disableentitlement` | Disable entitlement checks (limit to admin-only backend operations) |
 | `privacycontext:<label>` | Scope to a specific privacy context |
 
 ## 7.2 Session Control Privileges
@@ -475,13 +475,13 @@ curl -X POST "$KALTURA_SERVICE_URL/service/appToken/action/delete" \
 | Error Code | Meaning | Resolution |
 |------------|---------|------------|
 | `INVALID_APP_TOKEN_ID` | Token ID does not exist | Verify the `id` parameter; token may have been deleted |
-| `INVALID_APP_TOKEN_HASH` | HMAC hash mismatch | Recompute `SHA256(widget_ks + app_token_value)` — check for encoding issues, ensure no extra whitespace |
+| `INVALID_APP_TOKEN_HASH` | HMAC hash mismatch | Recompute `SHA256(widget_ks + app_token_value)` — verify encoding and confirm input is the exact raw concatenation |
 | `APP_TOKEN_NOT_ACTIVE` | Token is disabled (status != 2) | Re-enable with `appToken.update` or create a new token |
 | `EXPIRED_TOKEN` | Token has passed its `expiry` timestamp | Create a new token with a future expiry |
 | `PROPERTY_VALIDATION_NOT_UPDATABLE` | Attempted to change `hashType` after creation | `hashType` is immutable — create a new token with the desired hash type |
 | `INVALID_KS` | The KS used to call the API is invalid or expired | Generate a fresh admin KS via `session.start` |
 
-**Retry strategy:** For transient errors (HTTP 5xx, timeouts), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (`INVALID_APP_TOKEN_HASH`, `INVALID_KS`, `EXPIRED_TOKEN`, validation errors), fix the request before retrying — these will not resolve on their own.
+**Retry strategy:** For transient errors (HTTP 5xx, timeouts), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (`INVALID_APP_TOKEN_HASH`, `INVALID_KS`, `EXPIRED_TOKEN`, validation errors), fix the request parameters before retrying — these require a corrected request to succeed.
 
 # 11. Best Practices
 

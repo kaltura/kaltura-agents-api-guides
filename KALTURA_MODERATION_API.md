@@ -97,7 +97,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/baseEntry/action/flag" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "moderationFlag[objectType]=KalturaModerationFlag" \
-  -d "moderationFlag[flaggedEntryId]=$ENTRY_ID" \
+  -d "moderationFlag[flaggedEntryId]=$KALTURA_ENTRY_ID" \
   -d "moderationFlag[flagType]=1" \
   -d "moderationFlag[comments]=Contains inappropriate content"
 ```
@@ -138,7 +138,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/baseEntry/action/flag" \
 curl -X POST "$KALTURA_SERVICE_URL/service/baseEntry/action/listFlags" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "entryId=$ENTRY_ID" \
+  -d "entryId=$KALTURA_ENTRY_ID" \
   -d "pager[pageSize]=50"
 ```
 
@@ -182,7 +182,7 @@ Returns flags with `status=PENDING` (1). After `approve` or `reject`, flags are 
 curl -X POST "$KALTURA_SERVICE_URL/service/baseEntry/action/approve" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "entryId=$ENTRY_ID"
+  -d "entryId=$KALTURA_ENTRY_ID"
 ```
 
 Sets `moderationStatus` to `APPROVED` (2), resets `moderationCount` to 0, and marks all pending flags as `MODERATED`. The entry becomes playable and visible in default list results.
@@ -195,7 +195,7 @@ Sets `moderationStatus` to `APPROVED` (2), resets `moderationCount` to 0, and ma
 curl -X POST "$KALTURA_SERVICE_URL/service/baseEntry/action/reject" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "entryId=$ENTRY_ID"
+  -d "entryId=$KALTURA_ENTRY_ID"
 ```
 
 Sets `moderationStatus` to `REJECTED` (3), resets `moderationCount` to 0, and marks all pending flags as `MODERATED`. The entry is hidden from default list results and blocked from playback.
@@ -247,13 +247,13 @@ curl -X POST "$KALTURA_SERVICE_URL/service/multirequest" \
   -d "format=1" \
   -d "1[service]=baseEntry" \
   -d "1[action]=approve" \
-  -d "1[entryId]=0_entry1" \
+  -d "1[entryId]=$ENTRY_ID_1" \
   -d "2[service]=baseEntry" \
   -d "2[action]=approve" \
-  -d "2[entryId]=0_entry2" \
+  -d "2[entryId]=$ENTRY_ID_2" \
   -d "3[service]=baseEntry" \
   -d "3[action]=approve" \
-  -d "3[entryId]=0_entry3"
+  -d "3[entryId]=$ENTRY_ID_3"
 ```
 
 Check each sub-response for `KalturaAPIException` — one failed approval does not block the others.
@@ -286,7 +286,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/reach_entryVendorTask/action/add" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "entryVendorTask[objectType]=KalturaEntryVendorTask" \
-  -d "entryVendorTask[entryId]=$ENTRY_ID" \
+  -d "entryVendorTask[entryId]=$KALTURA_ENTRY_ID" \
   -d "entryVendorTask[catalogItemId]=$CATALOG_ITEM_ID" \
   -d "entryVendorTask[taskJobData][objectType]=KalturaModerationVendorTaskData" \
   -d "entryVendorTask[taskJobData][policyIds]=1,2" \
@@ -458,7 +458,7 @@ The AI engine uses a hybrid scoring approach combining weighted scores with crit
 
 # 9. Category Moderation
 
-Categories can require content approval independently of account-level moderation. This is commonly used for channel-based content gating in MediaSpace.
+Categories can require content approval independently of account-level moderation. This is commonly used for channel-based content gating in Content Hubs.
 
 When category moderation is enabled, entries added to the category get `categoryEntry.status = PENDING` (1) instead of `ACTIVE` (2). Channel managers approve or reject entries at the category level.
 
@@ -468,7 +468,7 @@ When category moderation is enabled, entries added to the category get `category
 curl -X POST "$KALTURA_SERVICE_URL/service/categoryEntry/action/activate" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "entryId=$ENTRY_ID" \
+  -d "entryId=$KALTURA_ENTRY_ID" \
   -d "categoryId=$CATEGORY_ID"
 ```
 
@@ -480,7 +480,7 @@ Changes `categoryEntry.status` from `PENDING` (1) to `ACTIVE` (2). The entry bec
 curl -X POST "$KALTURA_SERVICE_URL/service/categoryEntry/action/reject" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "entryId=$ENTRY_ID" \
+  -d "entryId=$KALTURA_ENTRY_ID" \
   -d "categoryId=$CATEGORY_ID"
 ```
 
@@ -609,7 +609,7 @@ Cross-reference: [REACH API Guide](KALTURA_REACH_API.md) for profile and rule co
 
 # 15. Best Practices
 
-- **Generate KS server-side** — never embed admin secrets in client applications. Use AppTokens for production auth  
+- **Generate KS server-side using AppTokens** — pass short-lived, scoped tokens to client applications. See [AppTokens API](KALTURA_APPTOKENS_API.md) for production auth patterns  
 - **Use category moderation for channel workflows** — `categoryEntry.activate`/`reject` provides per-channel control without affecting global entry playback  
 - **Check each multirequest sub-response** — bulk approve/reject operations can partially fail. Each array element may be a `KalturaAPIException`  
 - **Bridge AI results explicitly** — REACH moderation output does not auto-update `entry.moderationStatus`. Read `moderationOutputJson`, evaluate, then call `baseEntry.approve`/`reject`  

@@ -6,7 +6,7 @@ The Kaltura platform exposes 100+ REST API services, a dozen client libraries, s
 **Auth:** All requests require a Kaltura Session (KS) — see [Session Guide](KALTURA_SESSION_GUIDE.md) for details  
 **Format:** Form-encoded or JSON POST, `format=1` for JSON responses  
 
-<!-- Sections: 1.When to Use | 2.Prerequisites | 3.API Request Structure | 4.Endpoints & Regions | 5.Content Model: Entries and Assets | 6.Your First API Call | 7.Client Libraries | 8.Multirequest — Batching API Calls | 9.Error Handling | 10.Best Practices | 11.Shell Variables | 12.Related Guides -->
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.API Request Structure | 4.Endpoints & Regions | 5.Content Model: Entries and Assets | 6.Your First API Call | 7.Client Libraries | 8.Multirequest — Batching API Calls | 9.Shell Variables | 10.Error Handling | 11.Best Practices | 12.Related Guides -->
 
 
 # 1. When to Use
@@ -324,7 +324,29 @@ curl -X POST "$KALTURA_SERVICE_URL/service/multirequest" \
 - **Common patterns:** Upload workflows (create token + entry + attach content), creating entries with metadata and categories, any sequential workflow where each step uses a result from the previous step.
 
 
-# 9. Error Handling
+# 9. Shell Variables
+
+All guides in this project use these shell variables in curl examples:
+
+| Variable | Description | Example |
+|----------|------------|---------|
+| `$KALTURA_SERVICE_URL` | API base URL | `https://www.kaltura.com/api_v3` |
+| `$KALTURA_PARTNER_ID` | Your Kaltura account ID | `123456` |
+| `$KALTURA_ADMIN_SECRET` | Admin secret (backend only) | `abc123...` |
+| `$KALTURA_KS` | Active Kaltura Session token | `djJ8MTIz...` |
+| `$KALTURA_USER_ID` | User identifier | `user@example.com` |
+| `$KALTURA_PLAYER_ID` | Player uiConf ID | `56732362` |
+
+Set these before running examples:
+
+```bash
+export KALTURA_SERVICE_URL="https://www.kaltura.com/api_v3"
+export KALTURA_PARTNER_ID="YOUR_PARTNER_ID"
+export KALTURA_ADMIN_SECRET="YOUR_ADMIN_SECRET"
+```
+
+
+# 10. Error Handling
 
 **Error response format:**
 
@@ -352,35 +374,13 @@ curl -X POST "$KALTURA_SERVICE_URL/service/multirequest" \
 **Retry strategy:** For transient errors (HTTP 5xx, timeouts), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (4xx, `INVALID_KS`, `PROPERTY_VALIDATION_*`), fix the request before retrying.
 
 
-# 10. Best Practices
+# 11. Best Practices
 
 - **Use AppTokens in production.** The `session.start` examples in this guide are for getting started. In production, use [AppTokens](KALTURA_APPTOKENS_API.md) to avoid exposing your admin secret.  
 - **Always include `format=1`.** Without it, API v3 returns XML instead of JSON.  
 - **Set `$KALTURA_SERVICE_URL` to your region.** All examples use this variable. Set it to your account's regional endpoint (see section 4).  
 - **Check multirequest sub-results individually.** Each element in the response array can be a success or a `KalturaAPIException` — check each one.  
 - **Use short-lived KS tokens.** Default to 1-4 hour expiry. Renew via AppToken flow rather than generating long-lived admin sessions.
-
-
-# 11. Shell Variables
-
-All guides in this project use these shell variables in curl examples:
-
-| Variable | Description | Example |
-|----------|------------|---------|
-| `$KALTURA_SERVICE_URL` | API base URL | `https://www.kaltura.com/api_v3` |
-| `$KALTURA_PARTNER_ID` | Your Kaltura account ID | `123456` |
-| `$KALTURA_ADMIN_SECRET` | Admin secret (backend only) | `abc123...` |
-| `$KALTURA_KS` | Active Kaltura Session token | `djJ8MTIz...` |
-| `$KALTURA_USER_ID` | User identifier | `user@example.com` |
-| `$KALTURA_PLAYER_ID` | Player uiConf ID | `56732362` |
-
-Set these before running examples:
-
-```bash
-export KALTURA_SERVICE_URL="https://www.kaltura.com/api_v3"
-export KALTURA_PARTNER_ID="YOUR_PARTNER_ID"
-export KALTURA_ADMIN_SECRET="YOUR_ADMIN_SECRET"
-```
 
 
 # 12. Related Guides

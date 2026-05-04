@@ -2,11 +2,11 @@
 
 The VOD Avatar Studio lets you create pre-recorded avatar video presentations programmatically. You can select an AI avatar, write scenes with narration text, optionally use AI to compose scripts from existing video content, and generate a professional video of the avatar delivering the content. The generated video is saved as a standard Kaltura media entry.
 
-**Server-Side API Base URL:** `https://video-avatar.$REGION.ovp.kaltura.com/api/v1` (default region: `nvp1`)  
+**Base URL:** `https://video-avatar.$REGION.ovp.kaltura.com/api/v1` (default region: `nvp1`)  
 **Auth:** `Authorization: Bearer $KS` header  
 **Format:** JSON request/response  
 
-**Widget Base URL:** `https://unisphere.nvp1.ovp.kaltura.com/v1` (for browser embedding)
+**Widget URL:** `https://unisphere.nvp1.ovp.kaltura.com/v1` (for browser embedding)
 
 This guide covers two integration paths:
 - **Server-side API** (sections 4–10) — Full programmatic control over avatar videos: create, compose, generate, manage  
@@ -14,7 +14,7 @@ This guide covers two integration paths:
 
 For **real-time conversational avatars** that hold live AI-powered conversations, see the [Conversational Avatar Embed](KALTURA_CONVERSATIONAL_AVATAR_API.md).
 
-<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Architecture | 4.Auth & Headers | 5.Avatar Templates & Configuration | 6.Video Project Management | 7.AI Composition | 8.Audio Preview | 9.Video Generation | 10.Complete Server-Side Workflow | 1.Create an avatar with a color background | 2.Create a video project with scenes | 3.Preview audio for the first scene | 4.Generate the video | 5.Poll until ready | 6.Get the generated Kaltura entry ID | 1.Create (or reuse) an avatar | 2.Create a video with manually authored scenes mixing two source entries | 3.Preview a b-roll scene's narration audio before committing to generation | 4.Generate — skips compose entirely, goes straight from draft to generating | 5.Poll until ready | 11.Widget Embedding | 12.Error Handling | 13.Best Practices | 14.Multi-Region | 15.Related Guides -->
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Architecture | 4.Auth & Headers | 5.Avatar Templates & Configuration | 6.Video Project Management | 7.AI Composition | 8.Audio Preview | 9.Video Generation | 10.Complete Server-Side Workflow | 11.Widget Embedding | 12.Error Handling | 13.Best Practices | 14.Related Guides -->
 
 
 # 1. When to Use
@@ -74,7 +74,7 @@ draft ──→ composing ──→ composed ──→ generating ──→ read
 | `ready` | Video generation complete, `entryId` populated with the Kaltura media entry |
 | `generate-error` | Generation failed — use `resetStatus` to return to `composed` or `draft` |
 
-Scenes cannot be modified while the video is in `composing` or `generating` status.
+Scenes are read-only while the video is in `composing` or `generating` status — edits are accepted again once the operation completes or is reset.
 
 
 # 4. Auth & Headers
@@ -102,9 +102,9 @@ Every request uses:
 - **Body:** JSON  
 
 **KS requirements:**
-- No special privilege strings are needed (no `disableentitlement` or custom privileges)  
-- Both `type=0` (USER) and `type=2` (ADMIN) sessions work — there is no session-type check  
-- Data isolation is per-user: an admin KS does **not** grant cross-user visibility in this service  
+- A plain KS works — standard privileges are sufficient (no `disableentitlement` or custom privileges required)  
+- Both `type=0` (USER) and `type=2` (ADMIN) sessions work  
+- Data isolation is per-user: each user sees only their own videos and avatars, regardless of session type  
 - The partner account must have the VOD Avatar feature enabled. Use `partner/checkConfiguration` to verify:
   ```bash
   curl -s -X POST "$AVATAR_API/partner/checkConfiguration" \
@@ -120,7 +120,7 @@ Every request uses:
 
 Before creating a video, you need an **avatar** — a specific AI presenter with a chosen background. Avatars are built in two steps:
 
-1. **Pick a template** — Each template is a predefined AI character with a unique face, voice, and speaking style. You cannot create custom characters; you choose from the available set.  
+1. **Pick a template** — Each template is a predefined AI character with a unique face, voice, and speaking style. You select from the available set of predefined characters.  
 2. **Configure it as an avatar** — Combine the template with a background (solid color, library image, or custom image from your Kaltura account). This creates a reusable avatar configuration tied to your user.  
 
 The avatar ID is then passed to `video.add` to assign the presenter for that video project.
@@ -309,13 +309,13 @@ Each element in the `scenes` array represents one segment of the video.
 
 **B-roll constraints:**
 - The same entry can be reused across multiple scenes with different `startTime` values — each reuse does not count as an additional source  
-- B-roll entries must use a **standard frame rate** (25 or 30 fps). PowerPoint exports often use 600fps or other non-standard rates that cause generation failures. Re-encode to a standard rate before uploading (e.g., `ffmpeg -i input.mp4 -r 25 -c:v libx264 -profile:v main -c:a aac output.mp4`)  
+- B-roll entries require a **standard frame rate** (25 or 30 fps). Re-encode PowerPoint exports and other non-standard-rate sources to 25 fps before uploading (e.g., `ffmpeg -i input.mp4 -r 25 -c:v libx264 -profile:v main -c:a aac output.mp4`)  
 - Kaltura's transcoding pipeline adds an audio track to video-only uploads, so entries uploaded through the standard upload workflow (uploadToken → media.add → media.addContent) are always compatible with the Avatar renderer  
 - The `broll` object is stored on the scene regardless of `layoutType` — you can pre-configure B-roll data and switch `layoutType` to `"broll"` later via `video/update` without re-specifying the entry  
 
 **Narration constraints:**
-- Empty narration text (`""`) is **rejected** at `video/add` time with a validation error. Omitting the `narration` object entirely is accepted, but scenes without narration may be skipped during generation  
-- Each scene's narration must produce at least **~1.5 seconds of audio** after text-to-speech conversion. Very short phrases (1–2 words like "Hello" or "Thanks") produce only ~0.4s of TTS audio and cause a silent `generate-error`. Use at least one complete sentence per scene  
+- Provide narration text as a non-empty string — the API validates this at `video/add` time. Omitting the `narration` object entirely is accepted, but scenes with narration are required for generation  
+- Each scene's narration must produce at least **~1.5 seconds of audio** after text-to-speech conversion. Use at least one complete sentence per scene (~4+ words) to meet this threshold  
 
 **TTS speaking rate:**
 - The text-to-speech engine speaks at approximately **2.4 words/second** (measured average across varying sentence lengths). When writing narration for B-roll scenes, calculate the maximum safe word count as: `available_clip_duration × 2.1` (using a 15% safety buffer)  
@@ -403,7 +403,7 @@ curl -s -X POST "$AVATAR_API/video/update" \
 | `avatarId` | string | no | Updated avatar ID |
 | `scenes` | array | no | Replaces all scenes (removed trailing scenes are cleaned up) |
 
-Scenes cannot be modified while status is `composing` or `generating` — the API returns `VIDEO_IS_PROCESSING`.
+Scenes are editable only when status is `draft` or `composed` — the API returns `VIDEO_IS_PROCESSING` during active operations.
 
 ## List Video Projects
 
@@ -494,7 +494,7 @@ The compose action:
 4. Populates the video's `scenes` array with the generated content  
 5. Transitions to `composed` on success, or `compose-error` on failure  
 
-Source entries must have captions or transcripts — the API returns `CAPTIONS_NOT_FOUND` if no text content is available.
+Source entries require captions or transcripts — add them via [REACH](KALTURA_REACH_API.md) before composing. The API returns `CAPTIONS_NOT_FOUND` if text content is missing.
 
 **Response:** Returns the video with status `composing`. Poll `video.get` until status changes to `composed`.
 
@@ -519,7 +519,7 @@ curl -s -X POST "$AVATAR_API/video/previewAudio" \
 | `id` | string | yes | Video project ID |
 | `sceneId` | number | yes | Scene index (0-based) |
 
-The scene must have non-empty narration text — returns `SCENE_EMPTY_NARRATION` otherwise.
+The scene requires narration text to be populated — returns `SCENE_EMPTY_NARRATION` if the text is missing.
 
 Use `previewAudioStream` for streaming playback instead of downloading the full file:
 
@@ -583,12 +583,12 @@ done
 Generation time depends on the number of scenes, narration length, and current queue depth. Simple videos (1–3 full-screen scenes) typically complete in 2–5 minutes. Complex videos with many b-roll scenes can take 10–30 minutes or more. The process has two phases: scene generation (TTS + avatar rendering for each scene, runs in parallel) and aggregation (stitching scenes together with b-roll compositing). The `entryId` field appears on the video object once aggregation begins — its presence indicates scene generation succeeded and stitching is underway.
 
 **Generation error diagnostics:**  
-When generation fails, the status becomes `generate-error` with **no error message or detail** in the API response — the actual failure reason exists only in server-side logs. Common causes:
-- **Narration too short** — A scene's narration produces less than ~1.5 seconds of TTS audio (fewer than ~4 words). Use at least one complete sentence per scene  
-- A b-roll entry uses a non-standard frame rate (see b-roll requirements in section 6)  
-- The rendering service is temporarily unavailable (retry after a few minutes)  
+When generation fails, the status becomes `generate-error`. The API response includes only the status change — diagnose using the checklist below. Common causes:
+- **Narration too short** — Ensure each scene produces at least ~1.5 seconds of TTS audio (~4+ words). Use one complete sentence per scene  
+- **B-roll frame rate** — Confirm b-roll entries use 25 or 30 fps (see b-roll requirements in section 6)  
+- **Rendering service busy** — Retry after a few minutes if all content checks pass  
 
-**Isolating failures:** If generation fails, test with a minimal 1-scene full-screen video first. If that succeeds but b-roll videos fail, the issue is b-roll-specific — check b-roll entry frame rate and confirm the entry is in `status=2` (Ready). If even the 1-scene full-screen test fails, the issue is service-wide or the narration is too short.
+**Isolating the cause:** Start by testing a minimal 1-scene full-screen video. If that succeeds, the issue is b-roll-specific — verify b-roll entry frame rate is 25 or 30 fps and confirm the entry is in `status=2` (Ready). If the 1-scene test also produces `generate-error`, verify narration length (~4+ words per scene) or retry later for a transient service issue.
 
 ## Reset Status After Error
 
@@ -904,30 +904,29 @@ workspace.kill();
 
 ## Widget Errors
 
-- **Blank studio** — Verify the KS is valid and `partnerId` is a number (not string). Check browser console for API errors  
-- **No avatars available** — The account needs VOD Avatar feature provisioning  
-- **Generation fails** — The `generate-error` status provides no error detail. Isolate the cause: test a minimal 1-scene full-screen video first. If that fails, the rendering service is temporarily unavailable — retry later. If only complex videos fail, check b-roll entries for missing audio tracks, non-standard frame rates, or exceeding the 5-source limit  
+- **Blank studio** — Verify the KS is valid and `partnerId` is a number (required type). Check browser console for API errors  
+- **No avatars available** — Confirm the account has VOD Avatar feature provisioning  
+- **Generation produces `generate-error`** — Isolate the cause: test a minimal 1-scene full-screen video first. If that succeeds, check b-roll entries for standard frame rates (25/30 fps) and confirm they are within the 5-source limit. If it also errors, retry later for a transient service issue  
 - **KS expiry** — Update reactively: `workspace.session.setData(prev => ({ ...prev, ks: "new-ks" }))`  
 
 
 # 13. Best Practices
 
 - **Generate the KS server-side.** The KS is visible in client-side code — generate it on your backend and pass it to the widget  
-- **Set `partnerId` as a number.** The VOD Avatar widget requires `partnerId` as a number type, not a string  
+- **Set `partnerId` as a number.** The VOD Avatar widget requires `partnerId` as a number type (e.g., `12345` rather than `"12345"`)  
 - **Ensure captions before composing.** Source entries need captions or transcripts for AI composition. Use [REACH](KALTURA_REACH_API.md) to add captions first  
 - **Poll at 10-second intervals.** The widget uses 10-second polling; match this in server-side integrations  
 - **Handle error states.** Use `resetStatus` to recover from `compose-error` or `generate-error`, then modify scenes and retry  
 - **Preview audio before generating.** Use `previewAudio` to verify narration quality — generation is more expensive  
 - **Reuse b-roll entries at different start times.** The same entry at different `startTime` offsets gives visual variety without adding sources. Prefer fewer entries with longer durations for maximum reuse  
 - **Prepare b-roll entries.** Ensure all b-roll source videos use standard frame rates (25 or 30 fps). Re-encode PowerPoint exports and screen recordings before uploading. Kaltura's transcoding pipeline handles codec conversion and adds audio tracks automatically  
-- **Write at least one full sentence per scene.** Empty narration text is rejected at `video/add` time. Very short narration (1–2 words) produces less than 0.5 seconds of TTS audio and causes `generate-error`. One complete sentence (~4+ words) is the safe minimum  
+- **Write at least one full sentence per scene.** The API validates narration text at `video/add` time — provide at least one complete sentence (~4+ words) per scene to produce sufficient TTS audio (1.5+ seconds)  
 - **Budget narration for b-roll scenes.** TTS speaks at ~2.4 words/second. For b-roll scenes, keep word count below `(clip_duration - startTime) × 2.1` to leave a safety margin. Use `previewAudio` and `ffprobe` to verify actual TTS duration for scenes close to the budget  
-- **Use long KS expiry for generation.** Generation can take 10–20 minutes for complex videos. Use 86400s (24h) expiry to prevent mid-generation KS expiration  
+- **Use long KS expiry for generation.** Generation can take 10–20 minutes for complex videos. Use 86400s (24h) expiry to ensure the session remains valid throughout  
 - **Process generated videos.** The resulting Kaltura entry can be enriched via [REACH](KALTURA_REACH_API.md) (captions, translation), [Content Lab](KALTURA_CONTENT_LAB_API.md) (chapters, summaries), or [Agents](KALTURA_AGENTS_MANAGER_API.md) (automated workflows)  
 - **Use HTTPS.** The Unisphere loader and all widget bundles require HTTPS  
 
-
-# 14. Multi-Region
+## Multi-Region CDN
 
 | Region | Server-Side API | Widget URL |
 |--------|----------------|------------|
@@ -939,7 +938,7 @@ workspace.kill();
 | SYP2 (Australia) | `https://video-avatar.syp2.ovp.kaltura.com/api/v1` | `https://unisphere.syp2.ovp.kaltura.com/v1` |
 
 
-# 15. Related Guides
+# 14. Related Guides
 
 - **[Conversational Avatar Embed](KALTURA_CONVERSATIONAL_AVATAR_API.md)** — Real-time AI avatar conversations via iframe SDK or WebRTC — the live counterpart to this pre-recorded studio  
 - **[Unisphere Framework](KALTURA_UNISPHERE_FRAMEWORK_API.md)** — The micro-frontend framework that powers the widget embed: loader, workspace lifecycle, services  

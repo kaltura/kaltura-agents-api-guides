@@ -1,6 +1,6 @@
 # Kaltura Chat & Collaborate (CnC) API
 
-The Chat & Collaborate (CnC) component provides real-time communication and audience interaction alongside video content. It powers the collaboration layer in Kaltura virtual events and MediaSpace content pages.
+The Chat & Collaborate (CnC) component provides real-time communication and audience interaction alongside video content. It powers the collaboration layer in Kaltura virtual events and Content Hubs pages.
 
 **Base URL:** Managed by the Events Platform — CnC is activated within event sessions, not via a standalone URL  
 **Auth:** Managed by the Events Platform — CnC uses the event session's authentication context  
@@ -38,7 +38,7 @@ CnC provides a suite of collaboration modules that appear as panels alongside th
 
 # 4. Integration
 
-CnC is embedded as part of the Kaltura Events Platform or MediaSpace experience. It is not a standalone widget with a public embed API — it is automatically included when you create virtual event sessions through the Events Platform.
+CnC is embedded as part of the Kaltura Events Platform or Content Hubs experience. It is not a standalone widget with a public embed API — it is automatically included when you create virtual event sessions through the Events Platform.
 
 **How CnC is activated:**
 

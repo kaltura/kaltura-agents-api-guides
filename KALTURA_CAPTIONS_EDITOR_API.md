@@ -25,7 +25,7 @@ The entry must have an existing caption asset before opening the editor. Create 
 curl -X POST "$KALTURA_SERVICE_URL/service/caption_captionAsset/action/add" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "entryId=ENTRY_ID" \
+  -d "entryId=$KALTURA_ENTRY_ID" \
   -d "captionAsset[objectType]=KalturaCaptionAsset" \
   -d "captionAsset[language]=English" \
   -d "captionAsset[format]=1" \

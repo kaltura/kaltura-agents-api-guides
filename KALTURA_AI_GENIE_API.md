@@ -6,14 +6,14 @@ Kaltura AI Genie provides conversational AI search and generative answers over y
 **Auth:** `Authorization: KS <YOUR_KS>` header  
 **Format:** JSON request/response bodies, all endpoints use POST unless noted  
 
-# When to Use
+# 1. When to Use
 
 - **AI-powered video search** — Product teams building intelligent search experiences that let users find specific moments across large video libraries using natural language queries  
 - **Conversational Q&A over video content** — Developers integrating a chat-based interface where users ask questions and receive AI-generated answers grounded in actual video content with source citations  
 - **Knowledge extraction and content discovery** — Organizations surfacing insights from their video libraries by enabling users to query across transcripts, metadata, and visual content without watching every video  
 - **Custom RAG integrations** — Backend developers building server-side workflows that programmatically query Genie's retrieval-augmented generation API for content indexing, reporting, or automated knowledge base construction  
 
-# Prerequisites
+# 2. Prerequisites
 
 This guide assumes you already:
 - Know how to generate Kaltura Sessions (KS) in your backend, setting privileges.  
@@ -38,9 +38,9 @@ These privileges apply only to server-side API integrations and are not part of 
 | `agentid:<ID>` | Select a specific agent configuration |
 | `geniegpcid:<ID>` | Select a partner config by its database ID directly |
 
-<!-- Sections: 1.Architecture Overview | 2.Stateless RAG Search | 3.Streaming Conversation | 4.WebSocket Chat | 5.Thread Management | 6.Message Management | 7.Feedback | 8.Suggested Questions | 9.Status & Configuration | 10.Integration Flow | 11.Error Handling | 12.Best Practices | 13.Related Guides -->
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Architecture Overview | 4.Stateless RAG Search | 5.Streaming Conversation | 6.WebSocket Chat | 7.Thread Management | 8.Message Management | 9.Feedback | 10.Suggested Questions | 11.Status & Configuration | 12.Integration Flow | 13.Error Handling | 14.Best Practices | 15.Related Guides -->
 
-# 1. Architecture Overview
+# 3. Architecture Overview
 
 ## Indexing Pipeline
 
@@ -69,7 +69,7 @@ When a user queries Genie, the search follows this path:
 4. **Chapter merging** — Adjacent matching chunks from the same entry are merged into coherent segments with start/end timestamps  
 5. **Response** — Merged results are returned as text or structured chapters with source attribution  
 
-# 2. Stateless RAG Search
+# 4. Stateless RAG Search
 
 **POST** `/mcp/search`
 
@@ -158,7 +158,7 @@ When no matching content is found (or the vector index has not been built yet), 
 This is not an API error — it means the knowledge base has no content matching the query. Ensure entries have captions/transcripts and the indexer has processed them.
 
 
-# 3. Streaming Conversation
+# 5. Streaming Conversation
 
 ```bash
 POST /assistant/converse
@@ -274,7 +274,7 @@ keypoints:
   summary: ...
   citation:
     clips:
-    - entry_id: 1_umwrb2y9
+    - entry_id: 1_abc12345
       start_time: 11
       end_time: 25
 ```
@@ -286,7 +286,7 @@ A parser should:
 - Extract **entry_id**, **start_time**, **end_time** and de-dupe clips.
 
 
-# 4. WebSocket Chat
+# 6. WebSocket Chat
 
 **WebSocket** `/assistant/ws`
 
@@ -372,7 +372,7 @@ Set `deleteFromHistory: true` to remove the aborted message from the conversatio
 ```
 
 
-# 5. Thread Management
+# 7. Thread Management
 
 Genie automatically creates conversation threads when users send messages via `/assistant/converse`. These endpoints let you list, inspect, and clean up threads.
 
@@ -430,7 +430,7 @@ Genie automatically creates conversation threads when users send messages via `/
 **Response:** Returns the list of deleted thread objects.
 
 
-# 6. Message Management
+# 8. Message Management
 
 ### List Messages
 
@@ -500,7 +500,7 @@ Creates a shareable copy of a message that can be loaded by other users.
 To load a shared message, use `/message/list` with `filter.idEquals` set to the `newMessageId`.
 
 
-# 7. Feedback
+# 9. Feedback
 
 ### Add Feedback
 
@@ -550,7 +550,7 @@ Submit thumbs-up/down feedback on a Genie response.
 ```
 
 
-# 8. Suggested Questions
+# 10. Suggested Questions
 
 **POST** `/followup/get-suggested-questions?new_response=true`
 
@@ -574,7 +574,7 @@ Returns a set of suggested questions drawn from the indexed knowledge base. Ques
 The `new_response=true` query parameter returns the modern response format (list of strings). Typically returns 3 random questions from the indexed content.
 
 
-# 9. Status & Configuration
+# 11. Status & Configuration
 
 **GET** `/assistant/status`
 
@@ -609,7 +609,7 @@ Service health check (no auth required):
 ```
 
 
-# 10. Integration Flow
+# 12. Integration Flow
 
 The typical integration flow for building a Genie-powered feature:
 
@@ -844,7 +844,7 @@ curl -X POST "$KALTURA_GENIE_URL/feedback/add" \
 ```
 
 
-# 11. Error Handling
+# 13. Error Handling
 
 | Error / Status | Meaning | Resolution |
 |----------------|---------|------------|
@@ -860,7 +860,7 @@ curl -X POST "$KALTURA_GENIE_URL/feedback/add" \
 
 **Retry strategy:** For transient errors (HTTP 5xx, timeouts, stream interruptions), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (`401 Unauthorized`, `400 Bad Request`, invalid `threadId`), fix the request before retrying — these will not resolve on their own.
 
-# 12. Best Practices
+# 14. Best Practices
 
 - **Enrich content before querying.** Genie's RAG quality depends on captions, transcripts, and document attachments. Use REACH or the Agents Manager enrichment pipeline to process content before making it searchable.
 - **Use `model_type: "fast"` for interactive UIs** where response latency matters. Use `"smart"` for batch or background analysis where quality matters more.
@@ -873,7 +873,7 @@ curl -X POST "$KALTURA_GENIE_URL/feedback/add" \
 - **Track `segmentNumber → runtimeName`** from `segmentStart` events. The `metadata.runtimeName` may be absent on subsequent chunks for the same segment.
 - **Use AppTokens for production.** Generate scoped KS tokens server-side and keep admin secrets on the backend only.
 
-# 13. Related Guides
+# 15. Related Guides
 
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — Generate the KS required for Genie auth (`KS` header)
 - **[AppTokens](KALTURA_APPTOKENS_API.md)** — Secure KS generation for production Genie integrations

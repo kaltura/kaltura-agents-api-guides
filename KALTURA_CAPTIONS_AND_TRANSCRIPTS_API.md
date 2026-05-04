@@ -92,7 +92,7 @@ Welcome to the presentation.
 <v Speaker>Today we cover the Kaltura API.</v>
 ```
 
-Requires `WEBVTT` header on first line. Timing uses `.` (not `,`). Supports cue settings (`position`, `line`, `align`, `size`), speaker identification (`<v>`), and CSS styling.
+Requires `WEBVTT` header on first line. Timing uses `.` as the millisecond separator. Supports cue settings (`position`, `line`, `align`, `size`), speaker identification (`<v>`), and CSS styling.
 
 ## 4.5 DFXP/TTML Format Reference
 
@@ -178,7 +178,7 @@ POST /service/caption_captionAsset/action/add
 curl -X POST "$KALTURA_SERVICE_URL/service/caption_captionAsset/action/add" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "entryId=$ENTRY_ID" \
+  -d "entryId=$KALTURA_ENTRY_ID" \
   -d "captionAsset[objectType]=KalturaCaptionAsset" \
   -d "captionAsset[label]=English" \
   -d "captionAsset[language]=English" \
@@ -192,7 +192,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/caption_captionAsset/action/add" \
 | `captionAsset[objectType]` | string | Yes | Always `KalturaCaptionAsset` |
 | `captionAsset[label]` | string | No | Display label |
 | `captionAsset[language]` | string | Yes | Language (KalturaLanguage enum value) |
-| `captionAsset[format]` | integer | No | `1`=SRT (default), `2`=DFXP, `3`=WEBVTT, `4`=CAP, `5`=SCC. insertOnly — cannot change after creation. |
+| `captionAsset[format]` | integer | No | `1`=SRT (default), `2`=DFXP, `3`=WEBVTT, `4`=CAP, `5`=SCC. insertOnly — set at creation time, remains fixed. |
 | `captionAsset[isDefault]` | boolean | No | Set as default caption for the entry |
 | `captionAsset[captionParamsId]` | integer | No | Template ID — language and label auto-copied from template |
 
@@ -344,7 +344,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/caption_captionAsset/action/list" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "filter[objectType]=KalturaAssetFilter" \
-  -d "filter[entryIdEqual]=$ENTRY_ID"
+  -d "filter[entryIdEqual]=$KALTURA_ENTRY_ID"
 ```
 
 | Parameter | Type | Required | Description |
@@ -431,7 +431,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/caption_captionAsset/action/update" \
 }
 ```
 
-The `format` field is insertOnly and cannot be changed after creation.
+The `format` field is insertOnly — set it at creation time, as it remains fixed for the lifetime of the asset.
 
 ## 5.10 Set as Default Caption
 
@@ -545,7 +545,7 @@ Times are in milliseconds. Maximum source file size: 1 MB. For larger files, use
 Serve the default caption for an entry without looking up the caption asset ID:
 
 ```bash
-curl "$KALTURA_SERVICE_URL/service/caption_captionAsset/action/serveByEntryId?ks=$KALTURA_KS&entryId=$ENTRY_ID"
+curl "$KALTURA_SERVICE_URL/service/caption_captionAsset/action/serveByEntryId?ks=$KALTURA_KS&entryId=$KALTURA_ENTRY_ID"
 ```
 
 | Parameter | Type | Required | Description |
@@ -693,7 +693,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/reach_entryVendorTask/action/add" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "entryVendorTask[objectType]=KalturaEntryVendorTask" \
-  -d "entryVendorTask[entryId]=$ENTRY_ID" \
+  -d "entryVendorTask[entryId]=$KALTURA_ENTRY_ID" \
   -d "entryVendorTask[reachProfileId]=$REACH_PROFILE_ID" \
   -d "entryVendorTask[catalogItemId]=$ASR_CATALOG_ITEM_ID"
 ```
@@ -713,7 +713,7 @@ Order professional human transcription:
 - **serviceType:** `1` (HUMAN)
 - **Accuracy:** 99%+
 - **Turnaround:** 3-72 hours depending on vendor and turnaround tier
-- **Partners:** 3Play Media, Verbit, AmberScript, dotSUB
+- **Vendors:** Professional human transcription vendors available through the REACH marketplace
 
 ## 8.4 Transcript Alignment via REACH
 
@@ -730,7 +730,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/reach_entryVendorTask/action/getJobs"
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "filter[objectType]=KalturaEntryVendorTaskFilter" \
-  -d "filter[entryIdEqual]=$ENTRY_ID"
+  -d "filter[entryIdEqual]=$KALTURA_ENTRY_ID"
 ```
 
 **Task status flow:**
@@ -765,7 +765,7 @@ Each entry supports multiple caption tracks — one asset per language per entry
 curl -X POST "$KALTURA_SERVICE_URL/service/caption_captionAsset/action/add" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "entryId=$ENTRY_ID" \
+  -d "entryId=$KALTURA_ENTRY_ID" \
   -d "captionAsset[objectType]=KalturaCaptionAsset" \
   -d "captionAsset[label]=English" \
   -d "captionAsset[language]=English" \
@@ -776,7 +776,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/caption_captionAsset/action/add" \
 curl -X POST "$KALTURA_SERVICE_URL/service/caption_captionAsset/action/add" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "entryId=$ENTRY_ID" \
+  -d "entryId=$KALTURA_ENTRY_ID" \
   -d "captionAsset[objectType]=KalturaCaptionAsset" \
   -d "captionAsset[label]=Spanish" \
   -d "captionAsset[language]=Spanish" \
@@ -803,7 +803,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/caption_captionAsset/action/list" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "filter[objectType]=KalturaAssetFilter" \
-  -d "filter[entryIdEqual]=$ENTRY_ID" \
+  -d "filter[entryIdEqual]=$KALTURA_ENTRY_ID" \
   -d "filter[statusEqual]=2"
 
 # Switch default to Spanish
@@ -821,7 +821,7 @@ Upload a single DFXP file containing multiple language tracks with `language="Mu
 curl -X POST "$KALTURA_SERVICE_URL/service/caption_captionAsset/action/add" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "entryId=$ENTRY_ID" \
+  -d "entryId=$KALTURA_ENTRY_ID" \
   -d "captionAsset[objectType]=KalturaCaptionAsset" \
   -d "captionAsset[language]=Multilingual" \
   -d "captionAsset[format]=2"
@@ -932,7 +932,7 @@ The `playkit-js-transcript` plugin displays a searchable, scrolling transcript a
 | `downloadDisabled` | `true` / `false` | Disable transcript download |
 | `printDisabled` | `true` / `false` | Disable transcript print |
 
-The transcript plugin reads caption data from `serveAsJson` for structured display. It does not support live entries.
+The transcript plugin reads caption data from `serveAsJson` for structured display. It works with VOD entries only.
 
 ## 11.3 Caption Track Selection
 
@@ -974,7 +974,7 @@ Set the `blockAutoTranscript` flag on entries to prevent auto-captioning:
 curl -X POST "$KALTURA_SERVICE_URL/service/media/action/update" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "entryId=$ENTRY_ID" \
+  -d "entryId=$KALTURA_ENTRY_ID" \
   -d "mediaEntry[objectType]=KalturaMediaEntry" \
   -d "mediaEntry[blockAutoTranscript]=1"
 ```
@@ -1015,7 +1015,7 @@ FCC caption quality requirements:
 
 ## 13.3 Machine vs Human Accuracy
 
-- **Machine (REACH ASR):** ~83-87% accuracy. Not sufficient for ADA/Section 508 compliance as a standalone solution. Use as a starting point for human review.
+- **Machine (REACH ASR):** ~83-87% accuracy. Use as a starting point, then upgrade to human captions for full ADA/Section 508 compliance.
 - **Human (REACH professional):** 99%+ accuracy. Meets ADA, Section 508, WCAG 2.1 AA, and FCC requirements.
 
 Best practice: Auto-caption with machine ASR for immediate availability, then upgrade to human captions for compliance.
@@ -1047,7 +1047,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/caption_captionAsset/action/list" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "filter[objectType]=KalturaAssetFilter" \
-  -d "filter[entryIdEqual]=$ENTRY_ID" \
+  -d "filter[entryIdEqual]=$KALTURA_ENTRY_ID" \
   -d "filter[statusEqual]=2"
 
 # Step 3: Flag entries with totalCount=0 as needing captions
@@ -1075,7 +1075,7 @@ English captions (REACH ASR) → REACH translation to Spanish, French, Mandarin 
 
 ## 14.5 Enterprise: Town Hall Multi-Language
 
-Live company event → REACH live captions (serviceFeature=11) → recording auto-captioned → translate to regional languages → distribute to regional MediaSpace portals.
+Live company event → REACH live captions (serviceFeature=11) → recording auto-captioned → translate to regional languages → distribute to regional Content Hubs.
 
 ## 14.6 Media: Broadcast-to-Web
 
@@ -1135,9 +1135,9 @@ Bulk list entries → check caption presence per entry → report gaps → order
 - **One default caption per entry.** Use `captionAsset.setAsDefault` after uploading. The player auto-displays the default caption. Only one caption can be default per entry.
 - **Set accuracy on machine-generated captions.** The `accuracy` field enables automatic deduplication when human captions replace machine captions for the same language.
 - **Use REACH for automated captioning; manual API for corrections/imports.** REACH handles the transcription pipeline. Use the caption API to upload corrected files or import captions from external sources.
-- **Use eSearch for caption text search.** Do not iterate over `captionAsset.list` to search caption content. Use `KalturaESearchCaptionItem` for indexed full-text search. See [eSearch API](KALTURA_ESEARCH_API.md).
+- **Use eSearch for caption text search.** Use `KalturaESearchCaptionItem` for indexed full-text search across all entries at once. See [eSearch API](KALTURA_ESEARCH_API.md).
 - **Caption every entry for accessibility compliance.** Use REACH auto-rules to ensure all new entries get captioned. Run periodic audits (section 13.5) to catch gaps.
-- **format is insertOnly.** Choose the correct caption format at creation time — it cannot be changed after the asset is created.
+- **format is insertOnly.** Choose the correct caption format at creation time — it remains fixed for the lifetime of the asset.
 - **Use DFXP/TTML for multi-language single-file uploads.** Upload a single DFXP file with `language="Multilingual"` and the server auto-splits into per-language assets.
 - **Use Captions Studio for interactive editing.** The Captions Studio (Captions Editor) provides a browser-based editor with synchronized video/waveform playback. Create a caption asset first, then pass its ID to the editor. See [Captions Editor Guide](KALTURA_CAPTIONS_EDITOR_API.md) for embed details.
 

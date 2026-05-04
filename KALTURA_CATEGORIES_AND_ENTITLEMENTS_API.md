@@ -183,7 +183,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/category/action/add" \
   -d "format=1" \
   -d "category[objectType]=KalturaCategory" \
   -d "category[name]=Onboarding" \
-  -d "category[parentId]=12345" \
+  -d "category[parentId]=$PARENT_CATEGORY_ID" \
   -d "category[description]=Onboarding materials"
 ```
 
@@ -195,7 +195,7 @@ The response includes the computed `fullName` (e.g., `"Training>Onboarding"`) an
 curl -X POST "$KALTURA_SERVICE_URL/service/category/action/get" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "id=12345"
+  -d "id=$CATEGORY_ID"
 ```
 
 Returns the full `KalturaCategory` object. Returns `CATEGORY_NOT_FOUND` if the ID is invalid.
@@ -257,7 +257,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/category/action/list" \
 curl -X POST "$KALTURA_SERVICE_URL/service/category/action/update" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "id=12345" \
+  -d "id=$CATEGORY_ID" \
   -d "category[objectType]=KalturaCategory" \
   -d "category[description]=Updated training materials" \
   -d "category[tags]=training,updated"
@@ -271,7 +271,7 @@ Fields not included remain unchanged. Response: Full updated `KalturaCategory` o
 curl -X POST "$KALTURA_SERVICE_URL/service/category/action/delete" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "id=12345"
+  -d "id=$CATEGORY_ID"
 ```
 
 Deletes the category. Child categories are also deleted. Entries assigned to the category are unlinked (not deleted).
@@ -291,7 +291,7 @@ POST /service/category/action/clone
 curl -X POST "$KALTURA_SERVICE_URL/service/category/action/clone" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "id=12345" \
+  -d "id=$CATEGORY_ID" \
   -d "cloneOptions[objectType]=KalturaCategoryClone"
 ```
 
@@ -315,8 +315,8 @@ Categories form a tree structure via the `parentId` field. The API automatically
 curl -X POST "$KALTURA_SERVICE_URL/service/category/action/move" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "categoryIds=67890" \
-  -d "targetCategoryParentId=99999"
+  -d "categoryIds=$CATEGORY_ID" \
+  -d "targetCategoryParentId=$TARGET_PARENT_CATEGORY_ID"
 ```
 
 | Parameter | Type | Required | Description |
@@ -343,7 +343,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/category/action/list" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "filter[objectType]=KalturaCategoryFilter" \
-  -d "filter[parentIdEqual]=12345"
+  -d "filter[parentIdEqual]=$CATEGORY_ID"
 ```
 
 **List all descendants of a category:**
@@ -352,7 +352,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/category/action/list" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "filter[objectType]=KalturaCategoryFilter" \
-  -d "filter[ancestorIdIn]=12345"
+  -d "filter[ancestorIdIn]=$CATEGORY_ID"
 ```
 
 **Find categories by path prefix:**
@@ -408,7 +408,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/categoryUser/action/add" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "categoryUser[objectType]=KalturaCategoryUser" \
-  -d "categoryUser[categoryId]=12345" \
+  -d "categoryUser[categoryId]=$CATEGORY_ID" \
   -d "categoryUser[userId]=jane.doe@example.com" \
   -d "categoryUser[permissionLevel]=3"
 ```
@@ -428,7 +428,7 @@ Response: Full `KalturaCategoryUser` object with `status=1` (ACTIVE).
 curl -X POST "$KALTURA_SERVICE_URL/service/categoryUser/action/get" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "categoryId=12345" \
+  -d "categoryId=$CATEGORY_ID" \
   -d "userId=jane.doe@example.com"
 ```
 
@@ -439,7 +439,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/categoryUser/action/list" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "filter[objectType]=KalturaCategoryUserFilter" \
-  -d "filter[categoryIdEqual]=12345" \
+  -d "filter[categoryIdEqual]=$CATEGORY_ID" \
   -d "pager[pageSize]=50"
 ```
 
@@ -461,7 +461,7 @@ Filter fields (KalturaCategoryUserFilter):
 curl -X POST "$KALTURA_SERVICE_URL/service/categoryUser/action/update" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "categoryId=12345" \
+  -d "categoryId=$CATEGORY_ID" \
   -d "userId=jane.doe@example.com" \
   -d "categoryUser[objectType]=KalturaCategoryUser" \
   -d "categoryUser[permissionLevel]=2"
@@ -473,7 +473,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/categoryUser/action/update" \
 curl -X POST "$KALTURA_SERVICE_URL/service/categoryUser/action/delete" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "categoryId=12345" \
+  -d "categoryId=$CATEGORY_ID" \
   -d "userId=jane.doe@example.com"
 ```
 
@@ -485,7 +485,7 @@ Activate a pending or deactivated member:
 curl -X POST "$KALTURA_SERVICE_URL/service/categoryUser/action/activate" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "categoryId=12345" \
+  -d "categoryId=$CATEGORY_ID" \
   -d "userId=jane.doe@example.com"
 ```
 
@@ -495,7 +495,7 @@ Deactivate an active member (preserves the membership record):
 curl -X POST "$KALTURA_SERVICE_URL/service/categoryUser/action/deactivate" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "categoryId=12345" \
+  -d "categoryId=$CATEGORY_ID" \
   -d "userId=jane.doe@example.com"
 ```
 
@@ -521,8 +521,8 @@ curl -X POST "$KALTURA_SERVICE_URL/service/categoryEntry/action/add" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "categoryEntry[objectType]=KalturaCategoryEntry" \
-  -d "categoryEntry[categoryId]=12345" \
-  -d "categoryEntry[entryId]=0_abc123"
+  -d "categoryEntry[categoryId]=$CATEGORY_ID" \
+  -d "categoryEntry[entryId]=$KALTURA_ENTRY_ID"
 ```
 
 Response: Full `KalturaCategoryEntry` object with `status=2` (ACTIVE), or `status=1` (PENDING) if the category has moderation enabled and the user lacks MODERATOR permission.
@@ -534,7 +534,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/categoryEntry/action/list" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "filter[objectType]=KalturaCategoryEntryFilter" \
-  -d "filter[categoryIdEqual]=12345" \
+  -d "filter[categoryIdEqual]=$CATEGORY_ID" \
   -d "pager[pageSize]=50"
 ```
 
@@ -554,8 +554,8 @@ Filter fields (KalturaCategoryEntryFilter):
 curl -X POST "$KALTURA_SERVICE_URL/service/categoryEntry/action/delete" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "entryId=0_abc123" \
-  -d "categoryId=12345"
+  -d "entryId=$KALTURA_ENTRY_ID" \
+  -d "categoryId=$CATEGORY_ID"
 ```
 
 Removes the entry from the category. The entry itself is not deleted.
@@ -569,8 +569,8 @@ When a category has `moderation=1`, new entry assignments enter `PENDING` status
 curl -X POST "$KALTURA_SERVICE_URL/service/categoryEntry/action/activate" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "entryId=0_abc123" \
-  -d "categoryId=12345"
+  -d "entryId=$KALTURA_ENTRY_ID" \
+  -d "categoryId=$CATEGORY_ID"
 ```
 
 **Reject a pending entry:**
@@ -578,8 +578,8 @@ curl -X POST "$KALTURA_SERVICE_URL/service/categoryEntry/action/activate" \
 curl -X POST "$KALTURA_SERVICE_URL/service/categoryEntry/action/reject" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "entryId=0_abc123" \
-  -d "categoryId=12345"
+  -d "entryId=$KALTURA_ENTRY_ID" \
+  -d "categoryId=$CATEGORY_ID"
 ```
 
 ## 8.6 Sync Privacy Context
@@ -590,8 +590,8 @@ Synchronize the privacy context for entries in a category after changing the cat
 curl -X POST "$KALTURA_SERVICE_URL/service/categoryEntry/action/syncPrivacyContext" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "entryId=0_abc123" \
-  -d "categoryId=12345"
+  -d "entryId=$KALTURA_ENTRY_ID" \
+  -d "categoryId=$CATEGORY_ID"
 ```
 
 
@@ -603,7 +603,7 @@ Entitlement is Kaltura's mechanism for restricting content visibility based on c
 
 Content entitlements govern which users can see which entries. Entitlements are configured at the category level by setting a **privacy context** (`privacyContext` field) -- a free-text label (English characters, no commas or spaces) that identifies the application context.
 
-Applications such as Kaltura MediaSpace use entitlements to implement "authenticated content channels."
+Applications such as Content Hubs use entitlements to implement "authenticated content channels."
 
 1. **Category privacy** (`privacy` field) sets the baseline visibility rule.  
 2. **Category membership** (`categoryUser`) determines which users have access to `MEMBERS_ONLY` categories.  
@@ -690,7 +690,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/categoryUser/action/add" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "categoryUser[objectType]=KalturaCategoryUser" \
-  -d "categoryUser[categoryId]=12345" \
+  -d "categoryUser[categoryId]=$CATEGORY_ID" \
   -d "categoryUser[userId]=jane.doe@example.com" \
   -d "categoryUser[permissionLevel]=3"
 ```
@@ -702,8 +702,8 @@ curl -X POST "$KALTURA_SERVICE_URL/service/categoryEntry/action/add" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "categoryEntry[objectType]=KalturaCategoryEntry" \
-  -d "categoryEntry[categoryId]=12345" \
-  -d "categoryEntry[entryId]=0_abc123"
+  -d "categoryEntry[categoryId]=$CATEGORY_ID" \
+  -d "categoryEntry[entryId]=$KALTURA_ENTRY_ID"
 ```
 
 4. Generate a user KS with entitlement for the matching privacy context:
@@ -821,15 +821,15 @@ curl -X POST "$KALTURA_SERVICE_URL/service/bulk/action/get" \
 
 # 13. Related Guides
 
-- **[Session Guide](KALTURA_SESSION_GUIDE.md)** -- `enableentitlement`, `privacycontext`, `disableentitlement` KS privileges  
-- **[Access Control API](KALTURA_ACCESS_CONTROL_API.md)** -- IP, country, domain, scheduling restrictions on content delivery (complementary to entitlement)  
-- **[User Management API](KALTURA_USER_MANAGEMENT_API.md)** -- Users for category membership (`categoryUser` references KalturaUser IDs)  
-- **[eSearch API](KALTURA_ESEARCH_API.md)** -- Search entries by category assignment, search categories  
-- **[Agents Manager API](KALTURA_AGENTS_MANAGER_API.md)** -- `ENTRY_ADDED_TO_CATEGORY` trigger for AI agent workflows  
-- **[Webhooks API](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md)** -- Category event notifications (category created, entry assigned, etc.)  
-- **[Moderation API](KALTURA_MODERATION_API.md)** -- Content moderation queue and approval workflows  
-- **[Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md)** -- Entitlement determines content visibility in player; access control affects playback  
-- **[Content Delivery API](KALTURA_CONTENT_DELIVERY_API.md)** -- Delivery URLs where access control is enforced  
-- **[Distribution API](KALTURA_DISTRIBUTION_API.md)** -- Category-based content scoping for distribution profiles  
-- **[Syndication API](KALTURA_SYNDICATION_API.md)** -- Category filters for syndication feed content  
-- **[Gamification API](KALTURA_GAMIFICATION_API.md)** -- Category-based content scoping for gamification rules  
+- **[Session Guide](KALTURA_SESSION_GUIDE.md)** — `enableentitlement`, `privacycontext`, `disableentitlement` KS privileges  
+- **[Access Control API](KALTURA_ACCESS_CONTROL_API.md)** — IP, country, domain, scheduling restrictions on content delivery (complementary to entitlement)  
+- **[User Management API](KALTURA_USER_MANAGEMENT_API.md)** — Users for category membership (`categoryUser` references KalturaUser IDs)  
+- **[eSearch API](KALTURA_ESEARCH_API.md)** — Search entries by category assignment, search categories  
+- **[Agents Manager API](KALTURA_AGENTS_MANAGER_API.md)** — `ENTRY_ADDED_TO_CATEGORY` trigger for AI agent workflows  
+- **[Webhooks API](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md)** — Category event notifications (category created, entry assigned, etc.)  
+- **[Moderation API](KALTURA_MODERATION_API.md)** — Content moderation queue and approval workflows  
+- **[Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md)** — Entitlement determines content visibility in player; access control affects playback  
+- **[Content Delivery API](KALTURA_CONTENT_DELIVERY_API.md)** — Delivery URLs where access control is enforced  
+- **[Distribution API](KALTURA_DISTRIBUTION_API.md)** — Category-based content scoping for distribution profiles  
+- **[Syndication API](KALTURA_SYNDICATION_API.md)** — Category filters for syndication feed content  
+- **[Gamification API](KALTURA_GAMIFICATION_API.md)** — Category-based content scoping for gamification rules  

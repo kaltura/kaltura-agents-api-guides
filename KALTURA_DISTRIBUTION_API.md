@@ -7,7 +7,7 @@ Kaltura's content distribution system pushes media to external platforms (YouTub
 **Format:** Form-encoded POST, `format=1` for JSON responses  
 **Services:** `contentDistribution_distributionProvider`, `contentDistribution_distributionProfile`, `contentDistribution_entryDistribution`, `contentDistribution_genericDistributionProvider`, `contentDistribution_genericDistributionProviderAction`  
 
-<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Core Concepts | 4.Distribution Providers | 5.Distribution Profile Management | 6.Entry Distribution Lifecycle | 7.Distribution Triggers & Automation | 8.Distribution Connector Reference | 9.MRSS & Field Configuration | 10.Building a Custom Connector | 11.Status & Error Reference | 12.Error Handling | 13.Best Practices | 14.Common Integration Patterns | 15.API Actions Reference | 16.Related Guides -->
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Core Concepts | 4.Distribution Providers | 5.Distribution Profile Management | 6.Entry Distribution Lifecycle | 7.Distribution Triggers & Automation | 8.Distribution Connector Reference | 9.MRSS & Field Configuration | 10.Building a Custom Connector | 11.Status & Error Reference | 12.API Actions Reference | 13.Error Handling | 14.Best Practices | 15.Related Guides -->
 
 
 # 1. When to Use
@@ -184,7 +184,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_distributionProfi
 
 **The `partnerId` parameter is required in the request body.** The distribution plugin uses the request-level `partnerId` (not the KS) to associate the profile with your account. Omitting it creates an orphaned profile that cannot be retrieved.  
 
-Profile creation requires provider-specific configuration (OAuth credentials for YouTube/Facebook, connection details for FTP, target account details for Cross-Kaltura). Profiles are typically configured through the KMC (Kaltura Management Console) and then managed via API.
+Profile creation requires provider-specific configuration (OAuth credentials for YouTube/Facebook, connection details for FTP, target account details for Cross-Kaltura). Profiles are typically configured through the Rich Media CMS (KMC) and then managed via API.
 
 ## 5.3 distributionProfile.get
 
@@ -280,7 +280,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_distributionProfi
   -d "distributionProfile[submitEnabled]=2"
 ```
 
-The `protocol` field on FTP profiles is immutable after creation — include it in the `add` call but do not attempt to update it. Updating `protocol` returns `PROPERTY_VALIDATION_NOT_UPDATABLE` and rejects the entire request. To change protocol, delete the profile and create a new one.
+The `protocol` field on FTP profiles is immutable after creation — include it in the initial `add` call. Updating `protocol` returns `PROPERTY_VALIDATION_NOT_UPDATABLE` and rejects the entire request. To change protocol, delete the profile and create a new one.
 
 ## 5.6 distributionProfile.updateStatus
 
@@ -372,7 +372,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "entryDistribution[objectType]=KalturaEntryDistribution" \
-  -d "entryDistribution[entryId]=$ENTRY_ID" \
+  -d "entryDistribution[entryId]=$KALTURA_ENTRY_ID" \
   -d "entryDistribution[distributionProfileId]=$DISTRIBUTION_PROFILE_ID"
 ```
 
@@ -483,7 +483,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "filter[objectType]=KalturaEntryDistributionFilter" \
-  -d "filter[entryIdEqual]=$ENTRY_ID"
+  -d "filter[entryIdEqual]=$KALTURA_ENTRY_ID"
 ```
 
 ```bash
@@ -802,7 +802,7 @@ Key fields:
 3. Complete the Google OAuth consent flow — the resulting refresh token is stored server-side on the profile
 4. Once authorized, the profile can push content to the YouTube channel via the YouTube Data API
 
-This authorization is typically done once during profile setup through the KMC (Kaltura Management Console). The refresh token is automatically renewed by the distribution engine.
+This authorization is typically done once during profile setup through the Rich Media CMS (KMC). The refresh token is automatically renewed by the distribution engine.
 
 When an entry is successfully distributed to YouTube, the `remoteId` field on the entry distribution is populated with the YouTube video ID.
 
@@ -830,7 +830,7 @@ Key fields:
 3. Complete the Facebook OAuth consent flow, granting the required permissions (`pages_manage_posts`, `pages_read_engagement`, etc.)
 4. The resulting `pageAccessToken` and `userAccessToken` are stored on the profile. Facebook page tokens are long-lived but may need re-authorization if permissions change
 
-This authorization is typically done once during profile setup through the KMC (Kaltura Management Console).
+This authorization is typically done once during profile setup through the Rich Media CMS (KMC).
 
 ## 8.3 Cross-Kaltura Distribution
 
@@ -952,7 +952,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_genericDistributi
   -d "format=1" \
   -d "genericDistributionProvider[name]=My Custom Platform" \
   -d "genericDistributionProvider[requiredFlavorParamsIds]=0" \
-  -d "genericDistributionProvider[optionalFlavorParamsIds]=487041" \
+  -d "genericDistributionProvider[optionalFlavorParamsIds]=$FLAVOR_PARAMS_ID" \
   -d "genericDistributionProvider[isDefault]=false"
 ```
 
@@ -1247,172 +1247,7 @@ The same pipeline runs for UPDATE and DELETE actions using their respective tran
 | 3 | AFTER_SUNSET | Content has expired |
 
 
-# 12. Error Handling
-
-| Error Code | Meaning | Resolution |
-|------------|---------|------------|
-| `ENTRY_DISTRIBUTION_NOT_FOUND` | Entry distribution ID does not exist | Verify the ID; may have been deleted |
-| `DISTRIBUTION_PROFILE_NOT_FOUND` | Distribution profile ID does not exist | Verify the profile ID |
-| `DISTRIBUTION_PROFILE_DISABLED` | Profile is currently disabled (status=1) | Re-enable with `distributionProfile.updateStatus` |
-| `ENTRY_NOT_FOUND` | The entry ID in the distribution binding does not exist | Verify the entry ID |
-| `SERVICE_FORBIDDEN` | Content Distribution plugin not enabled | Contact your Kaltura account manager |
-| `PROPERTY_VALIDATION_CANNOT_BE_NULL` | A required field is missing | Add the required parameter |
-| `INVALID_KS` | KS is invalid, expired, or lacks privileges | Generate a fresh admin KS |
-
-**Retry strategy:** For transient errors (HTTP 5xx, timeouts), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (`ENTRY_DISTRIBUTION_NOT_FOUND`, `SERVICE_FORBIDDEN`), fix the request before retrying. Distribution submission is asynchronous — after calling `submitAdd`, poll the entry distribution status rather than retrying the submit call.
-
-
-# 13. Best Practices
-
-- **Validate before submitting.** Call `entryDistribution.validate` before `submitAdd` to catch missing flavors, thumbnails, or metadata. Fix validation errors before attempting submission.
-- **Use `submitWhenReady=true` for newly uploaded content.** Entries that are still processing will be automatically submitted once they reach READY status, avoiding timing issues.
-- **Monitor dirty status for content updates.** When `updateEnabled=MANUAL`, periodically check for entry distributions with `dirtyStatus != 0` and call `submitUpdate` to push changes.
-- **Use sunrise/sunset for time-based releases.** Schedule content activation and expiration via timestamps rather than manual submit/delete calls.
-- **Check `serveSentData` / `serveReturnedData` for debugging.** When distribution fails, inspect the raw XML sent to and received from the remote platform.
-- **Use entry distribution `list` with filters for monitoring.** Filter by `statusEqual` to find failed distributions (status 7, 8, 9) and retry or investigate.
-- **Call `submitDelete` before `delete`.** To remove content from both the remote platform and Kaltura, call `submitDelete` first (removes from remote), then `delete` (removes the local record).
-- **Use Generic Distribution for custom XML-based targets.** Build a custom connector via API (section 10) for any platform that accepts XML file delivery. For platforms requiring OAuth or custom REST API integration, contact your Kaltura account manager to request a new built-in connector.
-
-
-# 14. Common Integration Patterns
-
-## 14.1 Multi-Platform Publishing Pipeline
-
-Distribute a single entry to multiple platforms simultaneously by binding it to multiple distribution profiles:
-
-```bash
-# Bind to YouTube
-curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution/action/add" \
-  -d "ks=$KALTURA_KS" \
-  -d "format=1" \
-  -d "entryDistribution[objectType]=KalturaEntryDistribution" \
-  -d "entryDistribution[entryId]=$ENTRY_ID" \
-  -d "entryDistribution[distributionProfileId]=$YOUTUBE_PROFILE_ID"
-
-# Bind to Facebook
-curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution/action/add" \
-  -d "ks=$KALTURA_KS" \
-  -d "format=1" \
-  -d "entryDistribution[objectType]=KalturaEntryDistribution" \
-  -d "entryDistribution[entryId]=$ENTRY_ID" \
-  -d "entryDistribution[distributionProfileId]=$FACEBOOK_PROFILE_ID"
-
-# Submit both with submitWhenReady
-curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution/action/submitAdd" \
-  -d "ks=$KALTURA_KS" \
-  -d "format=1" \
-  -d "id=$YOUTUBE_ENTRY_DIST_ID" \
-  -d "submitWhenReady=true"
-
-curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution/action/submitAdd" \
-  -d "ks=$KALTURA_KS" \
-  -d "format=1" \
-  -d "id=$FACEBOOK_ENTRY_DIST_ID" \
-  -d "submitWhenReady=true"
-```
-
-## 14.2 YouTube Channel Distribution
-
-Full workflow for distributing content to YouTube:
-
-1. **Get profile** — retrieve the YouTube distribution profile to verify configuration
-2. **Bind entry** — create an entry distribution linking the entry to the YouTube profile
-3. **Validate** — check that required flavors and metadata are present
-4. **Submit** — push to YouTube; the entry gets a YouTube video ID in `remoteId`
-5. **Monitor** — check status transitions; READY (2) means the video is live on YouTube
-
-```bash
-# Step 1: Verify YouTube profile
-curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_distributionProfile/action/get" \
-  -d "ks=$KALTURA_KS" \
-  -d "format=1" \
-  -d "id=$YOUTUBE_PROFILE_ID"
-
-# Step 2: Bind entry
-curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution/action/add" \
-  -d "ks=$KALTURA_KS" \
-  -d "format=1" \
-  -d "entryDistribution[objectType]=KalturaEntryDistribution" \
-  -d "entryDistribution[entryId]=$ENTRY_ID" \
-  -d "entryDistribution[distributionProfileId]=$YOUTUBE_PROFILE_ID"
-
-# Step 3: Validate
-curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution/action/validate" \
-  -d "ks=$KALTURA_KS" \
-  -d "format=1" \
-  -d "id=$ENTRY_DISTRIBUTION_ID"
-
-# Step 4: Submit
-curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution/action/submitAdd" \
-  -d "ks=$KALTURA_KS" \
-  -d "format=1" \
-  -d "id=$ENTRY_DISTRIBUTION_ID" \
-  -d "submitWhenReady=true"
-
-# Step 5: Check status
-curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution/action/get" \
-  -d "ks=$KALTURA_KS" \
-  -d "format=1" \
-  -d "id=$ENTRY_DISTRIBUTION_ID"
-```
-
-## 14.3 Time-Based Content Release
-
-Schedule content to go live on a remote platform at a future date and expire automatically:
-
-```bash
-curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution/action/add" \
-  -d "ks=$KALTURA_KS" \
-  -d "format=1" \
-  -d "entryDistribution[objectType]=KalturaEntryDistribution" \
-  -d "entryDistribution[entryId]=$ENTRY_ID" \
-  -d "entryDistribution[distributionProfileId]=$DISTRIBUTION_PROFILE_ID" \
-  -d "entryDistribution[sunrise]=$GO_LIVE_TIMESTAMP" \
-  -d "entryDistribution[sunset]=$EXPIRE_TIMESTAMP"
-
-curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution/action/submitAdd" \
-  -d "ks=$KALTURA_KS" \
-  -d "format=1" \
-  -d "id=$ENTRY_DISTRIBUTION_ID" \
-  -d "submitWhenReady=true"
-```
-
-## 14.4 Monitoring Distribution Health
-
-Find all failed distributions and retry them:
-
-```bash
-# Find distributions with ERROR_SUBMITTING status
-curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution/action/list" \
-  -d "ks=$KALTURA_KS" \
-  -d "format=1" \
-  -d "filter[objectType]=KalturaEntryDistributionFilter" \
-  -d "filter[statusEqual]=7"
-
-# View what was sent to the remote platform
-curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution/action/serveSentData" \
-  -d "ks=$KALTURA_KS" \
-  -d "format=1" \
-  -d "id=$FAILED_ENTRY_DIST_ID" \
-  -d "actionType=1"
-
-# Retry the submission
-curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution/action/retrySubmit" \
-  -d "ks=$KALTURA_KS" \
-  -d "format=1" \
-  -d "id=$FAILED_ENTRY_DIST_ID"
-```
-
-## 14.5 Webhook-Triggered Distribution
-
-Combine distribution with [webhooks](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md) for event-driven publishing. Set up a webhook that fires when entry metadata changes, then programmatically manage distribution updates:
-
-1. Create a webhook template for `OBJECT_DATA_CHANGED` on `ENTRY` objects
-2. In your webhook handler, check if the entry has active distributions
-3. If `dirtyStatus != 0`, call `entryDistribution.submitUpdate` to push changes
-
-
-# 15. API Actions Reference
+# 12. API Actions Reference
 
 | Service | Action | Description |
 |---------|--------|-------------|
@@ -1452,7 +1287,171 @@ Combine distribution with [webhooks](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMA
 | `contentDistribution_entryDistribution` | `serveReturnedData` | Retrieve XML returned from remote |
 
 
-# 16. Related Guides
+# 13. Error Handling
+
+| Error Code | Meaning | Resolution |
+|------------|---------|------------|
+| `ENTRY_DISTRIBUTION_NOT_FOUND` | Entry distribution ID does not exist | Verify the ID; may have been deleted |
+| `DISTRIBUTION_PROFILE_NOT_FOUND` | Distribution profile ID does not exist | Verify the profile ID |
+| `DISTRIBUTION_PROFILE_DISABLED` | Profile is currently disabled (status=1) | Re-enable with `distributionProfile.updateStatus` |
+| `ENTRY_NOT_FOUND` | The entry ID in the distribution binding does not exist | Verify the entry ID |
+| `SERVICE_FORBIDDEN` | Content Distribution plugin not enabled | Contact your Kaltura account manager |
+| `PROPERTY_VALIDATION_CANNOT_BE_NULL` | A required field is missing | Add the required parameter |
+| `INVALID_KS` | KS is invalid, expired, or lacks privileges | Generate a fresh admin KS |
+
+**Retry strategy:** For transient errors (HTTP 5xx, timeouts), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (`ENTRY_DISTRIBUTION_NOT_FOUND`, `SERVICE_FORBIDDEN`), fix the request before retrying. Distribution submission is asynchronous — after calling `submitAdd`, poll the entry distribution status rather than retrying the submit call.
+
+
+# 14. Best Practices
+
+- **Validate before submitting.** Call `entryDistribution.validate` before `submitAdd` to catch missing flavors, thumbnails, or metadata. Fix validation errors before attempting submission.
+- **Use `submitWhenReady=true` for newly uploaded content.** Entries that are still processing will be automatically submitted once they reach READY status, avoiding timing issues.
+- **Monitor dirty status for content updates.** When `updateEnabled=MANUAL`, periodically check for entry distributions with `dirtyStatus != 0` and call `submitUpdate` to push changes.
+- **Use sunrise/sunset for time-based releases.** Schedule content activation and expiration via timestamps rather than manual submit/delete calls.
+- **Check `serveSentData` / `serveReturnedData` for debugging.** When distribution fails, inspect the raw XML sent to and received from the remote platform.
+- **Use entry distribution `list` with filters for monitoring.** Filter by `statusEqual` to find failed distributions (status 7, 8, 9) and retry or investigate.
+- **Call `submitDelete` before `delete`.** To remove content from both the remote platform and Kaltura, call `submitDelete` first (removes from remote), then `delete` (removes the local record).
+- **Use Generic Distribution for custom XML-based targets.** Build a custom connector via API (section 10) for any platform that accepts XML file delivery. For platforms requiring OAuth or custom REST API integration, contact your Kaltura account manager to request a new built-in connector.
+
+## Common Integration Patterns
+
+### Multi-Platform Publishing Pipeline
+
+Distribute a single entry to multiple platforms simultaneously by binding it to multiple distribution profiles:
+
+```bash
+# Bind to YouTube
+curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution/action/add" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "entryDistribution[objectType]=KalturaEntryDistribution" \
+  -d "entryDistribution[entryId]=$KALTURA_ENTRY_ID" \
+  -d "entryDistribution[distributionProfileId]=$YOUTUBE_PROFILE_ID"
+
+# Bind to Facebook
+curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution/action/add" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "entryDistribution[objectType]=KalturaEntryDistribution" \
+  -d "entryDistribution[entryId]=$KALTURA_ENTRY_ID" \
+  -d "entryDistribution[distributionProfileId]=$FACEBOOK_PROFILE_ID"
+
+# Submit both with submitWhenReady
+curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution/action/submitAdd" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "id=$YOUTUBE_ENTRY_DIST_ID" \
+  -d "submitWhenReady=true"
+
+curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution/action/submitAdd" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "id=$FACEBOOK_ENTRY_DIST_ID" \
+  -d "submitWhenReady=true"
+```
+
+### YouTube Channel Distribution
+
+Full workflow for distributing content to YouTube:
+
+1. **Get profile** — retrieve the YouTube distribution profile to verify configuration
+2. **Bind entry** — create an entry distribution linking the entry to the YouTube profile
+3. **Validate** — check that required flavors and metadata are present
+4. **Submit** — push to YouTube; the entry gets a YouTube video ID in `remoteId`
+5. **Monitor** — check status transitions; READY (2) means the video is live on YouTube
+
+```bash
+# Step 1: Verify YouTube profile
+curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_distributionProfile/action/get" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "id=$YOUTUBE_PROFILE_ID"
+
+# Step 2: Bind entry
+curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution/action/add" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "entryDistribution[objectType]=KalturaEntryDistribution" \
+  -d "entryDistribution[entryId]=$KALTURA_ENTRY_ID" \
+  -d "entryDistribution[distributionProfileId]=$YOUTUBE_PROFILE_ID"
+
+# Step 3: Validate
+curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution/action/validate" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "id=$ENTRY_DISTRIBUTION_ID"
+
+# Step 4: Submit
+curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution/action/submitAdd" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "id=$ENTRY_DISTRIBUTION_ID" \
+  -d "submitWhenReady=true"
+
+# Step 5: Check status
+curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution/action/get" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "id=$ENTRY_DISTRIBUTION_ID"
+```
+
+### Time-Based Content Release
+
+Schedule content to go live on a remote platform at a future date and expire automatically:
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution/action/add" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "entryDistribution[objectType]=KalturaEntryDistribution" \
+  -d "entryDistribution[entryId]=$KALTURA_ENTRY_ID" \
+  -d "entryDistribution[distributionProfileId]=$DISTRIBUTION_PROFILE_ID" \
+  -d "entryDistribution[sunrise]=$GO_LIVE_TIMESTAMP" \
+  -d "entryDistribution[sunset]=$EXPIRE_TIMESTAMP"
+
+curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution/action/submitAdd" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "id=$ENTRY_DISTRIBUTION_ID" \
+  -d "submitWhenReady=true"
+```
+
+### Monitoring Distribution Health
+
+Find all failed distributions and retry them:
+
+```bash
+# Find distributions with ERROR_SUBMITTING status
+curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution/action/list" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "filter[objectType]=KalturaEntryDistributionFilter" \
+  -d "filter[statusEqual]=7"
+
+# View what was sent to the remote platform
+curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution/action/serveSentData" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "id=$FAILED_ENTRY_DIST_ID" \
+  -d "actionType=1"
+
+# Retry the submission
+curl -X POST "$KALTURA_SERVICE_URL/service/contentDistribution_entryDistribution/action/retrySubmit" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "id=$FAILED_ENTRY_DIST_ID"
+```
+
+### Webhook-Triggered Distribution
+
+Combine distribution with [webhooks](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md) for event-driven publishing. Set up a webhook that fires when entry metadata changes, then programmatically manage distribution updates:
+
+1. Create a webhook template for `OBJECT_DATA_CHANGED` on `ENTRY` objects
+2. In your webhook handler, check if the entry has active distributions
+3. If `dirtyStatus != 0`, call `entryDistribution.submitUpdate` to push changes
+
+
+# 15. Related Guides
 
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — KS generation and management
 - **[AppTokens API](KALTURA_APPTOKENS_API.md)** — Secure server-to-server auth for automated distribution workflows

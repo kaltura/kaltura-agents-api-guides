@@ -2,22 +2,27 @@
 
 This guide covers the complete lifecycle of getting content into Kaltura: creating upload tokens, uploading files (including chunked/resumable transfers), creating media, document, and data entries, importing from URLs, copying entries, replacing content, and managing flavor assets and attachments.
 
-**Base URL:** `$SERVICE_URL` (default: `https://www.kaltura.com/api_v3`)  
+**Base URL:** `$KALTURA_SERVICE_URL` (default: `https://www.kaltura.com/api_v3`)  
 **Auth:** All requests require a valid KS (see [Session Guide](KALTURA_SESSION_GUIDE.md))  
 **Format:** Form-encoded POST, `format=1` for JSON responses  
 
-<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Upload Lifecycle Overview | 4.Upload Token API | 5.Creating Media Entries | 6.Entry CRUD Operations | 7.Cross-Type Entry Operations (baseEntry) | 8.Non-Media Entry Types | 9.Flavor Assets (Transcoded Renditions) | 10.Attachment Assets (Non-Media File Attachments) | 11.Bulk Upload | 12.Complete Example -- Chunked Upload Workflow | 13.Error Handling | 14.Best Practices | 15.Related Guides -->
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Upload Lifecycle Overview | 4.Upload Token API | 5.Creating Media Entries (16 resource types, clipping, multi-flavor) | 6.Entry CRUD Operations | 7.Cross-Type Entry Operations (baseEntry.clone) | 8.Non-Media Entry Types | 9.Flavor Assets (Transcoded Renditions) | 10.Attachment Assets (Non-Media File Attachments) | 11.Bulk Upload | 12.Complete Example -- Chunked Upload Workflow | 13.Error Handling | 14.Best Practices | 15.Related Guides -->
 
 
 # 1. When to Use
 
 | Scenario | What to Use |
 |----------|-------------|
-| **Media onboarding pipeline** — Ingest video, audio, or images from local storage | `uploadToken` + `media.add` + `media.addContent` |
+| **Media onboarding pipeline** — Ingest video, audio, or images from local storage | `uploadToken` + `media.add` + `media.addContent` with `KalturaUploadedFileTokenResource` |
 | **CMS integration** — Programmatic upload with progress tracking and resume | Chunked `uploadToken.upload` with `resume=true` |
-| **Bulk migration** — Move thousands of files from an existing library | `media.addFromUrl` or CSV `bulkUploadAdd` |
+| **Bulk migration** — Move thousands of files from an existing library | `media.add` + `media.addContent` with `KalturaUrlResource`, or CSV `bulkUploadAdd` |
 | **Content replacement** — Swap a video's source file without changing its entry ID | `media.updateContent` |
-| **Entry cloning** — Duplicate an entry with all metadata and assets | `baseEntry.clone` or `media.addFromEntry` |
+| **Entry cloning** — Duplicate an entry with all metadata and assets | `baseEntry.clone` (full deep copy with granular options) |
+| **Clipping / trimming** — Extract a time segment from an existing video | `media.addContent` with `KalturaOperationResource` + `KalturaClipAttributes` |
+| **Concatenation** — Combine segments from multiple videos into one | `media.addContent` with `KalturaOperationResources` (plural) |
+| **Multi-bitrate ingest** — Upload pre-transcoded renditions without re-encoding | `media.addContent` with `KalturaAssetsParamsResourceContainers` |
+| **SFTP import** — Pull files from secure servers with SSH key auth | `media.addContent` with `KalturaSshUrlResource` |
+| **Remote storage** — Register content on external CDN/S3 without copying | `media.addContent` with `KalturaRemoteStorageResource` |
 | **Document management** — Upload PDFs, slides, or Word docs for web viewing | `documents.addContent` with `KalturaDocumentEntry` |
 | **Arbitrary file storage** — Store JSON, CSV, ZIP, or config files | `data.add` with `KalturaDataEntry` (type=6) |
 | **Supplementary files** — Attach transcripts, slide decks, or data files to a video | `attachmentAsset.add` + `attachmentAsset.setContent` |
@@ -28,7 +33,7 @@ This guide covers the complete lifecycle of getting content into Kaltura: creati
 
 - **Kaltura Session (KS):** ADMIN KS (type=2) for upload and entry management. See [Session Guide](KALTURA_SESSION_GUIDE.md).  
 - **Partner ID and API credentials:** Available from KMC > Settings > Integration Settings.  
-- **Service URL:** Set `$SERVICE_URL` to your regional endpoint (default: `https://www.kaltura.com/api_v3`).  
+- **Service URL:** Set `$KALTURA_SERVICE_URL` to your regional endpoint (default: `https://www.kaltura.com/api_v3`).  
 - **Permissions:** `CONTENT_MANAGE_BASE` permission for creating entries and uploading content.
 
 
@@ -49,10 +54,15 @@ Alternative paths:
 
 | Method | Use Case | Requires Local File? |
 |--------|----------|---------------------|
-| `uploadToken` + `entry.addContent` | Full control, chunked/resumable upload | Yes |
-| `media.addFromUrl` | Import from a public URL (Kaltura fetches the file) | No |
-| `media.addFromEntry` | Copy an existing entry | No |
-| `media.addFromFlavorAsset` | Create a new entry from a specific transcoded rendition | No |
+| `uploadToken` + `media.addContent` | Full control, chunked/resumable upload | Yes |
+| `media.addContent` with `KalturaUrlResource` | Import from a remote URL (Kaltura fetches the file) | No |
+| `media.addContent` with `KalturaEntryResource` | Copy content from an existing entry's source flavor | No |
+| `media.addContent` with `KalturaAssetResource` | Create entry from a specific transcoded rendition | No |
+| `media.addContent` with `KalturaOperationResource` | Clip/trim/effects from an existing entry | No |
+| `media.addContent` with `KalturaOperationResources` | Concatenate segments from multiple entries | No |
+| `media.addContent` with `KalturaAssetsParamsResourceContainers` | Multi-flavor ingest (pre-transcoded files) | No (URLs) or Yes (tokens) |
+| `media.addContent` with `KalturaSshUrlResource` | Import from SFTP server with SSH keys | No |
+| `media.addContent` with `KalturaRemoteStorageResource` | Register on external storage without copy | No |
 | `media.bulkUploadAdd` | Batch ingest via CSV or XML | No (URLs in CSV) |
 | `baseEntry.clone` | Deep-clone entry with all assets and metadata | No |
 
@@ -97,8 +107,8 @@ POST /api_v3/service/uploadToken/action/add
 | 5 | DELETED | Token deleted |
 
 ```bash
-curl -X POST "$SERVICE_URL/service/uploadToken/action/add" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/add" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "uploadToken[fileName]=my_video.mp4" \
   -d "uploadToken[fileSize]=15728640"
@@ -121,8 +131,8 @@ POST /api_v3/service/uploadToken/action/upload
 ### Single-file upload (small files)
 
 ```bash
-curl -X POST "$SERVICE_URL/service/uploadToken/action/upload" \
-  -F "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/upload" \
+  -F "ks=$KALTURA_KS" \
   -F "format=1" \
   -F "uploadTokenId=$UPLOAD_TOKEN_ID" \
   -F "resume=false" \
@@ -143,8 +153,8 @@ Split the file into chunks and upload each sequentially. The server accepts para
 ```bash
 # First chunk (offset 0)
 dd if=big_video.mp4 bs=2097152 count=1 skip=0 2>/dev/null | \
-curl -X POST "$SERVICE_URL/service/uploadToken/action/upload" \
-  -F "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/upload" \
+  -F "ks=$KALTURA_KS" \
   -F "format=1" \
   -F "uploadTokenId=$UPLOAD_TOKEN_ID" \
   -F "resume=false" \
@@ -154,8 +164,8 @@ curl -X POST "$SERVICE_URL/service/uploadToken/action/upload" \
 
 # Subsequent chunks (resume=true, resumeAt=byte offset)
 dd if=big_video.mp4 bs=2097152 count=1 skip=1 2>/dev/null | \
-curl -X POST "$SERVICE_URL/service/uploadToken/action/upload" \
-  -F "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/upload" \
+  -F "ks=$KALTURA_KS" \
   -F "format=1" \
   -F "uploadTokenId=$UPLOAD_TOKEN_ID" \
   -F "resume=true" \
@@ -165,8 +175,8 @@ curl -X POST "$SERVICE_URL/service/uploadToken/action/upload" \
 
 # Final chunk (finalChunk=true)
 dd if=big_video.mp4 bs=2097152 count=1 skip=2 2>/dev/null | \
-curl -X POST "$SERVICE_URL/service/uploadToken/action/upload" \
-  -F "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/upload" \
+  -F "ks=$KALTURA_KS" \
   -F "format=1" \
   -F "uploadTokenId=$UPLOAD_TOKEN_ID" \
   -F "resume=true" \
@@ -178,16 +188,16 @@ curl -X POST "$SERVICE_URL/service/uploadToken/action/upload" \
 **Resume after failure:** Call `uploadToken.get` to check `uploadedFileSize`, then resume from that offset:
 
 ```bash
-curl -X POST "$SERVICE_URL/service/uploadToken/action/get" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/get" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "uploadTokenId=$UPLOAD_TOKEN_ID"
 # Response includes: "uploadedFileSize": 4194304
 
 RESUME_AT=4194304
 dd if=largefile.mp4 bs=2097152 skip=$((RESUME_AT / 2097152)) 2>/dev/null | \
-curl -X POST "$SERVICE_URL/service/uploadToken/action/upload" \
-  -F "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/upload" \
+  -F "ks=$KALTURA_KS" \
   -F "format=1" \
   -F "uploadTokenId=$UPLOAD_TOKEN_ID" \
   -F "resume=true" \
@@ -259,8 +269,8 @@ POST /api_v3/service/media/action/add
 **Response:** `KalturaMediaEntry` with `id`, `status` (7 = NO_CONTENT until file attached)
 
 ```bash
-curl -X POST "$SERVICE_URL/service/media/action/add" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/media/action/add" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "entry[objectType]=KalturaMediaEntry" \
   -d "entry[mediaType]=1" \
@@ -281,24 +291,32 @@ POST /api_v3/service/media/action/addContent
 | `resource[objectType]` | string | Resource type (see table below) |
 | `resource[token]` | string | Upload token ID (for `KalturaUploadedFileTokenResource`) |
 
-**Content resource types:** The `resource` parameter accepts multiple types:
+**Content resource types:** The `resource` parameter accepts any of these types:
 
-| Resource Type | Description |
-|--------------|-------------|
-| `KalturaUploadedFileTokenResource` | Attach content from an upload token (most common) |
-| `KalturaUrlResource` | Import from HTTP/FTP/SFTP URL |
-| `KalturaEntryResource` | Copy content from another entry |
-| `KalturaAssetResource` | Copy from a specific flavor asset |
-| `KalturaRemoteStorageResource` | Import from a configured remote storage |
-| `KalturaAssetsParamsResourceContainers` | Multi-flavor ingest (attach multiple renditions at once) |
+| Resource Type | Description | Use Case |
+|--------------|-------------|----------|
+| `KalturaUploadedFileTokenResource` | Attach content from an upload token | Standard upload workflow (most common) |
+| `KalturaUrlResource` | Import from HTTP/HTTPS/FTP URL | Remote file import |
+| `KalturaEntryResource` | Copy content from another entry's flavor | Entry content duplication |
+| `KalturaAssetResource` | Copy from a specific flavor asset by ID | Flavor-level content copy |
+| `KalturaOperationResource` | Clip, trim, or apply effects to source content | Clipping, concatenation, effects |
+| `KalturaAssetsParamsResourceContainers` | Multi-flavor ingest (multiple renditions at once) | Pre-transcoded multi-bitrate content |
+| `KalturaRemoteStorageResource` | Register content on configured remote storage | External CDN/S3 content |
+| `KalturaSshUrlResource` | Import via SSH/SFTP with key authentication | Secure server file transfer |
+| `KalturaDropFolderFileResource` | Reference a file from a configured drop folder | Drop folder integration |
+| `KalturaRemoteStorageResources` | Register content on multiple storage profiles | Multi-CDN/multi-region content |
+| `KalturaStringResource` | Inline string content (text, XML, JSON) | Caption content, data entries |
+| `KalturaUploadedFileResource` | Direct multipart file upload (no token) | Simple single-request upload |
+
+Two additional types exist for internal/system use only (`KalturaServerFileResource`, `KalturaFileSyncResource`) and are not available to customer accounts.
 
 Triggers transcoding. Entry status changes from `NO_CONTENT (7)` to `IMPORT (0)` or `PENDING (4)`.
 
 ```bash
-curl -X POST "$SERVICE_URL/service/media/action/addContent" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/media/action/addContent" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "entryId=$ENTRY_ID" \
+  -d "entryId=$KALTURA_ENTRY_ID" \
   -d "resource[objectType]=KalturaUploadedFileTokenResource" \
   -d "resource[token]=$UPLOAD_TOKEN_ID"
 ```
@@ -319,10 +337,10 @@ POST /api_v3/service/media/action/updateContent
 Replaces the source file while preserving the entry ID, metadata, embed codes, and analytics. The entry enters a "pending replacement" state until transcoding completes. Uses locking to prevent concurrent replacements.
 
 ```bash
-curl -X POST "$SERVICE_URL/service/media/action/updateContent" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/media/action/updateContent" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "entryId=$ENTRY_ID" \
+  -d "entryId=$KALTURA_ENTRY_ID" \
   -d "resource[objectType]=KalturaUploadedFileTokenResource" \
   -d "resource[token]=$UPLOAD_TOKEN_ID"
 ```
@@ -335,85 +353,294 @@ When content replacement is configured to require approval:
 
 ```bash
 # Approve pending replacement
-curl -X POST "$SERVICE_URL/service/media/action/approveReplace" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/media/action/approveReplace" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "entryId=$ENTRY_ID"
+  -d "entryId=$KALTURA_ENTRY_ID"
 
 # Cancel pending replacement
-curl -X POST "$SERVICE_URL/service/media/action/cancelReplace" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/media/action/cancelReplace" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "entryId=$ENTRY_ID"
+  -d "entryId=$KALTURA_ENTRY_ID"
 ```
 
-## 5.5 media.addFromUrl -- Import from URL
+## 5.5 Import from URL (KalturaUrlResource)
 
-```
-POST /api_v3/service/media/action/addFromUrl
-```
+Use `media.add` + `media.addContent` with `KalturaUrlResource` to import content from a remote URL. Kaltura fetches the file server-side via an async import job. Entry transitions from `NO_CONTENT (7)` → `IMPORT (0)` → `READY (2)`.
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `mediaEntry[objectType]` | string | `KalturaMediaEntry` |
-| `mediaEntry[name]` | string | Display name |
-| `mediaEntry[mediaType]` | int | `1`=Video, `2`=Image, `5`=Audio |
-| `url` | string | Publicly accessible direct file URL |
-
-Kaltura fetches the file server-side. Entry starts in `IMPORT (0)` status. Supports HTTP and FTP URLs.
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `resource[objectType]` | string | Yes | `KalturaUrlResource` |
+| `resource[url]` | string | Yes | Direct file URL (HTTP, HTTPS, or FTP) |
+| `resource[urlHeaders]` | array | No | Custom HTTP headers for the download request (e.g., auth tokens) |
+| `resource[forceAsyncDownload]` | bool | No | Force async import job |
 
 ```bash
-curl -X POST "$SERVICE_URL/service/media/action/addFromUrl" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/media/action/addContent" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "mediaEntry[objectType]=KalturaMediaEntry" \
-  -d "mediaEntry[name]=Imported from URL" \
-  -d "mediaEntry[mediaType]=1" \
-  -d "url=https://example.com/sample_video.mp4"
+  -d "entryId=$KALTURA_ENTRY_ID" \
+  -d "resource[objectType]=KalturaUrlResource" \
+  -d "resource[url]=https://example.com/sample_video.mp4"
 ```
 
-**Business scenario — content migration:** A media company migrating from another platform exports a CSV of asset URLs. A script iterates through the CSV, calling `addFromUrl` for each, then polls until entries reach READY status.
-
-## 5.6 media.addFromEntry -- Copy an Existing Entry
-
-```
-POST /api_v3/service/media/action/addFromEntry
-```
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `sourceEntryId` | string | Entry ID to copy from |
-| `mediaEntry[objectType]` | string | `KalturaMediaEntry` (optional, for overriding metadata) |
-| `mediaEntry[name]` | string | Override name (optional) |
-| `sourceFlavorParamsId` | int | Copy a specific flavor only (optional; copies original if omitted) |
-
-Creates a new entry by copying content from an existing one. The new entry gets its own transcoding run.
+With custom headers (e.g., for authenticated sources):
 
 ```bash
-curl -X POST "$SERVICE_URL/service/media/action/addFromEntry" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/media/action/addContent" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "sourceEntryId=$SOURCE_ENTRY_ID" \
-  -d "mediaEntry[objectType]=KalturaMediaEntry" \
-  -d "mediaEntry[name]=Copy of Original"
+  -d "entryId=$KALTURA_ENTRY_ID" \
+  -d "resource[objectType]=KalturaUrlResource" \
+  -d "resource[url]=https://storage.example.com/assets/video.mp4" \
+  -d "resource[urlHeaders][0]=Authorization: Bearer YOUR_TOKEN"
 ```
+
+The URL must point to a direct downloadable file. Streaming manifests (HLS/DASH), redirect URLs (playManifest), and HTML pages cause import failures. Poll `media.get` until status reaches `2` (READY).
+
+**Business scenario — content migration:** A media company migrating from another platform exports a CSV of asset URLs. A script iterates through the CSV, creating entries and attaching URL resources for each, then polls until entries reach READY status.
+
+## 5.6 Copy from Existing Entry (KalturaEntryResource)
+
+Use `media.add` + `media.addContent` with `KalturaEntryResource` to create a new entry by copying content from an existing one. The new entry gets its own transcoding run.
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/media/action/add" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "entry[objectType]=KalturaMediaEntry" \
+  -d "entry[name]=Copy of Original"
+```
+
+Then attach the source entry's content:
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/media/action/addContent" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "entryId=$KALTURA_ENTRY_ID" \
+  -d "resource[objectType]=KalturaEntryResource" \
+  -d "resource[entryId]=$SOURCE_ENTRY_ID" \
+  -d "resource[flavorParamsId]=0"
+```
+
+Set `resource[flavorParamsId]=0` to copy the original source flavor. Specify a different flavor params ID to copy a specific rendition only.
 
 **Business scenario — multi-tenant content:** A SaaS platform distributes the same training video to multiple customer accounts, each needing independent analytics and access control.
 
-## 5.7 media.addFromFlavorAsset -- Create Entry from a Specific Rendition
+## 5.7 Copy from Specific Flavor Asset (KalturaAssetResource)
 
+Use `media.addContent` with `KalturaAssetResource` to create a new entry from a specific transcoded rendition of an existing entry. Unlike `KalturaEntryResource` (which references by entry ID + flavor params), this references a flavor asset directly by its ID.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `resource[objectType]` | string | Yes | `KalturaAssetResource` |
+| `resource[assetId]` | string | Yes | The flavor asset ID to copy from |
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/media/action/addContent" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "entryId=$KALTURA_ENTRY_ID" \
+  -d "resource[objectType]=KalturaAssetResource" \
+  -d "resource[assetId]=$FLAVOR_ASSET_ID"
 ```
-POST /api_v3/service/media/action/addFromFlavorAsset
+
+**Business scenario — derivative content:** A video platform extracts the audio-only rendition from a lecture recording to create a podcast entry.
+
+## 5.8 Import via SSH/SFTP (KalturaSshUrlResource)
+
+Use `KalturaSshUrlResource` to import files from SSH/SFTP servers with key authentication.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `resource[objectType]` | string | Yes | `KalturaSshUrlResource` |
+| `resource[url]` | string | Yes | SFTP URL (e.g., `sftp://host/path/file.mp4`) |
+| `resource[privateKey]` | string | No | SSH private key content |
+| `resource[publicKey]` | string | No | SSH public key content |
+| `resource[keyPassphrase]` | string | No | Passphrase for the SSH key |
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/media/action/addContent" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "entryId=$KALTURA_ENTRY_ID" \
+  -d "resource[objectType]=KalturaSshUrlResource" \
+  -d "resource[url]=sftp://media-server.example.com/incoming/video.mp4" \
+  -d "resource[privateKey]=$SSH_PRIVATE_KEY" \
+  -d "resource[publicKey]=$SSH_PUBLIC_KEY"
 ```
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `sourceFlavorAssetId` | string | Flavor asset ID to use as source |
-| `mediaEntry[objectType]` | string | `KalturaMediaEntry` (optional) |
+**Business scenario — broadcast ingest:** A television network's production workflow deposits finished segments on an SFTP server. An automated pipeline picks them up via `KalturaSshUrlResource` for publishing.
 
-Creates a new entry using a specific transcoded rendition as the source.
+## 5.9 Remote Storage (KalturaRemoteStorageResource)
 
-## 5.8 Entry Statuses
+Use `KalturaRemoteStorageResource` to register content that lives on a configured remote storage profile (e.g., your own S3 bucket or CDN) without downloading it into Kaltura storage. The file stays in place — Kaltura creates a reference to serve it from its current location.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `resource[objectType]` | string | Yes | `KalturaRemoteStorageResource` |
+| `resource[url]` | string | Yes | Path/URL on the remote storage |
+| `resource[storageProfileId]` | int | Yes | ID of the configured storage profile |
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/media/action/addContent" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "entryId=$KALTURA_ENTRY_ID" \
+  -d "resource[objectType]=KalturaRemoteStorageResource" \
+  -d "resource[url]=/videos/2024/keynote_1080p.mp4" \
+  -d "resource[storageProfileId]=$STORAGE_PROFILE_ID"
+```
+
+Requires a storage profile configured on your account (one-time setup by your Kaltura account team). For registering the same content on multiple storage profiles simultaneously, use `KalturaRemoteStorageResources` (plural) with an array of resources.
+
+**Business scenario — hybrid storage:** An enterprise keeps original source files in their own S3 bucket for compliance. They register these with Kaltura for playback and metadata management without moving the files.
+
+## 5.10 Drop Folder Files (KalturaDropFolderFileResource)
+
+Use `KalturaDropFolderFileResource` to reference a file that arrived through a configured drop folder (FTP, SFTP, S3, or local directory watched by Kaltura).
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `resource[objectType]` | string | Yes | `KalturaDropFolderFileResource` |
+| `resource[dropFolderFileId]` | int | Yes | ID of the drop folder file object |
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/media/action/addContent" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "entryId=$KALTURA_ENTRY_ID" \
+  -d "resource[objectType]=KalturaDropFolderFileResource" \
+  -d "resource[dropFolderFileId]=$DROP_FOLDER_FILE_ID"
+```
+
+Requires the Drop Folder plugin enabled and a configured drop folder on your account. Files deposited in the drop folder are detected automatically; use this resource type when you need to manually associate a drop folder file with an entry.
+
+## 5.11 Inline String Content (KalturaStringResource)
+
+Use `KalturaStringResource` to create entries from inline text content. Commonly used for data entries, inline caption content, or metadata files.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `resource[objectType]` | string | Yes | `KalturaStringResource` |
+| `resource[content]` | string | Yes | The text content to store |
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/data/action/addContent" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "entryId=$DATA_ENTRY_ID" \
+  -d "resource[objectType]=KalturaStringResource" \
+  -d "resource[content]={\"config\": \"value\", \"version\": 2}"
+```
+
+Also used with `captionAsset.setContent` to set caption text directly:
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/caption_captionAsset/action/setContent" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "id=$CAPTION_ASSET_ID" \
+  -d "resource[objectType]=KalturaStringResource" \
+  -d "resource[content]=WEBVTT%0A%0A00:00:00.000 --> 00:00:05.000%0AHello world"
+```
+
+## 5.12 Direct File Upload (KalturaUploadedFileResource)
+
+Use `KalturaUploadedFileResource` for a single-request upload where the file is sent as multipart form data directly with the `addContent` call. Simpler than the upload token flow but limited by server upload size limits.
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/media/action/addContent" \
+  -F "ks=$KALTURA_KS" \
+  -F "format=1" \
+  -F "entryId=$KALTURA_ENTRY_ID" \
+  -F "resource[objectType]=KalturaUploadedFileResource" \
+  -F "resource[fileData]=@/path/to/video.mp4"
+```
+
+For files larger than 100 MB, use the upload token workflow (`KalturaUploadedFileTokenResource`) with chunked upload for resumability.
+
+## 5.13 Clipping, Effects, and Composition (KalturaOperationResource)
+
+Use `KalturaOperationResource` to create entries by extracting a clip (time segment) from existing content. This resource type also supports fade effects, overlays, background replacement, and caption burn-in.
+
+For a quick clip with offset and duration:
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/media/action/addContent" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "entryId=$KALTURA_ENTRY_ID" \
+  -d "resource[objectType]=KalturaOperationResource" \
+  -d "resource[resource][objectType]=KalturaEntryResource" \
+  -d "resource[resource][entryId]=$SOURCE_ENTRY_ID" \
+  -d "resource[resource][flavorParamsId]=0" \
+  -d "resource[operationAttributes][0][objectType]=KalturaClipAttributes" \
+  -d "resource[operationAttributes][0][offset]=60000" \
+  -d "resource[operationAttributes][0][duration]=30000"
+```
+
+For comprehensive documentation of all editing operations — trim, multi-clip concat, overlays, chroma-key background replacement, caption burn-in, effects, dimension control, and audio mixing — see the **[Video Editing API](KALTURA_VIDEO_EDITING_API.md)**.
+
+## 5.14 Multi-Clip Concatenation (KalturaOperationResources)
+
+Use `KalturaOperationResources` (plural) to concatenate segments from multiple source entries into a single output. For full documentation including dimension normalization, chapter naming, and advanced composition, see the **[Video Editing API](KALTURA_VIDEO_EDITING_API.md)**.
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/media/action/addContent" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "entryId=$KALTURA_ENTRY_ID" \
+  -d "resource[objectType]=KalturaOperationResources" \
+  -d "resource[resources][0][objectType]=KalturaOperationResource" \
+  -d "resource[resources][0][resource][objectType]=KalturaEntryResource" \
+  -d "resource[resources][0][resource][entryId]=$SOURCE_ENTRY_1" \
+  -d "resource[resources][0][resource][flavorParamsId]=0" \
+  -d "resource[resources][0][operationAttributes][0][objectType]=KalturaClipAttributes" \
+  -d "resource[resources][0][operationAttributes][0][offset]=0" \
+  -d "resource[resources][0][operationAttributes][0][duration]=10000" \
+  -d "resource[resources][1][objectType]=KalturaOperationResource" \
+  -d "resource[resources][1][resource][objectType]=KalturaEntryResource" \
+  -d "resource[resources][1][resource][entryId]=$SOURCE_ENTRY_2" \
+  -d "resource[resources][1][resource][flavorParamsId]=0" \
+  -d "resource[resources][1][operationAttributes][0][objectType]=KalturaClipAttributes" \
+  -d "resource[resources][1][operationAttributes][0][offset]=0" \
+  -d "resource[resources][1][operationAttributes][0][duration]=15000"
+```
+
+## 5.15 Multi-Flavor Ingest (KalturaAssetsParamsResourceContainers)
+
+Use `KalturaAssetsParamsResourceContainers` to ingest multiple pre-transcoded renditions in a single `addContent` call. Each rendition is mapped to a specific flavor params ID.
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/media/action/addContent" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "entryId=$KALTURA_ENTRY_ID" \
+  -d "resource[objectType]=KalturaAssetsParamsResourceContainers" \
+  -d "resource[resources][0][objectType]=KalturaAssetParamsResourceContainer" \
+  -d "resource[resources][0][assetParamsId]=0" \
+  -d "resource[resources][0][resource][objectType]=KalturaUrlResource" \
+  -d "resource[resources][0][resource][url]=https://example.com/source_original.mp4" \
+  -d "resource[resources][1][objectType]=KalturaAssetParamsResourceContainer" \
+  -d "resource[resources][1][assetParamsId]=$FLAVOR_PARAMS_720P" \
+  -d "resource[resources][1][resource][objectType]=KalturaUrlResource" \
+  -d "resource[resources][1][resource][url]=https://example.com/video_720p.mp4" \
+  -d "resource[resources][2][objectType]=KalturaAssetParamsResourceContainer" \
+  -d "resource[resources][2][assetParamsId]=$FLAVOR_PARAMS_1080P" \
+  -d "resource[resources][2][resource][objectType]=KalturaUrlResource" \
+  -d "resource[resources][2][resource][url]=https://example.com/video_1080p.mp4"
+```
+
+Each `KalturaAssetParamsResourceContainer` maps:
+- `assetParamsId` — the target flavor params ID (use `0` for original source, or specific flavor params IDs from your conversion profile)
+- `resource` — any content resource type (`KalturaUrlResource`, `KalturaUploadedFileTokenResource`, etc.)
+
+**Business scenario — broadcast workflow:** A broadcaster already has renditions at multiple bitrates from their production pipeline. They ingest all renditions at once, skipping re-transcoding and reducing time-to-publish.
+
+## 5.16 Entry Statuses
 
 | Value | Name | Description |
 |-------|------|-------------|
@@ -428,7 +655,7 @@ Creates a new entry using a specific transcoded rendition as the source.
 | 6 | BLOCKED | Blocked by admin |
 | 7 | NO_CONTENT | Entry created, no file attached |
 
-## 5.9 Flavor Asset Statuses
+## 5.17 Flavor Asset Statuses
 
 When polling flavor assets during transcoding (`flavorAsset.list` with `entryIdEqual`):
 
@@ -446,7 +673,7 @@ When polling flavor assets during transcoding (`flavorAsset.list` with `entryIdE
 | 8 | VALIDATING | File validation in progress |
 | 9 | EXPORTING | Being exported to external storage |
 
-## 5.10 Entry Moderation Statuses
+## 5.18 Entry Moderation Statuses
 
 When content moderation is enabled on the account, entries have a `moderationStatus` field:
 
@@ -476,20 +703,20 @@ POST /api_v3/service/media/action/get
 | `version` | int | No | Specific version to retrieve (default: latest) |
 
 ```bash
-curl -X POST "$SERVICE_URL/service/media/action/get" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/media/action/get" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "entryId=$ENTRY_ID"
+  -d "entryId=$KALTURA_ENTRY_ID"
 ```
 
-**Poll for READY status after upload:** After calling `media.addContent` or `media.addFromUrl`, poll `media.get` until `status` reaches `2` (READY):
+**Poll for READY status after upload:** After calling `media.addContent`, poll `media.get` until `status` reaches `2` (READY):
 
 ```bash
 while true; do
-  STATUS=$(curl -s -X POST "$SERVICE_URL/service/media/action/get" \
-    -d "ks=$KS" \
+  STATUS=$(curl -s -X POST "$KALTURA_SERVICE_URL/service/media/action/get" \
+    -d "ks=$KALTURA_KS" \
     -d "format=1" \
-    -d "entryId=$ENTRY_ID" | jq -r '.status')
+    -d "entryId=$KALTURA_ENTRY_ID" | jq -r '.status')
   echo "Status: $STATUS"
   [ "$STATUS" = "2" ] && break
   [ "$STATUS" = "-1" ] && echo "Transcoding failed" && break
@@ -518,8 +745,8 @@ POST /api_v3/service/media/action/list
 | `pager[pageIndex]` | int | Page number (1-based) |
 
 ```bash
-curl -X POST "$SERVICE_URL/service/media/action/list" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/media/action/list" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "filter[objectType]=KalturaMediaEntryFilter" \
   -d "filter[tagsMultiLikeOr]=api,upload" \
@@ -556,10 +783,10 @@ POST /api_v3/service/media/action/update
 Only include the fields you want to change -- omitted fields remain unchanged (partial update).
 
 ```bash
-curl -X POST "$SERVICE_URL/service/media/action/update" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/media/action/update" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "entryId=$ENTRY_ID" \
+  -d "entryId=$KALTURA_ENTRY_ID" \
   -d "mediaEntry[objectType]=KalturaMediaEntry" \
   -d "mediaEntry[name]=Updated Title" \
   -d "mediaEntry[tags]=updated,production"
@@ -574,10 +801,10 @@ POST /api_v3/service/media/action/delete
 Deletion is soft-delete (status changes to 3 = DELETED). The entry can be recovered from the recycle bin for a limited time.
 
 ```bash
-curl -X POST "$SERVICE_URL/service/media/action/delete" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/media/action/delete" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "entryId=$ENTRY_ID"
+  -d "entryId=$KALTURA_ENTRY_ID"
 ```
 
 ## 6.6 media.convert -- Trigger Transcoding
@@ -611,10 +838,10 @@ POST /api_v3/service/baseEntry/action/getByIds
 Returns an array of entries in a single request. More efficient than multiple `media.get` calls.
 
 ```bash
-curl -X POST "$SERVICE_URL/service/baseEntry/action/getByIds" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/baseEntry/action/getByIds" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "entryIds=1_abc123,1_def456,1_ghi789"
+  -d "entryIds=$ENTRY_ID_1,$ENTRY_ID_2,$ENTRY_ID_3"
 ```
 
 ## 7.2 baseEntry.listByReferenceId -- Find by External Reference
@@ -635,27 +862,102 @@ POST /api_v3/service/baseEntry/action/listByReferenceId
 POST /api_v3/service/baseEntry/action/clone
 ```
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `entryId` | string | Entry to clone |
-| `cloneOptions` | array | Clone options (optional; controls which assets to include) |
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `entryId` | string | Yes | Entry to clone |
+| `cloneOptions` | array | No | Array of clone option items controlling which components to include/exclude |
 
-Creates a full copy of the entry including metadata, flavors, thumbnails, and other assets.
+Creates a full deep copy of the entry including all metadata, flavor assets, thumbnails, captions, categories, access control, and custom metadata. The cloned entry gets a new ID with statistics reset to zero.
+
+**Default clone (copies everything):**
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/baseEntry/action/clone" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "entryId=$SOURCE_ENTRY_ID"
+```
+
+**Clone with options — exclude specific components:**
+
+Each clone option item has `itemType` (what component) and `rule` (0 = include, 1 = exclude):
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/baseEntry/action/clone" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "entryId=$SOURCE_ENTRY_ID" \
+  -d "cloneOptions[0][objectType]=KalturaBaseEntryCloneOptionComponent" \
+  -d "cloneOptions[0][itemType]=5" \
+  -d "cloneOptions[0][rule]=1" \
+  -d "cloneOptions[1][objectType]=KalturaBaseEntryCloneOptionComponent" \
+  -d "cloneOptions[1][itemType]=2" \
+  -d "cloneOptions[1][rule]=1"
+```
+
+This clones the entry while excluding custom metadata (`itemType=5`) and category assignments (`itemType=2`).
+
+**Clone with child entries (multi-stream, parent-child hierarchies):**
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/baseEntry/action/clone" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "entryId=$SOURCE_ENTRY_ID" \
+  -d "cloneOptions[0][objectType]=KalturaBaseEntryCloneOptionComponent" \
+  -d "cloneOptions[0][itemType]=3" \
+  -d "cloneOptions[0][rule]=0"
+```
+
+**Clone option item types:**
+
+| itemType | Component | Default Behavior |
+|----------|-----------|-----------------|
+| `1` | Users (ownership) | Copied — exclude to use current KS user as owner |
+| `2` | Categories | Copied — exclude to remove category assignments |
+| `3` | Child entries | **NOT copied** — must explicitly include (rule=0) |
+| `4` | Access control | Copied — exclude to use account default |
+| `5` | Custom metadata | Copied — exclude to remove metadata profiles |
+| `6` | Flavors | Copied — exclude to create entry with NO_CONTENT status |
+| `7` | Captions | Copied — exclude to remove caption assets |
+
+Plugin-provided clone options (available when cue point plugins are enabled):
+
+| itemType | Component |
+|----------|-----------|
+| `adCuePoint.AD_CUE_POINTS` | Ad cue points |
+| `annotation.ANNOTATION_CUE_POINTS` | Annotation cue points |
+| `codeCuePoint.CODE_CUE_POINTS` | Code cue points |
+| `thumbCuePoint.THUMB_CUE_POINTS` | Thumbnail cue points |
+
+**Clone vs. KalturaEntryResource:**
+
+| | `baseEntry.clone` | `media.addContent` with `KalturaEntryResource` |
+|--|-------------------|------------------------------------------------|
+| Result | Full copy with metadata, categories, captions, cue points | New entry with only the source file (content only) |
+| Metadata | All fields preserved | Fresh empty entry you define |
+| Flavors | All flavors copied instantly | Re-transcodes from source |
+| Status | READY immediately (if source is READY) | Goes through ingestion pipeline |
+| Control | Include/exclude components granularly | Only select which flavor to copy |
+
+Use `baseEntry.clone` when duplicating a complete entry with all its assets and metadata. Use `KalturaEntryResource` when you need a new entry with independent metadata that shares only the source file.
+
+**Business scenario — multi-tenant distribution:** A corporate training team clones a compliance video to 50 department accounts, each clone inheriting categories and custom metadata but with independent analytics tracking.
 
 ## 7.4 baseEntry.recycle / baseEntry.restoreRecycled
 
 ```bash
 # Move to recycle bin (soft delete with recovery option)
-curl -X POST "$SERVICE_URL/service/baseEntry/action/recycle" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/baseEntry/action/recycle" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "entryId=$ENTRY_ID"
+  -d "entryId=$KALTURA_ENTRY_ID"
 
 # Restore from recycle bin
-curl -X POST "$SERVICE_URL/service/baseEntry/action/restoreRecycled" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/baseEntry/action/restoreRecycled" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "entryId=$ENTRY_ID"
+  -d "entryId=$KALTURA_ENTRY_ID"
 ```
 
 ## 7.5 baseEntry.export -- Export to Remote Storage
@@ -700,16 +1002,16 @@ Upload documents (PDF, DOCX, PPTX) using the `documents` service. Documents go t
 
 ```bash
 # Create a document entry and attach content
-curl -X POST "$SERVICE_URL/service/baseEntry/action/add" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/baseEntry/action/add" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "entry[objectType]=KalturaDocumentEntry" \
   -d "entry[name]=Presentation Slides" \
   -d "entry[documentType]=11" \
   -d "entry[tags]=slides,training"
 
-curl -X POST "$SERVICE_URL/service/documents_documents/action/addContent" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/documents_documents/action/addContent" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "entryId=$DOC_ENTRY_ID" \
   -d "resource[objectType]=KalturaUploadedFileTokenResource" \
@@ -733,16 +1035,16 @@ Upload any file type as a data entry. Data entries are stored and served as-is w
 | `data.serve` | Serve data content as file download |
 
 ```bash
-curl -X POST "$SERVICE_URL/service/baseEntry/action/add" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/baseEntry/action/add" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "entry[objectType]=KalturaDataEntry" \
   -d "entry[type]=6" \
   -d "entry[name]=Configuration File" \
   -d "entry[tags]=config,json"
 
-curl -X POST "$SERVICE_URL/service/baseEntry/action/addContent" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/baseEntry/action/addContent" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "entryId=$DATA_ENTRY_ID" \
   -d "resource[objectType]=KalturaUploadedFileTokenResource" \
@@ -780,10 +1082,10 @@ POST /api_v3/service/flavorAsset/action/list
 **Response:** List of `KalturaFlavorAsset` objects with `id`, `flavorParamsId`, `width`, `height`, `bitrate` (kbps), `size` (KB), `status`, `isOriginal`.
 
 ```bash
-curl -X POST "$SERVICE_URL/service/flavorAsset/action/list" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/flavorAsset/action/list" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "filter[entryIdEqual]=$ENTRY_ID"
+  -d "filter[entryIdEqual]=$KALTURA_ENTRY_ID"
 ```
 
 ## 9.2 flavorAsset.getFlavorAssetsWithParams
@@ -798,16 +1100,16 @@ Returns all flavor assets paired with their flavor params for an entry. Includes
 
 ```bash
 # Create a flavor asset on the entry
-curl -X POST "$SERVICE_URL/service/flavorAsset/action/add" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/flavorAsset/action/add" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "entryId=$ENTRY_ID" \
+  -d "entryId=$KALTURA_ENTRY_ID" \
   -d "flavorAsset[objectType]=KalturaFlavorAsset" \
   -d "flavorAsset[flavorParamsId]=0"
 
 # Upload content to the flavor
-curl -X POST "$SERVICE_URL/service/flavorAsset/action/setContent" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/flavorAsset/action/setContent" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "id=$FLAVOR_ASSET_ID" \
   -d "contentResource[objectType]=KalturaUploadedFileTokenResource" \
@@ -820,15 +1122,15 @@ curl -X POST "$SERVICE_URL/service/flavorAsset/action/setContent" \
 
 ```bash
 # Trigger conversion for a specific flavor params
-curl -X POST "$SERVICE_URL/service/flavorAsset/action/convert" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/flavorAsset/action/convert" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "entryId=$ENTRY_ID" \
-  -d "flavorParamsId=487071"
+  -d "entryId=$KALTURA_ENTRY_ID" \
+  -d "flavorParamsId=$FLAVOR_PARAMS_ID"
 
 # Re-convert an existing flavor asset
-curl -X POST "$SERVICE_URL/service/flavorAsset/action/reconvert" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/flavorAsset/action/reconvert" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "id=$FLAVOR_ASSET_ID"
 ```
@@ -850,8 +1152,8 @@ Returns a direct download URL string for that specific flavor.
 ## 9.6 flavorAsset.export -- Export to Remote Storage
 
 ```bash
-curl -X POST "$SERVICE_URL/service/flavorAsset/action/export" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/flavorAsset/action/export" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "assetId=$FLAVOR_ASSET_ID" \
   -d "storageProfileId=$STORAGE_PROFILE_ID"
@@ -879,32 +1181,32 @@ The `attachment_attachmentAsset` service attaches supplementary files to media e
 
 ```bash
 # Step 1: Create the attachment asset
-curl -X POST "$SERVICE_URL/service/attachment_attachmentAsset/action/add" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/attachment_attachmentAsset/action/add" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "entryId=$ENTRY_ID" \
+  -d "entryId=$KALTURA_ENTRY_ID" \
   -d "attachmentAsset[objectType]=KalturaAttachmentAsset" \
   -d "attachmentAsset[title]=Slide Deck" \
   -d "attachmentAsset[format]=3" \
   -d "attachmentAsset[fileExt]=pdf"
 
 # Step 2: Upload the file using an upload token
-curl -X POST "$SERVICE_URL/service/attachment_attachmentAsset/action/setContent" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/attachment_attachmentAsset/action/setContent" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "id=$ATTACHMENT_ASSET_ID" \
   -d "contentResource[objectType]=KalturaUploadedFileTokenResource" \
   -d "contentResource[token]=$UPLOAD_TOKEN_ID"
 
 # List attachments for an entry
-curl -X POST "$SERVICE_URL/service/attachment_attachmentAsset/action/list" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/attachment_attachmentAsset/action/list" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "filter[entryIdEqual]=$ENTRY_ID"
+  -d "filter[entryIdEqual]=$KALTURA_ENTRY_ID"
 
 # Get direct download URL
-curl -X POST "$SERVICE_URL/service/attachment_attachmentAsset/action/getUrl" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/attachment_attachmentAsset/action/getUrl" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "id=$ATTACHMENT_ASSET_ID"
 ```
@@ -951,8 +1253,8 @@ For bulk operations creating more than 5,000 entries, coordinate with your Kaltu
 
 ```bash
 # --- Step 1: Create an upload token ---
-curl -X POST "$SERVICE_URL/service/uploadToken/action/add" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/add" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "uploadToken[fileName]=my_video.mp4" \
   -d "uploadToken[fileSize]=6291456"
@@ -962,8 +1264,8 @@ curl -X POST "$SERVICE_URL/service/uploadToken/action/add" \
 
 # Chunk 1 (first 2 MB)
 dd if=my_video.mp4 bs=2097152 count=1 skip=0 2>/dev/null | \
-curl -X POST "$SERVICE_URL/service/uploadToken/action/upload" \
-  -F "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/upload" \
+  -F "ks=$KALTURA_KS" \
   -F "format=1" \
   -F "uploadTokenId=$UPLOAD_TOKEN_ID" \
   -F "resume=false" \
@@ -973,8 +1275,8 @@ curl -X POST "$SERVICE_URL/service/uploadToken/action/upload" \
 
 # Chunk 2 (next 2 MB)
 dd if=my_video.mp4 bs=2097152 count=1 skip=1 2>/dev/null | \
-curl -X POST "$SERVICE_URL/service/uploadToken/action/upload" \
-  -F "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/upload" \
+  -F "ks=$KALTURA_KS" \
   -F "format=1" \
   -F "uploadTokenId=$UPLOAD_TOKEN_ID" \
   -F "resume=true" \
@@ -984,8 +1286,8 @@ curl -X POST "$SERVICE_URL/service/uploadToken/action/upload" \
 
 # Chunk 3 / final chunk (last 2 MB)
 dd if=my_video.mp4 bs=2097152 count=1 skip=2 2>/dev/null | \
-curl -X POST "$SERVICE_URL/service/uploadToken/action/upload" \
-  -F "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/upload" \
+  -F "ks=$KALTURA_KS" \
   -F "format=1" \
   -F "uploadTokenId=$UPLOAD_TOKEN_ID" \
   -F "resume=true" \
@@ -994,8 +1296,8 @@ curl -X POST "$SERVICE_URL/service/uploadToken/action/upload" \
   -F "fileData=@-;filename=chunk_4194304"
 
 # --- Step 3: Create a media entry ---
-curl -X POST "$SERVICE_URL/service/media/action/add" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/media/action/add" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "entry[objectType]=KalturaMediaEntry" \
   -d "entry[mediaType]=1" \
@@ -1003,17 +1305,17 @@ curl -X POST "$SERVICE_URL/service/media/action/add" \
 # Save the "id" from the response as ENTRY_ID
 
 # --- Step 4: Attach the upload token to the entry ---
-curl -X POST "$SERVICE_URL/service/media/action/addContent" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/media/action/addContent" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "entryId=$ENTRY_ID" \
+  -d "entryId=$KALTURA_ENTRY_ID" \
   -d "resource[objectType]=KalturaUploadedFileTokenResource" \
   -d "resource[token]=$UPLOAD_TOKEN_ID"
 
 # --- Step 5: Poll for READY ---
 while true; do
-  STATUS=$(curl -s -X POST "$SERVICE_URL/service/media/action/get" \
-    -d "ks=$KS" -d "format=1" -d "entryId=$ENTRY_ID" | jq -r '.status')
+  STATUS=$(curl -s -X POST "$KALTURA_SERVICE_URL/service/media/action/get" \
+    -d "ks=$KALTURA_KS" -d "format=1" -d "entryId=$KALTURA_ENTRY_ID" | jq -r '.status')
   echo "Status: $STATUS"
   [ "$STATUS" = "2" ] && echo "READY" && break
   [ "$STATUS" = "-1" ] || [ "$STATUS" = "-2" ] && echo "Failed" && break
@@ -1037,7 +1339,7 @@ done
 | `ENTRY_ID_NOT_FOUND` | Entry ID does not exist | Verify the entry ID; may have been deleted |
 | `INVALID_ENTRY_TYPE` | Operation not supported for this entry type | Use the correct service for the entry type |
 | `MAX_FILE_SIZE_EXCEEDED` | File exceeds the partner's upload limit | Use chunked upload or request limit increase |
-| Import stuck at status 0 | `addFromUrl` URL is a redirect | Use a direct file URL, not a streaming manifest URL |
+| Import stuck at status 0 | URL resource points to a redirect or manifest | Use a direct file URL with `KalturaUrlResource`, not a streaming manifest or redirect URL |
 
 **Retry strategy:** For transient errors (HTTP 5xx, timeouts), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (`UPLOAD_TOKEN_NOT_FOUND`, `ENTRY_ID_NOT_FOUND`), fix the request before retrying. For async operations (transcoding, URL imports), poll with increasing intervals (5s, 10s, 30s).
 
@@ -1045,8 +1347,10 @@ done
 # 14. Best Practices
 
 - **Use chunked upload for files > 10 MB.** Chunked upload supports resume on failure via `resumeAt`. Use `autoFinalize=1` with `fileSize` to simplify the protocol.  
-- **Use `addFromUrl` for remote files.** Provide direct file URLs -- redirect URLs (playManifest, HLS) cause import failures.  
-- **Use the two-step pattern:** `entry.add` + `entry.addContent` with `KalturaResource` types is the modern approach. The `addFrom*` convenience methods are deprecated but still functional.  
+- **Use `media.addContent` with `KalturaUrlResource` for remote files.** Provide direct file URLs — redirect URLs (playManifest, HLS) cause import failures. The two-step pattern (`media.add` + `media.addContent`) gives explicit control over entry metadata before triggering ingestion.  
+- **Use the correct resource type for each ingestion pattern:** `KalturaUploadedFileTokenResource` for local uploads, `KalturaUrlResource` for URL imports, `KalturaEntryResource` for copying content, `KalturaOperationResource` for clipping, `KalturaAssetsParamsResourceContainers` for multi-flavor ingest.  
+- **Use `baseEntry.clone` for entry duplication.** Clone provides a full deep copy (metadata, flavors, captions, cue points) with granular control over what to include. Use `KalturaEntryResource` only when you need a new entry with independent metadata.  
+- **Use `KalturaOperationResource` for clips.** Create time-based clips by specifying `offset` (ms) and `duration` (ms). Source must be a READY entry. For multi-clip concatenation, use `KalturaOperationResources` (plural).  
 - **Poll for READY status after upload.** Check `media.get` for `status=2` before performing operations that require processed content.  
 - **Use `referenceId` for cross-system linking.** Set a reference ID matching your CMS's content ID, then use `baseEntry.listByReferenceId` to look up entries.  
 - **Use `updateContent` for version management.** Replace the source file while preserving the entry ID, embed codes, and analytics history.  
@@ -1060,16 +1364,17 @@ done
 
 # 15. Related Guides
 
-- **[Content Delivery API](KALTURA_CONTENT_DELIVERY_API.md)** -- playManifest streaming URLs, raw serve, download URLs, access control  
-- **[Thumbnail & Image API](KALTURA_THUMBNAIL_API.md)** -- Dynamic thumbnail generation, thumbAsset management, sprite sheets  
-- **[Session Guide](KALTURA_SESSION_GUIDE.md)** -- Create and manage KS tokens  
-- **[AppTokens Guide](KALTURA_APPTOKENS_API.md)** -- Secure token-based auth for upload integrations  
-- **[API Getting Started](KALTURA_API_GETTING_STARTED.md)** -- Foundation guide covering content model, multirequest, and API patterns  
-- **[eSearch Guide](KALTURA_ESEARCH_API.md)** -- Search for entries after upload  
-- **[Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md)** -- Embed uploaded content  
-- **[REACH Guide](KALTURA_REACH_API.md)** -- Enrichment services for uploaded content (captions, translation, moderation)  
-- **[Agents Manager](KALTURA_AGENTS_MANAGER_API.md)** -- Auto-process uploaded content (triggers on ENTRY_READY)  
-- **[Multi-Stream](KALTURA_MULTI_STREAM_API.md)** -- Create synchronized dual/multi-screen entries  
-- **[Webhooks API](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md)** -- Get notified when entries finish processing  
-- **[Distribution](KALTURA_DISTRIBUTION_API.md)** -- Distribute uploaded content to external platforms  
-- **[Moderation API](KALTURA_MODERATION_API.md)** -- Content moderation workflows  
+- **[Video Editing API](KALTURA_VIDEO_EDITING_API.md)** — Trim, clip, concat, overlay, chroma key, caption burn-in, effects  
+- **[Content Delivery API](KALTURA_CONTENT_DELIVERY_API.md)** — playManifest streaming URLs, raw serve, download URLs, access control  
+- **[Thumbnail & Image API](KALTURA_THUMBNAIL_API.md)** — Dynamic thumbnail generation, thumbAsset management, sprite sheets  
+- **[Session Guide](KALTURA_SESSION_GUIDE.md)** — Create and manage KS tokens  
+- **[AppTokens Guide](KALTURA_APPTOKENS_API.md)** — Secure token-based auth for upload integrations  
+- **[API Getting Started](KALTURA_API_GETTING_STARTED.md)** — Foundation guide covering content model, multirequest, and API patterns  
+- **[eSearch Guide](KALTURA_ESEARCH_API.md)** — Search for entries after upload  
+- **[Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md)** — Embed uploaded content  
+- **[REACH Guide](KALTURA_REACH_API.md)** — Enrichment services for uploaded content (captions, translation, moderation)  
+- **[Agents Manager](KALTURA_AGENTS_MANAGER_API.md)** — Auto-process uploaded content (triggers on ENTRY_READY)  
+- **[Multi-Stream](KALTURA_MULTI_STREAM_API.md)** — Create synchronized dual/multi-screen entries  
+- **[Webhooks API](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md)** — Get notified when entries finish processing  
+- **[Distribution](KALTURA_DISTRIBUTION_API.md)** — Distribute uploaded content to external platforms  
+- **[Moderation API](KALTURA_MODERATION_API.md)** — Content moderation workflows  

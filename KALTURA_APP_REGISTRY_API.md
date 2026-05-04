@@ -9,7 +9,7 @@ When you create a virtual event through the Events Platform, an app is automatic
 **Format:** JSON request/response bodies, all endpoints use POST  
 **Regions:** NVP (default `nvp1`), EU (`irp2`), DE (`frp2`)  
 
-<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Authentication | 4.App Entity | 5.Register an App | 6.Get an App | 7.Update an App | 8.Delete an App | 9.Enable / Disable an App | 10.List Apps | 11.Find Apps by Organization Domain | 12.Versioning | 13.Error Handling | 14.Common Integration Patterns | 15.Best Practices | 16.Related Guides -->
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Authentication | 4.App Entity | 5.Register an App | 6.Get an App | 7.Update an App | 8.Delete an App | 9.Enable / Disable an App | 10.List Apps | 11.Find Apps by Organization Domain | 12.Versioning | 13.Error Handling | 14.Best Practices | 15.Related Guides -->
 
 
 # 1. When to Use
@@ -526,9 +526,17 @@ Validation errors (missing required fields, invalid enum values) return HTTP 400
 **Retry strategy:** For transient errors (HTTP 5xx, timeouts), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (HTTP 400, `OBJECT_NOT_FOUND`, `APP_REGISTRY_ALREADY_EXISTS_WITH_THIS_APP_CUSTOM_ID`), fix the request before retrying — these will not resolve on their own.
 
 
-# 14. Common Integration Patterns
+# 14. Best Practices
 
-## 14.1 Virtual Event ID to App GUID Mapping
+- **Use `appCustomId` for external system mapping.** Map virtual event IDs or external identifiers to app GUIDs for cross-service lookups (e.g., Events Platform auto-registers with `appCustomId` = virtual event ID).
+- **Track `version` numbers for concurrency detection.** The version increments on each state change — use it to detect concurrent modifications.
+- **Enable apps after configuration is complete.** Create and configure first, then enable — other services (User Profile, Messaging) only interact with enabled apps.
+- **Use the delta sync pattern for production integrations.** Filter by `updatedAt` range and paginate to keep your system in sync without full re-scans.
+- **Use AppTokens for production access.** Generate KS via `appToken.startSession` with HMAC — keep admin secrets off application servers.
+
+## Common Integration Patterns
+
+### Virtual Event ID to App GUID Mapping
 
 When the Events Platform creates a virtual event, it automatically registers an app in the App Registry with `appType: "epmEvent"` and sets the `appCustomId` to the **virtual event ID**. This is the primary cross-service linkage — to work with registration data for a specific event, resolve the virtual event ID to an `appGuid` first:
 
@@ -566,7 +574,7 @@ curl -s -X POST "$KALTURA_APP_REGISTRY_URL/app-registry/list" \
   }'
 ```
 
-## 14.2 Register App for Custom Integration
+### Register App for Custom Integration
 
 For custom integrations outside the Events Platform, register apps explicitly:
 
@@ -583,7 +591,7 @@ APP_GUID=$(curl -s -X POST "$KALTURA_APP_REGISTRY_URL/app-registry/add" \
 echo "App GUID: $APP_GUID"
 ```
 
-## 14.3 Register App -> Manage User Profiles
+### Register App -> Manage User Profiles
 
 The [User Profile API](KALTURA_USER_PROFILE_API.md) associates user data with specific app instances. The `appGuid` parameter in user profile operations must reference a registered, enabled app:
 
@@ -602,7 +610,7 @@ curl -X POST "$KALTURA_USER_PROFILE_URL/user-profile/add" \
 The User Profile service validates that the `appGuid` exists and is enabled in the App Registry. Validation results are cached for up to 24 hours — if you disable or delete an app, existing user profile operations may continue to work briefly.
 
 
-## 14.4 Cross-Service Registration Data Retrieval
+### Cross-Service Registration Data Retrieval
 
 The full flow for extracting event registration and attendance data spans four services:
 
@@ -643,7 +651,7 @@ curl -s -X POST "$KALTURA_SERVICE_URL/service/user/action/list" \
 
 For incremental syncs, use `updatedAtGreaterThanOrEqual` in both App Registry `list` and User Profile `list` filters to pull only records changed since your last sync.
 
-## 14.5 Incremental Data Sync
+### Incremental Data Sync
 
 Use date filters for efficient delta pulls instead of full data dumps:
 
@@ -664,15 +672,7 @@ curl -s -X POST "$KALTURA_APP_REGISTRY_URL/app-registry/list" \
 Store the last record's `updatedAt` timestamp as a watermark and use it as the start of the next sync window.
 
 
-# 15. Best Practices
-
-- **Use `appCustomId` for external system mapping.** Map virtual event IDs or external identifiers to app GUIDs for cross-service lookups (e.g., Events Platform auto-registers with `appCustomId` = virtual event ID).
-- **Track `version` numbers for concurrency detection.** The version increments on each state change — use it to detect concurrent modifications.
-- **Enable apps after configuration is complete.** Create and configure first, then enable — other services (User Profile, Messaging) only interact with enabled apps.
-- **Use the delta sync pattern for production integrations.** Filter by `updatedAt` range and paginate to keep your system in sync without full re-scans.
-- **Use AppTokens for production access.** Generate KS via `appToken.startSession` with HMAC — keep admin secrets off application servers.
-
-# 16. Related Guides
+# 15. Related Guides
 
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — KS generation and management
 - **[AppTokens API](KALTURA_APPTOKENS_API.md)** — Secure server-to-server auth

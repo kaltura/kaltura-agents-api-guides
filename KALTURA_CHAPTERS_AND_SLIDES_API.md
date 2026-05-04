@@ -56,7 +56,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/cuepoint_cuepoint/action/add" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "cuePoint[objectType]=KalturaThumbCuePoint" \
-  -d "cuePoint[entryId]=1_abc123" \
+  -d "cuePoint[entryId]=$KALTURA_ENTRY_ID" \
   -d "cuePoint[startTime]=0" \
   -d "cuePoint[subType]=2" \
   -d "cuePoint[title]=Introduction" \
@@ -72,7 +72,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/cuepoint_cuepoint/action/add" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "cuePoint[objectType]=KalturaThumbCuePoint" \
-  -d "cuePoint[entryId]=1_abc123" \
+  -d "cuePoint[entryId]=$KALTURA_ENTRY_ID" \
   -d "cuePoint[startTime]=30000" \
   -d "cuePoint[subType]=1" \
   -d "cuePoint[title]=Slide 2: Architecture Diagram" \
@@ -94,7 +94,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/thumbAsset/action/add" \
   -d "format=1" \
   -d "entryId=$KALTURA_ENTRY_ID" \
   -d "thumbAsset[objectType]=KalturaTimedThumbAsset" \
-  -d "thumbAsset[cuePointId]=1_slide_cp_id"
+  -d "thumbAsset[cuePointId]=$CUE_POINT_ID"
 ```
 
 ## 7.2 Upload and Set Content
@@ -109,16 +109,16 @@ curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/add" \
 curl -X POST "$KALTURA_SERVICE_URL/service/uploadToken/action/upload" \
   -F "ks=$KALTURA_KS" \
   -F "format=1" \
-  -F "uploadTokenId=TOKEN_ID" \
+  -F "uploadTokenId=$UPLOAD_TOKEN_ID" \
   -F "fileData=@slide.png"
 
 # Attach the uploaded image to the thumb asset
 curl -X POST "$KALTURA_SERVICE_URL/service/thumbAsset/action/setContent" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "id=THUMB_ASSET_ID" \
+  -d "id=$THUMB_ASSET_ID" \
   -d "contentResource[objectType]=KalturaUploadedFileTokenResource" \
-  -d "contentResource[token]=TOKEN_ID"
+  -d "contentResource[token]=$UPLOAD_TOKEN_ID"
 ```
 
 After `setContent`, the thumb asset reaches `status=2` (READY) and the linked cue point automatically transitions from `status=4` (PENDING) to `status=1` (READY). The cue point's `assetId` field is populated with the thumb asset ID.
@@ -129,7 +129,7 @@ After `setContent`, the thumb asset reaches `status=2` (READY) and the linked cu
 curl -X POST "$KALTURA_SERVICE_URL/service/thumbAsset/action/getUrl" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "id=THUMB_ASSET_ID"
+  -d "id=$THUMB_ASSET_ID"
 ```
 
 Returns a CDN URL that serves the slide image directly.
@@ -163,7 +163,7 @@ Filter to get only chapters or only slides:
 curl -X POST "$KALTURA_SERVICE_URL/service/cuepoint_cuepoint/action/list" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "filter[entryIdEqual]=1_abc123" \
+  -d "filter[entryIdEqual]=$KALTURA_ENTRY_ID" \
   -d "filter[cuePointTypeEqual]=thumbCuePoint.Thumb" \
   -d "filter[subTypeEqual]=2"
 
@@ -171,7 +171,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/cuepoint_cuepoint/action/list" \
 curl -X POST "$KALTURA_SERVICE_URL/service/cuepoint_cuepoint/action/list" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "filter[entryIdEqual]=1_abc123" \
+  -d "filter[entryIdEqual]=$KALTURA_ENTRY_ID" \
   -d "filter[cuePointTypeEqual]=thumbCuePoint.Thumb" \
   -d "filter[subTypeEqual]=1"
 ```
@@ -251,10 +251,10 @@ Chapter titles and slide OCR text are indexed in eSearch. Use `KalturaESearchCue
 
 # 15. Related Guides
 
-- [Cue Points Hub](KALTURA_CUE_POINTS_API.md) — Base cue point concepts, shared CRUD, eSearch integration, bulk operations
-- [Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md) — Player v7 setup, navigation and dualscreen plugins
-- [REACH API](KALTURA_REACH_API.md) — AI-powered chaptering (serviceFeature=5)
-- [Content Lab API](KALTURA_CONTENT_LAB_API.md) — AI chapter generation widget
-- [Multi-Stream API](KALTURA_MULTI_STREAM_API.md) — Dual-screen entries with slide/camera sync
-- [Upload & Ingestion API](KALTURA_UPLOAD_AND_INGESTION_API.md) — Upload token workflow for slide images
-- [Thumbnail API](KALTURA_THUMBNAIL_API.md) — thumbAsset CRUD for slide thumbnails
+- **[Cue Points Hub](KALTURA_CUE_POINTS_API.md)** — Base cue point concepts, shared CRUD, eSearch integration, bulk operations
+- **[Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md)** — Player v7 setup, navigation and dualscreen plugins
+- **[REACH API](KALTURA_REACH_API.md)** — AI-powered chaptering (serviceFeature=5)
+- **[Content Lab API](KALTURA_CONTENT_LAB_API.md)** — AI chapter generation widget
+- **[Multi-Stream API](KALTURA_MULTI_STREAM_API.md)** — Dual-screen entries with slide/camera sync
+- **[Upload & Ingestion API](KALTURA_UPLOAD_AND_INGESTION_API.md)** — Upload token workflow for slide images
+- **[Thumbnail API](KALTURA_THUMBNAIL_API.md)** — thumbAsset CRUD for slide thumbnails

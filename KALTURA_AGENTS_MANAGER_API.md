@@ -6,23 +6,23 @@ The Agents Manager lets you create **automated content-processing agents** that 
 **Auth:** `Authorization: Bearer <YOUR_KS>` header  
 **Format:** JSON request/response bodies, all endpoints use POST  
 
-## When to Use
+# 1. When to Use
 
 - **Automated post-upload processing** — Media operations teams deploying agents that automatically caption, summarize, and tag every new video upload without manual intervention  
 - **AI-powered content enrichment at scale** — Organizations processing large content libraries with consistent quality by configuring agents to generate translations, audio descriptions, and metadata enrichment across thousands of entries  
 - **Event-driven content workflows** — Developers building automation pipelines that trigger specific actions when content is added to a category, updated, or reaches a ready state  
 - **On-demand batch processing** — Content managers running agents manually on selected entries to apply enrichment services to existing content that predates the automation setup  
 
-## Prerequisites
+# 2. Prerequisites
 
 - Know how to generate Kaltura Sessions (KS) in your backend (see [Session Guide](KALTURA_SESSION_GUIDE.md))
 - Have a Kaltura account with the Agents Manager capability enabled
 - Have relevant REACH enrichment services provisioned on your account (see [REACH Guide](KALTURA_REACH_API.md))
 
-<!-- Sections: 1.Discover Available Action Types | 2.Create a Trigger | 3.Create Actions | 4.Create an Agent | 5.List Agents | 6.Delete Resources | 7.Execution Tracking | 8.Error Handling | 9.Best Practices | 10.Related Guides -->
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Key Benefits | 4.Core Concepts | 5.Available Triggers | 6.Available Actions | 7.Discover Available Action Types | 8.Create a Trigger | 9.Create Actions | 10.Create an Agent | 11.List Agents | 12.Delete Resources | 13.Execution Tracking | 14.Error Handling | 15.Best Practices | 16.Related Guides -->
 
 
-## Key Benefits
+# 3. Key Benefits
 
 - **Hands-free content processing** — Agents run automatically when content events occur. No manual steps, no delays.
 - **Consistent quality at scale** — Every piece of content gets the same treatment, whether you upload 10 videos or 10,000.
@@ -31,7 +31,7 @@ The Agents Manager lets you create **automated content-processing agents** that 
 - **Full visibility** — Track every execution with a unique trace ID. Query status at any time.
 
 
-## Core Concepts
+# 4. Core Concepts
 
 An agent is composed of three objects:
 
@@ -43,7 +43,7 @@ An agent is composed of three objects:
 | **Action Definitions** | The catalog of available action types for your account (e.g., captions, audio description). Each provides vendor/language combinations with `catalogItemId` values you reference when building your actions payload. |
 
 
-## Available Triggers
+# 5. Available Triggers
 
 Triggers are identified by `systemName`:
 
@@ -55,7 +55,7 @@ Triggers are identified by `systemName`:
 | **RUN_ON_DEMAND** | Trigger an agent manually via the API on specific content, without waiting for an event. |
 
 
-## Available Actions
+# 6. Available Actions
 
 Action types are listed dynamically via the Action Definitions API. Available actions depend on your account configuration and which services are provisioned. Examples include:
 
@@ -71,10 +71,10 @@ Action types are listed dynamically via the Action Definitions API. Available ac
 
 Most agent actions are powered by **Kaltura REACH** services. The `catalogItemId` values in the action definitions map directly to REACH vendor catalog items. See [REACH coverage](#kaltura-reach--the-services-behind-agent-actions) below for which services are available as agent actions vs. direct REACH API calls.
 
-The actions available to your agents depend on which services are enabled on your Kaltura account. Your account's full catalog of available action types — including any services added after this guide was written — can always be retrieved at runtime by calling the **Action Definitions API** (see [Step 1](#1-discover-available-action-types) below). This ensures your integration automatically discovers new action types as they become available, without code changes.
+The actions available to your agents depend on which services are enabled on your Kaltura account. Your account's full catalog of available action types — including any services added after this guide was written — can always be retrieved at runtime by calling the **Action Definitions API** (see [Step 7](#7-discover-available-action-types) below). This ensures your integration automatically discovers new action types as they become available, without code changes.
 
 
-# 1. Discover Available Action Types
+# 7. Discover Available Action Types
 
 Retrieve the catalog of actions available for your account. The response includes vendor information, supported languages, and `catalogItemId` values needed to build your actions payload.
 
@@ -139,7 +139,7 @@ Retrieve the catalog of actions available for your account. The response include
 - Not all action types have vendors/languages (e.g., `summary`, `publish_entry` may have different structures).
 
 
-# 2. Create a Trigger
+# 8. Create a Trigger
 
 Define when your agent should run. Triggers use a `systemName` to identify the event type.
 
@@ -175,7 +175,7 @@ Define when your agent should run. Triggers use a `systemName` to identify the e
 ```
 
 
-# 3. Create Actions
+# 9. Create Actions
 
 Define what your agent should do. Actions reference a `workflowId` and contain one or more `workflowActions`, each specifying a REACH profile, action type, and catalog item.
 
@@ -225,7 +225,7 @@ Define what your agent should do. Actions reference a `workflowId` and contain o
 ```
 
 
-# 4. Create an Agent
+# 10. Create an Agent
 
 Tie the trigger and actions together into an agent.
 
@@ -281,7 +281,7 @@ Enable the trigger and actions first, then set the agent status to `"Enabled"`. 
 Note: The create response includes full inline `trigger` and `actions` objects. The list endpoint returns only `triggerId` and `actionsId` as string references (see below).
 
 
-# 5. List Agents
+# 11. List Agents
 
 Retrieve all agents configured for your account.
 
@@ -318,7 +318,7 @@ Retrieve all agents configured for your account.
 ```
 
 
-# 6. Delete Resources
+# 12. Delete Resources
 
 Each resource type has its own delete endpoint. **Triggers and actions must be deleted explicitly** — they are not automatically removed when an agent is deleted.
 
@@ -357,7 +357,7 @@ Each delete returns the deleted object with `"status": "Deleted"`:
 ```
 
 
-# 7. Execution Tracking
+# 13. Execution Tracking
 
 Every agent execution is tracked and queryable:
 
@@ -491,8 +491,8 @@ For the complete REACH API reference — including all available services, how t
 
 In addition to the API, agents can be configured through Kaltura's management interfaces:
 
-- **KMC (Kaltura Management Console)** — Full agent management for administrators.
-- **KMS (Kaltura MediaSpace)** — Agent configuration within the end-user portal.
+- **Rich Media CMS (KMC)** — Full agent management for administrators.
+- **Content Hubs (KMS)** — Agent configuration within the end-user portal.
 - **Custom applications** — Embed the agent management UI into your own applications using Kaltura's Unisphere framework, which provides embeddable components for Kaltura functionality.
 
 
@@ -502,7 +502,7 @@ In addition to the API, agents can be configured through Kaltura's management in
 - **Supported action types:** captions, translation, dubbing, summary, moderation, metadata enrichment. For AI Clips, Quiz, Live Captions, and Video Analysis, use the [REACH API](KALTURA_REACH_API.md) directly. Call `actionDefinition/list` to discover available action types for your account.
 
 
-# 8. Error Handling
+# 14. Error Handling
 
 | Error Code / Status | Meaning | Resolution |
 |---------------------|---------|------------|
@@ -514,7 +514,7 @@ In addition to the API, agents can be configured through Kaltura's management in
 
 **Retry strategy:** For transient errors (HTTP 5xx, timeouts), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (`401 Unauthorized`, `400 Bad Request`, `404 Not Found`), fix the request before retrying — these will not resolve on their own. For async operations (agent executions), poll with increasing intervals (5s, 10s, 30s) rather than tight loops.
 
-# 9. Best Practices
+# 15. Best Practices
 
 - **Use specific triggers.** Prefer `ENTRY_READY` (fires once when transcoding completes) over `ENTRY_ADDED` (fires before content is playable).
 - **Filter triggers by category.** Use `categoryIds` in trigger configuration to limit which entries an agent processes — avoids processing test or draft content.
@@ -523,7 +523,7 @@ In addition to the API, agents can be configured through Kaltura's management in
 - **Use AppTokens for production.** Create a scoped AppToken for your agent automation service rather than using raw admin secrets.
 - **Set up one agent per workflow.** Separate agents for different processing pipelines (captioning, translation, moderation) makes debugging easier.
 
-# 10. Related Guides
+# 16. Related Guides
 
 - **[Agents Widget](KALTURA_AGENTS_WIDGET_API.md)** — Embeddable UI for managing agents via a Unisphere drawer panel — the visual counterpart to this server-side API  
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — Generate the KS needed for Bearer auth

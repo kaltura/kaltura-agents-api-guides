@@ -6,7 +6,7 @@ Experience Components are front-end embeddable apps and widgets that simplify bu
 **Auth:** KS passed via config object, URL parameter, or SDK constructor  
 **Format:** JavaScript embed, iframe embed, or SDK  
 
-<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Components | 4.Component Summaries | 5.Shared Best Practices | 6.Error Handling Overview | 7.Related Guides -->
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Components | 4.Component Summaries | 5.Error Handling | 6.Best Practices | 7.Related Guides -->
 
 
 # 1. When to Use
@@ -70,22 +70,22 @@ Each component creates, modifies, or interacts with Kaltura content and services
 **Embeddable Analytics** — Analytics visualization dashboards embedded via iframe with a `postMessage` protocol. Provides the same views as the KMC — engagement, technology, geo, contributors, live stream health, and entity drill-downs. See [Embeddable Analytics Guide](KALTURA_ANALYTICS_EMBED_API.md).
 
 
-# 5. Shared Best Practices
-
-- **Scope the KS for each component.** Express Recorder needs `editadmintags:*`. Captions Editor needs edit permissions for caption assets. Genie needs `setrole:PLAYBACK_BASE_ROLE`. Analytics needs ADMIN KS (type=2). Use the minimum privileges required for each component.  
-- **Handle session expiry for long-lived embeds.** Recording, caption editing, and avatar conversations can last longer than a typical KS TTL. Generate a KS with sufficient expiry for the expected session duration, or implement KS renewal in your application. For Embeddable Analytics, send an `updateConfig` message with a fresh KS.  
-- **Verify entry readiness.** After Express Recorder uploads, the entry goes through transcoding. Poll `media.get` for `status=2` (READY) before redirecting users to playback or caption editing.  
-- **Use HTTPS for all embed URLs.** All component embed URLs must use HTTPS for WebRTC, secure media access, iframe security policies, and ES module imports.  
-- **Generate client-facing KS tokens server-side.** Components like Genie and the Player expose the KS in client-side code. Generate USER sessions (type=0) with minimal privileges on your backend. Never embed admin secrets in client-side code.  
-
-
-# 6. Error Handling Overview
+# 5. Error Handling
 
 Each standalone guide includes component-specific error handling. Common patterns across all components:
 
 - **KS expiry during long sessions** — Components do not automatically renew expired sessions. Uploads, saves, and API calls fail silently when the KS expires. Generate tokens with sufficient expiry or implement renewal logic.  
 - **Missing permissions** — Components that require specific KS privileges (e.g., `editadmintags:*` for Express Recorder, analytics role for Embeddable Analytics) fail silently or show empty UIs when permissions are missing.  
 - **Container/iframe not rendered** — Verify CSS selectors match existing DOM elements, iframe `src` URLs are accessible over HTTPS, and container elements have explicit dimensions.  
+
+
+# 6. Best Practices
+
+- **Scope the KS for each component.** Express Recorder needs `editadmintags:*`. Captions Editor needs edit permissions for caption assets. Genie needs `setrole:PLAYBACK_BASE_ROLE`. Analytics needs ADMIN KS (type=2). Use the minimum privileges required for each component.  
+- **Handle session expiry for long-lived embeds.** Recording, caption editing, and avatar conversations can last longer than a typical KS TTL. Generate a KS with sufficient expiry for the expected session duration, or implement KS renewal in your application. For Embeddable Analytics, send an `updateConfig` message with a fresh KS.  
+- **Verify entry readiness.** After Express Recorder uploads, the entry goes through transcoding. Poll `media.get` for `status=2` (READY) before redirecting users to playback or caption editing.  
+- **Use HTTPS for all embed URLs.** All component embed URLs must use HTTPS for WebRTC, secure media access, iframe security policies, and ES module imports.  
+- **Generate client-facing KS tokens server-side.** Components like Genie and the Player expose the KS in client-side code. Generate USER sessions (type=0) with minimal privileges on your backend and pass them to client components at runtime. See [AppTokens API](KALTURA_APPTOKENS_API.md) for the secure pattern.  
 
 
 # 7. Related Guides

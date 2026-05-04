@@ -6,7 +6,7 @@ Content Lab is a Unisphere widget for AI-powered content repurposing. It generat
 **Auth:** KS passed via runtime settings  
 **Format:** ES module JavaScript embed (Unisphere runtime)  
 
-<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Architecture | 4.Embedding | 5.Application Runtime Settings | 6.AI Consent Runtime Settings | 7.Runtime API | 8.KS Requirements | 9.Error Handling | 10.Best Practices | 11.Multi-Region | 12.Related Guides -->
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Architecture | 4.Embedding | 5.Application Runtime Settings | 6.AI Consent Runtime Settings | 7.Runtime API | 8.KS Requirements | 9.Error Handling | 10.Best Practices | 11.Related Guides -->
 
 
 # 1. When to Use
@@ -107,7 +107,7 @@ Load the Unisphere loader and configure both the application and ai-consent runt
     "application"
   );
   contentLab.openApplication({
-    entryId: "$ENTRY_ID",
+    entryId: "$KALTURA_ENTRY_ID",
     eventSessionContextId: "",
     type: "entry"
   });
@@ -236,7 +236,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/reach_entryVendorTask/action/list" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "filter[objectType]=KalturaEntryVendorTaskFilter" \
-  -d "filter[entryIdEqual]=$ENTRY_ID" \
+  -d "filter[entryIdEqual]=$KALTURA_ENTRY_ID" \
   -d "filter[orderBy]=-createdAt"
 ```
 
@@ -303,8 +303,7 @@ The account must have the `FEATURE_CONTENT_LAB` permission enabled.
 - **Generate the KS server-side.** The KS is visible in client-side code — generate it on your backend.  
 - **Use HTTPS.** The Unisphere loader and all widget bundles require HTTPS.  
 
-
-# 11. Multi-Region
+## Multi-Region CDN
 
 | Region | Server URL | Consent API |
 |--------|-----------|-------------|
@@ -313,7 +312,7 @@ The account must have the `FEATURE_CONTENT_LAB` permission enabled.
 | FRP2 (DE) | `https://unisphere.frp2.ovp.kaltura.com/v1` | `https://consent.frp2.ovp.kaltura.com/api/v1` |
 
 
-# 12. Related Guides
+# 11. Related Guides
 
 - **[Unisphere Framework](KALTURA_UNISPHERE_FRAMEWORK_API.md)** — The micro-frontend framework that powers this widget: loader, workspace lifecycle, services  
 - **[Experience Components Overview](KALTURA_EXPERIENCE_COMPONENTS_API.md)** — Index of all embeddable components with shared guidelines  

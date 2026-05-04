@@ -6,7 +6,7 @@ The Embeddable Analytics widget provides analytics visualization dashboards that
 **Auth:** ADMIN KS (type=2) passed via postMessage  
 **Format:** iframe embed with postMessage protocol  
 
-<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Embedding | 4.Initialization Protocol | 5.Init Payload Reference | 6.Message Types | 7.Navigation Paths | 8.Date Filters | 9.viewsConfig — Controlling Dashboard Widgets | 10.Handling Drill-Down Navigation | 11.KS Requirements | 12.Error Handling | 13.Best Practices | 14.Complete Integration Example | 15.Programmatic Alternative | 16.Related Guides -->
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Embedding | 4.Initialization Protocol | 5.Init Payload Reference | 6.Message Types | 7.Navigation Paths | 8.Date Filters | 9.viewsConfig — Controlling Dashboard Widgets | 10.Handling Drill-Down Navigation | 11.KS Requirements | 12.Complete Integration Example | 13.Programmatic Alternative | 14.Error Handling | 15.Best Practices | 16.Related Guides -->
 
 
 # 1. When to Use
@@ -169,7 +169,7 @@ The `init` message payload configures the analytics app. All properties below ar
 |----------|------|-------------|
 | `predefinedFilter.ownerIdsIn` | string | Restrict reports to entries owned by this user ID. Use for "My Content" analytics |
 | `customData.metadataProfileId` | number | Metadata profile ID for displaying custom metadata comments |
-| `customData.disableUserDrilldown` | boolean | Prevent user drill-down navigation from entry detail views |
+| `customData.disableUserDrilldown` | boolean | When `true`, keeps users on the current entry detail view (hides drill-down navigation links) |
 | `customData.eventId` | string | Events Platform: scope analytics to a specific event |
 | `customData.eventContentCategoryFullName` | string | Events Platform: category full name for event content |
 | `customData.eventSessionEntries` | string | Events Platform: comma-separated session entry IDs |
@@ -189,7 +189,7 @@ The `init` message payload configures the analytics app. All properties below ar
 | Property | Type | Description |
 |----------|------|-------------|
 | `customStyle.baseClassName` | string | CSS class added to the iframe `<body>` — use as a scope prefix in `css` |
-| `customStyle.css` | string | Raw CSS injected into the iframe `<head>`. Scope rules under `baseClassName` to avoid conflicts |
+| `customStyle.css` | string | Raw CSS injected into the iframe `<head>`. Scope rules under `baseClassName` to keep styles isolated |
 
 **Example:** Transparent background for embedding in a dark host page:
 
@@ -209,7 +209,7 @@ Messages **from analytics app to host:**
 |-------------|---------|-------------|
 | `analyticsInit` | `{ menuConfig: object, viewsConfig: object }` | App loaded — sends default menu and viewsConfig for host to merge or override before responding with `init` |
 | `analyticsInitComplete` | — | Initialization complete, app ready for `navigate` and `updateFilters` |
-| `updateLayout` | `{ height: number }` | Request host to resize iframe to the given height in pixels. Handle this to avoid scrollbars inside the iframe |
+| `updateLayout` | `{ height: number }` | Request host to resize iframe to the given height in pixels. Handle this to keep the iframe scrollbar-free by matching content height |
 | `scrollTo` | `string` (pixel offset) | Request host to scroll the parent window to the specified pixel offset |
 | `navigateTo` | `string` (URL path) | User clicked a drill-down link — host should handle navigation (see section 10). Path includes entity type and ID |
 | `navigateBack` | — | User clicked back — host should navigate to the previous view |
@@ -463,33 +463,7 @@ Use a short-lived KS and refresh it when the user navigates to the analytics vie
 For multi-account analytics, the parent account must have the `FEATURE_MULTI_ACCOUNT_ANALYTICS` permission, and the KS must be generated on the parent account. Set `multiAccount: true` in the init payload.
 
 
-# 12. Error Handling
-
-- **`analyticsInitComplete` not received** — If the postMessage handshake starts (`analyticsInit` received) but `analyticsInitComplete` never arrives, verify the KS user has a role with analytics permissions. The app fetches the user's role during initialization — a user with empty `roleIds` causes the init to stall. Use the `Publisher Administrator` role or another role that includes analytics access.  
-- **Blank iframe** — Verify the iframe `src` URL is accessible and HTTPS is used. Check the browser console for mixed content warnings.  
-- **KS expiry during session** — The analytics app does not automatically renew expired sessions. Send an `updateConfig` message with a fresh KS to renew the session without reloading the iframe.  
-- **Cross-origin postMessage issues** — When using the standard cross-origin iframe, ensure you do not filter `event.origin` too strictly in your `message` listener. The analytics app runs on `kmc.kaltura.com`.  
-
-
-# 13. Best Practices
-
-- **Hide the menu for single-view embeds.** Set `menuConfig.showMenu` to `false` when embedding a specific analytics view (e.g., entry analytics on a content detail page).  
-- **Handle `updateLayout` messages.** The analytics app sends `updateLayout` with the content height — resize the iframe dynamically to avoid scrollbars inside the iframe:  
-
-```javascript
-window.addEventListener('message', function(e) {
-  if (!e.data || e.data.messageType !== 'updateLayout') return;
-  var iframe = document.getElementById('analytics');
-  iframe.style.height = e.data.payload.height + 'px';
-});
-```
-
-- **Handle `navigateTo` messages.** When users click drill-down links, the analytics app sends navigation requests to the host. Implement routing logic to either re-navigate within the analytics iframe or redirect to your application's pages.  
-- **Refresh the KS proactively.** Send `updateConfig` with a fresh KS before the current one expires. This avoids silent API failures within the analytics dashboard.  
-- **Use `viewsConfig` to scope the UI.** Hide irrelevant widgets, filters, and buttons by setting their `viewsConfig` keys to `null`. This creates a focused, branded analytics experience.  
-
-
-# 14. Complete Integration Example
+# 12. Complete Integration Example
 
 A full working example that handles the init handshake, dynamic iframe sizing, navigation, and KS refresh:
 
@@ -565,9 +539,35 @@ A full working example that handles the init handshake, dynamic iframe sizing, n
 ```
 
 
-# 15. Programmatic Alternative
+# 13. Programmatic Alternative
 
 For full programmatic access to analytics data (custom reports, CSV exports, time-series queries), use the [Analytics Reports API](KALTURA_ANALYTICS_REPORTS_API.md) instead. The API provides more granular control over report parameters, date ranges, and output formats without requiring iframe integration.
+
+
+# 14. Error Handling
+
+- **`analyticsInitComplete` not received** — If the postMessage handshake starts (`analyticsInit` received) but `analyticsInitComplete` has yet to arrive, verify the KS user has a role with analytics permissions. The app fetches the user's role during initialization — the user must have populated `roleIds` for init to complete. Use the `Publisher Administrator` role or another role that includes analytics access.  
+- **Blank iframe** — Verify the iframe `src` URL is accessible and HTTPS is used. Check the browser console for mixed content warnings.  
+- **KS expiry during session** — The host is responsible for refreshing sessions. Send an `updateConfig` message with a fresh KS to renew the session without reloading the iframe.  
+- **Cross-origin postMessage issues** — When using the standard cross-origin iframe, allow `kmc.kaltura.com` as a trusted origin in your `message` listener. The analytics app posts messages from this domain.  
+
+
+# 15. Best Practices
+
+- **Hide the menu for single-view embeds.** Set `menuConfig.showMenu` to `false` when embedding a specific analytics view (e.g., entry analytics on a content detail page).  
+- **Handle `updateLayout` messages.** The analytics app sends `updateLayout` with the content height — resize the iframe dynamically so the full dashboard is visible seamlessly:  
+
+```javascript
+window.addEventListener('message', function(e) {
+  if (!e.data || e.data.messageType !== 'updateLayout') return;
+  var iframe = document.getElementById('analytics');
+  iframe.style.height = e.data.payload.height + 'px';
+});
+```
+
+- **Handle `navigateTo` messages.** When users click drill-down links, the analytics app sends navigation requests to the host. Implement routing logic to either re-navigate within the analytics iframe or redirect to your application's pages.  
+- **Refresh the KS proactively.** Send `updateConfig` with a fresh KS before the current one expires. This keeps the analytics dashboard responsive with valid API credentials.  
+- **Use `viewsConfig` to scope the UI.** Hide irrelevant widgets, filters, and buttons by setting their `viewsConfig` keys to `null`. This creates a focused, branded analytics experience.  
 
 
 # 16. Related Guides

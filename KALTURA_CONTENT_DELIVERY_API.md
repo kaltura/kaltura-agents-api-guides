@@ -2,9 +2,10 @@
 
 This guide covers delivering content to viewers: constructing playManifest URLs for adaptive streaming (HLS/DASH), raw serve URLs for direct file access, download URLs, flavor asset selection, delivery profiles, and CDN configuration.
 
-**Base URL:** `$SERVICE_URL` (default: `https://www.kaltura.com/api_v3`)  
+**Base URL:** `$KALTURA_SERVICE_URL` (default: `https://www.kaltura.com/api_v3`)  
 **CDN Base:** `https://cdnapisec.kaltura.com` (or your account's CDN host)  
 **Auth:** Public entries work without KS. Access-controlled entries require a KS appended to the URL.  
+**Format:** Form-encoded request body; JSON response (format=1)  
 
 <!-- Sections: 1.When to Use | 2.Prerequisites | 3.playManifest — Adaptive Streaming | 4.Raw Serve URL — Direct File Access | 5.Download Endpoint | 6.Flavor Asset Delivery | 7.Delivery Profiles | 8.CDN URL Tokenization | 9.Access Control on Delivery | 10.Complete Delivery Workflow | 11.Error Handling | 12.Best Practices | 13.Related Guides -->
 
@@ -145,28 +146,28 @@ When no flavor selection parameters are provided, the server selects flavors bas
 
 ```bash
 # HLS streaming (most common)
-https://cdnapisec.kaltura.com/p/$PARTNER_ID/sp/${PARTNER_ID}00/playManifest/entryId/$ENTRY_ID/format/applehttp/protocol/https
+https://cdnapisec.kaltura.com/p/$KALTURA_PARTNER_ID/sp/${KALTURA_PARTNER_ID}00/playManifest/entryId/$KALTURA_ENTRY_ID/format/applehttp/protocol/https
 
 # MPEG-DASH streaming
-https://cdnapisec.kaltura.com/p/$PARTNER_ID/sp/${PARTNER_ID}00/playManifest/entryId/$ENTRY_ID/format/mpegdash/protocol/https
+https://cdnapisec.kaltura.com/p/$KALTURA_PARTNER_ID/sp/${KALTURA_PARTNER_ID}00/playManifest/entryId/$KALTURA_ENTRY_ID/format/mpegdash/protocol/https
 
 # Progressive download (single MP4)
-https://cdnapisec.kaltura.com/p/$PARTNER_ID/sp/${PARTNER_ID}00/playManifest/entryId/$ENTRY_ID/format/url/protocol/https
+https://cdnapisec.kaltura.com/p/$KALTURA_PARTNER_ID/sp/${KALTURA_PARTNER_ID}00/playManifest/entryId/$KALTURA_ENTRY_ID/format/url/protocol/https
 
 # Download with specific flavor
-https://cdnapisec.kaltura.com/p/$PARTNER_ID/sp/${PARTNER_ID}00/playManifest/entryId/$ENTRY_ID/format/download/protocol/https/flavorParamIds/0
+https://cdnapisec.kaltura.com/p/$KALTURA_PARTNER_ID/sp/${KALTURA_PARTNER_ID}00/playManifest/entryId/$KALTURA_ENTRY_ID/format/download/protocol/https/flavorParamIds/0
 
 # With access control (append KS)
-https://cdnapisec.kaltura.com/p/$PARTNER_ID/sp/${PARTNER_ID}00/playManifest/entryId/$ENTRY_ID/format/applehttp/protocol/https/ks/$KS
+https://cdnapisec.kaltura.com/p/$KALTURA_PARTNER_ID/sp/${KALTURA_PARTNER_ID}00/playManifest/entryId/$KALTURA_ENTRY_ID/format/applehttp/protocol/https/ks/$KALTURA_KS
 
 # 30-second preview clip
-https://cdnapisec.kaltura.com/p/$PARTNER_ID/sp/${PARTNER_ID}00/playManifest/entryId/$ENTRY_ID/format/applehttp/protocol/https/clipTo/30000
+https://cdnapisec.kaltura.com/p/$KALTURA_PARTNER_ID/sp/${KALTURA_PARTNER_ID}00/playManifest/entryId/$KALTURA_ENTRY_ID/format/applehttp/protocol/https/clipTo/30000
 
 # Capped at 1500kbps maximum bitrate
-https://cdnapisec.kaltura.com/p/$PARTNER_ID/sp/${PARTNER_ID}00/playManifest/entryId/$ENTRY_ID/format/applehttp/protocol/https/maxBitrate/1500
+https://cdnapisec.kaltura.com/p/$KALTURA_PARTNER_ID/sp/${KALTURA_PARTNER_ID}00/playManifest/entryId/$KALTURA_ENTRY_ID/format/applehttp/protocol/https/maxBitrate/1500
 
 # With referrer for domain restriction
-https://cdnapisec.kaltura.com/p/$PARTNER_ID/sp/${PARTNER_ID}00/playManifest/entryId/$ENTRY_ID/format/applehttp/protocol/https/referrer/aHR0cHM6Ly9teXNpdGUuY29t
+https://cdnapisec.kaltura.com/p/$KALTURA_PARTNER_ID/sp/${KALTURA_PARTNER_ID}00/playManifest/entryId/$KALTURA_ENTRY_ID/format/applehttp/protocol/https/referrer/aHR0cHM6Ly9teXNpdGUuY29t
 ```
 
 **Download URL from entry object:** Every `KalturaMediaEntry` includes a `downloadUrl` property that is a pre-built playManifest download URL.
@@ -207,16 +208,16 @@ https://cdnapisec.kaltura.com/p/{PARTNER_ID}/raw/entry_id/{ENTRY_ID}/{param}/{va
 
 ```bash
 # Serve an SVG inline in the browser
-https://cdnapisec.kaltura.com/p/$PARTNER_ID/raw/entry_id/$ENTRY_ID/direct_serve/1/forceproxy/true/logo.svg
+https://cdnapisec.kaltura.com/p/$KALTURA_PARTNER_ID/raw/entry_id/$KALTURA_ENTRY_ID/direct_serve/1/forceproxy/true/logo.svg
 
 # Serve a PDF (prompts download — no direct_serve)
-https://cdnapisec.kaltura.com/p/$PARTNER_ID/raw/entry_id/$ENTRY_ID/forceproxy/true/report.pdf
+https://cdnapisec.kaltura.com/p/$KALTURA_PARTNER_ID/raw/entry_id/$KALTURA_ENTRY_ID/forceproxy/true/report.pdf
 
 # Serve original source video inline (native browser player)
-https://cdnapisec.kaltura.com/p/$PARTNER_ID/raw/entry_id/$ENTRY_ID/direct_serve/1/forceproxy/true/video.mp4
+https://cdnapisec.kaltura.com/p/$KALTURA_PARTNER_ID/raw/entry_id/$KALTURA_ENTRY_ID/direct_serve/1/forceproxy/true/video.mp4
 
 # Access-controlled entry (append KS)
-https://cdnapisec.kaltura.com/p/$PARTNER_ID/raw/entry_id/$ENTRY_ID/ks/$KS/direct_serve/1/forceproxy/true/file.zip
+https://cdnapisec.kaltura.com/p/$KALTURA_PARTNER_ID/raw/entry_id/$KALTURA_ENTRY_ID/ks/$KALTURA_KS/direct_serve/1/forceproxy/true/file.zip
 ```
 
 ## 4.4 When to Use Raw vs Other Methods
@@ -269,8 +270,8 @@ POST /api_v3/service/flavorAsset/action/getUrl
 Returns a direct download URL string.
 
 ```bash
-curl -X POST "$SERVICE_URL/service/flavorAsset/action/getUrl" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/flavorAsset/action/getUrl" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "id=$FLAVOR_ASSET_ID"
 ```
@@ -280,10 +281,10 @@ curl -X POST "$SERVICE_URL/service/flavorAsset/action/getUrl" \
 ## 6.2 flavorAsset.list — Discover Available Renditions
 
 ```bash
-curl -X POST "$SERVICE_URL/service/flavorAsset/action/list" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/flavorAsset/action/list" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "filter[entryIdEqual]=$ENTRY_ID"
+  -d "filter[entryIdEqual]=$KALTURA_ENTRY_ID"
 ```
 
 Returns all flavors with `id`, `width`, `height`, `bitrate` (kbps), `size` (KB), `status`, `isOriginal`.
@@ -293,10 +294,10 @@ Returns all flavors with `id`, `width`, `height`, `bitrate` (kbps), `size` (KB),
 Returns all flavor assets paired with their flavor params for an entry, including params without assets (not yet transcoded) and assets without params.
 
 ```bash
-curl -X POST "$SERVICE_URL/service/flavorAsset/action/getFlavorAssetsWithParams" \
-  -d "ks=$KS" \
+curl -X POST "$KALTURA_SERVICE_URL/service/flavorAsset/action/getFlavorAssetsWithParams" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "entryId=$ENTRY_ID"
+  -d "entryId=$KALTURA_ENTRY_ID"
 ```
 
 
@@ -417,8 +418,8 @@ For access-controlled content:
 - **Use `playSessionId` for analytics.** Include a unique session ID to track playback analytics accurately.  
 - **Use `referrer` for domain restrictions.** Base64-encode the page URL and pass it as the `referrer` parameter.  
 - **Cache playManifest URLs.** Manifest URLs are CDN-cached. For time-sensitive access control, use `expiry` and `kt` parameters.  
-- **Use `flavorAsset.getUrl` for download links.** Don't construct flavor URLs manually — the API handles storage selection and tokenization.  
-- **Use Access Control profiles for restrictions.** Don't implement custom access checks in your application — configure them in Kaltura and they're enforced on every request.  
+- **Use `flavorAsset.getUrl` for download links.** It handles storage selection, CDN routing, and tokenization automatically.  
+- **Use Access Control profiles for restrictions.** The platform handles geo, IP, domain, and scheduling checks during playback — configure them in Kaltura and they're enforced on every request.  
 - **Short-form parameter names** (`e`, `f`, `pt`, etc.) are supported for all playManifest parameters for shorter URLs.  
 - **Videos under 10 seconds:** Akamai HDS format automatically falls back to progressive HTTP for very short videos.  
 

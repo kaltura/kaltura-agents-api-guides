@@ -6,7 +6,7 @@ Kaltura's eSearch API, powered by Elasticsearch, provides flexible full-text sea
 **Auth:** KS passed as `ks` parameter in POST form data (see [Session Guide](KALTURA_SESSION_GUIDE.md))  
 **Format:** Form-encoded POST (`application/x-www-form-urlencoded`), `format=1` for JSON responses  
 
-<!-- Sections: 1.When to Use | 2.Prerequisites | 3.API Endpoint & Structure | 4.Authentication | 5.Core Request Parameters & Objects | 6.Search Item (`searchItems`) Deep Dive | 7.API Response Format (JSON) | 8.Capabilities & Scenarios (with Curl Examples) | 9.Advanced Topics & Use Cases | 10.Edge Cases & Best Practices | 11.Key Objects & Enums Quick Reference | 12.Agent / LLM Integration Notes | 13.Error Handling | 14.Related Guides -->
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.API Endpoint & Structure | 4.Authentication | 5.Core Request Parameters & Objects | 6.Search Item (`searchItems`) Deep Dive | 7.API Response Format (JSON) | 8.Capabilities & Scenarios (with Curl Examples) | 9.Advanced Topics & Use Cases | 10.Advanced Patterns & Edge Cases | 11.Key Objects & Enums Quick Reference | 12.Agent / LLM Integration Notes | 13.Error Handling | 14.Best Practices | 15.Related Guides -->
 
 # 1. When to Use
 
@@ -203,7 +203,7 @@ Examples pipe to `jq` for readability.
     -d "searchParams[searchOperator][searchItems][0][objectType]=KalturaESearchEntryMetadataItem" \
     -d "searchParams[searchOperator][searchItems][0][searchTerm]=recipe" \
     -d "searchParams[searchOperator][searchItems][0][itemType]=1" \
-    -d "searchParams[searchOperator][searchItems][0][metadataProfileId]=653" \
+    -d "searchParams[searchOperator][searchItems][0][metadataProfileId]=$METADATA_PROFILE_ID" \
     -d "searchParams[searchOperator][searchItems][0][xpath]=/*[local-name()='metadata']/*[local-name()='Field1']" \
     -d "searchParams[searchOperator][searchItems][0][addHighlight]=true" \
     -d "searchParams[searchOperator][objectType]=KalturaESearchEntryOperator" \
@@ -214,27 +214,23 @@ Examples pipe to `jq` for readability.
 **E. Complex Logic (AND/NOT)**
 * **Goal:** Find entries with "strawberry" in the name AND which do *NOT* have "adding sugar" in the cue point text.
 * **Capability:** Complex logic operators, Field-specific search, Cue point search.
+* **Structure:** The top-level AND operator (`operator=1`) combines two items: item 0 searches for "strawberry" in the name field, and item 1 is a nested NOT operator (`operator=3`) whose child item searches cue point text for "adding sugar".
 * **Curl:**
     ```bash
     curl -X POST "$KALTURA_SERVICE_URL/service/elasticsearch_esearch/action/searchEntry" \
     -d "ks=$KALTURA_KS" \
-    # Main AND operator combines two items:
     -d "searchParams[searchOperator][operator]=1" \
     -d "searchParams[searchOperator][objectType]=KalturaESearchEntryOperator" \
-    # Item 0: 'strawberry' in name
     -d "searchParams[searchOperator][searchItems][0][objectType]=KalturaESearchEntryItem" \
     -d "searchParams[searchOperator][searchItems][0][itemType]=2" \
     -d "searchParams[searchOperator][searchItems][0][fieldName]=name" \
     -d "searchParams[searchOperator][searchItems][0][searchTerm]=strawberry" \
-    # Item 1: Nested NOT operator
     -d "searchParams[searchOperator][searchItems][1][objectType]=KalturaESearchEntryOperator" \
     -d "searchParams[searchOperator][searchItems][1][operator]=3" \
-    # Item 1.0 (inside NOT): 'adding sugar' in cue point text
     -d "searchParams[searchOperator][searchItems][1][searchItems][0][objectType]=KalturaESearchCuePointItem" \
     -d "searchParams[searchOperator][searchItems][1][searchItems][0][itemType]=1" \
     -d "searchParams[searchOperator][searchItems][1][searchItems][0][fieldName]=text" \
     -d "searchParams[searchOperator][searchItems][1][searchItems][0][searchTerm]=adding sugar" \
-    # End searchParams object
     -d "searchParams[objectType]=KalturaESearchEntryParams" \
     -d "format=1" | jq .
     ```
@@ -388,7 +384,7 @@ Examples pipe to `jq` for readability.
     * **Use Case:** Combining complex AND/OR/NOT logic as shown in Scenario E.
     * **How:** Place a `KalturaESearchEntryOperator` (or similar) within the `searchItems` array of another operator. This allows nesting conditions (e.g., `A AND (B OR (NOT C))`).
 
-# 10. Edge Cases & Best Practices
+# 10. Advanced Patterns & Edge Cases
 
 * **10,000 Result Limit:** Elasticsearch enforces a 10K result cap (500/page x 20 pages max). To traverse larger result sets, use `KalturaESearchRange` on `created_at` with scroll-forward pagination — move the date window after each 10K batch.
 * **Large Result Sets:** Always use the `pager` parameter (`pageIndex`, `pageSize`) to retrieve results in manageable chunks. Iterate through pages by incrementing `pageIndex` until the number of returned objects is less than `pageSize` or zero.
@@ -492,7 +488,7 @@ When exposing eSearch to an LLM via agent tools:
 
 * **Split into simple + advanced tools.** Provide a simple `search(query, page_size, order_by)` tool for keyword searches (90% of requests) and an advanced `search(search_params)` tool for caption timestamps, date ranges, and complex logic. Both call the same underlying API.
 
-* **Return the full API response.** Never strip `itemsData`, `highlight`, or `aggregations` — the LLM needs these for diverse use cases: caption timestamps for clip playback, match context for summarization, faceted counts for dashboard queries.
+* **Return the full API response including `itemsData`, `highlight`, and `aggregations`.** Downstream consumers rely on these fields for display and faceting: caption timestamps for clip playback, match context for summarization, faceted counts for dashboard queries.
 
 * **Use concrete objectTypes for orderBy.** `KalturaESearchOrderByItem` is abstract and returns `OBJECT_TYPE_ABSTRACT`. Use `KalturaESearchEntryOrderByItem` for entry search, `KalturaESearchCategoryOrderByItem` for category search, `KalturaESearchUserOrderByItem` for user search, `KalturaESearchGroupOrderByItem` for group search.
 
@@ -515,7 +511,18 @@ When exposing eSearch to an LLM via agent tools:
 **Retry strategy:** For transient errors (HTTP 5xx, `ESEARCH_SERVICE_DOWN`, timeouts), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (`INVALID_KS`, `ELASTIC_SEARCH_QUERY_NOT_VALID`, permission errors), fix the request before retrying — these will not resolve on their own.
 
 
-# 14. Related Guides
+# 14. Best Practices
+
+* **Use targeted field searches for performance.** Unified searches (`KalturaESearchUnifiedItem`) query all fields and can be slower. Specify `fieldName` (e.g., `NAME`, `CAPTIONS_CONTENT`) when you know what you are searching.
+* **Choose EXACT_MATCH vs PARTIAL intentionally.** `EXACT_MATCH` (`itemType=1`) provides higher precision. `PARTIAL` (`itemType=2`) expands with synonyms for higher recall. Use `ignoreSynonym=true` in `searchParams` to disable synonym expansion when precision matters more.
+* **Paginate with scroll-forward for large result sets.** Elasticsearch caps at 10K results (500/page x 20 pages). For larger sets, use `KalturaESearchRange` on `created_at` with date windows.
+* **Use aggregations for faceted counts.** Aggregations return counts per value (media type, category, tag) without fetching full results — ideal for building filter UIs.
+* **Use concrete objectTypes.** Abstract types (`KalturaESearchOrderByItem`, `KalturaESearchAggregationItem`) return `OBJECT_TYPE_ABSTRACT`. Always use concrete types like `KalturaESearchEntryOrderByItem`.
+* **Note the aggregation double nesting.** The parameter path is `searchParams[aggregations][aggregations][0]` — the outer is the container, the inner is the array.
+* **Caption timestamps are milliseconds.** `startsAt` and `endsAt` in caption item data are integers in milliseconds. Divide by 1000 for seconds.
+
+
+# 15. Related Guides
 
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — Generate the KS required for all eSearch calls
 - **[AppTokens](KALTURA_APPTOKENS_API.md)** — Secure KS generation for production integrations

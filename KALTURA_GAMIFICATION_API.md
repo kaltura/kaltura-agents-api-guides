@@ -21,7 +21,7 @@ The Game Services (SCM) API powers engagement mechanics for virtual events and l
 | `report` | generate | Report generation (8 types) |
 | `scheduledGameObject` | create, update, list, delete | Scheduled status transitions |
 
-<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Authentication | 4.Leaderboard Entity & CRUD | 5.Participation Policies | 6.Rules Engine | 7.Badges | 8.Certificates | 9.Lead Scoring | 10.User Scores & Progress | 11.External Events & CSV Import | 12.Reports | 13.Scheduled Game Objects | 14.Error Handling | 15.Common Integration Patterns | 1.Create leaderboard (scheduled) | 2.Create rules | 3.Create badges | 4.Enable leaderboard when event starts | 1.Create certificate with PDF template | 2.Create viewership rule for the certificate | 3.Enable certificate with credits mapping | 1.Create lead scoring profile | 2.Create rules across engagement categories | 3.After event — generate lead scoring report | 4.List user lead scores | 1.Create CPE certificate with per-entry eligibility | 2.Create viewership rule scoped to accredited sessions category | 3.Enable certificate with credits mapping (watch-time to CPE credit tiers) | 4.Generate per-entry certificate report for accreditation submission | 1.Create external rule on the leaderboard | 2.Import scores — delta mode (add to existing scores) | 3.Import scores — upsert mode (replace existing scores) | 1.Create leaderboard rule scoped to sponsor category | 2.Track sponsor booth page visit via analytics.trackEvent (API v3) | 3.Pull per-sponsor engagement data via report.getTable (API v3) | 4.Generate per-sponsor gamification report | 1.Create 90-day onboarding leaderboard | 2.Create module completion rule (scoped to IT Security category) | 3.Create "Security Certified" milestone badge | 4.Create HR-branded onboarding completion certificate | 5.Generate onboarding completion report for HR records | 1.Create "API Expert" badge with content + quiz requirements | 2.Query per-customer badge progress | 3.Generate badge completion report for CRM export | 1.Create leaderboard with department-based sub-leaderboards | 2.Create "Top Department" team badge | 3.Query team standings (sub-leaderboard rankings) | 16.Best Practices | 17.Related Guides -->
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Authentication | 4.Leaderboard Entity & CRUD | 5.Participation Policies | 6.Rules Engine | 7.Badges | 8.Certificates | 9.Lead Scoring | 10.User Scores & Progress | 11.External Events & CSV Import | 12.Reports | 13.Scheduled Game Objects | 14.Error Handling | 15.Best Practices | 16.Related Guides -->
 
 
 # 1. When to Use
@@ -908,9 +908,27 @@ All `list` endpoints support these filter fields:
 | `pager` | object | `{pageSize, pageIndex}` for pagination |
 
 
-# 15. Common Integration Patterns
+# 15. Best Practices
 
-## 15.1 Virtual Conference Engagement Program
+**Rule design — use groupBy wisely.** `groupBy: "kuserId"` accumulates across all entries. `groupBy: "kuserId,entryId"` accumulates per entry per user — use this for "watch X minutes per session" rules where you want per-session caps.
+
+**Set maxPoints caps.** Without `maxPoints`, users can accumulate unlimited points from a single rule. Use caps to prevent gaming: `"maxPoints": "100"` per session for viewership, `"maxPoints": "50"` for chat.
+
+**Sub-rule ordering.** Sub-rules execute before the root rule evaluates. Use `block_root_rule_if_exhausted` to cap total accumulation, and `block_root_rule_while_in_progress` for prerequisite logic.
+
+**Status lifecycle.** Create game objects as `scheduled`, enable rules, then update to `enabled` when the event starts. Use `scheduledGameObject` for automated transitions.
+
+**Event scoping.** Scope rules to specific events or content using `virtualEventId` and `categories` conditions. Without scoping, rules apply to all partner content.
+
+**Certificate PDF design.** Test the PDF template with a real certificate before the event. The background image URL must be publicly accessible. Text overlay positions (`x`, `y`) are in pixels from the top-left corner.
+
+**Participation policies.** Always exclude internal staff from leaderboards and lead scoring via `byEmailDomain` with policy `do_not_save`. Speakers can participate but should be hidden via `do_not_display`.
+
+**External events.** Use `delta` mode for incremental score additions (booth visits, check-ins). Use `upsert` mode when the external system provides final scores (exam results, external quiz platforms).
+
+## Common Integration Patterns
+
+### Virtual Conference Engagement Program
 
 Set up a complete gamification program for a multi-day virtual conference.
 
@@ -1018,7 +1036,7 @@ curl -s -X POST "$KALTURA_SCM_URL/leaderboard/update" \
   -d '{"id": "'$LEADERBOARD'", "status": "enabled"}'
 ```
 
-## 15.2 Partner Training Certification
+### Partner Training Certification
 
 Set up tiered certification with PDF certificates.
 
@@ -1075,7 +1093,7 @@ curl -s -X POST "$KALTURA_SCM_URL/certificate/update" \
   }'
 ```
 
-## 15.3 Post-Event Lead Scoring
+### Post-Event Lead Scoring
 
 Score attendees and export hot leads to CRM.
 
@@ -1151,7 +1169,7 @@ curl -s -X POST "$KALTURA_SCM_URL/userLeadScoring/list" \
   -d '{"gameObjectId": "'$LEAD'", "pager": {"pageSize": 100, "pageIndex": 1}}'
 ```
 
-## 15.4 Flash Challenges with Scheduled Transitions
+### Flash Challenges with Scheduled Transitions
 
 Create time-limited challenges that auto-enable and auto-disable.
 
@@ -1211,7 +1229,7 @@ curl -s -X POST "$KALTURA_SCM_URL/scheduledGameObject/create" \
   }'
 ```
 
-## 15.5 CPE / Continuing Education Credits
+### CPE / Continuing Education Credits
 
 Track Continuing Professional Education (CPE) credits per session for accreditation bodies (medical, legal, accounting). Each session awards credits based on verified watch time, and a branded PDF certificate is generated for submission to the accreditation authority.
 
@@ -1295,7 +1313,7 @@ The `categories` condition in the rule ensures only sessions within the accredit
 
 > **See also:** [Events Platform](KALTURA_EVENTS_PLATFORM_API.md) for virtual event and session category setup, [Custom Metadata](KALTURA_CUSTOM_METADATA_API.md) for attaching accreditation metadata to entries.
 
-## 15.6 External Score Import (Hybrid Events)
+### External Score Import (Hybrid Events)
 
 Hybrid events combine in-person and digital activities on a single leaderboard. Booth visits, physical check-ins, and external quiz platforms produce scores outside the Kaltura analytics pipeline. Import those scores via CSV so they appear alongside digital engagement on the same leaderboard.
 
@@ -1352,7 +1370,7 @@ Use `delta` for incremental activities where each occurrence adds points (booth 
 
 > **See also:** Section 11 (External Events & CSV Import) for CSV format details, [Analytics Reports](KALTURA_ANALYTICS_REPORTS_API.md) for verifying imported data in analytics.
 
-## 15.7 Sponsor Engagement Tracking & ROI Reports
+### Sponsor Engagement Tracking & ROI Reports
 
 Event sponsors need measurable engagement data to justify renewal. Organize sponsor content by category, track booth page visits via analytics events, score engagement on a per-sponsor leaderboard, and generate per-sponsor reports.
 
@@ -1418,7 +1436,7 @@ The `categories` condition on the rule ensures only content within the sponsor's
 
 > **See also:** [Categories & Entitlements](KALTURA_CATEGORIES_AND_ENTITLEMENTS_API.md) for sponsor category setup, [Events Collection](KALTURA_ANALYTICS_EVENTS_COLLECTION_API.md) for analytics event tracking, [Analytics Reports](KALTURA_ANALYTICS_REPORTS_API.md) for report.getTable usage, [Events Platform](KALTURA_EVENTS_PLATFORM_API.md) for virtual event structure.
 
-## 15.8 Employee Onboarding Gamification
+### Employee Onboarding Gamification
 
 Make employee onboarding engaging with module-based scoring, milestone badges, and a branded completion certificate. HR managers track cohort progress and generate records for compliance.
 
@@ -1538,7 +1556,7 @@ The 90-day window on the leaderboard defines the cohort period. Each onboarding 
 
 > **See also:** [Categories & Entitlements](KALTURA_CATEGORIES_AND_ENTITLEMENTS_API.md) for organizing onboarding modules by category, [User Management](KALTURA_USER_MANAGEMENT_API.md) for managing new hire user accounts and group assignments.
 
-## 15.9 Customer Education Academy with Badges
+### Customer Education Academy with Badges
 
 Reduce support tickets by building a customer education portal with visible achievement badges. Each product area has a badge requiring both content consumption and quiz completion. Track customer progress and export completion data to CRM.
 
@@ -1610,7 +1628,7 @@ Each badge requires both content consumption (`countUnique` ensures the customer
 
 > **See also:** [Categories & Entitlements](KALTURA_CATEGORIES_AND_ENTITLEMENTS_API.md) for product area category structure, [eSearch](KALTURA_ESEARCH_API.md) for searching entries and users by badge-related metadata.
 
-## 15.10 Team-Based Competitions
+### Team-Based Competitions
 
 Run department-level or regional competitions alongside individual rankings. Sub-leaderboards automatically aggregate individual scores by a user profile property (company, country, department), so team standings update in real time without separate team-level scoring logic.
 
@@ -1684,26 +1702,7 @@ The `filterPaths: ["company"]` setting on the sub-leaderboard groups users by th
 > **See also:** [User Profile](KALTURA_USER_PROFILE_API.md) for user properties that power `filterPaths` grouping, [Events Platform](KALTURA_EVENTS_PLATFORM_API.md) for virtual event scoping.
 
 
-# 16. Best Practices
-
-**Rule design — use groupBy wisely.** `groupBy: "kuserId"` accumulates across all entries. `groupBy: "kuserId,entryId"` accumulates per entry per user — use this for "watch X minutes per session" rules where you want per-session caps.
-
-**Set maxPoints caps.** Without `maxPoints`, users can accumulate unlimited points from a single rule. Use caps to prevent gaming: `"maxPoints": "100"` per session for viewership, `"maxPoints": "50"` for chat.
-
-**Sub-rule ordering.** Sub-rules execute before the root rule evaluates. Use `block_root_rule_if_exhausted` to cap total accumulation, and `block_root_rule_while_in_progress` for prerequisite logic.
-
-**Status lifecycle.** Create game objects as `scheduled`, enable rules, then update to `enabled` when the event starts. Use `scheduledGameObject` for automated transitions.
-
-**Event scoping.** Scope rules to specific events or content using `virtualEventId` and `categories` conditions. Without scoping, rules apply to all partner content.
-
-**Certificate PDF design.** Test the PDF template with a real certificate before the event. The background image URL must be publicly accessible. Text overlay positions (`x`, `y`) are in pixels from the top-left corner.
-
-**Participation policies.** Always exclude internal staff from leaderboards and lead scoring via `byEmailDomain` with policy `do_not_save`. Speakers can participate but should be hidden via `do_not_display`.
-
-**External events.** Use `delta` mode for incremental score additions (booth visits, check-ins). Use `upsert` mode when the external system provides final scores (exam results, external quiz platforms).
-
-
-# 17. Related Guides
+# 16. Related Guides
 
 - **[Events Platform](KALTURA_EVENTS_PLATFORM_API.md)** — `virtualEventIds` scope game objects to events; category IDs in rule conditions  
 - **[User Profile](KALTURA_USER_PROFILE_API.md)** — User properties power sub-leaderboards via `filterPaths[]`; user metadata enriches reports  

@@ -14,7 +14,7 @@ Report playback and engagement events back to Kaltura's analytics system. The st
 | `analytics.trackEvent` | Application-level event tracking (separate analytics server) |
 | Player Analytics Plugin | Built-in event reporting in Kaltura Player v7 (reference implementation) |
 
-<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Authentication | 4.Player Event Types | 5.stats.collect | 1.Widget loaded | 2.Media loaded | 3.Play | 4.Quartiles (25%, 50%, 75%, 100%) | 6.analytics.trackEvent | 7.Event Reporting Protocol | 8.Server-Side Collection | 1.Generate a KS with userId for per-user attribution | 2.Report playback events via stats.collect | 9.Custom Event Context | 10.Verification | 1.Send events | 2.Wait for propagation (for testing; production dashboards handle this automatically) | 3.Verify in reports | 11.Error Handling | 12.Common Integration Patterns | 13.Best Practices | 14.Related Guides -->
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Authentication | 4.Player Event Types | 5.stats.collect | 1.Widget loaded | 2.Media loaded | 3.Play | 4.Quartiles (25%, 50%, 75%, 100%) | 6.analytics.trackEvent | 7.Event Reporting Protocol | 8.Server-Side Collection | 1.Generate a KS with userId for per-user attribution | 2.Report playback events via stats.collect | 9.Custom Event Context | 10.Verification | 1.Send events | 2.Wait for propagation (for testing; production dashboards handle this automatically) | 3.Verify in reports | 11.Error Handling | 12.Best Practices | 13.Related Guides -->
 
 
 # 1. When to Use
@@ -124,7 +124,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/stats/action/collect" \
   -d "format=1" \
   -d "event[objectType]=KalturaStatsEvent" \
   -d "event[partnerId]=$KALTURA_PARTNER_ID" \
-  -d "event[entryId]=$ENTRY_ID" \
+  -d "event[entryId]=$KALTURA_ENTRY_ID" \
   -d "event[eventType]=3" \
   -d "event[sessionId]=$SESSION_ID" \
   -d "event[eventTimestamp]=$(date +%s)"
@@ -210,7 +210,7 @@ curl -s -X POST "$KALTURA_SERVICE_URL/service/stats/action/collect" \
   -d "format=1" \
   -d "event[objectType]=KalturaStatsEvent" \
   -d "event[partnerId]=$KALTURA_PARTNER_ID" \
-  -d "event[entryId]=$ENTRY_ID" \
+  -d "event[entryId]=$KALTURA_ENTRY_ID" \
   -d "event[eventType]=1" \
   -d "event[sessionId]=$SESSION_ID" \
   -d "event[eventTimestamp]=$(date +%s)"
@@ -221,7 +221,7 @@ curl -s -X POST "$KALTURA_SERVICE_URL/service/stats/action/collect" \
   -d "format=1" \
   -d "event[objectType]=KalturaStatsEvent" \
   -d "event[partnerId]=$KALTURA_PARTNER_ID" \
-  -d "event[entryId]=$ENTRY_ID" \
+  -d "event[entryId]=$KALTURA_ENTRY_ID" \
   -d "event[eventType]=2" \
   -d "event[sessionId]=$SESSION_ID" \
   -d "event[eventTimestamp]=$(date +%s)"
@@ -232,7 +232,7 @@ curl -s -X POST "$KALTURA_SERVICE_URL/service/stats/action/collect" \
   -d "format=1" \
   -d "event[objectType]=KalturaStatsEvent" \
   -d "event[partnerId]=$KALTURA_PARTNER_ID" \
-  -d "event[entryId]=$ENTRY_ID" \
+  -d "event[entryId]=$KALTURA_ENTRY_ID" \
   -d "event[eventType]=3" \
   -d "event[sessionId]=$SESSION_ID" \
   -d "event[eventTimestamp]=$(date +%s)"
@@ -244,7 +244,7 @@ for EVENT_TYPE in 4 5 6 7; do
   -d "format=1" \
     -d "event[objectType]=KalturaStatsEvent" \
     -d "event[partnerId]=$KALTURA_PARTNER_ID" \
-    -d "event[entryId]=$ENTRY_ID" \
+    -d "event[entryId]=$KALTURA_ENTRY_ID" \
     -d "event[eventType]=$EVENT_TYPE" \
     -d "event[sessionId]=$SESSION_ID" \
     -d "event[eventTimestamp]=$(date +%s)"
@@ -271,7 +271,7 @@ curl -X POST "$KALTURA_ANALYTICS_URL/api_v3/index.php?service=analytics&action=t
   -d "format=1" \
   -d "eventType=10003" \
   -d "partnerId=$KALTURA_PARTNER_ID" \
-  -d "entryId=$ENTRY_ID" \
+  -d "entryId=$KALTURA_ENTRY_ID" \
   -d "kalturaApplication=my-portal"
 ```
 
@@ -301,7 +301,7 @@ curl -X POST "$KALTURA_ANALYTICS_URL/api_v3/index.php?service=analytics&action=t
   -d "format=1" \
   -d "eventType=10003" \
   -d "partnerId=$KALTURA_PARTNER_ID" \
-  -d "entryId=$ENTRY_ID" \
+  -d "entryId=$KALTURA_ENTRY_ID" \
   -d "kalturaApplication=events-portal" \
   -d "pageType=lobby" \
   -d "pageName=main-lobby"
@@ -312,7 +312,7 @@ curl -X POST "$KALTURA_ANALYTICS_URL/api_v3/index.php?service=analytics&action=t
   -d "format=1" \
   -d "eventType=10002" \
   -d "partnerId=$KALTURA_PARTNER_ID" \
-  -d "entryId=$ENTRY_ID" \
+  -d "entryId=$KALTURA_ENTRY_ID" \
   -d "kalturaApplication=events-portal" \
   -d "buttonType=cta" \
   -d "buttonName=register-now"
@@ -382,11 +382,11 @@ KS=$(curl -s -X POST "$KALTURA_SERVICE_URL/service/session/action/start" \
 SESSION_ID="kiosk_$(date +%s)"
 
 curl -s -X POST "$KALTURA_SERVICE_URL/service/stats/action/collect" \
-  -d "ks=$KS" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "event[objectType]=KalturaStatsEvent" \
   -d "event[partnerId]=$KALTURA_PARTNER_ID" \
-  -d "event[entryId]=$ENTRY_ID" \
+  -d "event[entryId]=$KALTURA_ENTRY_ID" \
   -d "event[eventType]=3" \
   -d "event[sessionId]=$SESSION_ID" \
   -d "event[eventTimestamp]=$(date +%s)" \
@@ -414,11 +414,11 @@ KS=$(curl -s -X POST "$KALTURA_SERVICE_URL/service/session/action/start" \
 
 # All events sent with this KS are tagged under "corporate-portal"
 curl -s -X POST "$KALTURA_SERVICE_URL/service/stats/action/collect" \
-  -d "ks=$KS" \
+  -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "event[objectType]=KalturaStatsEvent" \
   -d "event[partnerId]=$KALTURA_PARTNER_ID" \
-  -d "event[entryId]=$ENTRY_ID" \
+  -d "event[entryId]=$KALTURA_ENTRY_ID" \
   -d "event[eventType]=3" \
   -d "event[sessionId]=$SESSION_ID" \
   -d "event[eventTimestamp]=$(date +%s)"
@@ -456,7 +456,7 @@ curl -s -X POST "$KALTURA_SERVICE_URL/service/stats/action/collect" \
   -d "format=1" \
   -d "event[objectType]=KalturaStatsEvent" \
   -d "event[partnerId]=$KALTURA_PARTNER_ID" \
-  -d "event[entryId]=$ENTRY_ID" \
+  -d "event[entryId]=$KALTURA_ENTRY_ID" \
   -d "event[eventType]=3" \
   -d "event[sessionId]=$SESSION_ID" \
   -d "event[eventTimestamp]=$(date +%s)"
@@ -472,7 +472,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getTable" \
   -d "reportInputFilter[objectType]=KalturaEndUserReportInputFilter" \
   -d "reportInputFilter[fromDate]=$FROM_TIMESTAMP" \
   -d "reportInputFilter[toDate]=$TO_TIMESTAMP" \
-  -d "reportInputFilter[entryIdIn]=$ENTRY_ID" \
+  -d "reportInputFilter[entryIdIn]=$KALTURA_ENTRY_ID" \
   -d "pager[pageSize]=5" \
   -d "pager[pageIndex]=1" \
   -d "responseOptions[objectType]=KalturaReportResponseOptions" \
@@ -509,9 +509,25 @@ For transient failures (HTTP 500, network timeout):
 - Do not retry 400/401 errors (fix the request instead)
 
 
-# 12. Common Integration Patterns
+# 12. Best Practices
 
-## 12.1 Custom Player Analytics Integration
+**Event ordering matters.** Fire events in lifecycle order (WIDGET_LOADED → MEDIA_LOADED → PLAY → quartiles). Out-of-order events may cause incorrect analytics calculations (e.g., a PLAY event without a preceding WIDGET_LOADED).
+
+**Fire quartiles once per session.** Each quartile event (25%, 50%, 75%, 100%) should fire exactly once per playback session. Seeking past a quartile does not count — only natural forward playback reaching that position should trigger the event.
+
+**Use consistent session IDs.** All events in a single playback session must share the same `sessionId`. A new session ID is generated each time the user starts a new playback (including replays).
+
+**Include userId for attribution.** Always include `userId` in the KS for per-user analytics. Without it, events are anonymous and cannot be correlated with user-level reports.
+
+**Use appId for multi-app environments.** If you run multiple applications on one Kaltura account, use `appId:<name>` KS privileges to segment analytics per application. This enables separate dashboards and reports for each app.
+
+**Kaltura Player v7 is the reference implementation.** The built-in Kaltura Player handles all event reporting automatically. When building a custom player, use the Player v7 analytics behavior as the reference for which events to fire and when. See [Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md).
+
+**Gamification integration.** `viewPeriod` events (derived from playback events) feed the Gamification rules engine. Custom player events reported via `stats.collect` trigger leaderboard scoring, badge progress, and certificate tracking. See [Gamification Guide](KALTURA_GAMIFICATION_API.md).
+
+## Common Integration Patterns
+
+### Custom Player Analytics Integration
 
 Build a custom player that reports events back to Kaltura analytics.
 
@@ -526,7 +542,7 @@ for EVENT in 1 2 3; do
   -d "format=1" \
     -d "event[objectType]=KalturaStatsEvent" \
     -d "event[partnerId]=$KALTURA_PARTNER_ID" \
-    -d "event[entryId]=$ENTRY_ID" \
+    -d "event[entryId]=$KALTURA_ENTRY_ID" \
     -d "event[eventType]=$EVENT" \
     -d "event[sessionId]=$SESSION_ID" \
     -d "event[eventTimestamp]=$(date +%s)" \
@@ -540,14 +556,14 @@ for QUARTILE in 4 5 6 7; do
   -d "format=1" \
     -d "event[objectType]=KalturaStatsEvent" \
     -d "event[partnerId]=$KALTURA_PARTNER_ID" \
-    -d "event[entryId]=$ENTRY_ID" \
+    -d "event[entryId]=$KALTURA_ENTRY_ID" \
     -d "event[eventType]=$QUARTILE" \
     -d "event[sessionId]=$SESSION_ID" \
     -d "event[eventTimestamp]=$(date +%s)"
 done
 ```
 
-## 12.2 Full Funnel Tracking (Page + Video)
+### Full Funnel Tracking (Page + Video)
 
 Track the full user journey from portal visit through video playback.
 
@@ -558,7 +574,7 @@ curl -s -X POST "$KALTURA_ANALYTICS_URL/api_v3/index.php?service=analytics&actio
   -d "format=1" \
   -d "eventType=10003" \
   -d "partnerId=$KALTURA_PARTNER_ID" \
-  -d "entryId=$ENTRY_ID" \
+  -d "entryId=$KALTURA_ENTRY_ID" \
   -d "kalturaApplication=events-portal" \
   -d "pageType=lobby"
 
@@ -568,7 +584,7 @@ curl -s -X POST "$KALTURA_ANALYTICS_URL/api_v3/index.php?service=analytics&actio
   -d "format=1" \
   -d "eventType=10002" \
   -d "partnerId=$KALTURA_PARTNER_ID" \
-  -d "entryId=$ENTRY_ID" \
+  -d "entryId=$KALTURA_ENTRY_ID" \
   -d "kalturaApplication=events-portal" \
   -d "buttonType=navigation" \
   -d "buttonName=view-session"
@@ -579,13 +595,13 @@ curl -s -X POST "$KALTURA_SERVICE_URL/service/stats/action/collect" \
   -d "format=1" \
   -d "event[objectType]=KalturaStatsEvent" \
   -d "event[partnerId]=$KALTURA_PARTNER_ID" \
-  -d "event[entryId]=$ENTRY_ID" \
+  -d "event[entryId]=$KALTURA_ENTRY_ID" \
   -d "event[eventType]=3" \
   -d "event[sessionId]=$SESSION_ID" \
   -d "event[eventTimestamp]=$(date +%s)"
 ```
 
-## 12.3 Server-Side Playback Tracking
+### Server-Side Playback Tracking
 
 Backend systems report plays for unified analytics across all channels.
 
@@ -602,11 +618,11 @@ KS=$(curl -s -X POST "$KALTURA_SERVICE_URL/service/session/action/start" \
 SESSION_ID="server_$(date +%s)"
 for EVENT_TYPE in 1 2 3 4 5 6 7; do
   curl -s -X POST "$KALTURA_SERVICE_URL/service/stats/action/collect" \
-    -d "ks=$KS" \
+    -d "ks=$KALTURA_KS" \
   -d "format=1" \
     -d "event[objectType]=KalturaStatsEvent" \
     -d "event[partnerId]=$KALTURA_PARTNER_ID" \
-    -d "event[entryId]=$ENTRY_ID" \
+    -d "event[entryId]=$KALTURA_ENTRY_ID" \
     -d "event[eventType]=$EVENT_TYPE" \
     -d "event[sessionId]=$SESSION_ID" \
     -d "event[eventTimestamp]=$(date +%s)" \
@@ -614,7 +630,7 @@ for EVENT_TYPE in 1 2 3 4 5 6 7; do
 done
 ```
 
-## 12.4 Per-Application Segmentation
+### Per-Application Segmentation
 
 Separate analytics for multiple applications on the same Kaltura account.
 
@@ -643,24 +659,7 @@ KS_B=$(curl -s -X POST "$KALTURA_SERVICE_URL/service/session/action/start" \
 ```
 
 
-# 13. Best Practices
-
-**Event ordering matters.** Fire events in lifecycle order (WIDGET_LOADED → MEDIA_LOADED → PLAY → quartiles). Out-of-order events may cause incorrect analytics calculations (e.g., a PLAY event without a preceding WIDGET_LOADED).
-
-**Fire quartiles once per session.** Each quartile event (25%, 50%, 75%, 100%) should fire exactly once per playback session. Seeking past a quartile does not count — only natural forward playback reaching that position should trigger the event.
-
-**Use consistent session IDs.** All events in a single playback session must share the same `sessionId`. A new session ID is generated each time the user starts a new playback (including replays).
-
-**Include userId for attribution.** Always include `userId` in the KS for per-user analytics. Without it, events are anonymous and cannot be correlated with user-level reports.
-
-**Use appId for multi-app environments.** If you run multiple applications on one Kaltura account, use `appId:<name>` KS privileges to segment analytics per application. This enables separate dashboards and reports for each app.
-
-**Kaltura Player v7 is the reference implementation.** The built-in Kaltura Player handles all event reporting automatically. When building a custom player, use the Player v7 analytics behavior as the reference for which events to fire and when. See [Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md).
-
-**Gamification integration.** `viewPeriod` events (derived from playback events) feed the Gamification rules engine. Custom player events reported via `stats.collect` trigger leaderboard scoring, badge progress, and certificate tracking. See [Gamification Guide](KALTURA_GAMIFICATION_API.md).
-
-
-# 14. Related Guides
+# 13. Related Guides
 
 - **[Player Embed](KALTURA_PLAYER_EMBED_GUIDE.md)** — Reference implementation — Player v7 fires ~45 event types automatically
 - **[Analytics Reports](KALTURA_ANALYTICS_REPORTS_API.md)** — Pull the data that events collection feeds into

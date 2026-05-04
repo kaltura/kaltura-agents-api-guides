@@ -325,7 +325,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadataProfile/action/updat
 | `metadataProfile[description]` | string | No | Updated description |
 | `xsdData` | string | No | Updated XSD (triggers re-validation of existing metadata, increments version) |
 
-Fields not included remain unchanged. Updating the XSD triggers the server to re-validate all existing metadata instances against the new schema. Incompatible changes cause `METADATA_UNABLE_TO_TRANSFORM`.
+Fields not included remain unchanged. Updating the XSD triggers the server to re-validate all existing metadata instances against the new schema. Keep schema changes backward-compatible (e.g., add new optional fields, widen enumerations) to pass re-validation successfully.
 
 ## 4.10 Update XSD from File
 
@@ -389,7 +389,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadataProfile/action/delet
 |-----------|------|----------|-------------|
 | `id` | integer | Yes | Profile ID to delete |
 
-Deletes the profile and cascades to all metadata instances associated with it. This action is irreversible. Profiles of type `DYNAMIC_OBJECT` with active references return `METADATA_PROFILE_REFERENCE_EXISTS`.
+Deletes the profile and cascades to all metadata instances associated with it. This is a permanent operation — back up any needed data before deleting. Profiles of type `DYNAMIC_OBJECT` with active references return `METADATA_PROFILE_REFERENCE_EXISTS`.
 
 
 # 5. XSD Schema Design
@@ -409,7 +409,7 @@ Every Kaltura metadata XSD must include four base type definitions that the KMC 
 
 ## 5.2 Base Type Definitions (Required)
 
-Every Kaltura XSD must include these four type definitions at the bottom of the schema. Without them, the KMC cannot determine field types for form rendering:
+Every Kaltura XSD must include these four type definitions at the bottom of the schema. The KMC uses these definitions to determine field types for form rendering:
 
 ```xml
 <xsd:complexType name="textType">
@@ -686,7 +686,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/add" \
   -d "format=1" \
   -d "metadataProfileId=$PROFILE_ID" \
   -d "objectType=1" \
-  -d "objectId=$ENTRY_ID" \
+  -d "objectId=$KALTURA_ENTRY_ID" \
   --data-urlencode 'xmlData=<metadata><Department>Engineering</Department><ProjectName>API Guides</ProjectName><DueDate>1718409600</DueDate><Tag>api</Tag><Tag>docs</Tag></metadata>'
 ```
 
@@ -697,7 +697,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/add" \
 | `objectId` | string | Yes | ID of the object to attach metadata to |
 | `xmlData` | string | Yes | XML data conforming to the profile's XSD |
 
-**Important:** XML field order must match the `<xsd:sequence>` order defined in the profile's XSD. Out-of-order fields cause validation errors. Field names are case-sensitive.
+**Important:** XML field order must match the `<xsd:sequence>` order defined in the profile's XSD. The server validates field ordering against the sequence definition. Field names are case-sensitive.
 
 **Response:**
 
@@ -730,7 +730,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/addFromFile"
   -d "format=1" \
   -d "metadataProfileId=$PROFILE_ID" \
   -d "objectType=1" \
-  -d "objectId=$ENTRY_ID" \
+  -d "objectId=$KALTURA_ENTRY_ID" \
   -F "xmlFile=@metadata.xml"
 ```
 
@@ -751,7 +751,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/addFromUrl" 
   -d "format=1" \
   -d "metadataProfileId=$PROFILE_ID" \
   -d "objectType=1" \
-  -d "objectId=$ENTRY_ID" \
+  -d "objectId=$KALTURA_ENTRY_ID" \
   -d "url=https://example.com/metadata/entry_metadata.xml"
 ```
 
@@ -805,7 +805,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/list" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "filter[objectType]=KalturaMetadataFilter" \
-  -d "filter[objectIdEqual]=$ENTRY_ID" \
+  -d "filter[objectIdEqual]=$KALTURA_ENTRY_ID" \
   -d "filter[objectTypeEqual]=1" \
   -d "filter[metadataProfileIdEqual]=$PROFILE_ID"
 ```
@@ -833,7 +833,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/list" \
 | `updatedAtGreaterThanOrEqual` / `updatedAtLessThanOrEqual` | Date range filters |
 | `orderBy` | `+createdAt`, `-createdAt`, `+updatedAt`, `-updatedAt`, `+metadataProfileVersion`, `-metadataProfileVersion` |
 
-**Important:** When `objectTypeEqual` is null, it defaults to ENTRY. For ENTRY type, `objectIdEqual` or `objectIdIn` is required — the server returns `MUST_FILTER_ON_OBJECT_ID` without it.
+**Important:** When `objectTypeEqual` is null, it defaults to ENTRY. For ENTRY type, always include `objectIdEqual` or `objectIdIn` — the server enforces this with `MUST_FILTER_ON_OBJECT_ID`.
 
 **Response:**
 
@@ -1015,7 +1015,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/add" \
   -d "format=1" \
   -d "metadataProfileId=$PROFILE_ID" \
   -d "objectType=1" \
-  -d "objectId=$ENTRY_ID" \
+  -d "objectId=$KALTURA_ENTRY_ID" \
   --data-urlencode 'xmlData=<metadata><Department>Engineering</Department></metadata>'
 ```
 
@@ -1086,9 +1086,9 @@ Target a specific field using the `xpath` parameter:
 
 ## 9.2 Searchable Fields
 
-Only fields with `<searchable>true</searchable>` in their `<appinfo>` annotation are indexed in eSearch. Non-searchable fields are stored but cannot be queried.
+Fields with `<searchable>true</searchable>` in their `<appinfo>` annotation are indexed in eSearch and available for queries. Fields marked `<searchable>false</searchable>` (or without the annotation) are stored for retrieval via `metadata.get` and `metadata.serve`.
 
-**Indexing limit:** Elasticsearch limits each metadata profile to 4 searchable Date fields and 4 searchable Integer fields. Additional Date/Integer fields beyond this limit are stored but silently not indexed in eSearch. Use text fields for non-filterable dates and numbers.
+**Indexing limit:** Elasticsearch indexes up to 4 searchable Date fields and 4 searchable Integer fields per metadata profile. Fields beyond this limit are stored and retrievable via `metadata.get`, but only the first 4 of each type appear in eSearch results. Use text fields for dates and numbers that only need storage and retrieval.
 
 ## 9.3 Cross-Field Search
 
@@ -1126,7 +1126,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/list" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "filter[objectType]=KalturaMetadataFilter" \
-  -d "filter[objectIdEqual]=$ENTRY_ID" \
+  -d "filter[objectIdEqual]=$KALTURA_ENTRY_ID" \
   -d "filter[objectTypeEqual]=1" \
   -d "filter[metadataProfileIdEqual]=$PROFILE_ID"
 
@@ -1136,7 +1136,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/add" \
   -d "format=1" \
   -d "metadataProfileId=$PROFILE_ID" \
   -d "objectType=1" \
-  -d "objectId=$ENTRY_ID" \
+  -d "objectId=$KALTURA_ENTRY_ID" \
   --data-urlencode 'xmlData=<metadata><Department>Engineering</Department></metadata>'
 
 # Step 2b: If totalCount>0, update existing (use ID from step 1)
@@ -1167,7 +1167,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/metadata_metadata/action/list" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "filter[objectType]=KalturaMetadataFilter" \
-  -d "filter[objectIdIn]=0_abc123,0_def456,0_ghi789" \
+  -d "filter[objectIdIn]=$ENTRY_ID_1,$ENTRY_ID_2,$ENTRY_ID_3" \
   -d "filter[objectTypeEqual]=1" \
   -d "filter[metadataProfileIdEqual]=$PROFILE_ID" \
   -d "pager[pageSize]=500"
@@ -1188,7 +1188,7 @@ When using Kaltura's bulk upload system, metadata is passed in `<customDataItems
 </customData>
 ```
 
-The `metadataProfile` attribute accepts the `systemName` (not just numeric ID). When updating via bulk XML, ALL existing fields must be included — omitted fields are cleared.
+The `metadataProfile` attribute accepts the `systemName` (or the numeric ID). When updating via bulk XML, include ALL existing fields — the system replaces the entire XML document, so include every field value to preserve them.
 
 ## 11.5 Schema Lookup by systemName
 
@@ -1269,7 +1269,7 @@ A `LegalHold` (listType yes/no) field prevents automated deletion. `ComplianceSt
 # 14. Best Practices
 
 - **Use systemName for stable profile references.** Set `systemName` on metadata profiles for machine lookups. Display names may change; system names provide a reliable key for code.
-- **Include all 4 base type definitions in every XSD.** Without `textType`, `dateType`, `objectType`, and `listType` definitions, the KMC cannot determine field types for form rendering.
+- **Include all 4 base type definitions in every XSD.** The KMC relies on `textType`, `dateType`, `objectType`, and `listType` definitions to determine field types for form rendering.
 - **Use `<appinfo>` annotations.** Add `label`, `key`, `searchable`, and `description` annotations to every field. This controls KMC rendering and eSearch indexing.
 - **One profile per use case.** Create separate profiles for different purposes (e.g., "Content Classification", "Workflow Status", "SEO Tags") rather than one large profile.
 - **Use listType with enumerations for filterable fields.** Enum fields are the only type available as KMC filter columns. They also enable dropdown UI controls.
@@ -1277,10 +1277,10 @@ A `LegalHold` (listType yes/no) field prevents automated deletion. `ComplianceSt
 - **Use optimistic locking for concurrent editing.** Pass the `version` parameter on `metadata.update` to prevent overwrites from concurrent processes.
 - **Date fields store Unix timestamps as longs.** Use Kaltura-native `dateType` (based on `xsd:long`) for dates. The KMC DatePicker interprets these as Unix timestamps, not ISO date strings.
 - **metadata.list for ENTRY type requires objectId.** Always include `objectIdEqual` or `objectIdIn` when listing entry metadata.
-- **Bulk XML updates must include ALL fields.** When updating metadata via bulk upload, omitted fields are cleared. Always include the complete XML with all field values.
+- **Bulk XML updates must include ALL fields.** The system replaces the entire XML document on bulk update. Always include the complete XML with all field values to preserve existing data.
 - **Use createMode filter to scope profile listings.** KMC-created profiles use `createMode=2`. API-created profiles use `createMode=1`. Filter with `createModeEqual` to list only profiles relevant to your integration.
-- **XML field order must match the XSD sequence.** When adding or updating metadata XML, the field order must exactly match the `<xsd:sequence>` order defined in the schema. Out-of-order fields cause validation errors. Field names are case-sensitive.
-- **4 searchable Date and 4 Integer fields per profile.** Elasticsearch limits the number of indexed Date and Integer fields per metadata profile to 4 each. Additional Date/Integer fields beyond this limit are stored but not searchable. Use text fields for non-filterable dates/numbers.
+- **XML field order must match the XSD sequence.** When adding or updating metadata XML, arrange fields in the exact `<xsd:sequence>` order defined in the schema. The server validates field ordering against the sequence definition. Field names are case-sensitive.
+- **4 searchable Date and 4 Integer fields per profile.** Elasticsearch indexes up to 4 Date and 4 Integer fields per metadata profile. Fields beyond this limit are stored and retrievable via `metadata.get`; only the first 4 of each type appear in eSearch. Use text fields for dates/numbers that only need storage and retrieval.
 - **`viewsData` controls KMC editor rendering.** The `viewsData` parameter on a metadata profile defines how fields render in the KMC metadata editor (field order, grouping, visibility). When omitted, a default UI is auto-generated from the XSD.
 
 

@@ -79,7 +79,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/cuepoint_cuepoint/action/add" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "cuePoint[objectType]=KalturaAdCuePoint" \
-  -d "cuePoint[entryId]=1_abc123" \
+  -d "cuePoint[entryId]=$KALTURA_ENTRY_ID" \
   -d "cuePoint[startTime]=120000" \
   -d "cuePoint[protocolType]=2" \
   -d "cuePoint[sourceUrl]=https://example.com/vast/midroll.xml" \
@@ -95,7 +95,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/cuepoint_cuepoint/action/add" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "cuePoint[objectType]=KalturaAdCuePoint" \
-  -d "cuePoint[entryId]=1_abc123" \
+  -d "cuePoint[entryId]=$KALTURA_ENTRY_ID" \
   -d "cuePoint[startTime]=30000" \
   -d "cuePoint[endTime]=45000" \
   -d "cuePoint[protocolType]=1" \
@@ -151,6 +151,6 @@ Ad cue point titles are indexed in eSearch via `KalturaESearchCuePointItem` with
 
 # 14. Related Guides
 
-- [Cue Points Hub](KALTURA_CUE_POINTS_API.md) — Base cue point concepts, shared CRUD, eSearch integration, bulk operations
-- [Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md) — Player v7 setup, ad plugin configuration
-- [Analytics Reports API](KALTURA_ANALYTICS_REPORTS_API.md) — Ad engagement analytics
+- **[Cue Points Hub](KALTURA_CUE_POINTS_API.md)** — Base cue point concepts, shared CRUD, eSearch integration, bulk operations
+- **[Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md)** — Player v7 setup, ad plugin configuration
+- **[Analytics Reports API](KALTURA_ANALYTICS_REPORTS_API.md)** — Ad engagement analytics

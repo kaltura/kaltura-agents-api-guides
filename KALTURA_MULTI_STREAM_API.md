@@ -12,18 +12,36 @@ Create synchronized multi-stream entries for dual-screen playback — Picture-in
 - **Picture-in-Picture and Side-by-Side experiences** — Content producers creating dual-screen video experiences where viewers see a primary speaker alongside a secondary stream (screen share, whiteboard, or additional camera)  
 - **Corporate training with multi-angle video** — L&D teams delivering training sessions with multiple synchronized video streams that viewers can toggle between for the best perspective  
 
-## Prerequisites
-
-- A Kaltura account with a valid Partner ID
-- A KS with appropriate privileges (see [Session Guide](KALTURA_SESSION_GUIDE.md))
-- A player with the Dual Screen plugin enabled (see [Section 5](#5-player-setup))
-- Video files that are in sync (same duration, same starting point)
-- For uploading new files, see the [Upload & Ingestion Guide](KALTURA_UPLOAD_AND_INGESTION_API.md)
-
-<!-- Sections: 1.Multi-Stream Architecture | 2.Create a Multi-Stream Entry Set | 3.Link an Existing Entry as a Child | 4.Verify and List Multi-Stream Entries | 5.Player v7 Dual Screen Setup | 6.Playback Behavior | 7.Complete Example — Multi-Stream Lifecycle | 8.API Reference | 9.Error Handling | 10.Best Practices | 11.Related Guides -->
+<!-- Sections: 1.Prerequisites & Authentication | 2.Multi-Stream Architecture | 3.Create a Multi-Stream Entry Set | 4.Link an Existing Entry as a Child | 5.Verify and List Multi-Stream Entries | 6.Player v7 Dual Screen Setup | 7.Playback Behavior | 8.Complete Example — Multi-Stream Lifecycle | 9.API Reference | 10.Error Handling | 11.Best Practices | 12.Related Guides -->
 
 
-# 1. Multi-Stream Architecture
+# 1. Prerequisites & Authentication
+
+| Requirement | Details |
+|-------------|---------|
+| **Kaltura account** | Active account with a valid Partner ID (`$KALTURA_PARTNER_ID`) |
+| **Admin KS** | Admin session (type=2) with `disableentitlement` privilege for full entry access. Generate via `session.start` or AppToken flow (see [Session Guide](KALTURA_SESSION_GUIDE.md) and [AppTokens Guide](KALTURA_APPTOKENS_API.md)) |
+| **Player with Dual Screen plugin** | A Kaltura Player v7 instance with the Dual Screen plugin enabled (see [Section 6](#6-player-v7-dual-screen-setup)) |
+| **Synchronized video files** | Source files with matching duration and aligned starting points for proper multi-stream playback |
+
+**Environment variables used throughout this guide:**
+
+```bash
+export KALTURA_SERVICE_URL="https://www.kaltura.com/api_v3"
+export KALTURA_PARTNER_ID="YOUR_PARTNER_ID"
+export KALTURA_KS="YOUR_KALTURA_SESSION"
+```
+
+**KS privilege guidance:**
+
+- For server-side operations (creating entries, linking children, listing entries), use an Admin KS (type=2) with `disableentitlement` to bypass content entitlement checks
+- For player-side playback, use a USER KS (type=0) scoped to the viewer — the Dual Screen player needs API access to discover child entries, but a user session is sufficient
+- In production, generate KS tokens server-side via AppTokens with minimal privileges and short expiry (1-4 hours). Pass tokens to clients per-session at runtime
+
+For uploading new files, see the [Upload & Ingestion Guide](KALTURA_UPLOAD_AND_INGESTION_API.md).
+
+
+# 2. Multi-Stream Architecture
 
 A multi-stream entry is a parent-child relationship between regular media entries:
 
@@ -46,11 +64,11 @@ Key behaviors:
 - The parent-child link is one-way: the child knows its parent. Use `baseEntry.list` with `parentEntryIdEqual` filter to find all children of a parent
 
 
-# 2. Create a Multi-Stream Entry Set
+# 3. Create a Multi-Stream Entry Set
 
 This workflow creates a parent entry and links child entries to it. For the upload steps (`uploadToken.add`, `uploadToken.upload`, `media.add`, `media.addContent`), see the [Upload & Ingestion Guide](KALTURA_UPLOAD_AND_INGESTION_API.md) for full details including chunked/resumable uploads.
 
-## 2.1 Create the Parent Entry
+## 3.1 Create the Parent Entry
 
 Upload and create the parent entry using the standard upload flow:
 
@@ -91,7 +109,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/media/action/addContent" \
 
 Wait for the parent entry status to become `2` (Ready) before proceeding.
 
-## 2.2 Create a Child Entry with parentEntryId
+## 3.2 Create a Child Entry with parentEntryId
 
 The key difference from a normal upload: set `entry[parentEntryId]` in the `media.add` call to link the child to the parent.
 
@@ -134,7 +152,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/media/action/addContent" \
 Repeat this step for each additional stream. Each child entry must reference the same `$PARENT_ENTRY_ID`.
 
 
-# 3. Link an Existing Entry as a Child
+# 4. Link an Existing Entry as a Child
 
 If you already have both videos as independent entries, link them after the fact using `baseEntry.update`:
 
@@ -157,9 +175,9 @@ curl -X POST "$KALTURA_SERVICE_URL/service/baseEntry/action/update" \
 ```
 
 
-# 4. Verify and List Multi-Stream Entries
+# 5. Verify and List Multi-Stream Entries
 
-## 4.1 Verify an Entry's Parent-Child Relationship
+## 5.1 Verify an Entry's Parent-Child Relationship
 
 ```bash
 # Get parent entry details
@@ -180,7 +198,7 @@ Confirm:
 - The child entry's `parentEntryId` matches the parent's `id`
 - Durations match (for synchronized playback)
 
-## 4.2 List All Children of a Parent
+## 5.2 List All Children of a Parent
 
 Use `baseEntry.list` with the `parentEntryIdEqual` filter:
 
@@ -194,11 +212,11 @@ curl -X POST "$KALTURA_SERVICE_URL/service/baseEntry/action/list" \
 The response `objects` array contains all child entries linked to the parent. The `totalCount` field shows how many children exist.
 
 
-# 5. Player v7 Dual Screen Setup
+# 6. Player v7 Dual Screen Setup
 
 The **Dual Screen plugin** (`@playkit-js/playkit-js-dual-screen`) enables synchronized multi-stream playback in Kaltura Player v7 (PlayKit). It requires the `kalturaCuepoints` plugin if showing slides.
 
-## 5.1 Enable via KMC Studio
+## 6.1 Enable via KMC Studio
 
 1. Log in to KMC and go to the **Studio** tab
 2. Select the player you want to configure (or create a new one)
@@ -211,7 +229,7 @@ The **Dual Screen plugin** (`@playkit-js/playkit-js-dual-screen`) enables synchr
 6. Set the **PiP position** (Top Right, Bottom Right, Top Left, Bottom Left)
 7. Click **Save**
 
-## 5.2 Enable via JavaScript Config
+## 6.2 Enable via JavaScript Config
 
 When using `KalturaPlayer.setup()`, add the `dualscreen` plugin to the config:
 
@@ -233,7 +251,7 @@ var player = KalturaPlayer.setup(config);
 player.loadMedia({ entryId: 'PARENT_ENTRY_ID' });
 ```
 
-## 5.3 Plugin Configuration Options
+## 6.3 Plugin Configuration Options
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
@@ -246,7 +264,7 @@ player.loadMedia({ entryId: 'PARENT_ENTRY_ID' });
 
 These values define the initial appearance on load. Viewers can interactively change layout and position during playback.
 
-## 5.4 Layout Modes
+## 6.4 Layout Modes
 
 | Layout | Description |
 |--------|-------------|
@@ -258,7 +276,7 @@ These values define the initial appearance on load. Viewers can interactively ch
 | `SingleMediaInverse` | Only secondary video shown |
 | `Hidden` | Dual screen deactivated |
 
-## 5.5 Programmatic Control via JavaScript API
+## 6.5 Programmatic Control via JavaScript API
 
 The plugin registers a `dualScreen` service on the player instance:
 
@@ -319,7 +337,7 @@ The first argument is `{ force: true }` to ensure the switch happens even if the
 
 For the `Inverse` variants (`PIPInverse`, `SideBySideInverse`, `SingleMediaInverse`), call `ds._applyInverse()` before the `_switchTo*` method to swap which stream is primary vs. secondary.
 
-## 5.6 Events
+## 6.6 Events
 
 The plugin emits two custom events:
 
@@ -337,7 +355,7 @@ player.addEventListener('dualscreen_change_layout', function(event) {
 See the [Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md) for full embedding details.
 
 
-# 6. Playback Behavior
+# 7. Playback Behavior
 
 | Streams | Player Behavior |
 |---------|----------------|
@@ -349,33 +367,45 @@ See the [Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md) for full embedding d
 - Renaming the parent entry is independent of child entries
 
 
-# 7. Complete Example — Multi-Stream Lifecycle
+# 8. Complete Example — Multi-Stream Lifecycle
 
 ```bash
 # Prerequisites: set these shell variables before running the commands below
 # KALTURA_SERVICE_URL="https://www.kaltura.com/api_v3"
 # KALTURA_KS="<your Kaltura Session>"
 
-# --- Step 1: Create the parent entry (using addFromUrl for simplicity) ---
-curl -X POST "$KALTURA_SERVICE_URL/service/media/action/addFromUrl" \
+# --- Step 1: Create the parent entry ---
+curl -X POST "$KALTURA_SERVICE_URL/service/media/action/add" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "mediaEntry[objectType]=KalturaMediaEntry" \
-  -d "mediaEntry[name]=Speaker Camera" \
-  -d "mediaEntry[mediaType]=1" \
-  -d "url=https://example.com/speaker.mp4"
+  -d "entry[objectType]=KalturaMediaEntry" \
+  -d "entry[name]=Speaker Camera" \
+  -d "entry[mediaType]=1"
 # Save the "id" from response as PARENT_ENTRY_ID
 
-# --- Step 2: Create a child entry linked to the parent ---
-curl -X POST "$KALTURA_SERVICE_URL/service/media/action/addFromUrl" \
+curl -X POST "$KALTURA_SERVICE_URL/service/media/action/addContent" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "mediaEntry[objectType]=KalturaMediaEntry" \
-  -d "mediaEntry[name]=Screen Share" \
-  -d "mediaEntry[mediaType]=1" \
-  -d "mediaEntry[parentEntryId]=$PARENT_ENTRY_ID" \
-  -d "url=https://example.com/screen-share.mp4"
+  -d "entryId=$PARENT_ENTRY_ID" \
+  -d "resource[objectType]=KalturaUrlResource" \
+  -d "resource[url]=https://example.com/speaker.mp4"
+
+# --- Step 2: Create a child entry linked to the parent ---
+curl -X POST "$KALTURA_SERVICE_URL/service/media/action/add" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "entry[objectType]=KalturaMediaEntry" \
+  -d "entry[name]=Screen Share" \
+  -d "entry[mediaType]=1" \
+  -d "entry[parentEntryId]=$PARENT_ENTRY_ID"
 # Save the "id" from response as CHILD_ENTRY_ID
+
+curl -X POST "$KALTURA_SERVICE_URL/service/media/action/addContent" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "entryId=$CHILD_ENTRY_ID" \
+  -d "resource[objectType]=KalturaUrlResource" \
+  -d "resource[url]=https://example.com/screen-share.mp4"
 
 # --- Step 3: Verify the relationship ---
 curl -X POST "$KALTURA_SERVICE_URL/service/baseEntry/action/get" \
@@ -417,13 +447,12 @@ curl -X POST "$KALTURA_SERVICE_URL/service/media/action/delete" \
 ```
 
 
-# 8. API Reference
+# 9. API Reference
 
 | Action | Purpose |
 |--------|---------|
 | `media.add` | Create a new media entry (set `parentEntryId` here for child entries) |
-| `media.addContent` | Attach an uploaded file to an entry |
-| `media.addFromUrl` | Create entry and import from URL (set `parentEntryId` for child) |
+| `media.addContent` | Attach content to an entry (use `KalturaUrlResource` for URLs, `KalturaUploadedFileTokenResource` for uploads) |
 | `baseEntry.update` | Link/unlink an existing entry as a child (set/clear `parentEntryId`) |
 | `baseEntry.get` | Retrieve entry details to verify parent-child setup |
 | `baseEntry.list` | List entries (use `filter[parentEntryIdEqual]` to find children) |
@@ -431,7 +460,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/media/action/delete" \
 | `uploadToken.upload` | Upload a file to the token |
 
 
-# 9. Error Handling
+# 10. Error Handling
 
 | Error Code | Meaning | Resolution |
 |------------|---------|------------|
@@ -442,15 +471,15 @@ curl -X POST "$KALTURA_SERVICE_URL/service/media/action/delete" \
 
 **Retry strategy:** For transient errors (HTTP 5xx, timeouts), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (`ENTRY_ID_NOT_FOUND`, `INVALID_ENTRY_TYPE`, `PROPERTY_VALIDATION_NOT_UPDATABLE`), fix the request before retrying — these will not resolve on their own.
 
-# 10. Best Practices
+# 11. Best Practices
 
 - **Create child entries with the correct `parentEntryId` from the start.** Setting `parentEntryId` during creation is more reliable than updating it later.
 - **Use USER KS (type=0)** for player-side operations. The Dual Screen player needs a KS to discover child entries via the API, but a scoped user session is sufficient.
 - **Poll for child entry READY status** before embedding. Multi-stream playback requires all entries to be transcoded.
-- **Use `addFromUrl` with direct MP4 URLs** for child entries. Redirect URLs (e.g., `playManifest`) cause import failures.
+- **Use `KalturaUrlResource` with direct MP4 URLs** for child entries. Redirect URLs (e.g., `playManifest`) cause import failures.
 - **Leverage REACH for all streams.** Order captions on both parent and child entries for complete accessibility coverage.
 
-# 11. Related Guides
+# 12. Related Guides
 
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — Generate the KS needed for API auth
 - **[Upload & Ingestion Guide](KALTURA_UPLOAD_AND_INGESTION_API.md)** — Full upload lifecycle (chunked, resumable, import from URL)

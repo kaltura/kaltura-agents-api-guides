@@ -6,7 +6,7 @@ The Media Manager is a Unisphere widget for browsing, selecting, and uploading K
 **Auth:** KS passed via workspace session or per-runtime settings  
 **Format:** ES module JavaScript embed (Unisphere runtime)  
 
-<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Embedding | 4.Configuration | 5.Visual Types | 6.Modes | 7.Runtime API | 8.Switching Categories at Runtime | 9.Upload Flow | 10.KS Requirements | 11.Container CSS | 12.Error Handling | 13.Best Practices | 14.Multi-Region | 15.Related Guides -->
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Embedding | 4.Configuration | 5.Visual Types | 6.Modes | 7.Runtime API | 8.Switching Categories at Runtime | 9.Upload Flow | 10.KS Requirements | 11.Container CSS | 12.Error Handling | 13.Best Practices | 14.Related Guides -->
 
 
 # 1. When to Use
@@ -372,8 +372,7 @@ The Media Manager fills the available space in its container. Set explicit dimen
 - **Clean up on navigation.** Call `workspace.kill()` when the user navigates away to release all runtimes and remove rendered DOM elements.  
 - **Refresh KS before expiry.** Call `workspace.session.setData(prev => ({ ...prev, ks: "new-ks" }))` to refresh the KS without reloading the workspace.  
 
-
-# 14. Multi-Region
+## Multi-Region CDN
 
 | Region | Server URL |
 |--------|-----------|
@@ -384,7 +383,7 @@ The Media Manager fills the available space in its container. Set explicit dimen
 Set the `serverUrl` in the workspace configuration to match your Kaltura account region.
 
 
-# 15. Related Guides
+# 14. Related Guides
 
 - **[Unisphere Framework](KALTURA_UNISPHERE_FRAMEWORK_API.md)** — The micro-frontend framework that powers this widget: loader, workspace lifecycle, services, multi-runtime composition  
 - **[Experience Components Overview](KALTURA_EXPERIENCE_COMPONENTS_API.md)** — Index of all embeddable components with shared guidelines  

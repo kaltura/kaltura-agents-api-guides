@@ -475,7 +475,7 @@ player.addEventListener('GENIE_OPEN_MANUAL', function(e) {
     }
   });
 
-  player.loadMedia({ entryId: "$ENTRY_ID" });
+  player.loadMedia({ entryId: "$KALTURA_ENTRY_ID" });
 </script>
 ```
 

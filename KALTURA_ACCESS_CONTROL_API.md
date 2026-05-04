@@ -273,7 +273,7 @@ Match or compare values from a custom metadata profile's XML fields. Metadata co
 # Block if AudioLanguage is NOT French
 -d "accessControlProfile[rules][0][conditions][0][objectType]=KalturaMatchMetadataCondition" \
 -d "accessControlProfile[rules][0][conditions][0][xPath]=AudioLanguage" \
--d "accessControlProfile[rules][0][conditions][0][profileId]=123" \
+-d "accessControlProfile[rules][0][conditions][0][profileId]=$METADATA_PROFILE_ID" \
 -d "accessControlProfile[rules][0][conditions][0][not]=true" \
 -d "accessControlProfile[rules][0][conditions][0][values][0][objectType]=KalturaStringValue" \
 -d "accessControlProfile[rules][0][conditions][0][values][0][value]=French"
@@ -286,7 +286,7 @@ Match or compare values from a custom metadata profile's XML fields. Metadata co
 -d "accessControlProfile[rules][0][conditions][0][objectType]=KalturaCompareMetadataCondition" \
 -d "accessControlProfile[rules][0][conditions][0][comparison]=4" \
 -d "accessControlProfile[rules][0][conditions][0][xPath]=ipadSunrise" \
--d "accessControlProfile[rules][0][conditions][0][profileId]=123" \
+-d "accessControlProfile[rules][0][conditions][0][profileId]=$METADATA_PROFILE_ID" \
 -d "accessControlProfile[rules][0][conditions][0][value][objectType]=KalturaTimeContextField"
 ```
 
@@ -334,7 +334,7 @@ For generic field matching (not metadata-specific), use `KalturaFieldMatchCondit
 ```bash
 # Restrict mobile devices to SD flavors only
 -d "accessControlProfile[rules][0][actions][0][objectType]=KalturaAccessControlLimitFlavorsAction" \
--d "accessControlProfile[rules][0][actions][0][flavorParamsIds]=487041,487051" \
+-d "accessControlProfile[rules][0][actions][0][flavorParamsIds]=$FLAVOR_PARAMS_ID_1,$FLAVOR_PARAMS_ID_2" \
 -d "accessControlProfile[rules][0][actions][0][isBlockedList]=false"
 ```
 
@@ -372,7 +372,7 @@ Kaltura has two mechanisms for enforcing time-based access:
 - Set `startDate` and `endDate` on the entry  
 - Single start/end window  
 - Enforced server-side across all devices  
-- Configurable via KMC without API calls  
+- Configurable via Rich Media CMS (KMC) without API calls  
 
 **Access control scheduling** (advanced):
 
@@ -391,7 +391,7 @@ Use `baseEntry.getContextData` to check whether content is currently available:
 curl -X POST "$KALTURA_SERVICE_URL/service/baseEntry/action/getContextData" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "entryId=$ENTRY_ID" \
+  -d "entryId=$KALTURA_ENTRY_ID" \
   -d "contextDataParams[objectType]=KalturaEntryContextDataParams"
 ```
 
@@ -412,7 +412,7 @@ Assign an access control profile to an entry via `media.update` (or `baseEntry.u
 curl -X POST "$KALTURA_SERVICE_URL/service/media/action/update" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "entryId=$ENTRY_ID" \
+  -d "entryId=$KALTURA_ENTRY_ID" \
   -d "mediaEntry[objectType]=KalturaMediaEntry" \
   -d "mediaEntry[accessControlId]=$ACCESS_CONTROL_ID"
 ```
@@ -473,10 +473,10 @@ A media company blocks feature-length content on specific mobile devices. Create
 
 # 15. Related Guides
 
-- **[Content Delivery API](KALTURA_CONTENT_DELIVERY_API.md)** -- playManifest, raw serve, download URLs where access control is enforced  
-- **[Session Guide](KALTURA_SESSION_GUIDE.md)** -- KS generation for authenticated access control conditions  
-- **[Categories & Entitlements API](KALTURA_CATEGORIES_AND_ENTITLEMENTS_API.md)** -- Category-based content entitlements (complementary to access control)  
-- **[Custom Metadata API](KALTURA_CUSTOM_METADATA_API.md)** -- Metadata profiles referenced in metadata conditions  
-- **[Thumbnail & Image API](KALTURA_THUMBNAIL_API.md)** -- Thumbnail delivery subject to THUMBNAIL context rules  
-- **[Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md)** -- Player handles access control responses and error messages  
-- **[Upload & Ingestion API](KALTURA_UPLOAD_AND_INGESTION_API.md)** -- Entry creation with `accessControlId` assignment  
+- **[Content Delivery API](KALTURA_CONTENT_DELIVERY_API.md)** — playManifest, raw serve, download URLs where access control is enforced  
+- **[Session Guide](KALTURA_SESSION_GUIDE.md)** — KS generation for authenticated access control conditions  
+- **[Categories & Entitlements API](KALTURA_CATEGORIES_AND_ENTITLEMENTS_API.md)** — Category-based content entitlements (complementary to access control)  
+- **[Custom Metadata API](KALTURA_CUSTOM_METADATA_API.md)** — Metadata profiles referenced in metadata conditions  
+- **[Thumbnail & Image API](KALTURA_THUMBNAIL_API.md)** — Thumbnail delivery subject to THUMBNAIL context rules  
+- **[Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md)** — Player handles access control responses and error messages  
+- **[Upload & Ingestion API](KALTURA_UPLOAD_AND_INGESTION_API.md)** — Entry creation with `accessControlId` assignment  

@@ -282,7 +282,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getTable" \
   -d "reportInputFilter[objectType]=KalturaEndUserReportInputFilter" \
   -d "reportInputFilter[fromDate]=$FROM_TIMESTAMP" \
   -d "reportInputFilter[toDate]=$TO_TIMESTAMP" \
-  -d "objectIds=CHILD_PARTNER_ID_1,CHILD_PARTNER_ID_2" \
+  -d "objectIds=$CHILD_PARTNER_ID_1,$CHILD_PARTNER_ID_2" \
   -d "pager[pageSize]=100" \
   -d "pager[pageIndex]=1" \
   -d "responseOptions[objectType]=KalturaReportResponseOptions" \

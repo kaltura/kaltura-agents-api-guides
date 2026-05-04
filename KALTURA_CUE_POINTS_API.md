@@ -112,7 +112,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/cuepoint_cuepoint/action/add" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "cuePoint[objectType]=KalturaCodeCuePoint" \
-  -d "cuePoint[entryId]=1_abc123" \
+  -d "cuePoint[entryId]=$KALTURA_ENTRY_ID" \
   -d "cuePoint[startTime]=5000" \
   -d "cuePoint[code]=marker-1" \
   -d "cuePoint[tags]=chapter"
@@ -124,7 +124,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/cuepoint_cuepoint/action/add" \
 curl -X POST "$KALTURA_SERVICE_URL/service/cuepoint_cuepoint/action/update" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "id=1_cp_id" \
+  -d "id=$CUE_POINT_ID" \
   -d "cuePoint[objectType]=KalturaCodeCuePoint" \
   -d "cuePoint[code]=updated-marker"
 ```
@@ -135,8 +135,8 @@ curl -X POST "$KALTURA_SERVICE_URL/service/cuepoint_cuepoint/action/update" \
 curl -X POST "$KALTURA_SERVICE_URL/service/cuepoint_cuepoint/action/clone" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "id=1_source_cp" \
-  -d "entryId=1_target_entry"
+  -d "id=$SOURCE_CUE_POINT_ID" \
+  -d "entryId=$TARGET_ENTRY_ID"
 ```
 
 Returns a new cue point with `copiedFrom` set to the source ID.
@@ -422,20 +422,20 @@ Ad, Annotation, Code, Thumb, and Quiz cue points support custom metadata profile
 # 13. Related Guides
 
 **Dedicated type guides:**
-- [Interactive Video Quiz API](KALTURA_QUIZ_API.md) — Quiz lifecycle, 8 question types, scoring, reports, IVQ plugin
-- [Chapters & Slides API](KALTURA_CHAPTERS_AND_SLIDES_API.md) — Chapter/slide cue points, timedThumbAsset workflow, navigation plugin
-- [Annotations API](KALTURA_ANNOTATIONS_API.md) — Text annotations, threading, hotspots
-- [Ad Cue Points API](KALTURA_AD_CUE_POINTS_API.md) — VAST/VPAID ad insertion, placement, protocol immutability
-- [Code, Event & Session API](KALTURA_CODE_CUE_POINTS_API.md) — Generic markers, view-change, broadcast events, recording sessions
+- **[Interactive Video Quiz API](KALTURA_QUIZ_API.md)** — Quiz lifecycle, 8 question types, scoring, reports, IVQ plugin
+- **[Chapters & Slides API](KALTURA_CHAPTERS_AND_SLIDES_API.md)** — Chapter/slide cue points, timedThumbAsset workflow, navigation plugin
+- **[Annotations API](KALTURA_ANNOTATIONS_API.md)** — Text annotations, threading, hotspots
+- **[Ad Cue Points API](KALTURA_AD_CUE_POINTS_API.md)** — VAST/VPAID ad insertion, placement, protocol immutability
+- **[Code, Event & Session API](KALTURA_CODE_CUE_POINTS_API.md)** — Generic markers, view-change, broadcast events, recording sessions
 
 **Cross-references:**
-- [eSearch API](KALTURA_ESEARCH_API.md) — Full search syntax, `KalturaESearchCuePointItem` details
-- [Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md) — Player v7 setup, plugin configuration
-- [REACH API](KALTURA_REACH_API.md) — AI-powered chaptering (serviceFeature=5), quiz generation (serviceFeature=12)
-- [Content Lab API](KALTURA_CONTENT_LAB_API.md) — AI-generated chapters and quizzes
-- [Captions & Transcripts](KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md) — Caption assets (related but separate from cue points)
-- [Multi-Stream API](KALTURA_MULTI_STREAM_API.md) — Dual-screen entries with slide/camera sync
-- [Custom Metadata API](KALTURA_CUSTOM_METADATA_API.md) — Attaching structured metadata to cue points
-- [Thumbnail API](KALTURA_THUMBNAIL_API.md) — Thumbnail assets for slide images
-- [Analytics Reports API](KALTURA_ANALYTICS_REPORTS_API.md) — Quiz reports and engagement analytics
-- [Gamification API](KALTURA_GAMIFICATION_API.md) — Quiz scores as gamification inputs
+- **[eSearch API](KALTURA_ESEARCH_API.md)** — Full search syntax, `KalturaESearchCuePointItem` details
+- **[Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md)** — Player v7 setup, plugin configuration
+- **[REACH API](KALTURA_REACH_API.md)** — AI-powered chaptering (serviceFeature=5), quiz generation (serviceFeature=12)
+- **[Content Lab API](KALTURA_CONTENT_LAB_API.md)** — AI-generated chapters and quizzes
+- **[Captions & Transcripts](KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md)** — Caption assets (related but separate from cue points)
+- **[Multi-Stream API](KALTURA_MULTI_STREAM_API.md)** — Dual-screen entries with slide/camera sync
+- **[Custom Metadata API](KALTURA_CUSTOM_METADATA_API.md)** — Attaching structured metadata to cue points
+- **[Thumbnail API](KALTURA_THUMBNAIL_API.md)** — Thumbnail assets for slide images
+- **[Analytics Reports API](KALTURA_ANALYTICS_REPORTS_API.md)** — Quiz reports and engagement analytics
+- **[Gamification API](KALTURA_GAMIFICATION_API.md)** — Quiz scores as gamification inputs

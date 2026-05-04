@@ -16,7 +16,7 @@ Pull analytics data out of Kaltura — content performance, viewer engagement, e
 | `stats` | `collect` | Server-side statistics collection |
 | `beacon` | `list` | Stream health diagnostics and encoder data |
 
-<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Authentication | 4.Report Response Format | 5.report.getTable | 6.report.getTotal | 7.report.getGraphs | 8.Multi-Request Batching | 9.CSV Exports | 10.Reports Microservice | 11.Live Analytics | 12.Report Types Reference | 13.Filter Fields Reference | 14.Error Handling & Permissions | 15.Common Integration Patterns | 16.Best Practices | 17.Related Guides -->
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Authentication | 4.Report Response Format | 5.report.getTable | 6.report.getTotal | 7.report.getGraphs | 8.Multi-Request Batching | 9.CSV Exports | 10.Reports Microservice | 11.Live Analytics | 12.Report Types Reference | 13.Filter Fields Reference | 14.Error Handling & Permissions | 15.Best Practices | 16.Related Guides -->
 
 
 # 1. When to Use
@@ -172,7 +172,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getTable" \
   -d "reportInputFilter[objectType]=KalturaEndUserReportInputFilter" \
   -d "reportInputFilter[fromDate]=$FROM_TIMESTAMP" \
   -d "reportInputFilter[toDate]=$TO_TIMESTAMP" \
-  -d "reportInputFilter[entryIdIn]=$ENTRY_ID" \
+  -d "reportInputFilter[entryIdIn]=$KALTURA_ENTRY_ID" \
   -d "pager[pageSize]=25" \
   -d "pager[pageIndex]=1" \
   -d "responseOptions[objectType]=KalturaReportResponseOptions" \
@@ -392,7 +392,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getCsvFromStringParams"
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "id=4021" \
-  -d "params=from_date=$FROM;to_date=$TO;entry_ids=$ENTRY_ID;virtualeventid=$EVENT_ID"
+  -d "params=from_date=$FROM;to_date=$TO;entry_ids=$KALTURA_ENTRY_ID;virtualeventid=$EVENT_ID"
 ```
 
 **Columns returned:** `email`, `combined_live_engaged_users_play_time_ratio`, `download_attachment`, `add_to_calendar`, `raise_hand`, `mic_on`, `cam_on`, `clap_clicked_count`, `heart_clicked_count`, `think_clicked_count`, `wow_clicked_count`, `smile_clicked_count`, `total_reactions_activity`, `answered_polls`, `messages_sent_group`, `qna_threads`
@@ -502,7 +502,7 @@ SESSION_ID=$(curl -s -X POST "$KALTURA_REPORTS_URL/api/v1/report/generate" \
   -d '{
     "reportName": "pollsActivity",
     "reportParameters": {
-      "entries_ids": ["'$ENTRY_ID'"],
+      "entries_ids": ["'$KALTURA_ENTRY_ID'"],
       "virtual_event_ids": ["'$EVENT_ID'"],
       "from_date_id": "2025-09-15",
       "to_date_id": "2025-09-16"
@@ -540,7 +540,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/liveReports/action/getEvents" \
   -d "format=1" \
   -d "reportType=ENTRY_TIME_LINE" \
   -d "filter[objectType]=KalturaLiveReportInputFilter" \
-  -d "filter[entryIds]=$ENTRY_ID" \
+  -d "filter[entryIds]=$KALTURA_ENTRY_ID" \
   -d "filter[fromTime]=$FROM_UNIX" \
   -d "filter[toTime]=$TO_UNIX" \
   -d "filter[live]=1"
@@ -571,7 +571,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/beacon/action/list" \
   -d "filter[eventTypeIn]=0_healthData,1_healthData" \
   -d "filter[indexTypeEqual]=log" \
   -d "filter[relatedObjectTypeIn]=4" \
-  -d "filter[objectIdIn]=$ENTRY_ID" \
+  -d "filter[objectIdIn]=$KALTURA_ENTRY_ID" \
   -d "filter[orderBy]=-updatedAt"
 ```
 
@@ -585,7 +585,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/beacon/action/list" \
   -d "filter[eventTypeIn]=0_staticData,0_dynamicData,1_staticData,1_dynamicData" \
   -d "filter[indexTypeEqual]=state" \
   -d "filter[relatedObjectTypeIn]=4" \
-  -d "filter[objectIdIn]=$ENTRY_ID"
+  -d "filter[objectIdIn]=$KALTURA_ENTRY_ID"
 ```
 
 **Beacon event type prefixes:** `0_` = primary stream, `1_` = backup/secondary stream.
@@ -742,9 +742,25 @@ The `KalturaEndUserReportInputFilter` supports these filter fields. Multiple val
 The Reports Microservice returns HTTP status codes. A `report/serve` call with `statusOnly: true` returns `{"status": "pending"}`, `{"status": "in_progress"}`, or `{"status": "completed"}`. If generation fails, the status response includes an error message.
 
 
-# 15. Common Integration Patterns
+# 15. Best Practices
 
-## 15.1 Event ROI Dashboard
+**Date handling.** All API v3 report filter dates use Unix timestamps in **seconds** (not milliseconds). For example, `Math.floor(Date.now() / 1000)` in JavaScript or `int(time.time())` in Python.
+
+**Pipe-delimited parsing.** Always set `responseOptions[delimiter]=|` for consistency. Parse the `header` field to map column positions dynamically rather than hardcoding column indices — columns may vary by report type and account configuration.
+
+**Multi-request for dashboards.** Batch `getTotal` + `getGraphs` + `getTable` in a single `KalturaMultiRequest` to reduce round trips. This is the standard pattern for building analytics dashboard views.
+
+**CSV vs API tradeoffs.** Use `report.getTable` for real-time dashboard queries with pagination. Use `report.getUrlForReportAsCsv` for bulk exports, scheduled ETL jobs, and BI tool ingestion. Use `report.getCsvFromStringParams` for specialized reports (IDs 4021, 6000-6002, 3006-3008) that are not available via the standard filter interface.
+
+**Polling intervals for live.** Follow the recommended intervals in section 11.3. Polling faster than recommended wastes resources without improving data freshness. Polling slower may miss transient issues.
+
+**Reports Microservice polling.** Always use `statusOnly: true` for the polling loop to avoid downloading the full CSV on every check. Only omit `statusOnly` for the final download request after status shows `completed`.
+
+**Cross-service analytics.** Use `appId:<name>` in KS privileges to tag analytics per-application. Use `virtualEventIdIn` to scope reports to specific events. Use `categoriesIdsIn` to scope by content library. See the [Session Guide](KALTURA_SESSION_GUIDE.md) for KS privilege syntax.
+
+## Common Integration Patterns
+
+### Event ROI Dashboard
 
 After a virtual conference, pull aggregate attendance, per-session breakdown, and engagement trends in a single multi-request call, then export per-attendee data for BI tools.
 
@@ -813,7 +829,7 @@ CSV_URL=$(curl -s -X POST "$KALTURA_SERVICE_URL/service/report/action/getUrlForR
 curl -o event_roi.csv "$CSV_URL"
 ```
 
-## 15.2 Content Performance Optimization
+### Content Performance Optimization
 
 Identify top-performing content and drop-off points to improve engagement.
 
@@ -840,7 +856,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getTable" \
   -d "reportInputFilter[objectType]=KalturaEndUserReportInputFilter" \
   -d "reportInputFilter[fromDate]=$FROM_TIMESTAMP" \
   -d "reportInputFilter[toDate]=$TO_TIMESTAMP" \
-  -d "reportInputFilter[entryIdIn]=$ENTRY_ID" \
+  -d "reportInputFilter[entryIdIn]=$KALTURA_ENTRY_ID" \
   -d "pager[pageSize]=25" \
   -d "pager[pageIndex]=1" \
   -d "responseOptions[objectType]=KalturaReportResponseOptions" \
@@ -854,14 +870,14 @@ curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getTable" \
   -d "reportInputFilter[objectType]=KalturaEndUserReportInputFilter" \
   -d "reportInputFilter[fromDate]=$FROM_TIMESTAMP" \
   -d "reportInputFilter[toDate]=$TO_TIMESTAMP" \
-  -d "reportInputFilter[entryIdIn]=$ENTRY_ID" \
+  -d "reportInputFilter[entryIdIn]=$KALTURA_ENTRY_ID" \
   -d "pager[pageSize]=25" \
   -d "pager[pageIndex]=1" \
   -d "responseOptions[objectType]=KalturaReportResponseOptions" \
   -d "responseOptions[delimiter]=|"
 ```
 
-## 15.3 Live Stream Operations Dashboard
+### Live Stream Operations Dashboard
 
 During a live event, poll multiple endpoints at recommended intervals to monitor stream health, viewer counts, and quality metrics.
 
@@ -874,7 +890,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/beacon/action/list" \
   -d "filter[eventTypeIn]=0_healthData,1_healthData" \
   -d "filter[indexTypeEqual]=log" \
   -d "filter[relatedObjectTypeIn]=4" \
-  -d "filter[objectIdIn]=$ENTRY_ID" \
+  -d "filter[objectIdIn]=$KALTURA_ENTRY_ID" \
   -d "filter[orderBy]=-updatedAt"
 
 # Live viewer count — poll every 30 seconds
@@ -885,7 +901,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/liveReports/action/getEvents" \
   -d "format=1" \
   -d "reportType=ENTRY_TIME_LINE" \
   -d "filter[objectType]=KalturaLiveReportInputFilter" \
-  -d "filter[entryIds]=$ENTRY_ID" \
+  -d "filter[entryIds]=$KALTURA_ENTRY_ID" \
   -d "filter[fromTime]=$FROM_UNIX" \
   -d "filter[toTime]=$TO_UNIX" \
   -d "filter[live]=1"
@@ -904,7 +920,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getTable" \
 
 If health beacon severity >= 3 (error/critical), alert the production team for backup stream activation.
 
-## 15.4 Compliance Training Verification
+### Compliance Training Verification
 
 Pull per-user engagement and completion data to generate audit-ready compliance records.
 
@@ -932,7 +948,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getTable" \
   -d "reportInputFilter[objectType]=KalturaEndUserReportInputFilter" \
   -d "reportInputFilter[fromDate]=$FROM_TIMESTAMP" \
   -d "reportInputFilter[toDate]=$TO_TIMESTAMP" \
-  -d "reportInputFilter[entryIdIn]=$ENTRY_ID" \
+  -d "reportInputFilter[entryIdIn]=$KALTURA_ENTRY_ID" \
   -d "pager[pageSize]=25" \
   -d "pager[pageIndex]=1" \
   -d "responseOptions[objectType]=KalturaReportResponseOptions" \
@@ -946,7 +962,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getCsvFromStringParams"
   -d "params=from_date_id=$FROM_DATE;to_date_id=$TO_DATE;timezone_offset=-240"
 ```
 
-## 15.5 Per-User Event Engagement Report
+### Per-User Event Engagement Report
 
 Pull granular per-attendee engagement data for follow-up campaigns.
 
@@ -956,7 +972,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getCsvFromStringParams"
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "id=4021" \
-  -d "params=from_date=$FROM;to_date=$TO;entry_ids=$ENTRY_ID;virtualeventid=$EVENT_ID"
+  -d "params=from_date=$FROM;to_date=$TO;entry_ids=$KALTURA_ENTRY_ID;virtualeventid=$EVENT_ID"
 
 # Step 2: C&C reports via Reports Microservice
 SESSION_ID=$(curl -s -X POST "$KALTURA_REPORTS_URL/api/v1/report/generate" \
@@ -965,7 +981,7 @@ SESSION_ID=$(curl -s -X POST "$KALTURA_REPORTS_URL/api/v1/report/generate" \
   -d '{
     "reportName": "pollsActivity",
     "reportParameters": {
-      "entries_ids": ["'$ENTRY_ID'"],
+      "entries_ids": ["'$KALTURA_ENTRY_ID'"],
       "virtual_event_ids": ["'$EVENT_ID'"],
       "from_date_id": "'$FROM_DATE'",
       "to_date_id": "'$TO_DATE'"
@@ -994,7 +1010,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getCsvFromStringParams"
   -d "params=from_date_id=$FROM_DATE;to_date_id=$TO_DATE;timezone_offset=-240"
 ```
 
-## 15.6 Multi-Account Analytics
+### Multi-Account Analytics
 
 Parent accounts use multi-account report variants to aggregate analytics across child accounts.
 
@@ -1024,7 +1040,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getTotal" \
   -d "responseOptions[delimiter]=|"
 ```
 
-## 15.7 BI Pipeline / Data Warehouse Integration
+### BI Pipeline / Data Warehouse Integration
 
 Pull analytics data on a schedule, transform pipe-delimited responses, and load into a data warehouse.
 
@@ -1075,7 +1091,7 @@ CSV_URL=$(curl -s -X POST "$KALTURA_SERVICE_URL/service/report/action/getUrlForR
 curl -o daily_export.csv "$CSV_URL"
 ```
 
-## 15.8 Geographic Analytics
+### Geographic Analytics
 
 Drill down from country to region to city for geographic distribution analysis.
 
@@ -1108,7 +1124,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getTable" \
   -d "responseOptions[delimiter]=|"
 ```
 
-## 15.9 Device and Technology Analytics
+### Device and Technology Analytics
 
 Analyze viewer device, browser, and OS distributions.
 
@@ -1140,7 +1156,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getTable" \
   -d "responseOptions[delimiter]=|"
 ```
 
-## 15.10 Accessibility Coverage Reporting
+### Accessibility Coverage Reporting
 
 Universities and government agencies subject to WCAG 2.1 AA requirements need to audit their entire video library for caption coverage, prioritize uncaptioned content by viewership, and auto-queue captioning jobs. This workflow combines eSearch for discovery, `captionAsset.list` for per-entry detail, report-based prioritization, and REACH task submission.
 
@@ -1164,7 +1180,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/caption_captionAsset/action/list" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
   -d "filter[objectType]=KalturaAssetFilter" \
-  -d "filter[entryIdEqual]=$ENTRY_ID"
+  -d "filter[entryIdEqual]=$KALTURA_ENTRY_ID"
 
 # Step 3: Rank uncaptioned content by play count for prioritization
 #   Use topContentCreator (reportType=38) filtered to the list of uncaptioned entry IDs
@@ -1187,7 +1203,7 @@ After ranking, submit the highest-traffic entries to REACH for automatic caption
 
 See also: [eSearch Guide](KALTURA_ESEARCH_API.md) for advanced search operators, [Captions & Transcripts Guide](KALTURA_CAPTIONS_AND_TRANSCRIPTS_API.md) for caption management.
 
-## 15.11 Lecture Capture & LMS Analytics
+### Lecture Capture & LMS Analytics
 
 Universities track per-student engagement to identify struggling students before they fall behind. This workflow pulls individual student viewing data scoped to a course category, analyzes drop-off patterns for specific lectures, and exports enriched reports with student name and email for LMS gradebook sync.
 
@@ -1237,7 +1253,7 @@ Students with low quartile completion on key lectures are candidates for early i
 
 See also: [Player Embed Guide](KALTURA_PLAYER_EMBED_GUIDE.md) for embedded player analytics events, [Categories & Entitlements Guide](KALTURA_CATEGORIES_AND_ENTITLEMENTS_API.md) for course category setup.
 
-## 15.12 Investor Relations Webcast Analytics
+### Investor Relations Webcast Analytics
 
 Public companies hosting earnings webcasts need segment-level engagement heatmaps for the IR team, geographic distribution for SEC Regulation FD compliance documentation, per-user engagement for investor follow-up, and bulk CSV exports for the board package.
 
@@ -1301,7 +1317,7 @@ The geographic report demonstrates that the webcast was accessible globally, whi
 
 See also: [Events Platform Guide](KALTURA_EVENTS_PLATFORM_API.md) for webcast setup, [User Profile Guide](KALTURA_USER_PROFILE_API.md) for attendee registration data.
 
-## 15.13 Thumbnail A/B Testing
+### Thumbnail A/B Testing
 
 Content teams optimize click-through rates by testing different thumbnail images. This workflow creates thumbnail variants from video frames, rotates the active thumbnail between test periods, and uses drop-off analytics to measure the impression-to-play conversion rate for each variant.
 
@@ -1311,7 +1327,7 @@ Content teams optimize click-through rates by testing different thumbnail images
 curl -X POST "$KALTURA_SERVICE_URL/service/thumbAsset/action/addFromEntry" \
   -d "ks=$KALTURA_KS" \
   -d "format=1" \
-  -d "entryId=$ENTRY_ID" \
+  -d "entryId=$KALTURA_ENTRY_ID" \
   -d "thumbAsset[objectType]=KalturaThumbAsset" \
   -d "thumbAsset[tags]=ab_test_variant_b" \
   -d "thumbOffset=45"
@@ -1333,7 +1349,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getTable" \
   -d "reportInputFilter[objectType]=KalturaEndUserReportInputFilter" \
   -d "reportInputFilter[fromDate]=$VARIANT_B_START" \
   -d "reportInputFilter[toDate]=$VARIANT_B_END" \
-  -d "reportInputFilter[entryIdIn]=$ENTRY_ID" \
+  -d "reportInputFilter[entryIdIn]=$KALTURA_ENTRY_ID" \
   -d "pager[pageSize]=25" \
   -d "pager[pageIndex]=1" \
   -d "responseOptions[objectType]=KalturaReportResponseOptions" \
@@ -1344,7 +1360,7 @@ Run the same `reportType=2` query with Variant A's date range, then compare the 
 
 See also: [Thumbnail API](KALTURA_THUMBNAIL_API.md) for thumbnail management.
 
-## 15.14 Webhook-Triggered Automated Reporting
+### Webhook-Triggered Automated Reporting
 
 Automate weekly analytics reports, real-time engagement alerts, and compliance report generation by combining webhooks with the report service. Webhooks fire on content events, trigger report generation, and route results through the messaging system.
 
@@ -1394,7 +1410,7 @@ For real-time alerting: when the webhook endpoint receives an event, call `repor
 
 See also: [Webhooks Guide](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md) for event notification template configuration, [Messaging Guide](KALTURA_MESSAGING_API.md) for alert delivery.
 
-## 15.15 Cross-Guide Workflow: Full Event Lifecycle
+### Cross-Guide Workflow: Full Event Lifecycle
 
 This master workflow demonstrates how the Analytics Reports, Events Collection, and Gamification guides work together with other guides to orchestrate a complete virtual event from planning through post-event follow-up.
 
@@ -1461,11 +1477,11 @@ curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getCsvFromStringParams"
   -d "params=from_date=$EVENT_START;to_date=$EVENT_END;virtualeventid=$VIRTUAL_EVENT_ID"
 ```
 
-## 15.16 Cross-Guide Workflow: Analytics-Driven Content Automation Pipeline
+### Cross-Guide Workflow: Analytics-Driven Content Automation Pipeline
 
 This pipeline automates the full content lifecycle from upload through performance monitoring, using webhooks to chain together processing, enrichment, and analytics-driven optimization.
 
-1. **Upload content** via chunked upload or `addFromUrl` [Upload & Ingestion](KALTURA_UPLOAD_AND_INGESTION_API.md)
+1. **Upload content** via chunked upload or URL import (`media.addContent` with `KalturaUrlResource`) [Upload & Ingestion](KALTURA_UPLOAD_AND_INGESTION_API.md)
 2. **Webhook fires on ENTRY_READY** when transcoding completes, triggering the enrichment pipeline [Webhooks](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md)
 3. **Auto-process via REACH and AI Agents** — the webhook handler submits the entry for captioning, translation, and AI-generated metadata [REACH](KALTURA_REACH_API.md), [Agents Manager](KALTURA_AGENTS_MANAGER_API.md)
 4. **Webhook fires on task completion** when captions and metadata are ready, confirming enrichment is complete [Webhooks](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md)
@@ -1507,7 +1523,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getTable" \
   -d "responseOptions[delimiter]=|"
 ```
 
-## 15.17 Cross-Guide Workflow: CRM Integration Pipeline
+### Cross-Guide Workflow: CRM Integration Pipeline
 
 This pipeline connects event engagement data to CRM systems for sales follow-up, combining user registration, gamification-based lead scoring, playback analytics, and automated data export.
 
@@ -1548,24 +1564,7 @@ curl -o crm_lead_export.csv "$CSV_URL"
 ```
 
 
-# 16. Best Practices
-
-**Date handling.** All API v3 report filter dates use Unix timestamps in **seconds** (not milliseconds). For example, `Math.floor(Date.now() / 1000)` in JavaScript or `int(time.time())` in Python.
-
-**Pipe-delimited parsing.** Always set `responseOptions[delimiter]=|` for consistency. Parse the `header` field to map column positions dynamically rather than hardcoding column indices — columns may vary by report type and account configuration.
-
-**Multi-request for dashboards.** Batch `getTotal` + `getGraphs` + `getTable` in a single `KalturaMultiRequest` to reduce round trips. This is the standard pattern for building analytics dashboard views.
-
-**CSV vs API tradeoffs.** Use `report.getTable` for real-time dashboard queries with pagination. Use `report.getUrlForReportAsCsv` for bulk exports, scheduled ETL jobs, and BI tool ingestion. Use `report.getCsvFromStringParams` for specialized reports (IDs 4021, 6000-6002, 3006-3008) that are not available via the standard filter interface.
-
-**Polling intervals for live.** Follow the recommended intervals in section 11.3. Polling faster than recommended wastes resources without improving data freshness. Polling slower may miss transient issues.
-
-**Reports Microservice polling.** Always use `statusOnly: true` for the polling loop to avoid downloading the full CSV on every check. Only omit `statusOnly` for the final download request after status shows `completed`.
-
-**Cross-service analytics.** Use `appId:<name>` in KS privileges to tag analytics per-application. Use `virtualEventIdIn` to scope reports to specific events. Use `categoriesIdsIn` to scope by content library. See the [Session Guide](KALTURA_SESSION_GUIDE.md) for KS privilege syntax.
-
-
-# 17. Related Guides
+# 16. Related Guides
 
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — `appId:<name>` KS privilege tags analytics per-application; `userId` ties analytics to a user
 - **[AppTokens](KALTURA_APPTOKENS_API.md)** — Scoped tokens for analytics-only access

@@ -9,7 +9,7 @@ A user has one profile per app — the same `userId` can have separate profiles 
 **Format:** JSON request/response bodies, all endpoints use POST  
 **Regions:** NVP (default `nvp1`), EU (`irp2`), DE (`frp2`)  
 
-<!-- Sections: 1.When to Use | 2.Authentication | 3.Prerequisites | 4.User Profile Entity | 5.Attendance Status Lifecycle | 6.Create a User Profile | 7.Bulk Create User Profiles | 8.Get a User Profile | 9.Update a User Profile | 10.List User Profiles | 11.Delete a User Profile | 12.Reports | 13.Error Handling | 14.Common Integration Patterns | 1.Register the app in App Registry (one-time setup) | 2.Create user profile when they register | 3.Confirm attendance | 4.Mark as attended (during event — triggers firstAttendedStatusTime) | 5.Get attendance stats | 15.Registration Reports (Reports Service) | 16.Best Practices | 17.Related Guides -->
+<!-- Sections: 1.When to Use | 2.Authentication | 3.Prerequisites | 4.User Profile Entity | 5.Attendance Status Lifecycle | 6.Create a User Profile | 7.Bulk Create User Profiles | 8.Get a User Profile | 9.Update a User Profile | 10.List User Profiles | 11.Delete a User Profile | 12.Reports | 13.Error Handling | 14.Best Practices | 15.Related Guides -->
 
 
 # 1. When to Use
@@ -721,9 +721,17 @@ Validation errors (missing required fields, invalid enum values) return HTTP 400
 **Retry strategy:** For transient errors (HTTP 5xx, timeouts, `SESSION_START_FAILED`), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (HTTP 400, `USER_PROFILE_NOT_FOUND`, `USER_ALREADY_ASSOCIATED_TO_APP_GUID`, `USER_ID_NOT_FOUND`), fix the request before retrying — these will not resolve on their own.
 
 
-# 14. Common Integration Patterns
+# 14. Best Practices
 
-## 14.1 Event Registration Flow
+- **Use `bulkAdd` for batch registration.** Up to 50 profiles per request — significantly faster than individual calls for event registration imports.
+- **Resolve virtual event ID → appGuid via App Registry first.** Use `appCustomIdIn` filter to map event IDs to app GUIDs before managing profiles (see [App Registry API](KALTURA_APP_REGISTRY_API.md)).
+- **Use status transitions to track attendance lifecycle.** Progress users through `created → registered → confirmed → attended → participated` for accurate reporting.
+- **Use `getFiltered` for reporting and analytics.** Filter by status, date range, and fields to build attendance dashboards without downloading all profiles.
+- **Use AppTokens for production access.** Generate KS via `appToken.startSession` with HMAC — keep admin secrets off application servers.
+
+## Common Integration Patterns
+
+### Event Registration Flow
 
 ```bash
 # 1. Register the app in App Registry (one-time setup)
@@ -776,7 +784,7 @@ curl -s -X POST "$KALTURA_USER_PROFILE_URL/reports/eventDataStats" \
   }"
 ```
 
-## 14.2 Bulk Import Attendees
+### Bulk Import Attendees
 
 ```bash
 # Import a batch of invited users
@@ -789,7 +797,7 @@ curl -X POST "$KALTURA_USER_PROFILE_URL/user-profile/bulkAdd" \
   ]"
 ```
 
-## 14.3 Cross-Service Registration Data Retrieval
+### Cross-Service Registration Data Retrieval
 
 The full workflow for extracting registration data for a virtual event spans multiple services. The key linkage is that `appCustomId` in the App Registry equals the `virtualEventId`:
 
@@ -828,7 +836,7 @@ curl -s -X POST "$KALTURA_SERVICE_URL/service/user/action/list" \
 
 See the [App Registry API](KALTURA_APP_REGISTRY_API.md) section 12.4 for the complete cross-service diagram.
 
-## 14.4 Incremental Data Pull
+### Incremental Data Pull
 
 Use `updatedAtGreaterThanOrEqual` to pull only profiles changed since your last sync — essential for large-scale integrations:
 
@@ -851,7 +859,7 @@ curl -s -X POST "$KALTURA_USER_PROFILE_URL/user-profile/list" \
 
 For very large datasets (10K+ records), combine pagination with time-based windowing — use `updatedAtLessThanOrEqual` alongside `updatedAtGreaterThanOrEqual` to partition queries into daily or hourly windows.
 
-## 14.5 Paginated Export
+### Paginated Export
 
 ```bash
 OFFSET=0
@@ -876,7 +884,7 @@ while true; do
 done
 ```
 
-## 14.6 Re-register After Cancellation
+### Re-register After Cancellation
 
 After a user unregisters and their profile is soft-deleted, create a new profile to re-register them:
 
@@ -898,7 +906,7 @@ curl -X POST "$KALTURA_USER_PROFILE_URL/user-profile/add" \
 ```
 
 
-## 14.7 PII Deletion and Cleanup
+### PII Deletion and Cleanup
 
 When deleting event data for compliance (GDPR, data retention), follow this order:
 
@@ -908,7 +916,7 @@ When deleting event data for compliance (GDPR, data retention), follow this orde
 4. **Delete user profiles** — `user-profile/delete` for each profile in this event
 5. **Delete KalturaUsers** — Only delete users from `user.delete` if they have **no profiles in other events**. Flagged users retain their core user record.
 
-User profiles **must** be deleted before deleting the KalturaUser. If you delete the KalturaUser first, re-inviting the same user to a future event will fail because the user profile creation validates the user exists via `user.get`.
+Delete user profiles before deleting the underlying KalturaUser — this preserves the ability to re-invite the user to future events. The user profile creation step validates that the user exists via `user.get`, so the core user record must still be present when creating new profiles.
 
 ```bash
 # Delete a profile, then check if the user can be fully deleted
@@ -935,14 +943,14 @@ fi
 ```
 
 
-# 15. Registration Reports (Reports Service)
+## Registration Reports
 
 For CSV-based registration and engagement reports, the platform provides an async Reports Service. This is separate from the User Profile API's `eventDataStats` endpoint and produces downloadable CSV files.
 
 **Reports Base URL:** `https://reports.nvp1.ovp.kaltura.com/api/v1`  
 **Auth:** `Authorization: Bearer <KS>`
 
-## 15.1 Generate a Report
+### Generate a Report
 
 ```bash
 REPORTS_URL="https://reports.nvp1.ovp.kaltura.com/api/v1"
@@ -957,7 +965,7 @@ SESSION_ID=$(curl -s -X POST "$REPORTS_URL/report/generate" \
   }" | jq -r '.sessionId')
 ```
 
-## 15.2 Poll and Download
+### Poll and Download
 
 The generate call returns a `sessionId`. Poll the serve endpoint until the report is ready:
 
@@ -983,7 +991,7 @@ curl -s -X POST "$REPORTS_URL/report/serve" \
 
 Reports may reflect cached data with a freshness window of 10-15 minutes. For real-time attendance status, use the User Profile `list` endpoint directly.
 
-## 15.3 Engagement Reports (API v3)
+### Engagement Reports (API v3)
 
 Per-user session engagement data is available via the core Kaltura Reports API using specific report IDs:
 
@@ -1005,15 +1013,7 @@ curl -s -X POST "$KALTURA_SERVICE_URL/service/report/action/getCsvFromStringPara
 ```
 
 
-# 16. Best Practices
-
-- **Use `bulkAdd` for batch registration.** Up to 50 profiles per request — significantly faster than individual calls for event registration imports.
-- **Resolve virtual event ID → appGuid via App Registry first.** Use `appCustomIdIn` filter to map event IDs to app GUIDs before managing profiles (see [App Registry API](KALTURA_APP_REGISTRY_API.md)).
-- **Use status transitions to track attendance lifecycle.** Progress users through `created → registered → confirmed → attended → participated` for accurate reporting.
-- **Use `getFiltered` for reporting and analytics.** Filter by status, date range, and fields to build attendance dashboards without downloading all profiles.
-- **Use AppTokens for production access.** Generate KS via `appToken.startSession` with HMAC — keep admin secrets off application servers.
-
-# 17. Related Guides
+# 15. Related Guides
 
 - **[App Registry API](KALTURA_APP_REGISTRY_API.md)** — Register and manage application instances (prerequisite for user profiles)
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — KS generation and management

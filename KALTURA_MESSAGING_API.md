@@ -7,7 +7,7 @@ The Messaging API enables sending personalized, template-based email communicati
 **Format:** JSON request/response bodies, all endpoints use POST  
 **Regions:** NVP (default `nvp1`), EU (`irp2`), DE (`frp2`)  
 
-<!-- Sections: 1.When to Use | 2.Authentication | 3.Email Template Entity | 4.Token Types | 5.Manage Email Templates | 6.Send Messages | 7.Message Lifecycle | 8.Track Messages | 9.Delivery Reports | 10.Unsubscribe Management | 11.Email Provider Configuration | 12.Domain Configuration | 13.Error Handling | 14.Common Integration Patterns | 15.Best Practices | 16.Related Guides -->
+<!-- Sections: 1.When to Use | 2.Authentication | 3.Email Template Entity | 4.Token Types | 5.Manage Email Templates | 6.Send Messages | 7.Message Lifecycle | 8.Track Messages | 9.Delivery Reports | 10.Unsubscribe Management | 11.Email Provider Configuration | 12.Domain Configuration | 13.Error Handling | 14.Best Practices | 15.Related Guides -->
 
 
 # 1. When to Use
@@ -1000,9 +1000,18 @@ Validation errors return HTTP 400. Application-level errors follow this structur
 **Retry strategy:** For transient errors (HTTP 5xx, timeouts), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (HTTP 400, `noActiveGroups`, `noActiveGroupUsers`, validation errors), fix the request before retrying — these will not resolve on their own. For async operations (message delivery tracking), poll with increasing intervals (5s, 10s, 30s) rather than tight loops.
 
 
-# 14. Common Integration Patterns
+# 14. Best Practices
 
-## 14.1 Event Invitation Workflow
+- **Use CAN-SPAM compliant unsubscribe groups.** Assign unsubscribe groups to all marketing/event emails and include `{unsubLink}` tokens — users who unsubscribe are automatically excluded from future sends.
+- **Use dynamic tokens for personalization.** Leverage `{recipient.*}`, `{magicLink}`, `{qrCodeLink}`, and custom tokens to create engaging, per-recipient emails without manual string substitution.
+- **Configure domain authentication.** Set up SPF and DKIM records for your sending domain to maximize deliverability and avoid spam filters.
+- **Track delivery stats and follow up on failures.** Use `msg-history/getStats` and `msg-history/getFiltered` to monitor bounce rates, open rates, and re-send to failed recipients.
+- **Use AppTokens for production access.** Generate KS via `appToken.startSession` with HMAC — keep admin secrets off application servers.
+- **Use the Messaging Service for all email communications.** Prefer the Messaging API over custom SMTP integrations — it provides tracking, analytics, and compliance out of the box.
+
+## Common Integration Patterns
+
+### Event Invitation Workflow
 
 Complete flow from virtual event to personalized invitations:
 
@@ -1055,7 +1064,7 @@ curl -X POST "$KALTURA_MESSAGING_URL/message/send" \
   }"
 ```
 
-## 14.2 Delivery Tracking Dashboard
+### Delivery Tracking Dashboard
 
 After sending, monitor delivery and engagement:
 
@@ -1078,7 +1087,7 @@ curl -X POST "$KALTURA_MESSAGING_URL/message/listDiscreteAggregateMessages" \
   }'
 ```
 
-## 14.3 Unsubscribe-Aware Messaging
+### Unsubscribe-Aware Messaging
 
 Set up templates with unsubscribe groups to respect user preferences:
 
@@ -1114,16 +1123,7 @@ curl -X POST "$KALTURA_MESSAGING_URL/email-template/add" \
 Users who unsubscribe from the `"event-updates"` group will be automatically excluded from future messages sent with that group.
 
 
-# 15. Best Practices
-
-- **Use CAN-SPAM compliant unsubscribe groups.** Assign unsubscribe groups to all marketing/event emails and include `{unsubLink}` tokens — users who unsubscribe are automatically excluded from future sends.
-- **Use dynamic tokens for personalization.** Leverage `{recipient.*}`, `{magicLink}`, `{qrCodeLink}`, and custom tokens to create engaging, per-recipient emails without manual string substitution.
-- **Configure domain authentication.** Set up SPF and DKIM records for your sending domain to maximize deliverability and avoid spam filters.
-- **Track delivery stats and follow up on failures.** Use `msg-history/getStats` and `msg-history/getFiltered` to monitor bounce rates, open rates, and re-send to failed recipients.
-- **Use AppTokens for production access.** Generate KS via `appToken.startSession` with HMAC — keep admin secrets off application servers.
-- **Use the Messaging Service for all email communications.** Prefer the Messaging API over custom SMTP integrations — it provides tracking, analytics, and compliance out of the box.
-
-# 16. Related Guides
+# 15. Related Guides
 
 - **[Session Guide](KALTURA_SESSION_GUIDE.md)** — KS generation and management
 - **[AppTokens API](KALTURA_APPTOKENS_API.md)** — Secure server-to-server auth

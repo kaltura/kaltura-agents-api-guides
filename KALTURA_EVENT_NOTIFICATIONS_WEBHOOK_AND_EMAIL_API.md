@@ -825,7 +825,7 @@ Send to all users subscribed to a category:
 ```bash
   -d "eventNotificationTemplate[to][objectType]=KalturaEmailNotificationCategoryRecipientProvider" \
   -d "eventNotificationTemplate[to][categoryId][objectType]=KalturaStringValue" \
-  -d "eventNotificationTemplate[to][categoryId][value]=12345"
+  -d "eventNotificationTemplate[to][categoryId][value]=$CATEGORY_ID"
 ```
 
 ### Group Members
@@ -1330,7 +1330,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/eventnotification_eventnotificationte
 - **Design for Kaltura's retry policy.** Kaltura retries failed webhook deliveries (HTTP 5xx or timeout) up to 10 times with exponential backoff over approximately 24 hours. Your endpoint should return HTTP 200 promptly to acknowledge receipt, then process the payload asynchronously. If your endpoint is down for an extended period, notifications will be lost after the retry window expires. Implement idempotency on your receiver — the same notification may be delivered more than once if your endpoint returns a non-200 status before Kaltura registers the acknowledgment.
 - **Use AppTokens for production webhook receivers.** Webhook receivers that call back into the Kaltura API should use AppTokens, not hardcoded admin secrets.
 - **Use `eventDelayedCondition` for content-dependent workflows.** Set `eventDelayedCondition=1` on templates that need fully-processed entries (e.g., ready for playback). This avoids webhook receivers dealing with entries still in transcoding.
-- **Avoid the deprecated `notification` service.** The legacy `notification.getClientNotification` API (PHP-based notification handler) is deprecated and should not be used. Use the `eventnotification_eventnotificationtemplate` service documented in this guide for all event notification needs.
+- **Use the `eventnotification_eventnotificationtemplate` service for all event notification needs.** It provides HTTP webhooks, email dispatch, and condition-based filtering. (The legacy `notification.getClientNotification` API is deprecated.)
 
 # 17. Related Guides
 
