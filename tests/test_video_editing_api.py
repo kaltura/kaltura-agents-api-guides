@@ -14,7 +14,7 @@ from test_helpers import kaltura_post, TestRunner, PARTNER_ID, KS, SERVICE_URL
 state = {}
 
 POLL_INTERVAL = 5
-POLL_TIMEOUT = 180
+POLL_TIMEOUT = int(os.environ.get("POLL_TIMEOUT", "360"))
 
 
 def _wait_for_ready(entry_id, timeout=POLL_TIMEOUT):

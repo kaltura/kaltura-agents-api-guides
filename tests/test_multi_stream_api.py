@@ -30,8 +30,8 @@ SAMPLE_VIDEO_URL = os.environ.get(
 
 # Polling config for entry readiness
 READY_STATUS = 2
-POLL_INTERVAL = 5      # seconds between status checks
-POLL_TIMEOUT = 180     # max seconds to wait for READY
+POLL_INTERVAL = 5
+POLL_TIMEOUT = int(os.environ.get("POLL_TIMEOUT", "360"))
 
 state = {}
 
