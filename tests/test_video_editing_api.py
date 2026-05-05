@@ -50,7 +50,7 @@ def _wait_for_replacement_ready(entry_id, timeout=POLL_TIMEOUT):
 
 
 def _find_ready_entry():
-    """Find an existing READY video entry with duration > 5s."""
+    """Find an existing READY video entry with duration > 5s, then clone it for test isolation."""
     result = kaltura_post("media", "list", {
         "filter[objectType]": "KalturaMediaEntryFilter",
         "filter[statusEqual]": 2,
@@ -60,7 +60,10 @@ def _find_ready_entry():
     })
     for obj in result.get("objects", []):
         if obj.get("status") == 2 and obj.get("duration", 0) >= 5:
-            return obj["id"]
+            clone = kaltura_post("baseEntry", "clone", {"entryId": obj["id"]})
+            clone_id = clone["id"]
+            _wait_for_ready(clone_id)
+            return clone_id
     return None
 
 
@@ -82,12 +85,14 @@ def main():
     # Phase 1: Setup — Find/Create Source Entries
     # ════════════════════════════════════════════
     def test_setup_source():
-        """Find two READY entries to use as editing sources."""
+        """Clone two READY entries to use as isolated editing sources."""
         src1 = _find_ready_entry()
         if not src1:
             raise Exception("No READY video entry found in account for testing")
         state["source_entry_1"] = src1
-        print(f"    Source 1: {src1}")
+        runner.register_cleanup(f"source entry 1 {src1}",
+                                lambda: kaltura_post("media", "delete", {"entryId": state["source_entry_1"]}))
+        print(f"    Source 1 (cloned): {src1}")
 
         result = kaltura_post("media", "list", {
             "filter[objectType]": "KalturaMediaEntryFilter",
@@ -101,12 +106,17 @@ def main():
         src2 = None
         for obj in objects:
             if obj.get("duration", 0) >= 5:
-                src2 = obj["id"]
+                clone = kaltura_post("baseEntry", "clone", {"entryId": obj["id"]})
+                src2 = clone["id"]
+                _wait_for_ready(src2)
                 break
         if not src2:
             src2 = src1
         state["source_entry_2"] = src2
-        print(f"    Source 2: {src2}")
+        if src2 != src1:
+            runner.register_cleanup(f"source entry 2 {src2}",
+                                    lambda: kaltura_post("media", "delete", {"entryId": state["source_entry_2"]}))
+        print(f"    Source 2 (cloned): {src2}")
 
     runner.run_test("setup — find READY source entries", test_setup_source)
 
