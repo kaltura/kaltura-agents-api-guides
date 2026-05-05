@@ -1,12 +1,12 @@
 # Kaltura Conversational Avatar Embed
 
-The Conversational Avatar SDK embeds AI-powered video avatars that hold real-time conversations with users. The avatar speaks, listens, and responds using AI — enabling training simulations, coaching, interview practice, and conversational agents. The SDK creates a sandboxed iframe and communicates via `postMessage`. Zero dependencies, ~6KB minified.
+The Conversational Avatar SDK embeds AI-powered video avatars that hold real-time conversations with users. The avatar speaks, listens, and responds using AI — enabling training simulations, coaching, interview practice, and conversational agents. Two integration modes are available: the **Socket SDK** (direct WebRTC with full control, GenUI, mic management) and the **Iframe SDK** (zero-config sandboxed embed).
 
-**Base URL:** `https://api.avatar.us.kaltura.ai` (API) / `https://meet.avatar.us.kaltura.ai` (WebRTC)  
+**Base URL:** `https://conversation.avatar.us.kaltura.ai` (Socket) / `https://api.avatar.us.kaltura.ai` (Iframe API)  
 **Auth:** Client ID + Flow ID (from Kaltura Studio)  
-**Format:** JavaScript embed (iframe via SDK, postMessage communication)  
+**Format:** JavaScript embed (Socket.IO + WebRTC or iframe + postMessage)  
 
-<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Embedding | 4.Configuration | 5.Lifecycle and Events | 6.Methods | 7.Dynamic Page Prompt | 8.Avatar Spoken Commands | 9.Transcript | 10.Pronunciation | 11.Multiple Instances | 12.Error Handling | 13.Best Practices | 14.Related Guides -->
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Choose Your SDK | 4.Socket SDK Quick Start | 5.Socket SDK Configuration | 6.Socket SDK Events | 7.Socket SDK Methods | 8.GenUI (Generative UI) | 9.Iframe SDK Quick Start | 10.Iframe SDK Configuration | 11.Iframe SDK Events | 12.Iframe SDK Methods | 13.Dynamic Page Prompt (DPP) | 14.Avatar Spoken Commands | 15.Transcript | 16.Pronunciation | 17.Multiple Instances | 18.Error Handling | 19.Best Practices | 20.Related Guides -->
 
 
 # 1. When to Use
@@ -17,23 +17,447 @@ The Conversational Avatar SDK embeds AI-powered video avatars that hold real-tim
 - **Code interview practice** — AI pair programming with live code context via DPP re-injection
 - **Customer-facing conversational agents** — Embed an AI avatar that answers questions about your products or services
 - **Language learning** — Practice pronunciation and conversation with real-time feedback via `pronunciation-score` events
+- **Interactive data exploration** — Avatar explains charts, diagrams, and code with GenUI visual overlays (Socket SDK)
+- **Contact collection** — Avatar guides users through providing email/phone with built-in form handling (Socket SDK)
 
 
 # 2. Prerequisites
 
 - **Client ID and Flow ID** — Obtain from Kaltura Studio (studio.kaltura.com or your organization's instance). Create or select an AI Avatar agent — the credentials appear in the agent's embed/integration settings.
-- **Avatar Knowledge Base configured** — A flow must have its Knowledge Base prompt configured in Kaltura Studio. This defines the avatar's persona, behavior, and conversation logic (see section 7 for the RICECO framework).
-- **HTTPS and microphone access** — The embed requires a secure context (HTTPS) for microphone access and iframe security policies. The user's browser must support WebRTC.
-- **Browser support** — Chrome 60+, Firefox 55+, Safari 11+, Edge 79+.
+- **Avatar Knowledge Base configured** — A flow must have its Knowledge Base prompt configured in Kaltura Studio. This defines the avatar's persona, behavior, and conversation logic (see section 13 for the RICECO framework).
+- **HTTPS and microphone access** — The embed requires a secure context (HTTPS) for microphone access. The user's browser must support WebRTC.
+- **Browser support** — Socket SDK: Chrome 72+, Firefox 60+, Safari 14+, Edge 79+. Iframe SDK: Chrome 60+, Firefox 55+, Safari 11+, Edge 79+.
 
 
-# 3. Embedding
+# 3. Choose Your SDK
 
-Load the SDK from jsDelivr CDN and initialize with your credentials:
+| | Socket SDK | Iframe SDK |
+|---|---|---|
+| Version | 2.0.0 | 1.2.0 |
+| How it works | Direct Socket.IO + WebRTC | iframe + postMessage |
+| Size | ~100KB + Socket.IO (loaded from CDN) | ~6KB, zero dependencies |
+| GenUI (visual content) | Built-in renderers for 14 content types | Event notifications only |
+| Video control | Owns the `<video>` element directly | Sandboxed inside iframe |
+| Mic control | `muteMic()` / `unmuteMic()` | Managed by iframe |
+| Text input | `sendText()` for text-only mode | Not available |
+| Auto-reconnect | Built-in exponential backoff | Page reload required |
+| Graceful degradation | video → audio → text fallback | None |
+| Error handling | 17 typed error codes | Event-based |
+| Use when | Full control, CSP-restricted environments, GenUI, low-latency, accessibility | Drop-in simplicity, sandboxed isolation, minimal integration |
+
+**Recommendation:** Use the Socket SDK for new integrations that need GenUI, mic control, or programmatic access to the video stream. Use the Iframe SDK when you need the simplest possible embed with full sandbox isolation.
+
+
+# 4. Socket SDK — Quick Start
 
 ```html
 <div id="avatar-container" style="width: 800px; height: 600px;"></div>
-<script src="https://cdn.jsdelivr.net/gh/kaltura/conversational-avatar-embed-sdk@v1.3.0/sdk/kaltura-avatar-sdk.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/kaltura/conversational-avatar-embed-sdk@latest/sdk-socket/kaltura-avatar-sdk.min.js"></script>
+<script>
+  var sdk = new KalturaAvatarSDK({
+    clientId: 'YOUR_CLIENT_ID',
+    flowId: 'YOUR_FLOW_ID',
+    container: '#avatar-container'
+  });
+
+  sdk.on('ready', function() {
+    console.log('Avatar ready — conversation starting');
+  });
+
+  sdk.on('avatar-speech', function(data) {
+    console.log('Avatar said:', data.text);
+  });
+
+  sdk.on('user-speech', function(data) {
+    if (data.isFinal) {
+      console.log('User said:', data.text);
+    }
+  });
+
+  sdk.connect();
+</script>
+```
+
+**SDK loading options:**
+
+| Method | URL |
+|--------|-----|
+| Latest (CDN) | `https://cdn.jsdelivr.net/gh/kaltura/conversational-avatar-embed-sdk@latest/sdk-socket/kaltura-avatar-sdk.min.js` |
+| Self-hosted | Download from the repository and serve from your own domain |
+
+The Socket SDK connects directly to Kaltura's conversation service via Socket.IO, negotiates WebRTC video via WHEP protocol, and acquires the microphone for speech recognition — all managed internally with automatic fallbacks.
+
+
+# 5. Socket SDK — Configuration
+
+## 5.1 Constructor Options
+
+```javascript
+var sdk = new KalturaAvatarSDK({
+  // Required
+  clientId: 'YOUR_CLIENT_ID',
+  flowId: 'YOUR_FLOW_ID',
+
+  // Container
+  container: '#avatar-container',  // CSS selector or HTMLElement
+
+  // Behavior
+  debug: false,
+  autoReconnect: true,
+  maxReconnectAttempts: 5,
+  reconnectBaseDelay: 1000,
+  connectionTimeout: 15000,
+  transcriptEnabled: true,
+  peerName: 'SDKUser',
+
+  // Media
+  media: {
+    video: true,
+    audioOnly: false,
+    autoPlay: true,
+    ariaLabel: 'AI Avatar Video',
+    // videoElement: existingVideoEl,   // provide your own <video>
+    // audioElement: existingAudioEl,   // provide your own <audio>
+    // micConstraints: { echoCancellation: true, noiseSuppression: true }
+  },
+
+  // Endpoints (override for custom deployments)
+  endpoints: {
+    socket: 'https://conversation.avatar.us.kaltura.ai',
+    socketPath: '/socket.io',
+    whep: 'https://srs.avatar.us.kaltura.ai'
+  },
+
+  // TURN/STUN (override for enterprise networks)
+  turn: {
+    urls: ['turn:turn.avatar.us.kaltura.ai:443?transport=tcp'],
+    username: 'kaltura',
+    credential: 'avatar',
+    iceTransportPolicy: 'relay'
+  },
+
+  // GenUI (see section 8)
+  genui: {
+    enabled: true,
+    position: 'overlay',   // 'overlay' | 'below' | 'custom'
+    autoHide: true,
+    dismissible: true,
+    cssPrefix: 'kav-genui'
+  }
+});
+```
+
+## 5.2 Configuration Reference
+
+| Parameter | Default | Description |
+|-----------|---------|-------------|
+| `clientId` | — | Kaltura avatar client identifier (required) |
+| `flowId` | — | Avatar flow ID (required) |
+| `container` | — | CSS selector or HTMLElement for rendering |
+| `debug` | `false` | Enable console logging |
+| `autoReconnect` | `true` | Automatically reconnect on connection loss |
+| `maxReconnectAttempts` | `5` | Maximum reconnection attempts before giving up |
+| `reconnectBaseDelay` | `1000` | Base delay in ms between reconnection attempts (exponential backoff) |
+| `connectionTimeout` | `15000` | Connection timeout in ms |
+| `transcriptEnabled` | `true` | Record conversation transcript |
+| `peerName` | `'SDKUser'` | Display name sent to the avatar service |
+| `media.video` | `true` | Enable video stream |
+| `media.audioOnly` | `false` | Audio-only mode (skip video negotiation) |
+| `media.autoPlay` | `true` | Auto-play video when stream is ready |
+| `media.ariaLabel` | `'AI Avatar Video'` | ARIA label for the video element |
+| `genui.enabled` | `true` | Enable GenUI rendering |
+| `genui.position` | `'overlay'` | Where to render GenUI content |
+| `genui.container` | — | Separate container for GenUI (when position is `'custom'`) |
+| `genui.autoHide` | `true` | Auto-hide GenUI when new content arrives |
+| `genui.dismissible` | `true` | Allow user to dismiss GenUI content |
+
+
+# 6. Socket SDK — Events
+
+## 6.1 Lifecycle Events
+
+| Event | Payload | Description |
+|-------|---------|-------------|
+| `connecting` | — | SDK starts connecting to the service |
+| `connected` | — | Socket connection established |
+| `ready` | — | Avatar visible, mic set up, avatar will greet |
+| `disconnected` | `{ reason }` | Connection lost |
+| `destroyed` | — | Instance permanently shut down |
+| `state-change` | `{ from, to }` | State machine transition |
+| `reconnecting` | `{ attempt, maxAttempts }` | Reconnection attempt in progress |
+| `reconnected` | — | Successfully reconnected |
+
+## 6.2 Speech Events
+
+| Event | Payload | Description |
+|-------|---------|-------------|
+| `avatar-speech` | `{ text }` | Complete sentence spoken by avatar |
+| `avatar-speaking-start` | — | Avatar lips start moving |
+| `avatar-speaking-end` | — | Avatar stopped talking |
+| `user-speech` | `{ text, isFinal }` | User speech transcription (`isFinal: true` for complete utterances) |
+
+## 6.3 Media Events
+
+| Event | Payload | Description |
+|-------|---------|-------------|
+| `video-ready` | `{ element }` | Video element is playing |
+| `audio-fallback` | — | Video failed, switched to audio-only |
+| `mic-granted` | `{ stream }` | Microphone access granted |
+| `mic-denied` | `{ error }` | Microphone access denied |
+
+## 6.4 GenUI Events
+
+| Event | Payload | Description |
+|-------|---------|-------------|
+| `genui` | `{ type, data }` | GenUI content received from avatar |
+| `genui:before-render` | `{ type, data, category }` | About to render (cancellable via middleware) |
+| `genui:rendered` | `{ type, data, category, element }` | Content rendered to DOM |
+| `genui:hidden` | `{ type, category }` | Content hidden |
+| `genui:interaction` | `{ interactionType, payload }` | User interacted with GenUI |
+| `genui:error` | `{ type, error }` | Renderer error |
+
+## 6.5 Command Events
+
+| Event | Payload | Description |
+|-------|---------|-------------|
+| `command-matched` | `{ command, text, pattern }` | Registered spoken command matched |
+| `transcript-entry` | `{ role, text, timestamp }` | New transcript entry added |
+
+## 6.6 Compatibility Events (v1 aliases)
+
+| Event | Maps to | Payload |
+|-------|---------|---------|
+| `showing-agent` | Server `showAgent` | — |
+| `agent-talked` | `avatar-speech` | `{ agentContent }` |
+| `user-transcription` | `user-speech` (final) | `{ userTranscription }` |
+| `conversation-ended` | Session end | — |
+
+## 6.7 Event Subscription
+
+```javascript
+// Subscribe (returns unsubscribe function)
+var unsub = sdk.on('avatar-speech', function(data) {
+  console.log(data.text);
+});
+
+// Subscribe once
+sdk.once('ready', function() { /* fires once */ });
+
+// Wildcard — receive all events
+sdk.on('*', function(eventName, data) {
+  console.log(eventName, data);
+});
+
+// Unsubscribe
+unsub();
+// Or: sdk.off('avatar-speech', handler);
+```
+
+
+# 7. Socket SDK — Methods
+
+## 7.1 Lifecycle
+
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `connect()` | `Promise<void>` | Connect to service, negotiate WebRTC, acquire mic, start session |
+| `start()` | `Promise<void>` | Alias for `connect()` |
+| `disconnect()` | `void` | End session gracefully |
+| `end()` | `void` | Alias for `disconnect()` |
+| `destroy()` | `void` | Permanent cleanup — releases all resources |
+
+## 7.2 Communication
+
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `sendText(text)` | `void` | Send text to avatar (works without microphone) |
+| `injectDPP(data)` | `void` | Inject Dynamic Page Prompt (object or JSON string) |
+| `injectDPPDebounced(data, delayMs?)` | `void` | Debounced DPP injection (default 200ms) |
+| `injectPrompt(jsonString)` | `void` | v1 alias for `injectDPP()` |
+
+## 7.3 Spoken Commands
+
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `registerCommand(name, pattern, handler)` | `() => void` | Register command (string or RegExp). Returns unsubscribe function |
+| `onEndPhrase(phrase, handler)` | `() => void` | Convenience: register command for session-ending phrases |
+| `clearCommands()` | `void` | Remove all registered commands |
+
+```javascript
+// Register a command with regex
+sdk.registerCommand('endCall', /ending call now/i, function(match) {
+  var transcript = sdk.getTranscript();
+  sdk.end();
+  showResults(transcript);
+});
+
+// Convenience for end phrases
+sdk.onEndPhrase('goodbye for now', function() {
+  sdk.end();
+});
+```
+
+## 7.4 Microphone
+
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `muteMic()` | `void` | Mute the microphone |
+| `unmuteMic()` | `void` | Unmute the microphone |
+| `isMicMuted()` | `boolean` | Check mute state |
+
+## 7.5 Transcript
+
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `getTranscript()` | `Array` | Full transcript: `[{ role, text, timestamp }]` |
+| `getTranscriptText(options?)` | `string` | Formatted transcript (`text`, `markdown`, or `json`) |
+| `downloadTranscript(options?)` | `void` | Download as file |
+| `clearTranscript()` | `void` | Clear recorded transcript |
+| `setTranscriptEnabled(enabled)` | `void` | Enable/disable recording |
+
+## 7.6 State and Info
+
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `getState()` | `string` | Current state machine state |
+| `getSessionId()` | `string \| null` | Active session ID |
+| `getRoomId()` | `string \| null` | Active room ID |
+| `getVideoElement()` | `HTMLVideoElement \| null` | The video element |
+| `getAudioElement()` | `HTMLAudioElement \| null` | The audio element (fallback mode) |
+| `getMicStream()` | `MediaStream \| null` | Raw microphone stream |
+| `isConnected()` | `boolean` | Connection state |
+| `isInConversation()` | `boolean` | Active conversation state |
+| `isAvatarSpeaking()` | `boolean` | Avatar currently speaking |
+
+## 7.7 GenUI Control
+
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `registerRenderer(type, renderer)` | `() => void` | Register custom renderer for a GenUI type |
+| `useGenUIMiddleware(middleware)` | `() => void` | Add rendering middleware |
+| `provideLibrary(name, library)` | `void` | Pre-provide a library instance (Chart.js, Mermaid, etc.) |
+| `setLibraryUrl(name, url)` | `void` | Override CDN URL for a library |
+| `hideGenUI(category?)` | `void` | Hide active GenUI content |
+| `getActiveGenUI()` | `object \| null` | Get active GenUI info: `{ type, category }` |
+| `setGenUIEnabled(enabled)` | `void` | Enable/disable GenUI |
+| `isGenUIEnabled()` | `boolean` | Check GenUI state |
+
+## 7.8 Contact Collection
+
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `submitContact(type, value)` | `void` | Submit contact info (`'email'` or `'phone'`) |
+| `rejectContact(type)` | `void` | Decline to provide contact info |
+
+
+# 8. GenUI (Generative UI)
+
+The Socket SDK renders rich visual content that the avatar sends during conversation. GenUI content appears as overlays or panels alongside the avatar video — charts, code snippets, diagrams, tables, images, and more.
+
+## 8.1 Built-in Content Types
+
+| Type | Category | Description |
+|------|----------|-------------|
+| `showHtml` | board | HTML content panel |
+| `showCode` | board | Code with syntax highlighting (CodeMirror) |
+| `showDiagram` | board | Mermaid diagrams |
+| `showChart` | board | Charts via Chart.js |
+| `showIFrame` | board | Embedded iframe |
+| `showLatex` | board | LaTeX math rendering (KaTeX) |
+| `showMedia` | visual | Media content |
+| `showGeneratedImages` | visual | AI-generated images |
+| `showVisualChart` | visual | Chart overlay |
+| `showVisualItems` | visual | Item list |
+| `showVisualLink` | visual | Link card |
+| `showVisualPhoto` | visual | Photo display |
+| `showVisualTable` | visual | Table display |
+| `showVisualVideo` | visual | Video embed |
+
+**Categories:** `board` types render full-screen panels. `visual` types render as overlays on the avatar video.
+
+## 8.2 Listening to GenUI Events
+
+```javascript
+sdk.on('genui', function(data) {
+  console.log('GenUI received:', data.type, data.data);
+});
+
+sdk.on('genui:rendered', function(info) {
+  console.log('Rendered:', info.type, 'in category:', info.category);
+});
+```
+
+## 8.3 Custom Renderers
+
+Register custom renderers for specific content types:
+
+```javascript
+sdk.registerRenderer('showCustomWidget', {
+  render: function(data, container, ctx) {
+    var el = document.createElement('div');
+    el.innerHTML = '<h3>' + data.title + '</h3><p>' + data.body + '</p>';
+    container.appendChild(el);
+  },
+  hide: function(container) {
+    container.innerHTML = '';
+  }
+});
+```
+
+## 8.4 Middleware
+
+Intercept and transform GenUI before rendering:
+
+```javascript
+sdk.useGenUIMiddleware({
+  beforeRender: function(ctx) {
+    // Cancel rendering for specific types
+    if (ctx.type === 'showChart' && !chartLibraryLoaded) {
+      ctx.cancelled = true;
+      return;
+    }
+    // Transform data
+    ctx.data.theme = 'dark';
+  },
+  afterRender: function(ctx) {
+    console.log('Rendered:', ctx.type);
+  }
+});
+```
+
+## 8.5 Library Loading
+
+The SDK lazy-loads rendering libraries from CDN on demand (Chart.js, Mermaid, KaTeX, CodeMirror). Pre-provide libraries to avoid CDN loads:
+
+```javascript
+// Pre-provide if already loaded on your page
+sdk.provideLibrary('chartjs', window.Chart);
+sdk.provideLibrary('mermaid', window.mermaid);
+
+// Override CDN URLs for custom deployments
+sdk.setLibraryUrl('chartjs', '/vendor/chart.min.js');
+```
+
+## 8.6 Sticky Content
+
+By default, GenUI content persists until the user dismisses it, new content replaces it, or `hideGenUI()` is called. Configure sticky behavior per type:
+
+```javascript
+var sdk = new KalturaAvatarSDK({
+  // ...
+  genui: {
+    enabled: true,
+    stickyTypes: ['showChart', 'showDiagram']  // these ignore server hide events
+  }
+});
+```
+
+
+# 9. Iframe SDK — Quick Start
+
+```html
+<div id="avatar-container" style="width: 800px; height: 600px;"></div>
+<script src="https://cdn.jsdelivr.net/gh/kaltura/conversational-avatar-embed-sdk@v1.3.0/sdk-iframe/kaltura-avatar-sdk.min.js"></script>
 <script>
   var sdk = new KalturaAvatarSDK({
     clientId: 'YOUR_CLIENT_ID',
@@ -66,21 +490,21 @@ Load the SDK from jsDelivr CDN and initialize with your credentials:
 
 | Method | URL |
 |--------|-----|
-| Latest (CDN) | `https://cdn.jsdelivr.net/gh/kaltura/conversational-avatar-embed-sdk@latest/sdk/kaltura-avatar-sdk.min.js` |
-| Pinned version | `https://cdn.jsdelivr.net/gh/kaltura/conversational-avatar-embed-sdk@v1.3.0/sdk/kaltura-avatar-sdk.min.js` |
+| Latest (CDN) | `https://cdn.jsdelivr.net/gh/kaltura/conversational-avatar-embed-sdk@latest/sdk-iframe/kaltura-avatar-sdk.min.js` |
+| Pinned version | `https://cdn.jsdelivr.net/gh/kaltura/conversational-avatar-embed-sdk@v1.3.0/sdk-iframe/kaltura-avatar-sdk.min.js` |
 | Self-hosted | Download from GitHub releases and serve from your own domain |
 
-The SDK exposes the global `KalturaAvatarSDK` class. It creates a sandboxed iframe inside the container element — all communication between the host page and the avatar happens via `postMessage`, with audio streamed via WebRTC to Kaltura's TURN servers.
+The Iframe SDK creates a sandboxed iframe inside the container element. All communication between the host page and the avatar happens via `postMessage`, with audio/video streamed via WebRTC through Kaltura's servers.
 
 
-# 4. Configuration
+# 10. Iframe SDK — Configuration
 
-## 4.1 Constructor Options
+## 10.1 Constructor Options
 
 | Parameter | Required | Description |
 |-----------|----------|-------------|
 | `clientId` | yes | Kaltura avatar client identifier (from Kaltura Studio) |
-| `flowId` | yes | Avatar flow ID — defines the avatar appearance, AI model, and conversation logic (from Kaltura Studio) |
+| `flowId` | yes | Avatar flow ID (from Kaltura Studio) |
 | `container` | no | CSS selector string or `HTMLElement` for the iframe |
 | `config.debug` | no | Enable console logging (default: `false`) |
 | `config.apiBaseUrl` | no | Override API URL (default: `https://api.avatar.us.kaltura.ai`) |
@@ -88,7 +512,7 @@ The SDK exposes the global `KalturaAvatarSDK` class. It creates a sandboxed ifra
 | `config.iframeClass` | no | CSS class to apply to the generated iframe |
 | `config.iframeStyles` | no | Inline CSS styles object for the iframe |
 
-## 4.2 Start Options
+## 10.2 Start Options
 
 The `start()` method accepts optional style overrides:
 
@@ -99,13 +523,13 @@ sdk.start({
 ```
 
 
-# 5. Lifecycle and Events
+# 11. Iframe SDK — Events
 
-## 5.1 State Machine
+## 11.1 State Machine
 
-The avatar progresses through states: `uninitialized` → `initializing` → `ready` → `in-conversation` → `ended`.
+States: `uninitialized` → `initializing` → `ready` → `in-conversation` → `ended`.
 
-An `error` state can be reached from any state. Access the current state via `sdk.getState()`. Listen for transitions via the `stateChange` event.
+An `error` state can be reached from any state. Access via `sdk.getState()`.
 
 Static enum: `KalturaAvatarSDK.State`
 
@@ -118,7 +542,7 @@ Static enum: `KalturaAvatarSDK.State`
 | `ENDED` | `'ended'` |
 | `ERROR` | `'error'` |
 
-## 5.2 Events
+## 11.2 Events
 
 Static enum: `KalturaAvatarSDK.Events`
 
@@ -126,45 +550,40 @@ Static enum: `KalturaAvatarSDK.Events`
 |-------|----------|---------|-------------|
 | `showing-join-meeting` | `SHOWING_JOIN_MEETING` | — | Pre-join screen appears |
 | `join-meeting-clicked` | `JOIN_MEETING_CLICKED` | — | User clicks join button |
-| `showing-agent` | `SHOWING_AGENT` | — | Avatar is visible and ready — inject DPP here |
-| `agent-talked` | `AGENT_TALKED` | `string \| { agentContent }` | Avatar spoke — contains the spoken text |
-| `user-transcription` | `USER_TRANSCRIPTION` | `string \| { userTranscription }` | User's speech was transcribed |
-| `pronunciation-score` | `PRONUNCIATION_SCORE` | `number \| { pronunciationScore }` | Pronunciation quality feedback (0–100) |
+| `showing-agent` | `SHOWING_AGENT` | — | Avatar visible and ready — inject DPP here |
+| `agent-talked` | `AGENT_TALKED` | `string \| { agentContent }` | Avatar spoke |
+| `user-transcription` | `USER_TRANSCRIPTION` | `string \| { userTranscription }` | User's speech transcribed |
+| `pronunciation-score` | `PRONUNCIATION_SCORE` | `number \| { pronunciationScore }` | Pronunciation feedback (0–100) |
 | `permissions-denied` | `PERMISSIONS_DENIED` | — | Microphone/camera permissions denied |
 | `conversation-ended` | `CONVERSATION_ENDED` | — | Conversation finished |
 | `load-agent-error` | `LOAD_AGENT_ERROR` | — | Failed to load the avatar |
-| `stateChange` | — | `{ from, to }` | Lifecycle state transition |
-| `ready` | — | `{ assets }` | Assets loaded (avatar info, design, talk URL) |
-| `started` | — | `{ iframe }` | Iframe created and conversation started |
+| `stateChange` | — | `{ from, to }` | State transition |
+| `ready` | — | `{ assets }` | Assets loaded |
+| `started` | — | `{ iframe }` | Iframe created |
 | `ended` | — | `{}` | Session ended |
 | `error` | — | `{ message }` | Error occurred |
 
-## 5.3 Event Subscription
+## 11.3 Event Subscription
 
 ```javascript
-// Subscribe (returns unsubscribe function)
 var unsubscribe = sdk.on('agent-talked', function(data) {
   console.log(data.agentContent || data);
 });
 
-// Subscribe once
 sdk.once('showing-agent', function() { /* fires once */ });
 
-// Wildcard — receive all events
 sdk.on('*', function(data) {
   console.log(data.event, data.data);
 });
 
-// Unsubscribe
 sdk.off('agent-talked', myCallback);
-// Or call the returned function:
 unsubscribe();
 ```
 
 
-# 6. Methods
+# 12. Iframe SDK — Methods
 
-## 6.1 Lifecycle
+## 12.1 Lifecycle
 
 | Method | Returns | Description |
 |--------|---------|-------------|
@@ -172,16 +591,16 @@ unsubscribe();
 | `init()` | `Promise<Assets>` | Initialize and load assets only (called automatically by `start`) |
 | `end()` | `void` | End the conversation and remove iframe |
 | `destroy()` | `void` | Full cleanup — listeners, assets, iframe, state reset |
-| `setContainer(el)` | `this` | Set or change the container element (CSS selector or HTMLElement) |
+| `setContainer(el)` | `this` | Set or change the container element |
 
-## 6.2 Communication
+## 12.2 Communication
 
 | Method | Returns | Description |
 |--------|---------|-------------|
-| `injectPrompt(text)` | `boolean` | Send a Dynamic Page Prompt (JSON string) to configure avatar behavior |
-| `sendMessage(message)` | `boolean` | Send a raw postMessage object to the iframe (advanced use) |
+| `injectPrompt(text)` | `boolean` | Send a Dynamic Page Prompt (JSON string) |
+| `sendMessage(message)` | `boolean` | Send a raw postMessage object to the iframe |
 
-## 6.3 State and Info
+## 12.3 State and Info
 
 | Method | Returns | Description |
 |--------|---------|-------------|
@@ -193,7 +612,7 @@ unsubscribe();
 | `getClientId()` | `string` | The configured client ID |
 | `getFlowId()` | `string` | The configured flow ID |
 
-## 6.4 Transcript
+## 12.4 Transcript
 
 | Method | Returns | Description |
 |--------|---------|-------------|
@@ -203,33 +622,50 @@ unsubscribe();
 | `getTranscriptText(options?)` | `string` | Formatted transcript (`text`, `markdown`, or `json`) |
 | `downloadTranscript(options?)` | `void` | Download transcript as a file |
 
-Download options: `{ filename?, format?: 'text'|'markdown'|'json', includeTimestamps?: boolean }`
 
+# 13. Dynamic Page Prompt (DPP)
 
-# 7. Dynamic Page Prompt (DPP)
+The Dynamic Page Prompt is the primary mechanism for customizing avatar behavior at runtime. Inject context to configure the avatar's persona, scenario, evaluation criteria, and guardrails per session.
 
-The Dynamic Page Prompt is the primary mechanism for customizing avatar behavior at runtime. Inject a JSON string via `injectPrompt()` on the `showing-agent` event to configure the avatar's persona, scenario, evaluation criteria, and guardrails per session.
+## 13.1 Injection Timing
 
-## 7.1 Injection Timing
+**Socket SDK** — inject on the `ready` event:
 
-Always inject on the `showing-agent` event with a 500ms delay:
+```javascript
+sdk.on('ready', function() {
+  sdk.injectDPP({
+    v: '2',
+    role: 'Interview Coach',
+    inst: ['Ask about their experience with project management']
+  });
+});
+```
+
+**Iframe SDK** — inject on `showing-agent` with a 500ms delay:
 
 ```javascript
 sdk.on('showing-agent', function() {
   setTimeout(function() {
-    sdk.injectPrompt(JSON.stringify(context));
+    sdk.injectPrompt(JSON.stringify({
+      v: '2',
+      role: 'Interview Coach',
+      inst: ['Ask about their experience with project management']
+    }));
   }, 500);
 });
 ```
 
-## 7.2 DPP Structure
+## 13.2 DPP Structure
 
-The DPP is free-form text — you can send any string, including plain text, structured JSON, YAML, or any format you choose. JSON is recommended because it makes it straightforward to enforce a consistent schema in both the avatar's Knowledge Base and your application code. The avatar's Knowledge Base prompt must include instructions on how to interpret whatever format you send.
+The DPP is free-form text — you can send any string, including plain text, structured JSON, YAML, or any format you choose. JSON is recommended because it makes it straightforward to enforce a consistent schema. The avatar's Knowledge Base prompt must include instructions on how to interpret whatever format you send.
+
+Include `"v": "2"` for version signaling.
 
 **Example** (interview scenario):
 
 ```json
 {
+  "v": "2",
   "mode": "interview",
   "user": { "first_name": "Jane", "role": "candidate" },
   "questions": [
@@ -244,6 +680,7 @@ The DPP is free-form text — you can send any string, including plain text, str
 
 ```json
 {
+  "v": "2",
   "step": 2,
   "total_steps": 5,
   "product": "Enterprise CRM",
@@ -262,9 +699,15 @@ Read the Dynamic Page Prompt JSON before speaking.
 - "step" / "total_steps" → track progress through the flow
 ```
 
-## 7.3 Re-injecting DPP (Real-time Updates)
+## 13.3 Re-injecting DPP (Real-time Updates)
 
-Call `injectPrompt()` multiple times during a session to push live context:
+**Socket SDK** — use built-in debounce:
+
+```javascript
+sdk.injectDPPDebounced({ code: editor.getValue(), cursor: editor.getCursor() }, 300);
+```
+
+**Iframe SDK** — debounce manually:
 
 ```javascript
 var debounceTimer;
@@ -281,9 +724,9 @@ Use cases for re-injection:
 - Phase transitions (user completed a task, move to next step)
 - Real-time data feeds (metrics, sensor readings)
 
-## 7.4 Knowledge Base Prompt (RICECO Framework)
+## 13.4 Knowledge Base Prompt (RICECO Framework)
 
-The avatar's Knowledge Base in Kaltura Studio defines its core behavior. Use the RICECO framework (Role, Instructions, Context, Examples, Constraints, Output) for structured prompts:
+The avatar's Knowledge Base in Kaltura Studio defines its core behavior. Use the RICECO framework (Role, Instructions, Context, Examples, Constraints, Output):
 
 ```
 # ROLE
@@ -318,9 +761,34 @@ When you have completed all required steps, say exactly:
 ```
 
 
-# 8. Avatar Spoken Commands
+# 14. Avatar Spoken Commands
 
-The avatar can trigger JavaScript actions by speaking specific phrases. Listen to `agent-talked` events and pattern-match on the spoken text:
+The avatar triggers JavaScript actions by speaking specific phrases.
+
+## 14.1 Socket SDK — Registered Commands
+
+Use `registerCommand()` for pattern-matched phrases with automatic event handling:
+
+```javascript
+sdk.registerCommand('endCall', /ending call now/i, function(match) {
+  var transcript = sdk.getTranscript();
+  sdk.end();
+  showResults(transcript);
+});
+
+sdk.registerCommand('nextStep', /moving to.*next step/i, function(match) {
+  loadNextStep();
+});
+
+// Listen for any matched command
+sdk.on('command-matched', function(data) {
+  console.log('Matched:', data.command, 'from:', data.text);
+});
+```
+
+## 14.2 Iframe SDK — Manual Pattern Matching
+
+Listen to `agent-talked` events and match text:
 
 ```javascript
 sdk.on('agent-talked', function(data) {
@@ -338,7 +806,9 @@ sdk.on('agent-talked', function(data) {
 });
 ```
 
-Configure the trigger phrases in the avatar's Knowledge Base:
+## 14.3 Knowledge Base Configuration
+
+Configure trigger phrases in the avatar's Knowledge Base:
 
 ```
 CALL TERMINATION:
@@ -350,18 +820,16 @@ When the user confirms they understand the current step, say exactly:
 "Moving to the next step now."
 ```
 
-| Avatar Says | JS Action |
-|-------------|-----------|
-| "Ending call now." | `sdk.end()` + show results |
+| Avatar Says | Action |
+|-------------|--------|
+| "Ending call now." | End session + show results |
 | "Moving to the next step now." | Load next scenario/step |
 | "I'll send you a summary." | Trigger export/email |
 
-The trigger phrases in the Knowledge Base must match your JS pattern-matching exactly (case-insensitive matching recommended).
 
+# 15. Transcript
 
-# 9. Transcript
-
-The SDK records all conversation turns automatically:
+Both SDKs record conversation turns automatically:
 
 ```javascript
 // Get structured transcript
@@ -380,10 +848,12 @@ sdk.setTranscriptEnabled(true);   // resume
 sdk.clearTranscript();            // reset
 ```
 
-Capture the transcript before calling `sdk.end()` — ending the session may clear it.
+Download options: `{ filename?, format?: 'text'|'markdown'|'json', includeTimestamps?: boolean }`
+
+Capture the transcript before ending the session — calling `end()` or `destroy()` may clear it.
 
 
-# 10. Pronunciation
+# 16. Pronunciation
 
 For brand names, acronyms, or technical terms that need specific pronunciation, add lexeme instructions to the Knowledge Base:
 
@@ -404,7 +874,7 @@ sdk.on('pronunciation-score', function(data) {
 ```
 
 
-# 11. Multiple Instances
+# 17. Multiple Instances
 
 Multiple SDK instances can run simultaneously (e.g., dual-avatar setups for multi-character simulations):
 
@@ -421,23 +891,84 @@ var avatar2 = new KalturaAvatarSDK({
   container: '#right-panel'
 });
 
-avatar1.start();
-avatar2.start();
+// Socket SDK
+avatar1.connect();
+avatar2.connect();
+
+// Iframe SDK
+// avatar1.start();
+// avatar2.start();
 ```
 
 Each instance has independent state, events, lifecycle, and transcript.
 
 
-# 12. Error Handling
+# 18. Error Handling
+
+## 18.1 Socket SDK — Typed Error Codes
+
+The Socket SDK emits structured errors with `.code`, `.message`, and `.recoverable` properties:
+
+| Code | Name | Category | Recoverable |
+|------|------|----------|-------------|
+| 1001 | CONNECTION_FAILED | Connection | yes |
+| 1002 | CONNECTION_TIMEOUT | Connection | yes |
+| 1003 | CONNECTION_LOST | Connection | yes |
+| 1004 | JOIN_FAILED | Connection | no |
+| 1005 | FLOW_CONFIG_ERROR | Connection | no |
+| 2001 | MIC_PERMISSION_DENIED | Media | no |
+| 2002 | MIC_NOT_AVAILABLE | Media | no |
+| 2003 | WHEP_NEGOTIATION_FAILED | Media | yes |
+| 2004 | WEBRTC_FAILED | Media | yes |
+| 2005 | VIDEO_PLAYBACK_FAILED | Media | yes |
+| 3001 | INVALID_STATE | Usage | no |
+| 3003 | ALREADY_DESTROYED | Usage | no |
+| 4002 | SESSION_EXPIRED | Session | no |
+| 4003 | CONVERSATION_TIME_EXPIRED | Session | no |
+| 5001 | INVALID_CONFIG | Config | no |
+| 5002 | CONTAINER_NOT_FOUND | Config | no |
+| 5003 | INVALID_DPP_JSON | Config | no |
+
+```javascript
+sdk.on('error', function(err) {
+  console.error('Error', err.code, err.message, 'recoverable:', err.recoverable);
+
+  if (err.code === 2001) {
+    showMicrophonePermissionPrompt();
+  }
+});
+```
+
+## 18.2 Graceful Degradation
+
+The Socket SDK handles failures automatically:
+
+| Failure | Automatic Response |
+|---------|-------------------|
+| Video stream fails | Falls back to audio-only (`audio-fallback` event) |
+| Microphone denied | Switches to text-only mode (use `sendText()`) |
+| Connection drops | Auto-reconnects with exponential backoff |
+| All reconnects fail | Emits error with `recoverable: false` |
+
+```javascript
+sdk.on('audio-fallback', function() {
+  console.log('Video unavailable — using audio only');
+});
+
+sdk.on('reconnecting', function(data) {
+  console.log('Reconnecting... attempt', data.attempt, 'of', data.maxAttempts);
+});
+```
+
+## 18.3 Iframe SDK — Error Events
 
 | Event / Scenario | Cause | Resolution |
 |------------------|-------|------------|
-| `load-agent-error` | Invalid `clientId` or `flowId`, or avatar not published | Verify credentials in Kaltura Studio; confirm the agent is published |
-| `permissions-denied` | User denied microphone access | Show a UI prompt explaining microphone is required for conversation |
-| `error` event | Network failure, WebRTC connection lost, or session timeout | Check connectivity to `*.avatar.us.kaltura.ai`; retry with `sdk.destroy()` then re-create |
-| Container not rendered | Selector matches no element, or element has zero dimensions | Verify the `container` selector matches an existing DOM element with explicit width and height |
-| DPP ignored | Injected before `showing-agent` or without the 500ms delay | Always inject on `showing-agent` with `setTimeout(..., 500)` |
-| Transcript empty after `end()` | Transcript cleared on session end | Capture transcript before calling `sdk.end()` |
+| `load-agent-error` | Invalid credentials or avatar not published | Verify clientId/flowId in Kaltura Studio |
+| `permissions-denied` | User denied microphone access | Show UI prompt explaining microphone is required |
+| `error` event | Network failure, WebRTC connection lost, session timeout | Retry with `sdk.destroy()` then re-create |
+| Container not rendered | Selector matches no element or zero dimensions | Verify container has explicit width and height |
+| DPP ignored | Injected before `showing-agent` or without delay | Inject on `showing-agent` with `setTimeout(..., 500)` |
 
 ```javascript
 sdk.on('error', function(data) {
@@ -454,39 +985,55 @@ sdk.on('permissions-denied', function() {
 ```
 
 
-# 13. Best Practices
+# 19. Best Practices
 
-1. **Inject DPP on `showing-agent` with 500ms delay.** The avatar must be fully loaded before receiving prompts. Injecting too early silently fails.
+**Socket SDK:**
 
-2. **Capture transcript before ending.** Call `sdk.getTranscript()` or `sdk.downloadTranscript()` before `sdk.end()` to preserve the conversation record.
+1. **Inject DPP on `ready` event.** The avatar is fully connected and ready to receive context at this point.
 
-3. **Use HTTPS.** The embed requires a secure context for microphone access and iframe security policies.
+2. **Use `injectDPPDebounced()` for live updates.** Built-in debouncing prevents flooding the avatar with rapid context changes.
 
-4. **Size the container explicitly.** The avatar iframe fills the container element — set explicit `width` and `height` to control the layout.
+3. **Use `registerCommand()` over manual text matching.** Structured command registration with regex provides more reliable pattern matching.
 
-5. **Clean up on navigation.** Call `destroy()` when the user navigates away to release microphone access and remove the iframe.
+4. **Handle `audio-fallback` gracefully.** Show users a notice that video is unavailable but the conversation continues.
 
-6. **Match trigger phrases exactly.** When using Avatar Spoken Commands, the phrases in your Knowledge Base must match your JavaScript pattern-matching — use `.toLowerCase()` and `.includes()` for resilient matching.
+5. **Check `isAvatarSpeaking()` before sending text.** Sending text while the avatar speaks may interrupt the response.
 
-7. **Pin the SDK version in production.** Use `@v1.3.0` (or the latest release tag) rather than `@latest` to prevent unexpected behavior from SDK updates.
+6. **Pre-provide libraries when possible.** If your page already loads Chart.js or Mermaid, use `provideLibrary()` to avoid duplicate CDN loads.
 
-8. **Handle permissions denial gracefully.** Listen for `permissions-denied` and show a user-friendly explanation rather than leaving the UI in a broken state.
+**Iframe SDK:**
 
-9. **Debounce DPP re-injection.** When sending live context updates (code changes, real-time data), debounce at 200ms+ so the avatar processes one prompt at a time.
+7. **Inject DPP on `showing-agent` with 500ms delay.** The avatar must be fully loaded before receiving prompts.
 
-10. **Use event constants.** Reference events via `KalturaAvatarSDK.Events.SHOWING_AGENT` rather than string literals for type safety and refactoring resilience.
+8. **Size the container explicitly.** The avatar iframe fills the container — set explicit `width` and `height`.
+
+**Both SDKs:**
+
+9. **Capture transcript before ending.** Call `getTranscript()` or `downloadTranscript()` before `end()`.
+
+10. **Use HTTPS.** Required for microphone access and WebRTC.
+
+11. **Clean up on navigation.** Call `destroy()` when the user navigates away to release resources.
+
+12. **Pin the SDK version in production.** Use a specific release tag rather than `@latest`.
+
+13. **Handle permissions denial gracefully.** Show a user-friendly explanation. With Socket SDK, fall back to `sendText()` for text-only mode.
+
+14. **Use event constants (Iframe SDK).** Reference events via `KalturaAvatarSDK.Events.SHOWING_AGENT` for type safety.
 
 ## Common Integration Patterns
 
 | Pattern | Description |
 |---------|-------------|
-| Interview simulation | DPP defines questions + evaluation criteria; `agent-talked` detects "Ending call now" to trigger scoring |
-| Multi-step onboarding | DPP tracks current step; re-inject on "Moving to next step now" with updated context |
-| Pair programming | DPP re-injected every few seconds with live code; avatar comments on changes |
+| Interview simulation | DPP defines questions + evaluation criteria; spoken command detects "Ending call now" to trigger scoring |
+| Multi-step onboarding | DPP tracks current step; re-inject with updated context on step transitions |
+| Pair programming | `injectDPPDebounced()` with live code every few seconds; GenUI shows code snippets |
+| Data exploration | Avatar explains data with GenUI charts, tables, and diagrams |
 | Dual-avatar roleplay | Two SDK instances with different flows; coordinate via shared state |
+| Accessibility | Socket SDK `sendText()` for text-only input; `audio-fallback` for video-impaired |
 
 
-# 14. Related Guides
+# 20. Related Guides
 
 - **[VOD Avatar Studio](KALTURA_VOD_AVATAR_API.md)** — Pre-recorded avatar video generation from scripts — the pre-recorded counterpart to this real-time conversational embed
 - **[Experience Components Overview](KALTURA_EXPERIENCE_COMPONENTS_API.md)** — Index of all embeddable components with shared guidelines

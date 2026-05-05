@@ -62,7 +62,7 @@ These guides are optimized for AI agent consumption through multiple discovery m
 | [Experience Components API](KALTURA_EXPERIENCE_COMPONENTS_API.md) | Index of all embeddable components with shared guidelines | 26 tests |
 | [Express Recorder API](KALTURA_EXPRESS_RECORDER_API.md) | Browser-based WebRTC video, audio, and screen recording | — |
 | [Captions Editor API](KALTURA_CAPTIONS_EDITOR_API.md) | Interactive caption editing with video/waveform sync | — |
-| [Conversational Avatar Embed](KALTURA_CONVERSATIONAL_AVATAR_API.md) | AI-powered conversational video avatar embed | — |
+| [Conversational Avatar Embed](KALTURA_CONVERSATIONAL_AVATAR_API.md) | AI-powered conversational video avatar: Socket SDK (WebRTC, GenUI) + Iframe SDK | — |
 | [Chat & Collaborate (CnC)](KALTURA_CNC_API.md) | Real-time chat, Q&A, polls alongside video content | — |
 | [Genie Widget API](KALTURA_GENIE_WIDGET_API.md) | Conversational AI search widget over video library | 7 tests |
 | [Media Manager API](KALTURA_MEDIA_MANAGER_API.md) | Browsable media library: select, upload, manage entries | 11 tests |
