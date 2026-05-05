@@ -637,7 +637,7 @@ The `reportType` parameter uses **integer IDs** (KalturaReportType enum). Pass t
 | `1` | TOP_CONTENT | Top videos by plays |
 | `2` | CONTENT_DROPOFF | Impressions-to-play and quartile drop-off analysis |
 | `6` | TOP_SYNDICATION | Syndication domains and referrers |
-| `13` | USER_TOP_CONTENT | Per-user engagement tables |
+| `13` | USER_TOP_CONTENT | Per-user engagement with 10-second segment granularity (watch/rewatch per segment) |
 | `21` | PLATFORMS | Device overview |
 | `22` | OPERATING_SYSTEM | Top operating systems |
 | `23` | BROWSERS | Top browsers |
@@ -651,6 +651,7 @@ The `reportType` parameter uses **integer IDs** (KalturaReportType enum). Pass t
 | `38` | TOP_CONTENT_CREATOR | Top content by creator, category top content |
 | `39` | TOP_CONTENT_CONTRIBUTORS | Top content contributors |
 | `41` | TOP_SOURCES | Upload sources |
+| `43` | CONTENT_INTERACTIONS_PERCENTILE | 1% percentile engagement timeline per entry (100 data points per video) |
 | `45` | PLAYER_RELATED_INTERACTIONS | Content interactions (shares, downloads) |
 | `46` | PLAYBACK_RATE | Playback speed statistics |
 | `52` | CATEGORY_HIGHLIGHTS | Category summary metrics |
@@ -876,6 +877,42 @@ curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getTable" \
   -d "responseOptions[objectType]=KalturaReportResponseOptions" \
   -d "responseOptions[delimiter]=|"
 ```
+
+### Content Intelligence — Segment-Level Engagement Analysis
+
+Correlate granular engagement data with captions and cue points to identify which content topics engage audiences most, detect confusing segments (high rewatch), and discover optimal clips for shorter shareable videos.
+
+```bash
+# 10-second segment report — per-user watch/rewatch data at segment granularity
+curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getTable" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "reportType=13" \
+  -d "reportInputFilter[objectType]=KalturaEndUserReportInputFilter" \
+  -d "reportInputFilter[fromDate]=$FROM_TIMESTAMP" \
+  -d "reportInputFilter[toDate]=$TO_TIMESTAMP" \
+  -d "reportInputFilter[entryIdIn]=$KALTURA_ENTRY_ID" \
+  -d "pager[pageSize]=500" \
+  -d "pager[pageIndex]=1" \
+  -d "responseOptions[objectType]=KalturaReportResponseOptions" \
+  -d "responseOptions[delimiter]=|"
+
+# 1% percentile report — 100 data points spanning the entry's timeline
+curl -X POST "$KALTURA_SERVICE_URL/service/report/action/getTable" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "reportType=43" \
+  -d "reportInputFilter[objectType]=KalturaEndUserReportInputFilter" \
+  -d "reportInputFilter[fromDate]=$FROM_TIMESTAMP" \
+  -d "reportInputFilter[toDate]=$TO_TIMESTAMP" \
+  -d "reportInputFilter[entryIdIn]=$KALTURA_ENTRY_ID" \
+  -d "pager[pageSize]=100" \
+  -d "pager[pageIndex]=1" \
+  -d "responseOptions[objectType]=KalturaReportResponseOptions" \
+  -d "responseOptions[delimiter]=|"
+```
+
+Combine these with captions (`captionAsset.serve` for transcript text) and cue points (`cuePoint.list` for chapters/slides) to map engagement peaks and valleys to specific content topics. High rewatch segments with complex caption text indicate challenging material; high-engagement segments with clear topic boundaries are candidates for standalone clips.
 
 ### Live Stream Operations Dashboard
 
