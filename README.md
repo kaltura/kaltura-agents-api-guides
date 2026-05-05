@@ -6,7 +6,7 @@
 [![Tests](https://img.shields.io/badge/Live--Tested-960+_tests-brightgreen.svg)](#guides)
 [![llms.txt](https://img.shields.io/badge/llms.txt-available-purple.svg)](llms.txt)
 [![Agent Skill](https://img.shields.io/badge/Agent_Skill-kaltura--api-orange.svg)](.agents/skills/kaltura-api/SKILL.md)
-[![Docs Site](https://img.shields.io/badge/Docs-GitHub_Pages-blue.svg)](https://kaltura.github.io/kaltura-agents-api-guides/)
+[![Docs Site](https://img.shields.io/badge/Docs-kaltura.md-blue.svg)](https://kaltura.md/)
 
 [Kaltura](https://corp.kaltura.com/) — The Agentic Digital Experience Platform. Kaltura is powering rich, agentic digital experiences across organizational journeys for customers, employees, learners, and audiences. The Kaltura platform combines intelligent content creation, enterprise-grade content management and intelligence, and multimodal conversational engagement capabilities. Kaltura serves leading enterprises, financial institutions, educational institutions, media and telecom providers, and other organizations worldwide.
 
