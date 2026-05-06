@@ -128,6 +128,8 @@ Save the `id` from the response as `EVENT_ID`.
 POST /api/v1/events/list
 ```
 
+The `filter` object is required and must contain at least one field. Use `searchTerm` for broad queries or `idIn` for specific events.
+
 ```json
 {
   "filter": {
@@ -138,30 +140,25 @@ POST /api/v1/events/list
   "pager": {
     "offset": 0,
     "limit": 15
-  },
-  "orderBy": "-startDate"
+  }
 }
 ```
 
 | Filter Field | Type | Description |
 |-------------|------|-------------|
-| `searchTerm` | string | Free-text search across name and description |
+| `searchTerm` | string | Free-text search across name and description (minimum 2 characters) |
 | `labels` | array | Filter by label tags |
-| `idIn` | array | Filter by specific event IDs |
+| `idIn` | array | Filter by specific event IDs (integers) |
+| `startDateGreaterThanOrEqual` | string | ISO 8601 — events starting on or after this date |
+| `startDateLessOrEqualThan` | string | ISO 8601 — events starting on or before this date |
+| `endDateGreaterThanOrEqual` | string | ISO 8601 — events ending on or after this date |
+| `endDateLessOrEqualThan` | string | ISO 8601 — events ending on or before this date |
+| `templateIdIn` | array | Filter by template IDs |
 
 | Pager Field | Type | Description |
 |-------------|------|-------------|
 | `offset` | int | Number of results to skip |
 | `limit` | int | Max results to return (max 15) |
-
-| `orderBy` | Description |
-|-----------|-------------|
-| `+startDate` | Ascending by start date |
-| `-startDate` | Descending by start date (newest first) |
-| `+createdAt` | Ascending by creation date |
-| `-createdAt` | Descending by creation date |
-| `+name` | Alphabetical |
-| `-name` | Reverse alphabetical |
 
 **Response example:**
 
@@ -187,9 +184,8 @@ curl -X POST "$KALTURA_EVENTS_API_URL/events/list" \
   -H "Authorization: Bearer $KALTURA_KS" \
   -H "Content-Type: application/json" \
   -d '{
-    "filter": {},
-    "pager": {"offset": 0, "limit": 10},
-    "orderBy": "-startDate"
+    "filter": {"searchTerm": "town hall"},
+    "pager": {"offset": 0, "limit": 10}
   }'
 ```
 
@@ -675,11 +671,10 @@ curl -X POST "$KALTURA_EVENTS_API_URL/sessions/create" \
 curl -X POST "$KALTURA_EVENTS_API_URL/events/list" \
   -H "Authorization: Bearer $KALTURA_KS" \
   -H "Content-Type: application/json" \
-  -d '{
-    "filter": {},
-    "pager": {"offset": 0, "limit": 5},
-    "orderBy": "-startDate"
-  }'
+  -d "{
+    \"filter\": {\"idIn\": [$EVENT_ID]},
+    \"pager\": {\"offset\": 0, \"limit\": 5}
+  }"
 
 # --- Step 4: Update the event ---
 curl -X POST "$KALTURA_EVENTS_API_URL/events/update" \

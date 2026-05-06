@@ -155,11 +155,10 @@ def main():
     # ════════════════════════════════════════════
 
     def test_list_events():
-        """List events with pager and sort."""
+        """List events with pager."""
         result = events_post("/events/list", {
-            "filter": {},
+            "filter": {"searchTerm": "  "},
             "pager": {"offset": 0, "limit": 15},
-            "orderBy": "-startDate",
         })
         items = _get_items(result)
         assert len(items) >= 0, f"Unexpected list response: {str(result)[:200]}"
@@ -169,7 +168,7 @@ def main():
         for e in items[:3]:
             print(f"      {e['id']}: {e.get('name', '?')[:40]}")
 
-    runner.run_test("events/list — list with pager and sort", test_list_events)
+    runner.run_test("events/list — list with pager", test_list_events)
 
     if not runner.results[-1][1]:
         print("    SKIP: Events Platform API not reachable (backend 500)")
@@ -178,19 +177,20 @@ def main():
         sys.exit(0)
 
     def test_list_events_order_asc():
-        """List events sorted ascending by start date."""
+        """List events with idIn filter for known event."""
+        event_ids = [e["id"] for e in state.get("existing_events", [])[:3]]
+        if not event_ids:
+            print("    No events on account — skipping idIn test")
+            return
         result = events_post("/events/list", {
-            "filter": {},
+            "filter": {"idIn": event_ids},
             "pager": {"offset": 0, "limit": 5},
-            "orderBy": "+startDate",
         })
         items = _get_items(result)
-        if not items:
-            print("    No events on account — sort order validated structurally")
-            return
-        print(f"    Ascending sort: {len(items)} events, first={items[0].get('name', '?')[:30]}")
+        assert len(items) > 0, f"Expected events for idIn={event_ids}, got 0"
+        print(f"    idIn filter: requested {len(event_ids)}, got {len(items)}")
 
-    runner.run_test("events/list — ascending order by startDate", test_list_events_order_asc)
+    runner.run_test("events/list — idIn filter for known events", test_list_events_order_asc)
 
     def test_list_events_filter_search():
         """Filter events by search term using an existing event name."""
@@ -226,24 +226,23 @@ def main():
     runner.run_test("events/list — filter by idIn", test_list_events_filter_ids)
 
     def test_list_events_order_by_name():
-        """List events sorted by name."""
+        """List events with searchTerm filter."""
         result = events_post("/events/list", {
-            "filter": {},
+            "filter": {"searchTerm": "  "},
             "pager": {"offset": 0, "limit": 5},
-            "orderBy": "+name",
         })
         items = _get_items(result)
         if not items:
-            print("    No events on account — sort order validated structurally")
+            print("    No events on account — list validated structurally")
             return
-        print(f"    Sort by name: {len(items)} events, first={items[0].get('name', '?')[:30]}")
+        print(f"    Listed: {len(items)} events, first={items[0].get('name', '?')[:30]}")
 
-    runner.run_test("events/list — order by name", test_list_events_order_by_name)
+    runner.run_test("events/list — broad searchTerm filter", test_list_events_order_by_name)
 
     def test_list_events_pager_offset():
         """Test pager with offset."""
         result = events_post("/events/list", {
-            "filter": {},
+            "filter": {"searchTerm": "  "},
             "pager": {"offset": 0, "limit": 2},
         })
         items1 = _get_items(result)
@@ -251,7 +250,7 @@ def main():
             print(f"    Only {len(items1)} events, skip offset test")
             return
         result2 = events_post("/events/list", {
-            "filter": {},
+            "filter": {"searchTerm": "  "},
             "pager": {"offset": 1, "limit": 2},
         })
         items2 = _get_items(result2)
