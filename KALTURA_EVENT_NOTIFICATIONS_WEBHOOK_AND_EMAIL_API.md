@@ -190,6 +190,10 @@ curl -X POST "$KALTURA_SERVICE_URL/service/eventnotification_eventnotificationte
 | Entry Changed | OBJECT_COPIED (3) | ENTRY (1) | Any entry modification |
 | Metadata Field Changed | OBJECT_DATA_CHANGED (6) | Metadata (plugin) | Custom metadata field updated |
 | Entry Added to Category | OBJECT_CREATED (5) | CATEGORYENTRY (37) | Entry assigned to category |
+| Entry Approved In Category | OBJECT_CHANGED (3) | CATEGORYENTRY (37) | Entry status changed to ACTIVE in category |
+| Entry Rejected In Category | OBJECT_CHANGED (3) | CATEGORYENTRY (37) | Entry status changed to REJECTED in category |
+| User was added to category | OBJECT_ADDED (2) | CATEGORYKUSER (12) | User added to category with ACTIVE status |
+| User was removed from category | OBJECT_DELETED (7) | CATEGORYKUSER (12) | User removed from category |
 | Flavor Asset Status Equals | OBJECT_COPIED (3) | FLAVORASSET (4) | Transcoding complete |
 | Flavor Asset Status Changed | OBJECT_CHANGED (3) | FLAVORASSET (4) | Flavor processing transitions |
 | New Caption Asset Added | OBJECT_CREATED (5) | CaptionAsset (plugin) | Caption uploaded |
@@ -805,7 +809,69 @@ curl -X POST "$KALTURA_SERVICE_URL/service/eventnotification_eventnotificationte
   -d "eventNotificationTemplate[to][emailRecipients][0][name][value]=Category Manager"
 ```
 
-## 12.5 Flavor Asset Status Change Webhook
+## 12.5 Category Entry Approval/Rejection Webhook
+
+Track when entries are approved or rejected in categories with moderation enabled:
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/eventnotification_eventnotificationtemplate/action/listTemplates" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "filter[objectType]=KalturaEventNotificationTemplateFilter" \
+  -d "filter[typeEqual]=httpNotification.Http" \
+  -d "filter[systemNameEqual]=HTTP_Entry_Approved_In_Category"
+```
+
+Clone the template for entry approval notifications:
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/eventnotification_eventnotificationtemplate/action/clone" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "id=$CATEGORY_ENTRY_APPROVED_TEMPLATE_ID" \
+  -d "eventNotificationTemplate[objectType]=KalturaHttpNotificationTemplate" \
+  -d "eventNotificationTemplate[name]=Category Entry Approved" \
+  -d "eventNotificationTemplate[systemName]=MY_CATENTRY_APPROVED" \
+  -d "eventNotificationTemplate[url]=https://myapp.example.com/webhooks/category-entry-approved" \
+  -d "eventNotificationTemplate[method]=2" \
+  -d "eventNotificationTemplate[signSecret]=my-webhook-secret" \
+  -d "eventNotificationTemplate[secureHashingAlgo]=2"
+```
+
+Use the same approach with `HTTP_Entry_Rejected_In_Category` for rejection events. Both templates fire on `categoryEntry` status changes (eventType=3, eventObjectType=37) with conditions checking `CategoryEntryStatus::ACTIVE` or `CategoryEntryStatus::REJECTED`.
+
+## 12.6 User Added/Removed from Category (HTTP Webhook)
+
+Track category membership changes via HTTP webhooks (complement to the email templates in 12.4):
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/eventnotification_eventnotificationtemplate/action/listTemplates" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "filter[objectType]=KalturaEventNotificationTemplateFilter" \
+  -d "filter[typeEqual]=httpNotification.Http" \
+  -d "filter[systemNameEqual]=Http_User_Added_To_Category"
+```
+
+Clone for user membership webhooks:
+
+```bash
+curl -X POST "$KALTURA_SERVICE_URL/service/eventnotification_eventnotificationtemplate/action/clone" \
+  -d "ks=$KALTURA_KS" \
+  -d "format=1" \
+  -d "id=$USER_ADDED_TO_CATEGORY_TEMPLATE_ID" \
+  -d "eventNotificationTemplate[objectType]=KalturaHttpNotificationTemplate" \
+  -d "eventNotificationTemplate[name]=User Joined Category Webhook" \
+  -d "eventNotificationTemplate[systemName]=MY_USER_JOINED_CATEGORY" \
+  -d "eventNotificationTemplate[url]=https://myapp.example.com/webhooks/user-category-join" \
+  -d "eventNotificationTemplate[method]=2" \
+  -d "eventNotificationTemplate[signSecret]=my-webhook-secret" \
+  -d "eventNotificationTemplate[secureHashingAlgo]=2"
+```
+
+Use `User_Was_Removed_From_Category` for the removal counterpart. The user-added template fires on `OBJECT_ADDED` (eventType=2) for `CATEGORYKUSER` (eventObjectType=12) with status=ACTIVE. The removal template fires on `OBJECT_DELETED` (eventType=7).
+
+## 12.7 Flavor Asset Status Change Webhook
 
 Track transcoding progress per flavor:
 
@@ -824,7 +890,7 @@ curl -X POST "$KALTURA_SERVICE_URL/service/eventnotification_eventnotificationte
   -d "eventNotificationTemplate[data][apiObjectType]=KalturaFlavorAsset"
 ```
 
-## 12.6 CRM Sync (Clone-and-Customize)
+## 12.8 CRM Sync (Clone-and-Customize)
 
 Full production pattern with authentication and signing:
 

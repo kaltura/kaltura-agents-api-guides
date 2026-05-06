@@ -184,6 +184,173 @@ def main():
     runner.run_test("listTemplates — paged results (pageSize=5)", test_list_templates_paged)
 
     # ════════════════════════════════════════════
+    # Phase 1b: Category Entry & User HTTP Templates (SUP-52293)
+    # ════════════════════════════════════════════
+    def test_category_entry_approved_template():
+        """Verify HTTP_Entry_Approved_In_Category system template exists."""
+        result = kaltura_post(SVC, "listTemplates", {
+            "filter[objectType]": "KalturaEventNotificationTemplateFilter",
+            "filter[typeEqual]": "httpNotification.Http",
+            "filter[systemNameEqual]": "HTTP_Entry_Approved_In_Category",
+        })
+        assert result.get("totalCount", 0) > 0, \
+            "HTTP_Entry_Approved_In_Category template not found in system templates"
+        tmpl = result["objects"][0]
+        assert tmpl.get("eventType") == 3, \
+            f"Expected eventType=3 (OBJECT_CHANGED), got {tmpl.get('eventType')}"
+        assert tmpl.get("eventObjectType") == 37, \
+            f"Expected eventObjectType=37 (CATEGORYENTRY), got {tmpl.get('eventObjectType')}"
+        state["catentry_approved_template_id"] = tmpl["id"]
+        print(f"    Found: id={tmpl['id']}, name={tmpl.get('name')}")
+        print(f"    Event: type={tmpl.get('eventType')} (OBJECT_CHANGED), "
+              f"objectType={tmpl.get('eventObjectType')} (CATEGORYENTRY)")
+
+    runner.run_test("listTemplates — HTTP_Entry_Approved_In_Category exists",
+                    test_category_entry_approved_template)
+
+    def test_category_entry_rejected_template():
+        """Verify HTTP_Entry_Rejected_In_Category system template exists."""
+        result = kaltura_post(SVC, "listTemplates", {
+            "filter[objectType]": "KalturaEventNotificationTemplateFilter",
+            "filter[typeEqual]": "httpNotification.Http",
+            "filter[systemNameEqual]": "HTTP_Entry_Rejected_In_Category",
+        })
+        assert result.get("totalCount", 0) > 0, \
+            "HTTP_Entry_Rejected_In_Category template not found in system templates"
+        tmpl = result["objects"][0]
+        assert tmpl.get("eventType") == 3, \
+            f"Expected eventType=3 (OBJECT_CHANGED), got {tmpl.get('eventType')}"
+        assert tmpl.get("eventObjectType") == 37, \
+            f"Expected eventObjectType=37 (CATEGORYENTRY), got {tmpl.get('eventObjectType')}"
+        state["catentry_rejected_template_id"] = tmpl["id"]
+        print(f"    Found: id={tmpl['id']}, name={tmpl.get('name')}")
+        print(f"    Event: type={tmpl.get('eventType')} (OBJECT_CHANGED), "
+              f"objectType={tmpl.get('eventObjectType')} (CATEGORYENTRY)")
+
+    runner.run_test("listTemplates — HTTP_Entry_Rejected_In_Category exists",
+                    test_category_entry_rejected_template)
+
+    def test_user_added_to_category_http_template():
+        """Verify Http_User_Added_To_Category system template exists."""
+        result = kaltura_post(SVC, "listTemplates", {
+            "filter[objectType]": "KalturaEventNotificationTemplateFilter",
+            "filter[typeEqual]": "httpNotification.Http",
+            "filter[systemNameEqual]": "Http_User_Added_To_Category",
+        })
+        assert result.get("totalCount", 0) > 0, \
+            "Http_User_Added_To_Category template not found in system templates"
+        tmpl = result["objects"][0]
+        assert tmpl.get("eventType") == 2, \
+            f"Expected eventType=2 (OBJECT_ADDED), got {tmpl.get('eventType')}"
+        assert tmpl.get("eventObjectType") == 12, \
+            f"Expected eventObjectType=12 (CATEGORYKUSER), got {tmpl.get('eventObjectType')}"
+        state["catuser_added_template_id"] = tmpl["id"]
+        print(f"    Found: id={tmpl['id']}, name={tmpl.get('name')}")
+        print(f"    Event: type={tmpl.get('eventType')} (OBJECT_ADDED), "
+              f"objectType={tmpl.get('eventObjectType')} (CATEGORYKUSER)")
+
+    runner.run_test("listTemplates — Http_User_Added_To_Category exists",
+                    test_user_added_to_category_http_template)
+
+    def test_user_removed_from_category_http_template():
+        """Verify User_Was_Removed_From_Category system template exists."""
+        result = kaltura_post(SVC, "listTemplates", {
+            "filter[objectType]": "KalturaEventNotificationTemplateFilter",
+            "filter[typeEqual]": "httpNotification.Http",
+            "filter[systemNameEqual]": "User_Was_Removed_From_Category",
+        })
+        assert result.get("totalCount", 0) > 0, \
+            "User_Was_Removed_From_Category template not found in system templates"
+        tmpl = result["objects"][0]
+        assert tmpl.get("eventType") == 7, \
+            f"Expected eventType=7 (OBJECT_DELETED), got {tmpl.get('eventType')}"
+        assert tmpl.get("eventObjectType") == 12, \
+            f"Expected eventObjectType=12 (CATEGORYKUSER), got {tmpl.get('eventObjectType')}"
+        state["catuser_removed_template_id"] = tmpl["id"]
+        print(f"    Found: id={tmpl['id']}, name={tmpl.get('name')}")
+        print(f"    Event: type={tmpl.get('eventType')} (OBJECT_DELETED), "
+              f"objectType={tmpl.get('eventObjectType')} (CATEGORYKUSER)")
+
+    runner.run_test("listTemplates — User_Was_Removed_From_Category exists",
+                    test_user_removed_from_category_http_template)
+
+    def test_clone_category_entry_approved():
+        """Clone HTTP_Entry_Approved_In_Category and verify inherited conditions."""
+        template_id = state.get("catentry_approved_template_id")
+        assert template_id, "HTTP_Entry_Approved_In_Category template not found"
+        result = kaltura_post(SVC, "clone", {
+            "id": template_id,
+            "eventNotificationTemplate[objectType]": "KalturaHttpNotificationTemplate",
+            "eventNotificationTemplate[name]": f"Test CatEntry Approved {TS}",
+            "eventNotificationTemplate[systemName]": f"TEST_CATENTRY_APPROVED_{TS}",
+            "eventNotificationTemplate[url]": f"https://test-{TS}.example.com/catentry-approved",
+            "eventNotificationTemplate[method]": 2,
+        })
+        assert "id" in result, f"Expected id in clone response: {result}"
+        state["catentry_approved_clone_id"] = result["id"]
+        runner.register_cleanup(
+            f"catentry approved clone {result['id']}",
+            lambda: kaltura_post(SVC, "delete", {"id": state["catentry_approved_clone_id"]}),
+        )
+        detail = kaltura_post(SVC, "get", {"id": result["id"]})
+        assert detail.get("eventType") == 3, \
+            f"Expected eventType=3, got {detail.get('eventType')}"
+        assert detail.get("eventObjectType") == 37, \
+            f"Expected eventObjectType=37, got {detail.get('eventObjectType')}"
+        raw_conditions = detail.get("eventConditions", [])
+        conditions = raw_conditions.get("objects", []) if isinstance(raw_conditions, dict) else raw_conditions
+        assert len(conditions) > 0, \
+            f"Expected inherited eventConditions, got none"
+        kaltura_post(SVC, "delete", {"id": result["id"]})
+        runner._cleanup_actions = [
+            (l, fn) for l, fn in runner._cleanup_actions
+            if "catentry approved" not in l
+        ]
+        print(f"    Cloned: {result['id']}, conditions inherited: {len(conditions)}")
+        print(f"    Verified eventType=3, eventObjectType=37 (CATEGORYENTRY)")
+
+    runner.run_test("clone — HTTP_Entry_Approved_In_Category with conditions",
+                    test_clone_category_entry_approved)
+
+    def test_clone_user_added_to_category_http():
+        """Clone Http_User_Added_To_Category and verify inherited conditions."""
+        template_id = state.get("catuser_added_template_id")
+        assert template_id, "Http_User_Added_To_Category template not found"
+        result = kaltura_post(SVC, "clone", {
+            "id": template_id,
+            "eventNotificationTemplate[objectType]": "KalturaHttpNotificationTemplate",
+            "eventNotificationTemplate[name]": f"Test CatUser Added {TS}",
+            "eventNotificationTemplate[systemName]": f"TEST_CATUSER_ADDED_HTTP_{TS}",
+            "eventNotificationTemplate[url]": f"https://test-{TS}.example.com/catuser-added",
+            "eventNotificationTemplate[method]": 2,
+        })
+        assert "id" in result, f"Expected id in clone response: {result}"
+        state["catuser_added_clone_id"] = result["id"]
+        runner.register_cleanup(
+            f"catuser added clone {result['id']}",
+            lambda: kaltura_post(SVC, "delete", {"id": state["catuser_added_clone_id"]}),
+        )
+        detail = kaltura_post(SVC, "get", {"id": result["id"]})
+        assert detail.get("eventType") == 2, \
+            f"Expected eventType=2, got {detail.get('eventType')}"
+        assert detail.get("eventObjectType") == 12, \
+            f"Expected eventObjectType=12, got {detail.get('eventObjectType')}"
+        raw_conditions = detail.get("eventConditions", [])
+        conditions = raw_conditions.get("objects", []) if isinstance(raw_conditions, dict) else raw_conditions
+        assert len(conditions) > 0, \
+            f"Expected inherited eventConditions, got none"
+        kaltura_post(SVC, "delete", {"id": result["id"]})
+        runner._cleanup_actions = [
+            (l, fn) for l, fn in runner._cleanup_actions
+            if "catuser added" not in l
+        ]
+        print(f"    Cloned: {result['id']}, conditions inherited: {len(conditions)}")
+        print(f"    Verified eventType=2, eventObjectType=12 (CATEGORYKUSER)")
+
+    runner.run_test("clone — Http_User_Added_To_Category with conditions",
+                    test_clone_user_added_to_category_http)
+
+    # ════════════════════════════════════════════
     # Phase 2: Clone & Manage HTTP Webhook Template
     # ════════════════════════════════════════════
     def test_clone_http_template():
