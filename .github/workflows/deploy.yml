@@ -15,6 +15,8 @@ on:
       - "mkdocs.yml"
       - ".agents/skills/kaltura-api/SKILL.md"
       - "assets/**"
+      - "functions/**"
+      - "llms.txt"
   workflow_dispatch:
 
 permissions:
@@ -48,3 +50,45 @@ jobs:
 
       - name: Build and deploy
         run: mkdocs gh-deploy --force
+
+  # ── Deploy to Cloudflare Workers (kaltura.md) ────────────
+  cloudflare:
+    name: Cloudflare Worker
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install MkDocs Material
+        run: pip install mkdocs-material
+
+      - name: Prepare docs directory
+        run: |
+          mkdir -p docs
+          for f in *.md; do
+            ln -sf "../$f" "docs/$f"
+          done
+          ln -sf ../LICENSE docs/LICENSE
+          ln -sf ../assets docs/assets
+
+      - name: Build site
+        run: mkdocs build
+
+      - name: Prepare raw markdown for agents
+        run: |
+          mkdir -p site/raw
+          cp KALTURA_*.md README.md GUIDE_MAP.md CONTRIBUTING.md PLAN.md site/raw/
+          cp llms.txt site/
+
+      - name: Deploy to Cloudflare
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy
+          wranglerVersion: "3"
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
