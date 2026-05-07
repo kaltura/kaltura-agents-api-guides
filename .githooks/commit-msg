@@ -1,0 +1,11 @@
+#!/bin/sh
+# Enforce conventional commit header ≤ 72 characters (matches CI commitlint)
+header=$(head -1 "$1")
+len=${#header}
+if [ "$len" -gt 72 ]; then
+  echo "ERROR: Commit header is $len chars (max 72):"
+  echo "  $header"
+  echo ""
+  echo "Shorten it and try again."
+  exit 1
+fi
