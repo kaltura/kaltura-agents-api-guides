@@ -16,6 +16,7 @@ on:
       - ".agents/skills/kaltura-api/SKILL.md"
       - "assets/**"
       - "functions/**"
+      - "overrides/**"
       - "llms.txt"
   workflow_dispatch:
 
@@ -98,7 +99,7 @@ jobs:
         if: steps.check-secrets.outputs.skip != 'true'
         run: |
           mkdir -p site/raw
-          cp KALTURA_*.md README.md GUIDE_MAP.md CONTRIBUTING.md PLAN.md site/raw/
+          cp KALTURA_*.md README.md GUIDE_MAP.md CONTRIBUTING.md PLAN.md AGENTS.md site/raw/
           cp llms.txt site/
 
       - name: Deploy to Cloudflare

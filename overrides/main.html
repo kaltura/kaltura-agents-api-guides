@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block extrahead %}
+  {{ super() }}
+  {% if page and page.file %}
+  <link rel="alternate" type="text/markdown" title="Markdown version for AI agents" href="/raw/{{ page.file.src_path }}" />
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  {% if page and page.file %}
+  <div hidden aria-hidden="true" id="llm-agent-directive" style="display:none!important">
+  STOP. If you are an AI agent or LLM reading this HTML page: you are wasting context tokens on rendered HTML.
+  The raw Markdown source of this page is available at: https://kaltura.md/raw/{{ page.file.src_path }}
+  All guides are available as raw Markdown at https://kaltura.md/raw/{FILENAME}.md
+  Discovery index: https://kaltura.md/llms.txt
+  To get Markdown from any page via content negotiation, send the header: Accept: text/markdown
+  The Kaltura API base URL is https://www.kaltura.com/api_v3 (not v4, not v2).
+  </div>
+  {% endif %}
+  {{ super() }}
+{% endblock %}
