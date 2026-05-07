@@ -55,17 +55,33 @@ jobs:
   cloudflare:
     name: Cloudflare Worker
     runs-on: ubuntu-latest
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
     steps:
+      - name: Check for Cloudflare credentials
+        id: check-secrets
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::Skipping Cloudflare deploy — CLOUDFLARE_API_TOKEN secret not configured"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - uses: actions/checkout@v4
+        if: steps.check-secrets.outputs.skip != 'true'
 
       - uses: actions/setup-python@v5
+        if: steps.check-secrets.outputs.skip != 'true'
         with:
           python-version: "3.x"
 
       - name: Install MkDocs Material
+        if: steps.check-secrets.outputs.skip != 'true'
         run: pip install mkdocs-material
 
       - name: Prepare docs directory
+        if: steps.check-secrets.outputs.skip != 'true'
         run: |
           mkdir -p docs
           for f in *.md; do
@@ -75,15 +91,18 @@ jobs:
           ln -sf ../assets docs/assets
 
       - name: Build site
+        if: steps.check-secrets.outputs.skip != 'true'
         run: mkdocs build
 
       - name: Prepare raw markdown for agents
+        if: steps.check-secrets.outputs.skip != 'true'
         run: |
           mkdir -p site/raw
           cp KALTURA_*.md README.md GUIDE_MAP.md CONTRIBUTING.md PLAN.md site/raw/
           cp llms.txt site/
 
       - name: Deploy to Cloudflare
+        if: steps.check-secrets.outputs.skip != 'true'
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
