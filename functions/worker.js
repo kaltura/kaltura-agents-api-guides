@@ -38,7 +38,7 @@ export default {
           headers: {
             "Content-Type": "text/markdown; charset=utf-8",
             Vary: "Accept",
-            "X-Estimated-Tokens": String(Math.ceil(body.length / 4)),
+            "X-Markdown-Tokens": String(Math.ceil(body.length / 4)),
           },
         });
       }
