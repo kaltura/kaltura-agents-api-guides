@@ -38,8 +38,7 @@ def _read_env_file_value(key):
                     return line.split("=", 1)[1].strip()
     return None
 
-# Events Platform requires a KS with userId set.
-# Generate a fresh one via session.start using admin secret.
+# Events Platform requires a KS with userId matching an EP team member.
 ADMIN_SECRET = _read_env_file_value("KALTURA_ADMIN_SECRET") or os.environ.get("KALTURA_ADMIN_SECRET", "")
 USER_ID = _read_env_file_value("KALTURA_USER_ID") or os.environ.get("KALTURA_USER_ID", "")
 
@@ -51,10 +50,10 @@ def _generate_events_ks():
     if not USER_ID:
         print("ERROR: KALTURA_USER_ID not set in .env")
         sys.exit(1)
-    # Read PID from .env file directly — system env may have a different value
     pid = _read_env_file_value("KALTURA_PARTNER_ID") or PARTNER_ID
+    svc_url = _read_env_file_value("KALTURA_SERVICE_URL") or SERVICE_URL
     resp = requests.post(
-        f"{SERVICE_URL}/service/session/action/start",
+        f"{svc_url}/service/session/action/start",
         data={
             "partnerId": pid,
             "secret": ADMIN_SECRET,
@@ -155,9 +154,9 @@ def main():
     # ════════════════════════════════════════════
 
     def test_list_events():
-        """List events with pager."""
+        """List all events using single-space searchTerm (matches all names)."""
         result = events_post("/events/list", {
-            "filter": {"searchTerm": "  "},
+            "filter": {"searchTerm": " "},
             "pager": {"offset": 0, "limit": 15},
         })
         items = _get_items(result)
@@ -168,7 +167,7 @@ def main():
         for e in items[:3]:
             print(f"      {e['id']}: {e.get('name', '?')[:40]}")
 
-    runner.run_test("events/list — list with pager", test_list_events)
+    runner.run_test("events/list — list all events", test_list_events)
 
     if not runner.results[-1][1]:
         print("    SKIP: Events Platform API not reachable (backend 500)")
@@ -176,7 +175,23 @@ def main():
         runner.summary()
         sys.exit(0)
 
-    def test_list_events_order_asc():
+    def test_list_events_order_by():
+        """List events with orderBy sorting."""
+        result = events_post("/events/list", {
+            "filter": {"searchTerm": " "},
+            "orderBy": "+name",
+            "pager": {"offset": 0, "limit": 15},
+        })
+        items = _get_items(result)
+        if not items:
+            print("    No events on account — orderBy validated structurally")
+            return
+        names = [e.get("name", "") for e in items]
+        print(f"    orderBy=+name: {len(items)} events, first={names[0][:30]}")
+
+    runner.run_test("events/list — orderBy sorting", test_list_events_order_by)
+
+    def test_list_events_filter_idIn():
         """List events with idIn filter for known event."""
         event_ids = [e["id"] for e in state.get("existing_events", [])[:3]]
         if not event_ids:
@@ -190,7 +205,7 @@ def main():
         assert len(items) > 0, f"Expected events for idIn={event_ids}, got 0"
         print(f"    idIn filter: requested {len(event_ids)}, got {len(items)}")
 
-    runner.run_test("events/list — idIn filter for known events", test_list_events_order_asc)
+    runner.run_test("events/list — idIn filter for known events", test_list_events_filter_idIn)
 
     def test_list_events_filter_search():
         """Filter events by search term using an existing event name."""
@@ -225,24 +240,22 @@ def main():
 
     runner.run_test("events/list — filter by idIn", test_list_events_filter_ids)
 
-    def test_list_events_order_by_name():
-        """List events with searchTerm filter."""
+    def test_list_events_date_filter():
+        """List events with date range filter."""
         result = events_post("/events/list", {
-            "filter": {"searchTerm": "  "},
-            "pager": {"offset": 0, "limit": 5},
+            "filter": {"searchTerm": " ", "startDateGreaterThanOrEqual": "2020-01-01T00:00:00Z"},
+            "pager": {"offset": 0, "limit": 15},
         })
         items = _get_items(result)
-        if not items:
-            print("    No events on account — list validated structurally")
-            return
-        print(f"    Listed: {len(items)} events, first={items[0].get('name', '?')[:30]}")
+        total = result.get("totalCount", len(items))
+        print(f"    Date filter (startDate >= 2020): {len(items)} events (total={total})")
 
-    runner.run_test("events/list — broad searchTerm filter", test_list_events_order_by_name)
+    runner.run_test("events/list — date range filter", test_list_events_date_filter)
 
     def test_list_events_pager_offset():
         """Test pager with offset."""
         result = events_post("/events/list", {
-            "filter": {"searchTerm": "  "},
+            "filter": {"searchTerm": " "},
             "pager": {"offset": 0, "limit": 2},
         })
         items1 = _get_items(result)
@@ -250,12 +263,11 @@ def main():
             print(f"    Only {len(items1)} events, skip offset test")
             return
         result2 = events_post("/events/list", {
-            "filter": {"searchTerm": "  "},
+            "filter": {"searchTerm": " "},
             "pager": {"offset": 1, "limit": 2},
         })
         items2 = _get_items(result2)
         if items1 and items2:
-            # Second page should start from a different event
             assert items1[0]["id"] != items2[0]["id"] or len(items1) == 1, (
                 "Offset did not change results"
             )

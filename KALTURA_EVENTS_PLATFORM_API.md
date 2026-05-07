@@ -34,7 +34,7 @@ All requests require a valid KS in the `Authorization` header:
 Authorization: Bearer <your_kaltura_session>
 ```
 
-**The KS must have a `userId` set.** Generate a KS with `userId` via `session.start` (see [Session Guide](KALTURA_SESSION_GUIDE.md)) or `appToken.startSession` (see [AppTokens Guide](KALTURA_APPTOKENS_API.md)).
+**The KS must have a `userId` set, and that user must be a team member (Admin, Organizer, or ContentManager) on the Events Platform instance.** Generate a KS with `userId` via `session.start` (see [Session Guide](KALTURA_SESSION_GUIDE.md)) or `appToken.startSession` (see [AppTokens Guide](KALTURA_APPTOKENS_API.md)).
 
 For production, use `appToken.startSession` with a `userId` privilege.
 
@@ -128,7 +128,7 @@ Save the `id` from the response as `EVENT_ID`.
 POST /api/v1/events/list
 ```
 
-The `filter` object is required and must contain at least one field. Use `searchTerm` for broad queries or `idIn` for specific events.
+All parameters are optional per the API specification. To reliably retrieve all events, include a single-space `searchTerm` filter which matches all event names.
 
 ```json
 {
@@ -140,27 +140,34 @@ The `filter` object is required and must contain at least one field. Use `search
   "pager": {
     "offset": 0,
     "limit": 15
-  }
+  },
+  "orderBy": "-startDate"
 }
 ```
 
 | Filter Field | Type | Description |
 |-------------|------|-------------|
-| `searchTerm` | string | Free-text search across name and description (minimum 2 characters) |
-| `labels` | array | Filter by label tags |
+| `searchTerm` | string | Free-text search by event name |
+| `labels` | array | Filter by label tags (matches events containing any listed label) |
 | `idIn` | array | Filter by specific event IDs (integers) |
+| `templateIdIn` | array | Filter by template IDs (e.g., `["tm0000", "tm2000"]`) |
 | `startDateGreaterThanOrEqual` | string | ISO 8601 — events starting on or after this date |
 | `startDateLessOrEqualThan` | string | ISO 8601 — events starting on or before this date |
 | `endDateGreaterThanOrEqual` | string | ISO 8601 — events ending on or after this date |
 | `endDateLessOrEqualThan` | string | ISO 8601 — events ending on or before this date |
-| `templateIdIn` | array | Filter by template IDs |
 
-| Pager Field | Type | Description |
-|-------------|------|-------------|
-| `offset` | int | Number of results to skip |
-| `limit` | int | Max results to return (max 15) |
+| Pager Field | Type | Default | Description |
+|-------------|------|---------|-------------|
+| `offset` | int | 0 | Number of results to skip |
+| `limit` | int | 5 | Max results to return (max 15) |
 
-**Response example:**
+| orderBy | Description |
+|---------|-------------|
+| `+name` / `-name` | Alphabetical by event name |
+| `+createdAt` / `-createdAt` | By creation date |
+| `+startDate` / `-startDate` | By event start date |
+
+**Response:**
 
 ```json
 {
@@ -168,16 +175,34 @@ The `filter` object is required and must contain at least one field. Use `search
     {
       "id": 56789,
       "name": "Q4 All-Hands Town Hall",
-      "status": "scheduled",
       "startDate": "2024-12-15T14:00:00.000Z",
       "endDate": "2024-12-15T16:00:00.000Z",
       "timezone": "America/New_York",
-      "labels": ["quarterly"]
+      "labels": ["quarterly"],
+      "publicDomain": "https://1234567-5.events.kaltura.com",
+      "templateId": "tm2000",
+      "createdAt": "2024-11-01T10:00:00.000Z"
     }
   ],
-  "totalCount": 1
+  "totalCount": 1,
+  "status": "ok"
 }
 ```
+
+List all events sorted by start date (descending):
+
+```bash
+curl -X POST "$KALTURA_EVENTS_API_URL/events/list" \
+  -H "Authorization: Bearer $KALTURA_KS" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "filter": {"searchTerm": " "},
+    "orderBy": "-startDate",
+    "pager": {"offset": 0, "limit": 15}
+  }'
+```
+
+Filter by search term:
 
 ```bash
 curl -X POST "$KALTURA_EVENTS_API_URL/events/list" \
@@ -188,8 +213,6 @@ curl -X POST "$KALTURA_EVENTS_API_URL/events/list" \
     "pager": {"offset": 0, "limit": 10}
   }'
 ```
-
-The response contains an `events` array and `totalCount`.
 
 ## 5.3 Update an Event
 
@@ -671,10 +694,11 @@ curl -X POST "$KALTURA_EVENTS_API_URL/sessions/create" \
 curl -X POST "$KALTURA_EVENTS_API_URL/events/list" \
   -H "Authorization: Bearer $KALTURA_KS" \
   -H "Content-Type: application/json" \
-  -d "{
-    \"filter\": {\"idIn\": [$EVENT_ID]},
-    \"pager\": {\"offset\": 0, \"limit\": 5}
-  }"
+  -d '{
+    "filter": {"searchTerm": " "},
+    "orderBy": "-startDate",
+    "pager": {"offset": 0, "limit": 15}
+  }'
 
 # --- Step 4: Update the event ---
 curl -X POST "$KALTURA_EVENTS_API_URL/events/update" \
@@ -699,7 +723,8 @@ curl -X POST "$KALTURA_EVENTS_API_URL/events/delete" \
 | HTTP Status / Error | Meaning | Resolution |
 |---------------------|---------|------------|
 | `401 Unauthorized` | Invalid or expired KS | Generate a fresh KS with `userId` set — Events Platform requires it |
-| `403 Forbidden` | KS lacks required permissions | Use an admin KS (type=2) with the user's `userId` |
+| `403 Forbidden` | KS lacks required permissions | Use an admin KS (type=2); the `userId` must be an Events Platform team member |
+| `500 Internal Server Error` (on list) | KS `userId` is not an EP team member | The `userId` in the KS must match a user registered as a team member (Admin/Organizer/ContentManager) on the Events Platform instance |
 | `404 Not Found` | Event, session, or team member ID does not exist | Verify the integer ID; resource may have been deleted |
 | `400 Bad Request` | Missing required field or invalid date format | Dates must be ISO 8601 format (e.g., `2025-06-15T09:00:00.000Z`). Event IDs are integers. |
 | Duplication job stuck | `duplicateStatus` returns `IN_PROGRESS` indefinitely | Poll with timeout (5 minutes recommended); if stuck, create the event manually |
