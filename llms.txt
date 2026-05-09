@@ -5,6 +5,7 @@
 The Kaltura platform combines intelligent content creation, enterprise-grade content management and intelligence, and multimodal conversational engagement capabilities — exposed through 100+ REST API services. These are live-tested API guides with curl examples using shell variables, written for AI agents and developers building integrations. Every guide has companion test scripts validated against the live Kaltura API.
 
 Base API URL: https://www.kaltura.com/api_v3
+To configure your coding agent as a Kaltura expert, see: https://github.com/kaltura/kaltura-agents-api-guides#use-with-your-coding-agent
 
 ## Foundation
 
