@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/kaltura/kaltura-agents-api-guides?label=Release)](https://github.com/kaltura/kaltura-agents-api-guides/releases/latest)
-[![Guides](https://img.shields.io/badge/Guides-50-green.svg)](#guides)
+[![Guides](https://img.shields.io/badge/Guides-51-green.svg)](#guides)
 [![Tests](https://img.shields.io/badge/Live--Tested-960+_tests-brightgreen.svg)](#guides)
 [![llms.txt](https://img.shields.io/badge/llms.txt-available-purple.svg)](llms.txt)
 [![Agent Skill](https://img.shields.io/badge/Agent_Skill-kaltura--api-orange.svg)](.agents/skills/kaltura-api/SKILL.md)
@@ -103,6 +103,7 @@ KALTURA_VIDEO_PORTAL_BASE_URL=https://your-site.events.kaltura.com
 | [Ad Cue Points API](KALTURA_AD_CUE_POINTS_API.md) | VAST/VPAID ad insertion: pre-roll, mid-roll, overlay | 6 tests |
 | [Code, Event & Session Cue Points API](KALTURA_CODE_CUE_POINTS_API.md) | Code markers, view-change, forceStop, event/session cue points | 14 tests |
 | [LTI Integration Guide](KALTURA_LTI_INTEGRATION_GUIDE.md) | LMS Extensions (KAF) via LTI: modules, auth flows, deep linking, grade passback | 24 tests |
+| [Short Link API](KALTURA_SHORT_LINK_API.md) | Create, resolve, and manage shortened URLs with expiration and status control | 22 tests |
 
 ## Quick Start
 

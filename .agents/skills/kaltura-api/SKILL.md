@@ -1,6 +1,6 @@
 ---
 name: kaltura-api
-description: Build applications on Kaltura — The Agentic Digital Experience Platform. 50 guides covering authentication (sessions, AppTokens, SSO/SAML), content management (upload, search, categories, metadata, captions), playback, AI services (captions, translation, agents, conversational AI), virtual events, user management, multi-stream, cue points & interactive video (hub + 5 dedicated type guides), content distribution, syndication feeds, analytics, gamification, webhooks, messaging, content moderation (flagging, AI-powered via REACH), experience components (Player, Express Recorder, Captions Editor, Genie Widget, Media Manager, Content Lab, Agents Widget, VOD Avatar Studio, Conversational Avatar with Socket SDK + GenUI, Chat & Collaborate, Embeddable Analytics), Unisphere framework, multi-account management, LTI/LMS integration. 960+ tests validated against live API. API v3 (form-encoded) and modern JSON APIs with curl examples.
+description: Build applications on Kaltura — The Agentic Digital Experience Platform. 51 guides covering authentication (sessions, AppTokens, SSO/SAML), content management (upload, search, categories, metadata, captions), playback, AI services (captions, translation, agents, conversational AI), virtual events, user management, multi-stream, cue points & interactive video (hub + 5 dedicated type guides), short links, content distribution, syndication feeds, analytics, gamification, webhooks, messaging, content moderation (flagging, AI-powered via REACH), experience components (Player, Express Recorder, Captions Editor, Genie Widget, Media Manager, Content Lab, Agents Widget, VOD Avatar Studio, Conversational Avatar with Socket SDK + GenUI, Chat & Collaborate, Embeddable Analytics), Unisphere framework, multi-account management, LTI/LMS integration. 980+ tests validated against live API. API v3 (form-encoded) and modern JSON APIs with curl examples.
 ---
 
 # Kaltura API Integration
@@ -198,7 +198,9 @@ Read the relevant guide when you need to implement a specific capability:
 
 - **[Multi-Account Management API](../../../KALTURA_MULTI_ACCOUNT_MANAGEMENT_API.md)** — Multi-account management: create child accounts via `partner.register`, cross-account auth via `session.impersonate`, aggregated analytics via multi-account report variants (20001-20023), per-account usage reports.
 
-### Distribution & Syndication
+### Sharing & Distribution
+
+- **[Short Link API](../../../KALTURA_SHORT_LINK_API.md)** — Create, manage, and resolve shortened URLs (`/tiny/{id}`) for sharing Kaltura content. Supports expiration, status control (enable/disable/delete), and the KMC preview-link pattern.
 
 - **[Content Distribution API](../../../KALTURA_DISTRIBUTION_API.md)** — Push content to external platforms (YouTube, Facebook, FTP, Cross-Kaltura) via distribution connectors. Distribution profiles define automation rules (auto-submit on entry ready, moderation-gated, sunrise/sunset scheduling). Entry distributions track per-entry status through a state machine (PENDING → QUEUED → SUBMITTING → READY). Uses `contentDistribution_*` plugin services (distributionProvider, distributionProfile, entryDistribution).
 

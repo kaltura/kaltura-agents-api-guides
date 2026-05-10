@@ -124,6 +124,7 @@ nav:
       - Analytics Events Collection: KALTURA_ANALYTICS_EVENTS_COLLECTION_API.md
   - Integration & Automation:
       - Event Notifications (Webhooks): KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md
+      - Short Links: KALTURA_SHORT_LINK_API.md
       - Content Distribution: KALTURA_DISTRIBUTION_API.md
       - Syndication Feeds: KALTURA_SYNDICATION_API.md
       - LTI Integration: KALTURA_LTI_INTEGRATION_GUIDE.md

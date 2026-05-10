@@ -80,6 +80,7 @@ Guides for delivering content to end users through players, widgets, events, and
 | [Events Platform](KALTURA_EVENTS_PLATFORM_API.md) | Virtual Events & Webinars | Virtual events, webinars, town halls, sessions |
 | [User Profile](KALTURA_USER_PROFILE_API.md) | Virtual Events & Webinars | Per-app user profiles, event attendance tracking |
 | [Gamification](KALTURA_GAMIFICATION_API.md) | Virtual Events & Webinars | Leaderboards, badges, certificates |
+| [Short Link](KALTURA_SHORT_LINK_API.md) | Content Sharing | Shortened URLs with expiration, status control, /tiny/ redirect |
 | [Content Distribution](KALTURA_DISTRIBUTION_API.md) | Distribution & Syndication | Push to YouTube, Facebook, FTP, custom connectors |
 | [Syndication Feeds](KALTURA_SYNDICATION_API.md) | Distribution & Syndication | RSS/MRSS/Podcast/Roku XML feeds |
 
@@ -255,6 +256,7 @@ Blue = Foundation | Purple = Creation | Orange = Management | Green = Experience
 | Send templated email campaigns | [Messaging](KALTURA_MESSAGING_API.md) |
 | Send email alerts when events occur | [Event Notifications](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md) |
 | Get analytics data | [Analytics Reports](KALTURA_ANALYTICS_REPORTS_API.md) |
+| Create a shareable short URL | [Short Link API](KALTURA_SHORT_LINK_API.md) |
 | Distribute to YouTube/Roku | [Distribution](KALTURA_DISTRIBUTION_API.md) or [Syndication](KALTURA_SYNDICATION_API.md) |
 | Manage sub-accounts | [Multi-Account Management](KALTURA_MULTI_ACCOUNT_MANAGEMENT_API.md) |
 | React to content events (webhooks) | [Event Notifications](KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API.md) |

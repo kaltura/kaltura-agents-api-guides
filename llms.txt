@@ -68,6 +68,10 @@ To configure your coding agent as a Kaltura expert, see: https://github.com/kalt
 - [Kaltura Messaging API](/raw/KALTURA_MESSAGING_API.md): The Messaging API enables sending personalized, template-based email communications to Kaltura users — event invitations, attendance...
 - [Kaltura Unisphere Framework API](/raw/KALTURA_UNISPHERE_FRAMEWORK_API.md): Unisphere is Kaltura's micro-frontend framework for embedding composable experiences. Load a workspace, configure runtimes (AI search, media...
 
+## Sharing & Distribution
+
+- [Kaltura Short Link API](/raw/KALTURA_SHORT_LINK_API.md): Create, manage, and resolve shortened URLs for sharing Kaltura content — player embeds, preview pages, download links, or any URL. Short links provide clean, shareable URLs with built-in expiration and status control.
+
 ## Distribution & Syndication
 
 - [Kaltura Content Distribution API](/raw/KALTURA_DISTRIBUTION_API.md): Kaltura's content distribution system pushes media to external platforms (YouTube, Facebook, FTP servers, cross-Kaltura accounts) via configurable...
