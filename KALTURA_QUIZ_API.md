@@ -34,20 +34,23 @@ on the entry and a user-entry service for tracking attempts and scores.
 # 3. Quiz Lifecycle
 
 ```
-quiz.add (mark entry as quiz)
-    → cuePoint.add (add KalturaQuestionCuePoint for each question)
-        → userEntry.add (viewer starts attempt → KalturaQuizUserEntry)
-            → cuePoint.add (viewer answers → KalturaAnswerCuePoint per question)
-                → userEntry.submitQuiz (calculate score)
-                    → report.getTable (pull reports)
+media.add (create video/audio entry)
+    → media.addContent (upload or import content)
+        → quiz.add (mark entry as quiz — sets capabilities='quiz.quiz')
+            → cuePoint.add (add KalturaQuestionCuePoint for each question)
+                → userEntry.add (viewer starts attempt → KalturaQuizUserEntry)
+                    → cuePoint.add (viewer answers → KalturaAnswerCuePoint per question)
+                        → userEntry.submitQuiz (calculate score)
+                            → report.getTable (pull reports)
 ```
 
-An entry becomes a quiz when you call `quiz.add`. Questions are cue points positioned on the timeline. Viewers start an attempt, answer questions as playback progresses, and submit for scoring. The system auto-calculates correctness and computes scores across attempts.
+A quiz is built on top of a video or audio entry (mediaType=1 or mediaType=5). Create the source entry first, then call `quiz.add` to mark it as a quiz. This sets `capabilities = 'quiz.quiz'` on the entry, which is how the Player IVQ plugin and Content Hubs recognize it as a quiz entry. Questions are cue points positioned on the timeline. Viewers start an attempt, answer questions as playback progresses, and submit for scoring. The system auto-calculates correctness and computes scores across attempts.
 
 
 # 4. Mark an Entry as a Quiz
 
-**Service:** `quiz_quiz`
+**Service:** `quiz_quiz`  
+**Prerequisite:** A video or audio entry (mediaType=1 or 5) must already exist. Create the entry with `media.add` + `media.addContent` first. See [Upload & Ingestion](KALTURA_UPLOAD_AND_INGESTION_API.md).
 
 ```bash
 curl -X POST "$KALTURA_SERVICE_URL/service/quiz_quiz/action/add" \
@@ -62,6 +65,8 @@ curl -X POST "$KALTURA_SERVICE_URL/service/quiz_quiz/action/add" \
   -d "quiz[attemptsAllowed]=3" \
   -d "quiz[scoreType]=1"
 ```
+
+This action sets `capabilities = 'quiz.quiz'` on the entry automatically. The Player IVQ plugin and Content Hubs use this field to identify quiz entries and render quiz UI.
 
 If the entry already has a quiz configuration, `quiz.add` returns `PROVIDED_ENTRY_IS_ALREADY_A_QUIZ` — use `quiz.update` instead.
 
@@ -85,12 +90,14 @@ If the entry already has a quiz configuration, `quiz.add` returns `PROVIDED_ENTR
 
 | Action | Description |
 |--------|-------------|
-| `add` | Mark entry as quiz with configuration |
+| `add` | Mark entry as quiz with configuration (sets `capabilities='quiz.quiz'`) |
 | `get` | Get quiz config by entryId |
 | `update` | Update quiz settings (increments version) |
-| `list` | List quiz entries |
+| `list` | List quiz entries (filter by `entryIdEqual` or `entryIdIn`) |
 | `serve` | Download quiz as PDF |
 | `getUrl` | Get PDF download URL (`quizOutputType`: 1=PDF) |
+
+**Discovering quiz entries:** Use `quiz.list` with `filter[entryIdEqual]` or `filter[entryIdIn]` to retrieve quiz configurations. The `capabilities` field on entries (`'quiz.quiz'`) is set automatically by `quiz.add` and is how the system identifies quiz entries.
 
 **Deleting quiz attempts:** Use `userEntry.delete` with the user entry ID to remove a quiz attempt.
 

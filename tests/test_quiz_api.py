@@ -96,6 +96,17 @@ def main():
 
     runner.run_test("quiz.add — mark entry as quiz", test_quiz_add)
 
+    def test_capabilities_set():
+        """Verify quiz.add sets capabilities='quiz.quiz' on the entry."""
+        result = kaltura_post("baseEntry", "get", {
+            "entryId": state["entry_id"],
+        })
+        caps = result.get("capabilities", "")
+        assert "quiz.quiz" in caps, f"Expected 'quiz.quiz' in capabilities, got '{caps}'"
+        print(f"    Entry capabilities: {caps}")
+
+    runner.run_test("baseEntry.get — capabilities='quiz.quiz' set by quiz.add", test_capabilities_set)
+
     def test_quiz_get():
         """Retrieve quiz configuration."""
         result = kaltura_post("quiz_quiz", "get", {
