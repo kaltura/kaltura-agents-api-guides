@@ -15,12 +15,130 @@ on:
       - "tests/test_helpers.py"
       - ".github/workflows/test.yml"
   workflow_dispatch:
+    inputs:
+      run_all:
+        description: "Run all tests (ignore change detection)"
+        type: boolean
+        default: false
 
 jobs:
-  # ── Live API Validation (all non-Playwright tests) ──────
+  # ── Determine which tests to run ─────────────────────────
+  detect-changes:
+    name: Detect changed guides
+    runs-on: ubuntu-latest
+    outputs:
+      api_tests: ${{ steps.filter.outputs.api_tests }}
+      browser_tests: ${{ steps.filter.outputs.browser_tests }}
+      run_all: ${{ steps.filter.outputs.run_all }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Determine test scope
+        id: filter
+        run: |
+          RUN_ALL="false"
+
+          # Run all if: workflow_dispatch with run_all, test_helpers changed, or workflow file changed
+          if [ "${{ inputs.run_all }}" = "true" ]; then
+            RUN_ALL="true"
+          fi
+
+          CHANGED=$(git diff --name-only HEAD~1 HEAD 2>/dev/null || echo "")
+
+          if echo "$CHANGED" | grep -q "tests/test_helpers.py"; then
+            RUN_ALL="true"
+          fi
+          if echo "$CHANGED" | grep -q ".github/workflows/test.yml"; then
+            RUN_ALL="true"
+          fi
+
+          if [ "$RUN_ALL" = "true" ]; then
+            echo "run_all=true" >> "$GITHUB_OUTPUT"
+            echo "api_tests=" >> "$GITHUB_OUTPUT"
+            echo "browser_tests=" >> "$GITHUB_OUTPUT"
+            echo "::notice::Running ALL tests (helpers/workflow changed or manual trigger)"
+            exit 0
+          fi
+
+          echo "run_all=false" >> "$GITHUB_OUTPUT"
+
+          # Map changed guides/tests to their test files
+          API_TESTS=""
+          BROWSER_TESTS=""
+
+          # Browser E2E test files (Playwright-dependent)
+          BROWSER_FILES="test_experience_components_e2e.py test_unisphere_framework_e2e.py test_agents_widget_api.py test_content_lab_api.py test_genie_widget_api.py test_media_manager_api.py test_vod_avatar_api.py"
+
+          for file in $CHANGED; do
+            TEST_FILE=""
+
+            # Direct test file change
+            if echo "$file" | grep -qE "^tests/test_.*\.py$"; then
+              TEST_FILE=$(basename "$file")
+            fi
+
+            # Guide change → derive test file
+            if echo "$file" | grep -qE "^KALTURA_.*\.md$"; then
+              # KALTURA_FOO_API.md → test_foo_api.py (lowercase, strip KALTURA_ prefix and .md suffix)
+              GUIDE_NAME=$(echo "$file" | sed 's/^KALTURA_//; s/\.md$//; s/\(.*\)/\L\1/')
+              TEST_FILE="test_${GUIDE_NAME}.py"
+
+              # Handle special mappings
+              case "$file" in
+                KALTURA_EXPERIENCE_COMPONENTS_API.md)
+                  TEST_FILE="test_experience_components_api.py"
+                  BROWSER_TESTS="${BROWSER_TESTS} tests/test_experience_components_e2e.py"
+                  ;;
+                KALTURA_UNISPHERE_FRAMEWORK_API.md)
+                  TEST_FILE="test_unisphere_framework_api.py"
+                  BROWSER_TESTS="${BROWSER_TESTS} tests/test_unisphere_framework_e2e.py"
+                  ;;
+                KALTURA_CAPTIONS_EDITOR_API.md)
+                  BROWSER_TESTS="${BROWSER_TESTS} tests/test_experience_components_e2e.py"
+                  TEST_FILE=""
+                  ;;
+                KALTURA_EXPRESS_RECORDER_API.md)
+                  BROWSER_TESTS="${BROWSER_TESTS} tests/test_experience_components_e2e.py"
+                  TEST_FILE=""
+                  ;;
+              esac
+            fi
+
+            if [ -n "$TEST_FILE" ] && [ -f "tests/$TEST_FILE" ]; then
+              # Classify as browser or API test
+              if echo "$BROWSER_FILES" | grep -q "$TEST_FILE"; then
+                BROWSER_TESTS="${BROWSER_TESTS} tests/${TEST_FILE}"
+              else
+                API_TESTS="${API_TESTS} tests/${TEST_FILE}"
+              fi
+            fi
+          done
+
+          # Deduplicate
+          API_TESTS=$(echo "$API_TESTS" | tr ' ' '\n' | sort -u | tr '\n' ' ' | xargs)
+          BROWSER_TESTS=$(echo "$BROWSER_TESTS" | tr ' ' '\n' | sort -u | tr '\n' ' ' | xargs)
+
+          echo "api_tests=$API_TESTS" >> "$GITHUB_OUTPUT"
+          echo "browser_tests=$BROWSER_TESTS" >> "$GITHUB_OUTPUT"
+
+          if [ -n "$API_TESTS" ]; then
+            echo "::notice::API tests to run: $API_TESTS"
+          fi
+          if [ -n "$BROWSER_TESTS" ]; then
+            echo "::notice::Browser tests to run: $BROWSER_TESTS"
+          fi
+          if [ -z "$API_TESTS" ] && [ -z "$BROWSER_TESTS" ]; then
+            echo "::notice::No matching test files for changed guides"
+          fi
+
+  # ── Live API Validation ──────────────────────────────────
   api-tests:
     name: API validation
     runs-on: ubuntu-latest
+    needs: detect-changes
+    if: needs.detect-changes.outputs.run_all == 'true' || needs.detect-changes.outputs.api_tests != ''
     env:
       KALTURA_PARTNER_ID: ${{ secrets.KALTURA_PARTNER_ID }}
       KALTURA_KS: ${{ secrets.KALTURA_KS }}
@@ -53,54 +171,21 @@ jobs:
         if: steps.check-secrets.outputs.skip != 'true'
         run: pip install requests
 
-      - name: Run all API tests
+      - name: Run API tests
         if: steps.check-secrets.outputs.skip != 'true'
         run: |
           failed=0
-          for test_file in \
-            tests/test_getting_started_api.py \
-            tests/test_session_api.py \
-            tests/test_apptokens_api.py \
-            tests/test_esearch_api.py \
-            tests/test_upload_and_ingestion_api.py \
-            tests/test_content_delivery_api.py \
-            tests/test_thumbnail_api.py \
-            tests/test_player_embed_api.py \
-            tests/test_reach_api.py \
-            tests/test_clips_api.py \
-            tests/test_agents_manager_api.py \
-            tests/test_genie_api.py \
-            tests/test_events_platform_api.py \
-            tests/test_app_registry_api.py \
-            tests/test_user_profile_api.py \
-            tests/test_messaging_api.py \
-            tests/test_event_notifications_webhook_and_email_api.py \
-            tests/test_multi_stream_api.py \
-            tests/test_user_management_api.py \
-            tests/test_auth_broker_api.py \
-            tests/test_categories_entitlements_api.py \
-            tests/test_access_control_api.py \
-            tests/test_custom_metadata_api.py \
-            tests/test_captions_transcripts_api.py \
-            tests/test_analytics_reports_api.py \
-            tests/test_analytics_events_collection_api.py \
-            tests/test_gamification_api.py \
-            tests/test_distribution_api.py \
-            tests/test_distribution_profiles_e2e.py \
-            tests/test_syndication_api.py \
-            tests/test_experience_components_api.py \
-            tests/test_multi_account_api.py \
-            tests/test_moderation_api.py \
-            tests/test_cue_points_api.py \
-            tests/test_quiz_api.py \
-            tests/test_chapters_slides_api.py \
-            tests/test_annotations_api.py \
-            tests/test_ad_cue_points_api.py \
-            tests/test_code_cue_points_api.py \
-            tests/test_unisphere_framework_api.py \
-            tests/test_video_editing_api.py \
-            tests/test_lti_integration_guide.py \
-          ; do
+          RUN_ALL="${{ needs.detect-changes.outputs.run_all }}"
+          SELECTED_TESTS="${{ needs.detect-changes.outputs.api_tests }}"
+
+          if [ "$RUN_ALL" = "true" ]; then
+            # Full test suite
+            TEST_FILES=$(find tests -name "test_*.py" -not -name "test_experience_components_e2e.py" -not -name "test_unisphere_framework_e2e.py" -not -name "test_agents_widget_api.py" -not -name "test_content_lab_api.py" -not -name "test_genie_widget_api.py" -not -name "test_media_manager_api.py" -not -name "test_vod_avatar_api.py" | sort)
+          else
+            TEST_FILES="$SELECTED_TESTS"
+          fi
+
+          for test_file in $TEST_FILES; do
             echo ""
             echo "════════════════════════════════════════════"
             echo "Running: $test_file"
@@ -123,6 +208,8 @@ jobs:
   browser-e2e:
     name: Browser E2E (Playwright)
     runs-on: ubuntu-latest
+    needs: detect-changes
+    if: needs.detect-changes.outputs.run_all == 'true' || needs.detect-changes.outputs.browser_tests != ''
     env:
       KALTURA_PARTNER_ID: ${{ secrets.KALTURA_PARTNER_ID }}
       KALTURA_KS: ${{ secrets.KALTURA_KS }}
@@ -156,19 +243,20 @@ jobs:
           pip install requests playwright
           playwright install --with-deps chromium
 
-      - name: Run all browser E2E tests
+      - name: Run browser E2E tests
         if: steps.check-secrets.outputs.skip != 'true'
         run: |
           failed=0
-          for test_file in \
-            tests/test_experience_components_e2e.py \
-            tests/test_unisphere_framework_e2e.py \
-            tests/test_agents_widget_api.py \
-            tests/test_content_lab_api.py \
-            tests/test_genie_widget_api.py \
-            tests/test_media_manager_api.py \
-            tests/test_vod_avatar_api.py \
-          ; do
+          RUN_ALL="${{ needs.detect-changes.outputs.run_all }}"
+          SELECTED_TESTS="${{ needs.detect-changes.outputs.browser_tests }}"
+
+          if [ "$RUN_ALL" = "true" ]; then
+            TEST_FILES="tests/test_experience_components_e2e.py tests/test_unisphere_framework_e2e.py tests/test_agents_widget_api.py tests/test_content_lab_api.py tests/test_genie_widget_api.py tests/test_media_manager_api.py tests/test_vod_avatar_api.py"
+          else
+            TEST_FILES="$SELECTED_TESTS"
+          fi
+
+          for test_file in $TEST_FILES; do
             echo ""
             echo "════════════════════════════════════════════"
             echo "Running: $test_file"
