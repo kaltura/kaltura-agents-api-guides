@@ -7,10 +7,11 @@ This document organizes all guides around the **Kaltura flywheel** — the three
 
 ## Foundation — Start Here
 
-Every integration begins with authentication. These guides are prerequisites for everything else.
+Every integration begins with credentials and authentication. These guides are prerequisites for everything else.
 
 | Guide | What You Learn |
 |-------|---------------|
+| [Getting Credentials](KALTURA_GETTING_CREDENTIALS.md) | Obtain Partner ID, Admin Secret, set up `.env`, verify access |
 | [API Getting Started](KALTURA_API_GETTING_STARTED.md) | API structure, endpoints, first call, multirequest batching, error handling |
 | [Session Guide (KS)](KALTURA_SESSION_GUIDE.md) | KS types, creation methods, privileges, validation, security |
 | [AppTokens](KALTURA_APPTOKENS_API.md) | Production auth without exposing secrets, HMAC, scoped tokens |

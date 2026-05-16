@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/kaltura/kaltura-agents-api-guides?label=Release)](https://github.com/kaltura/kaltura-agents-api-guides/releases/latest)
-[![Guides](https://img.shields.io/badge/Guides-51-green.svg)](#guides)
+[![Guides](https://img.shields.io/badge/Guides-52-green.svg)](#guides)
 [![Tests](https://img.shields.io/badge/Live--Tested-960+_tests-brightgreen.svg)](#guides)
 [![llms.txt](https://img.shields.io/badge/llms.txt-available-purple.svg)](llms.txt)
 [![Agent Skill](https://img.shields.io/badge/Agent_Skill-kaltura--api-orange.svg)](.agents/skills/kaltura-api/SKILL.md)
@@ -37,13 +37,13 @@ My .env file has the Kaltura account credentials and video portal URL. Use these
 If you can't access kaltura.md, you can also use the github repo directly: https://github.com/kaltura/kaltura-agents-api-guides
 ~~~
 
-Then create a `.env` file in your project root with your Kaltura credentials:
+Then create a `.env` file in your project root with your Kaltura credentials (see [Getting Credentials](KALTURA_GETTING_CREDENTIALS.md) for where to find each value):
 
 ```bash
 KALTURA_PARTNER_ID=your_partner_id
 KALTURA_ADMIN_SECRET=your_admin_secret
 KALTURA_SERVICE_URL=https://www.kaltura.com/api_v3
-KALTURA_USER_ID=your_email@example.com
+KALTURA_USER_ID=claude-code-kaltura-dev
 KALTURA_PLAYER_ID=your_player_id
 KALTURA_VIDEO_PORTAL_BASE_URL=https://your-site.events.kaltura.com
 ```
@@ -52,6 +52,7 @@ KALTURA_VIDEO_PORTAL_BASE_URL=https://your-site.events.kaltura.com
 
 | Guide | Description | Tests |
 |-------|-------------|-------|
+| [Getting Credentials](KALTURA_GETTING_CREDENTIALS.md) | Obtain Partner ID, Admin Secret, configure `.env`, verify access | 5 tests |
 | [API Getting Started](KALTURA_API_GETTING_STARTED.md) | API structure, first call, multirequest batching, error handling | 13 tests |
 | [Session (KS) Guide](KALTURA_SESSION_GUIDE.md) | Kaltura Session generation and management | 13 tests |
 | [AppTokens API](KALTURA_APPTOKENS_API.md) | Secure server-to-server auth without admin secrets | 17 tests |
@@ -97,7 +98,7 @@ KALTURA_VIDEO_PORTAL_BASE_URL=https://your-site.events.kaltura.com
 | [Multi-Account Management API](KALTURA_MULTI_ACCOUNT_MANAGEMENT_API.md) | Sub-accounts, cross-account auth, multi-account analytics | 6 tests |
 | [Moderation API](KALTURA_MODERATION_API.md) | Content flagging, approve/reject queue, AI moderation via REACH | 16 tests |
 | [Cue Points & Interactive Video API](KALTURA_CUE_POINTS_API.md) | Temporal metadata hub: base service, eSearch, protocols, bulk ops | 12 tests |
-| [Quiz API](KALTURA_QUIZ_API.md) | Interactive video quizzes: questions, scoring, reports, IVQ plugin | 19 tests |
+| [Quiz API](KALTURA_QUIZ_API.md) | Interactive video quizzes: questions, scoring, reports, IVQ plugin | 20 tests |
 | [Chapters & Slides API](KALTURA_CHAPTERS_AND_SLIDES_API.md) | Chapters, slides, timedThumbAsset workflow, navigation plugin | 8 tests |
 | [Annotations API](KALTURA_ANNOTATIONS_API.md) | Annotations, threaded replies, hotspots, searchableOnEntry | 7 tests |
 | [Ad Cue Points API](KALTURA_AD_CUE_POINTS_API.md) | VAST/VPAID ad insertion: pre-roll, mid-roll, overlay | 6 tests |
@@ -109,7 +110,7 @@ KALTURA_VIDEO_PORTAL_BASE_URL=https://your-site.events.kaltura.com
 
 ### 1. Get a Kaltura Account
 
-Sign up at [developer.kaltura.com](https://developer.kaltura.com/) or use an existing Kaltura account.
+Sign up at [corp.kaltura.com/pricing](https://corp.kaltura.com/pricing/) or use an existing Kaltura account. See the [Getting Credentials](KALTURA_GETTING_CREDENTIALS.md) guide for step-by-step instructions.
 
 ### 2. Configure Test Environment
 

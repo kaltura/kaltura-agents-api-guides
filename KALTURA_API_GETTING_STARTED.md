@@ -17,7 +17,7 @@ The Kaltura platform exposes 100+ REST API services, a dozen client libraries, s
 
 # 2. Prerequisites
 
-- **Partner ID and admin secret:** Available from your Kaltura Management Console (KMC) under Settings > Integration Settings.  
+- **Partner ID and Admin Secret:** Available from your KMC under Settings > Integration Settings. See [Getting Credentials](KALTURA_GETTING_CREDENTIALS.md) for step-by-step setup.  
 - **Service URL:** Set `$KALTURA_SERVICE_URL` to your account's regional endpoint (default: `https://www.kaltura.com/api_v3`).  
 - **A valid Kaltura Session (KS):** Generate one using `session.start` as described in [Session Guide](KALTURA_SESSION_GUIDE.md). All API calls require a KS.  
 - **curl or an HTTP client:** All examples use curl. Any HTTP client that supports POST requests with form-encoded or JSON bodies works.

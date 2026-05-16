@@ -11,6 +11,7 @@ Kaltura API Guides/
 ├── GUIDE_MAP.md                           # Dependency graph, reading order, decision tree
 ├── KALTURA_API_GETTING_STARTED.md         # API structure, first call, multirequest, errors
 ├── KALTURA_SESSION_GUIDE.md               # KS generation and management
+├── KALTURA_GETTING_CREDENTIALS.md         # Obtain credentials, configure .env, verify access
 ├── KALTURA_APPTOKENS_API.md               # Secure auth with AppTokens
 ├── KALTURA_ESEARCH_API.md                 # Unified search
 ├── KALTURA_UPLOAD_AND_INGESTION_API.md     # Upload, ingest, entry CRUD, flavors, attachments

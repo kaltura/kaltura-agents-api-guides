@@ -19,7 +19,7 @@ Application Tokens provide secure, scoped API access without exposing admin secr
 # 2. Prerequisites
 
 - **Kaltura Session (KS):** ADMIN KS (type=2) required for creating, listing, and managing AppTokens. See [Session Guide](KALTURA_SESSION_GUIDE.md) for generation methods.  
-- **Partner ID and admin secret:** Needed for the initial ADMIN KS that creates the AppToken. Available from KMC under Settings > Integration Settings.  
+- **Partner ID and Admin Secret:** Needed for the initial ADMIN KS that creates the AppToken. See [Getting Credentials](KALTURA_GETTING_CREDENTIALS.md) for step-by-step setup.  
 - **Service URL:** Set `$KALTURA_SERVICE_URL` to your account's regional endpoint (default: `https://www.kaltura.com/api_v3`).  
 - **Hash algorithm choice:** Select a hash type (SHA256 recommended) at token creation time -- it is immutable after creation.
 

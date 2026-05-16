@@ -70,6 +70,7 @@ markdown_extensions:
 nav:
   - Home: README.md
   - Getting Started:
+      - Getting Credentials: KALTURA_GETTING_CREDENTIALS.md
       - API Getting Started: KALTURA_API_GETTING_STARTED.md
       - Guide Map: GUIDE_MAP.md
   - Authentication:

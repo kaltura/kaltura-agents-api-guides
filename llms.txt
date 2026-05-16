@@ -9,6 +9,7 @@ To configure your coding agent as a Kaltura expert, see: https://github.com/kalt
 
 ## Foundation
 
+- [Kaltura API Credentials — Setup Guide](/raw/KALTURA_GETTING_CREDENTIALS.md): How to obtain Partner ID and Admin Secret, configure your .env file, and verify access. Start here if you need Kaltura API credentials.
 - [Kaltura API — Getting Started](/raw/KALTURA_API_GETTING_STARTED.md): The Kaltura platform exposes 100+ REST API services, a dozen client libraries, several front-end libraries, and embeddable experience components —...
 - [Kaltura Session (KS) Generation and Management](/raw/KALTURA_SESSION_GUIDE.md): Generate, use, and rotate Kaltura Sessions (KS) — the signed, time-limited tokens that authenticate every Kaltura API call and player embed.
 - [Kaltura Application Tokens (AppTokens) API](/raw/KALTURA_APPTOKENS_API.md): Application Tokens provide secure, scoped API access without exposing admin secrets. Instead of sharing your `adminSecret`, you create an AppToken...

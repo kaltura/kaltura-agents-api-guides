@@ -18,7 +18,7 @@ Generate, use, and rotate Kaltura Sessions (KS) — the signed, time-limited tok
 
 # 2. Prerequisites
 
-- **Partner ID:** Your Kaltura account identifier, available from the KMC under Settings > Integration Settings.  
+- **Partner ID and Admin Secret:** Available from KMC under Settings > Integration Settings. See [Getting Credentials](KALTURA_GETTING_CREDENTIALS.md) for step-by-step setup.  
 - **Admin secret (for `session.start`):** Required for server-side KS generation. Keep strictly server-side; use AppTokens for client-facing integrations.  
 - **Service URL:** Set `$KALTURA_SERVICE_URL` to your account's regional endpoint (default: `https://www.kaltura.com/api_v3`).  
 - **Understanding of session types:** USER (type=0) for end-user contexts, ADMIN (type=2) for backend administration. This guide covers both.
