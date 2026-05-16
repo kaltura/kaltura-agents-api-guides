@@ -106,7 +106,7 @@ Only needed for guides that interact with the Events Platform or embed portal co
 | Events Platform | `https://{PID}.events.kaltura.com` or `https://{PID}-{instance}.events.kaltura.com` |
 | Content Hubs (MediaSpace) | `https://{PID}.mediaspace.kaltura.com` or `https://{PID}-{instance}.mediaspace.kaltura.com` |
 
-The `{PID}` is your Partner ID and `{instance}` is a numeric instance identifier (e.g. `https://6500332.events.kaltura.com` or `https://6500332-1.events.kaltura.com`). Some accounts use a custom site name string instead of the PID.
+The `{PID}` is your Partner ID and `{instance}` is a numeric instance identifier (e.g. `https://123456.events.kaltura.com` or `https://123456-1.events.kaltura.com`). Some accounts use a custom site name string instead of the PID.
 
 The portal URL may also be a fully white-labeled custom domain (e.g. `https://video.yourcompany.com`). Find your portal URL by logging into your Kaltura site and checking the browser address bar.
 
