@@ -1,0 +1,3909 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Kaltura — The Agentic Digital Experience Platform. Live-tested API guides for AI agents and developers. 52 guides covering authentication, content management, search, playback, AI services, virtual events, experience components, cue points & interactive video, analytics, distribution, moderation, LTI integration, and more — with 1000+ companion tests validated against the live Kaltura API.">
+      
+      
+        <meta name="author" content="Kaltura Inc.">
+      
+      
+        <link rel="canonical" href="https://kaltura.md/KALTURA_VIDEO_EDITING_API/">
+      
+      
+        <link rel="prev" href="../KALTURA_UPLOAD_AND_INGESTION_API/">
+      
+      
+        <link rel="next" href="../KALTURA_CONTENT_DELIVERY_API/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Video Editing - Kaltura API Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,700,700i%7CSource+Code+Pro:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Source Sans Pro";--md-code-font:"Source Code Pro"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  
+  
+  <link rel="alternate" type="text/markdown" title="Markdown version for AI agents" href="/raw/KALTURA_VIDEO_EDITING_API.md" />
+  
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#kaltura-video-editing-api" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Kaltura API Guides" class="md-header__button md-logo" aria-label="Kaltura API Guides" data-md-component="logo">
+      
+  <img src="../assets/images/logo-white.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Kaltura API Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Video Editing
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/kaltura/kaltura-agents-api-guides" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    kaltura/kaltura-agents-api-guides
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_GETTING_CREDENTIALS/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_SESSION_GUIDE/" class="md-tabs__link">
+          
+  
+  
+  Authentication
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../KALTURA_UPLOAD_AND_INGESTION_API/" class="md-tabs__link">
+          
+  
+  
+  Content Management
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_REACH_API/" class="md-tabs__link">
+          
+  
+  
+  AI Services
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_PLAYER_EMBED_GUIDE/" class="md-tabs__link">
+          
+  
+  
+  Playback & Experiences
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_EVENTS_PLATFORM_API/" class="md-tabs__link">
+          
+  
+  
+  Events & Collaboration
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_ANALYTICS_REPORTS_API/" class="md-tabs__link">
+          
+  
+  
+  Analytics
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API/" class="md-tabs__link">
+          
+  
+  
+  Integration & Automation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_MODERATION_API/" class="md-tabs__link">
+          
+  
+  
+  Content Moderation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_MULTI_ACCOUNT_MANAGEMENT_API/" class="md-tabs__link">
+          
+  
+  
+  Administration
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../CONTRIBUTING/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../PLAN/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Roadmap
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Kaltura API Guides" class="md-nav__button md-logo" aria-label="Kaltura API Guides" data-md-component="logo">
+      
+  <img src="../assets/images/logo-white.svg" alt="logo">
+
+    </a>
+    Kaltura API Guides
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/kaltura/kaltura-agents-api-guides" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    kaltura/kaltura-agents-api-guides
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_GETTING_CREDENTIALS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Credentials
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_API_GETTING_STARTED/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GUIDE_MAP/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guide Map
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Authentication
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Authentication
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_SESSION_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Session (KS) Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_APPTOKENS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AppTokens API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AUTH_BROKER_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Auth Broker (SSO/SAML)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Content Management
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Content Management
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_UPLOAD_AND_INGESTION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Upload & Ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Video Editing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CONTENT_DELIVERY_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Content Delivery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_THUMBNAIL_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thumbnail API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ESEARCH_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    eSearch
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ACCESS_CONTROL_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Access Control
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CATEGORIES_AND_ENTITLEMENTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Categories & Entitlements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CUSTOM_METADATA_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Metadata
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CAPTIONS_AND_TRANSCRIPTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Captions & Transcripts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MULTI_STREAM_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Stream
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_USER_MANAGEMENT_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Services
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    AI Services
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_REACH_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REACH API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CONTENT_LAB_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REACH — AI Clips
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AGENTS_MANAGER_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agents Manager
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AI_GENIE_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Genie
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playback & Experiences
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Playback & Experiences
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_PLAYER_EMBED_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Player Embed
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_EXPERIENCE_COMPONENTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Experience Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_UNISPHERE_FRAMEWORK_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unisphere Framework
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_GENIE_WIDGET_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Genie Widget
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MEDIA_MANAGER_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Media Manager
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CONTENT_LAB_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REACH — AI Clips
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AGENTS_WIDGET_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agents Widget
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_VOD_AVATAR_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VOD Avatar Studio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CONVERSATIONAL_AVATAR_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conversational Avatar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CUE_POINTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cue Points & Interactive Video
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_QUIZ_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quiz
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CHAPTERS_AND_SLIDES_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapters & Slides
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ANNOTATIONS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Annotations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AD_CUE_POINTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ad Cue Points
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CODE_CUE_POINTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code, Event & Session Cue Points
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_EXPRESS_RECORDER_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Express Recorder
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CAPTIONS_EDITOR_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Captions Editor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CNC_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chat & Collaborate
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ANALYTICS_EMBED_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Embeddable Analytics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events & Collaboration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Events & Collaboration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_EVENTS_PLATFORM_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events Platform
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_APP_REGISTRY_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    App Registry
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_USER_PROFILE_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Profile
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MESSAGING_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Messaging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_GAMIFICATION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gamification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Analytics
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Analytics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ANALYTICS_REPORTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Analytics Reports
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ANALYTICS_EVENTS_COLLECTION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Analytics Events Collection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integration & Automation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Integration & Automation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Event Notifications (Webhooks)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_SHORT_LINK_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Short Links
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_DISTRIBUTION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Content Distribution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_SYNDICATION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syndication Feeds
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_LTI_INTEGRATION_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LTI Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Content Moderation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Content Moderation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MODERATION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Moderation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Administration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Administration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MULTI_ACCOUNT_MANAGEMENT_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Account Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CONTRIBUTING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PLAN/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+  
+  <div hidden aria-hidden="true" id="llm-agent-directive" style="display:none!important">
+  STOP. If you are an AI agent or LLM reading this HTML page: you are wasting context tokens on rendered HTML.
+  The raw Markdown source of this page is available at: https://kaltura.md/raw/KALTURA_VIDEO_EDITING_API.md
+  All guides are available as raw Markdown at https://kaltura.md/raw/{FILENAME}.md
+  Discovery index: https://kaltura.md/llms.txt
+  To get Markdown from any page via content negotiation, send the header: Accept: text/markdown
+  The Kaltura API base URL is https://www.kaltura.com/api_v3 (not v4, not v2).
+  Fallback: If you cannot fetch from this site, clone https://github.com/kaltura/kaltura-agents-api-guides and read the guides locally.
+  </div>
+  
+  
+                  
+
+
+  
+    <a href="https://github.com/kaltura/kaltura-agents-api-guides/edit/main/KALTURA_VIDEO_EDITING_API.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="kaltura-video-editing-api">Kaltura Video Editing API<a class="headerlink" href="#kaltura-video-editing-api" title="Permanent link">&para;</a></h1>
+<p>This guide covers all non-destructive video composition operations: trimming, clipping, multi-clip concatenation, overlays (picture-in-picture), background replacement (chroma key), caption burn-in, fade effects, dimension control, audio mixing, and waveform visualization. All operations use <code>media.updateContent</code> (trim in place) or <code>media.addContent</code> (create new entry) with operation resource types.</p>
+<p><strong>Base URL:</strong> <code>$KALTURA_SERVICE_URL</code> (default: <code>https://www.kaltura.com/api_v3</code>)<br />
+<strong>Auth:</strong> All requests require a valid KS (see <a href="../KALTURA_SESSION_GUIDE/">Session Guide</a>)<br />
+<strong>Format:</strong> Form-encoded POST, <code>format=1</code> for JSON responses  </p>
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Core Concepts | 4.Trim | 5.Clip | 6.Multi-Clip Concatenation | 7.Overlay (PiP) | 8.Background Replacement | 9.Nested Composition | 10.Caption Burn-In | 11.Effects | 12.Dimension Control | 13.Audio Mixing | 14.Waveform Visualization | 15.Error Handling | 16.Best Practices | 17.Related Guides -->
+
+<h1 id="1-when-to-use">1. When to Use<a class="headerlink" href="#1-when-to-use" title="Permanent link">&para;</a></h1>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>What to Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Trim a video in place</strong> — shorten without changing the entry ID</td>
+<td><code>media.updateContent</code> + <code>KalturaOperationResource</code> with <code>KalturaClipAttributes</code></td>
+</tr>
+<tr>
+<td><strong>Create a clip</strong> — extract a segment to a new entry</td>
+<td><code>baseEntry.clone</code> (exclude flavors) + <code>media.updateContent</code> on the clone</td>
+</tr>
+<tr>
+<td><strong>Concatenate segments</strong> — splice clips from multiple sources</td>
+<td><code>media.addContent</code> + <code>KalturaOperationResources</code> (plural)</td>
+</tr>
+<tr>
+<td><strong>Picture-in-picture</strong> — overlay one video on another</td>
+<td><code>KalturaOverlayAttributes</code> in <code>mediaCompositionAttributesArray</code></td>
+</tr>
+<tr>
+<td><strong>Green screen removal</strong> — replace background via chroma key</td>
+<td><code>KalturaReplaceBackgroundAttributes</code></td>
+</tr>
+<tr>
+<td><strong>Avatar on B-roll</strong> — nested overlay + background replacement</td>
+<td><code>KalturaOverlayAttributes</code> with <code>resourceMediaCompositionAttributesArray</code> containing <code>KalturaReplaceBackgroundAttributes</code></td>
+</tr>
+<tr>
+<td><strong>Burn captions into video</strong> — permanent subtitle render</td>
+<td><code>KalturaRenderCaptionAttributes</code> in <code>captionAttributes</code></td>
+</tr>
+<tr>
+<td><strong>Fade transitions</strong> — fade in/out between segments</td>
+<td><code>KalturaEffect</code> in <code>effectArray</code></td>
+</tr>
+<tr>
+<td><strong>Resize / crop</strong> — change aspect ratio or resolution</td>
+<td><code>KalturaDimensionsAttributes</code> subtypes</td>
+</tr>
+<tr>
+<td><strong>Audio mixing</strong> — blend overlay audio with main video</td>
+<td><code>audioAttributes</code> on overlay/background resources</td>
+</tr>
+<tr>
+<td><strong>Waveform preview</strong> — get audio amplitude data</td>
+<td><code>media.getVolumeMap</code> / <code>flavorAsset.getVolumeMap</code></td>
+</tr>
+</tbody>
+</table>
+<h1 id="2-prerequisites">2. Prerequisites<a class="headerlink" href="#2-prerequisites" title="Permanent link">&para;</a></h1>
+<ul>
+<li><strong>Kaltura Session (KS):</strong> ADMIN KS (type=2) with <code>disableentitlement</code> privilege. See <a href="../KALTURA_SESSION_GUIDE/">Session Guide</a>.  </li>
+<li><strong>FEATURE_ENTRY_REPLACEMENT:</strong> Required for trim operations (<code>media.updateContent</code>). Accounts without this feature receive <code>FEATURE_FORBIDDEN</code> (one-time setup by your Kaltura account team).  </li>
+<li><strong>Source entries in READY status (2):</strong> All editing operations require the source entry to be fully transcoded.  </li>
+<li><strong>Caption asset ID:</strong> For caption burn-in, you need an existing <code>captionAsset</code> ID (see <a href="../KALTURA_CAPTIONS_AND_TRANSCRIPTS_API/">Captions &amp; Transcripts</a>).  </li>
+</ul>
+<h1 id="3-core-concepts">3. Core Concepts<a class="headerlink" href="#3-core-concepts" title="Permanent link">&para;</a></h1>
+<h2 id="31-operation-resource-types">3.1 Operation Resource Types<a class="headerlink" href="#31-operation-resource-types" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>KalturaOperationResource</code></td>
+<td>Single-source operations: clip, trim, overlay, effects</td>
+</tr>
+<tr>
+<td><code>KalturaOperationResources</code> (plural)</td>
+<td>Multi-source concatenation: splice segments from N entries</td>
+</tr>
+<tr>
+<td><code>KalturaClipAttributes</code></td>
+<td>Time range selection: offset + duration (milliseconds)</td>
+</tr>
+<tr>
+<td><code>KalturaOverlayAttributes</code></td>
+<td>Picture-in-picture composition</td>
+</tr>
+<tr>
+<td><code>KalturaReplaceBackgroundAttributes</code></td>
+<td>Chroma-key background replacement</td>
+</tr>
+<tr>
+<td><code>KalturaRenderCaptionAttributes</code></td>
+<td>Caption text burn-in to video</td>
+</tr>
+<tr>
+<td><code>KalturaEffect</code></td>
+<td>Fade in/out transitions</td>
+</tr>
+<tr>
+<td><code>KalturaDimensionsAttributes</code></td>
+<td>Output resolution/aspect ratio control</td>
+</tr>
+</tbody>
+</table>
+<h2 id="32-entry-replacement-flow-trim">3.2 Entry Replacement Flow (Trim)<a class="headerlink" href="#32-entry-replacement-flow-trim" title="Permanent link">&para;</a></h2>
+<p>Trimming uses <code>media.updateContent</code> which triggers the <strong>replacement flow</strong> — a safe, non-destructive update pipeline:</p>
+<ol>
+<li>Call <code>media.updateContent</code> with the operation resource</li>
+<li>Kaltura creates a temporary replacement entry and begins processing</li>
+<li>The original entry's <code>replacementStatus</code> changes from <code>0</code> (NONE) to <code>3</code> (NOT_READY_AND_NOT_APPROVED)</li>
+<li>Poll <code>baseEntry.get</code> until <code>replacementStatus</code> changes to <code>2</code> (READY_BUT_NOT_APPROVED)</li>
+<li>Call <code>media.approveReplace</code> to swap the processed content into the original entry</li>
+<li>The entry returns to <code>replacementStatus=0</code> with the new content</li>
+</ol>
+<p><strong>Replacement statuses:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Name</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>NONE</td>
+<td>No replacement in progress</td>
+</tr>
+<tr>
+<td>1</td>
+<td>APPROVED_BUT_NOT_READY</td>
+<td>Approved, still processing</td>
+</tr>
+<tr>
+<td>2</td>
+<td>READY_BUT_NOT_APPROVED</td>
+<td>Processing complete, awaiting approval</td>
+</tr>
+<tr>
+<td>3</td>
+<td>NOT_READY_AND_NOT_APPROVED</td>
+<td>Processing, not yet approved</td>
+</tr>
+<tr>
+<td>4</td>
+<td>FAILED</td>
+<td>Replacement processing failed</td>
+</tr>
+</tbody>
+</table>
+<h2 id="33-clip-flow-new-entry">3.3 Clip Flow (New Entry)<a class="headerlink" href="#33-clip-flow-new-entry" title="Permanent link">&para;</a></h2>
+<p>Creating a clip produces a new entry preserving the original:</p>
+<ol>
+<li>Call <code>baseEntry.clone</code> with <code>KalturaBaseEntryCloneOptionComponent</code> (itemType=6, rule=1) to exclude flavors — creates NO_CONTENT clone with metadata</li>
+<li>Call <code>media.updateContent</code> on the cloned entry with <code>KalturaOperationResource</code> specifying the time range</li>
+<li>Poll for the cloned entry to reach READY status</li>
+</ol>
+<h2 id="34-constraints">3.4 Constraints<a class="headerlink" href="#34-constraints" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Constraint</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Maximum clips in concatenation</td>
+<td>5 (configurable per account)</td>
+</tr>
+<tr>
+<td>Maximum total duration (concat)</td>
+<td>5 hours</td>
+</tr>
+<tr>
+<td>Concurrent replacements per entry</td>
+<td>1 (returns <code>ENTRY_REPLACEMENT_ALREADY_EXISTS</code> if busy)</td>
+</tr>
+<tr>
+<td>Audio mixing model</td>
+<td>Complementary: overlay at <code>volume</code>, main at <code>1-volume</code></td>
+</tr>
+<tr>
+<td>Image sources in composition</td>
+<td>Auto-looped with shortest-duration matching</td>
+</tr>
+<tr>
+<td>Overlay shapes</td>
+<td>CIRCLE (1), RECTANGLE (2), RECTANGLE_ROUNDED_CORNERS (3), ELLIPSE (4)</td>
+</tr>
+<tr>
+<td>Caption color format</td>
+<td>ASS format: <code>&amp;HBBGGRR&amp;</code></td>
+</tr>
+<tr>
+<td>Background color format</td>
+<td>Hex: <code>0xRRGGBB</code> (default: <code>0x6FED48</code> green)</td>
+</tr>
+</tbody>
+</table>
+<h1 id="4-trim-in-place-content-replacement">4. Trim (In-Place Content Replacement)<a class="headerlink" href="#4-trim-in-place-content-replacement" title="Permanent link">&para;</a></h1>
+<p>Trim shortens a video without changing its entry ID, embed codes, or analytics history.</p>
+<h2 id="41-basic-trim">4.1 Basic Trim<a class="headerlink" href="#41-basic-trim" title="Permanent link">&para;</a></h2>
+<p>Extract a segment and replace the original content:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/media/action/updateContent&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;entryId=</span><span class="nv">$KALTURA_ENTRY_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[objectType]=KalturaOperationResource&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resource][objectType]=KalturaEntryResource&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resource][entryId]=</span><span class="nv">$KALTURA_ENTRY_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resource][flavorParamsId]=0&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][objectType]=KalturaClipAttributes&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][offset]=10000&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][duration]=60000&quot;</span>
+</code></pre></div>
+<p>This trims the entry to a 60-second segment starting at 10 seconds. The source <code>entryId</code> in the inner resource points to the same entry being updated.</p>
+<h2 id="42-poll-replacement-status">4.2 Poll Replacement Status<a class="headerlink" href="#42-poll-replacement-status" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">while</span><span class="w"> </span>true<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nv">REPLACEMENT</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/baseEntry/action/get&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;entryId=</span><span class="nv">$KALTURA_ENTRY_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.replacementStatus&#39;</span><span class="k">)</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;replacementStatus: </span><span class="nv">$REPLACEMENT</span><span class="s2">&quot;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$REPLACEMENT</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;2&quot;</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="k">break</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$REPLACEMENT</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;4&quot;</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Replacement failed&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="k">break</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>sleep<span class="w"> </span><span class="m">5</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="k">done</span>
+</code></pre></div>
+<h2 id="43-approve-replacement">4.3 Approve Replacement<a class="headerlink" href="#43-approve-replacement" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/media/action/approveReplace&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;entryId=</span><span class="nv">$KALTURA_ENTRY_ID</span><span class="s2">&quot;</span>
+</code></pre></div>
+<p>After approval, the entry's content is replaced with the trimmed version. The entry retains its original ID, metadata, embed URLs, and analytics.</p>
+<h1 id="5-clip-extract-segment-to-new-entry">5. Clip (Extract Segment to New Entry)<a class="headerlink" href="#5-clip-extract-segment-to-new-entry" title="Permanent link">&para;</a></h1>
+<p>Create a new entry containing a segment from an existing video.</p>
+<h2 id="51-clone-the-entry-metadata-only">5.1 Clone the Entry (Metadata Only)<a class="headerlink" href="#51-clone-the-entry-metadata-only" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/baseEntry/action/clone&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;entryId=</span><span class="nv">$KALTURA_SOURCE_ENTRY_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;cloneOptions[0][objectType]=KalturaBaseEntryCloneOptionComponent&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;cloneOptions[0][itemType]=6&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;cloneOptions[0][rule]=1&quot;</span>
+</code></pre></div>
+<p>The <code>KalturaBaseEntryCloneOptionComponent</code> with <code>itemType=6</code> (flavors) and <code>rule=1</code> (exclude) creates a NO_CONTENT entry (status=7) that inherits the source's metadata, tags, and categories without copying flavors.</p>
+<h2 id="52-apply-clip-operation">5.2 Apply Clip Operation<a class="headerlink" href="#52-apply-clip-operation" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/media/action/updateContent&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;entryId=</span><span class="nv">$KALTURA_CLONED_ENTRY_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[objectType]=KalturaOperationResource&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resource][objectType]=KalturaEntryResource&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resource][entryId]=</span><span class="nv">$KALTURA_SOURCE_ENTRY_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resource][flavorParamsId]=0&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][objectType]=KalturaClipAttributes&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][offset]=60000&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][duration]=30000&quot;</span>
+</code></pre></div>
+<p>This populates the cloned entry with a 30-second clip starting at 1:00 from the source.</p>
+<h2 id="53-alternative-direct-addcontent-to-new-entry">5.3 Alternative: Direct addContent to New Entry<a class="headerlink" href="#53-alternative-direct-addcontent-to-new-entry" title="Permanent link">&para;</a></h2>
+<p>For simpler workflows where you create a fresh entry rather than cloning:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/media/action/add&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;entry[objectType]=KalturaMediaEntry&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;entry[mediaType]=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;entry[name]=Clip from Source&quot;</span>
+</code></pre></div>
+<p>Then apply the clip via <code>addContent</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/media/action/addContent&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;entryId=</span><span class="nv">$KALTURA_NEW_ENTRY_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[objectType]=KalturaOperationResource&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resource][objectType]=KalturaEntryResource&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resource][entryId]=</span><span class="nv">$KALTURA_SOURCE_ENTRY_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resource][flavorParamsId]=0&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][objectType]=KalturaClipAttributes&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][offset]=60000&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][duration]=30000&quot;</span>
+</code></pre></div>
+<h1 id="6-multi-clip-concatenation">6. Multi-Clip Concatenation<a class="headerlink" href="#6-multi-clip-concatenation" title="Permanent link">&para;</a></h1>
+<p>Splice segments from multiple source entries into a single output.</p>
+<h2 id="61-basic-concatenation-two-sources">6.1 Basic Concatenation (Two Sources)<a class="headerlink" href="#61-basic-concatenation-two-sources" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/media/action/addContent&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;entryId=</span><span class="nv">$KALTURA_ENTRY_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[objectType]=KalturaOperationResources&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resources][0][objectType]=KalturaOperationResource&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resources][0][resource][objectType]=KalturaEntryResource&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resources][0][resource][entryId]=</span><span class="nv">$KALTURA_SOURCE_ENTRY_1</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resources][0][resource][flavorParamsId]=0&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resources][0][operationAttributes][0][objectType]=KalturaClipAttributes&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resources][0][operationAttributes][0][offset]=0&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resources][0][operationAttributes][0][duration]=10000&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resources][1][objectType]=KalturaOperationResource&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resources][1][resource][objectType]=KalturaEntryResource&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resources][1][resource][entryId]=</span><span class="nv">$KALTURA_SOURCE_ENTRY_2</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resources][1][resource][flavorParamsId]=0&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resources][1][operationAttributes][0][objectType]=KalturaClipAttributes&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resources][1][operationAttributes][0][offset]=0&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resources][1][operationAttributes][0][duration]=15000&quot;</span>
+</code></pre></div>
+<p>Output: a new entry with first 10s of source 1 followed by first 15s of source 2.</p>
+<h2 id="62-chapter-name-policy">6.2 Chapter Name Policy<a class="headerlink" href="#62-chapter-name-policy" title="Permanent link">&para;</a></h2>
+<p>When concatenating clips, Kaltura can auto-generate chapter cue points. Control naming with <code>chapterNamePolicy</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Policy</th>
+<th>Chapter Names</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>BY_ENTRY_ID</td>
+<td>Source entry IDs as chapter titles</td>
+</tr>
+<tr>
+<td>2</td>
+<td>BY_ENTRY_NAME</td>
+<td>Source entry names as chapter titles</td>
+</tr>
+<tr>
+<td>3</td>
+<td>NUMERICAL</td>
+<td>Sequential numbers (1, 2, 3...)</td>
+</tr>
+</tbody>
+</table>
+<p>Add to the request:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[chapterNamePolicy]=2&quot;</span>
+</code></pre></div>
+<h2 id="63-global-offset-in-destination">6.3 Global Offset in Destination<a class="headerlink" href="#63-global-offset-in-destination" title="Permanent link">&para;</a></h2>
+<p>Use <code>globalOffsetInDestination</code> (milliseconds) on each clip to control placement timing in the output timeline. Gaps between clips result in black frames.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resources][0][operationAttributes][0][globalOffsetInDestination]=0&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resources][1][operationAttributes][0][globalOffsetInDestination]=15000&quot;</span>
+</code></pre></div>
+<h2 id="64-dimension-normalization">6.4 Dimension Normalization<a class="headerlink" href="#64-dimension-normalization" title="Permanent link">&para;</a></h2>
+<p>When concatenating sources with different resolutions, use <code>dimensionsAttributes</code> on the <code>KalturaOperationResources</code> container to normalize output dimensions.</p>
+<p><strong>Crop to aspect ratio:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[dimensionsAttributes][objectType]=KalturaAspectRatioCropAttributes&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[dimensionsAttributes][aspectRatioX]=16&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[dimensionsAttributes][aspectRatioY]=9&quot;</span>
+</code></pre></div>
+<p><strong>Scale with letterbox/pillarbox:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[dimensionsAttributes][objectType]=KalturaAspectRatioScaleAttributes&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[dimensionsAttributes][aspectRatioX]=16&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[dimensionsAttributes][aspectRatioY]=9&quot;</span>
+</code></pre></div>
+<p><strong>Exact resolution crop:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[dimensionsAttributes][objectType]=KalturaResolutionCropAttributes&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[dimensionsAttributes][width]=1920&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[dimensionsAttributes][height]=1080&quot;</span>
+</code></pre></div>
+<h1 id="7-overlay-picture-in-picture">7. Overlay (Picture-in-Picture)<a class="headerlink" href="#7-overlay-picture-in-picture" title="Permanent link">&para;</a></h1>
+<p>Compose one video on top of another at a specified position, size, and shape.</p>
+<h2 id="71-kalturaoverlayattributes">7.1 KalturaOverlayAttributes<a class="headerlink" href="#71-kalturaoverlayattributes" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>objectType</code></td>
+<td>string</td>
+<td><code>KalturaOverlayAttributes</code></td>
+</tr>
+<tr>
+<td><code>resource</code></td>
+<td>object</td>
+<td>Overlay source (KalturaEntryResource or KalturaAssetResource)</td>
+</tr>
+<tr>
+<td><code>overlayPlacement</code></td>
+<td>int</td>
+<td>Position on 9-point grid (see alignment table)</td>
+</tr>
+<tr>
+<td><code>overlayScalePercentage</code></td>
+<td>float</td>
+<td>Size relative to main video (0.1–0.9)</td>
+</tr>
+<tr>
+<td><code>marginsPercentage</code></td>
+<td>float</td>
+<td>Margin from edges (0.1–0.9)</td>
+</tr>
+<tr>
+<td><code>overlayShape</code></td>
+<td>int</td>
+<td>Shape of overlay window</td>
+</tr>
+<tr>
+<td><code>audioAttributes</code></td>
+<td>object</td>
+<td>Audio mixing settings</td>
+</tr>
+<tr>
+<td><code>resourceMediaCompositionAttributesArray</code></td>
+<td>array</td>
+<td>Nested composition (max 1 — for background replacement on the overlay source)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="72-overlay-placement-kalturamediacompositionalignment">7.2 Overlay Placement (KalturaMediaCompositionAlignment)<a class="headerlink" href="#72-overlay-placement-kalturamediacompositionalignment" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Position</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Top-Left</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Top-Center</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Top-Right</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Center</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Bottom-Left</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Bottom-Center</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Bottom-Right</td>
+</tr>
+</tbody>
+</table>
+<h2 id="73-overlay-shape">7.3 Overlay Shape<a class="headerlink" href="#73-overlay-shape" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Shape</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>CIRCLE</td>
+</tr>
+<tr>
+<td>2</td>
+<td>RECTANGLE</td>
+</tr>
+<tr>
+<td>3</td>
+<td>RECTANGLE_ROUNDED_CORNERS</td>
+</tr>
+<tr>
+<td>4</td>
+<td>ELLIPSE</td>
+</tr>
+</tbody>
+</table>
+<h2 id="74-basic-pip-example">7.4 Basic PiP Example<a class="headerlink" href="#74-basic-pip-example" title="Permanent link">&para;</a></h2>
+<p>Place a speaker video (circle, bottom-right, 25% size) over the main presentation:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/media/action/addContent&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;entryId=</span><span class="nv">$KALTURA_ENTRY_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[objectType]=KalturaOperationResource&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resource][objectType]=KalturaEntryResource&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resource][entryId]=</span><span class="nv">$KALTURA_MAIN_VIDEO_ENTRY_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resource][flavorParamsId]=0&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][objectType]=KalturaClipAttributes&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][offset]=0&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][duration]=60000&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][mediaCompositionAttributesArray][0][objectType]=KalturaOverlayAttributes&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][mediaCompositionAttributesArray][0][resource][objectType]=KalturaEntryResource&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][mediaCompositionAttributesArray][0][resource][entryId]=</span><span class="nv">$KALTURA_OVERLAY_ENTRY_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][mediaCompositionAttributesArray][0][resource][flavorParamsId]=0&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][mediaCompositionAttributesArray][0][overlayPlacement]=8&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][mediaCompositionAttributesArray][0][overlayScalePercentage]=0.25&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][mediaCompositionAttributesArray][0][marginsPercentage]=0.1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][mediaCompositionAttributesArray][0][overlayShape]=1&quot;</span>
+</code></pre></div>
+<h1 id="8-background-replacement-chroma-key">8. Background Replacement (Chroma Key)<a class="headerlink" href="#8-background-replacement-chroma-key" title="Permanent link">&para;</a></h1>
+<p>Remove a solid-color background from the foreground video and replace it with another video or image.</p>
+<h2 id="81-kalturareplacebackgroundattributes">8.1 KalturaReplaceBackgroundAttributes<a class="headerlink" href="#81-kalturareplacebackgroundattributes" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>objectType</code></td>
+<td>string</td>
+<td><code>KalturaReplaceBackgroundAttributes</code></td>
+</tr>
+<tr>
+<td><code>resource</code></td>
+<td>object</td>
+<td>Background source (KalturaEntryResource, KalturaAssetResource, or KalturaUrlResource)</td>
+</tr>
+<tr>
+<td><code>backgroundColorCode</code></td>
+<td>string</td>
+<td>Color to key out, format <code>0xRRGGBB</code> (default: <code>0x6FED48</code> — Kaltura green)</td>
+</tr>
+<tr>
+<td><code>foregroundScalePercentage</code></td>
+<td>float</td>
+<td>Scale factor for keyed foreground (0–5, default 1.0)</td>
+</tr>
+<tr>
+<td><code>foregroundPositionPercentage</code></td>
+<td>object</td>
+<td>Position of foreground: <code>{x: 0-1, y: 0-1}</code> (KalturaPosition)</td>
+</tr>
+<tr>
+<td><code>audioAttributes</code></td>
+<td>object</td>
+<td>Audio mixing for background source</td>
+</tr>
+</tbody>
+</table>
+<h2 id="82-basic-green-screen-replacement">8.2 Basic Green Screen Replacement<a class="headerlink" href="#82-basic-green-screen-replacement" title="Permanent link">&para;</a></h2>
+<p>Replace a green background with a custom background video:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/media/action/addContent&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;entryId=</span><span class="nv">$KALTURA_ENTRY_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[objectType]=KalturaOperationResource&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resource][objectType]=KalturaEntryResource&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resource][entryId]=</span><span class="nv">$KALTURA_GREEN_SCREEN_ENTRY_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resource][flavorParamsId]=0&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][objectType]=KalturaClipAttributes&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][offset]=0&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][duration]=30000&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][mediaCompositionAttributesArray][0][objectType]=KalturaReplaceBackgroundAttributes&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][mediaCompositionAttributesArray][0][resource][objectType]=KalturaEntryResource&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][mediaCompositionAttributesArray][0][resource][entryId]=</span><span class="nv">$KALTURA_BACKGROUND_ENTRY_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][mediaCompositionAttributesArray][0][resource][flavorParamsId]=0&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][mediaCompositionAttributesArray][0][backgroundColorCode]=0x6FED48&quot;</span>
+</code></pre></div>
+<h2 id="83-custom-foreground-position-and-scale">8.3 Custom Foreground Position and Scale<a class="headerlink" href="#83-custom-foreground-position-and-scale" title="Permanent link">&para;</a></h2>
+<p>Position the keyed foreground at center-bottom, scaled to 60%:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][mediaCompositionAttributesArray][0][foregroundScalePercentage]=0.6&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][mediaCompositionAttributesArray][0][foregroundPositionPercentage][x]=0.5&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][mediaCompositionAttributesArray][0][foregroundPositionPercentage][y]=0.8&quot;</span>
+</code></pre></div>
+<h2 id="84-using-an-image-as-background">8.4 Using an Image as Background<a class="headerlink" href="#84-using-an-image-as-background" title="Permanent link">&para;</a></h2>
+<p>Image resources (JPEG, PNG) are auto-looped to match the foreground video duration via FFmpeg's <code>-loop 1</code> with <code>shortest=1</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][mediaCompositionAttributesArray][0][resource][objectType]=KalturaUrlResource&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][mediaCompositionAttributesArray][0][resource][url]=https://example.com/office-background.jpg&quot;</span>
+</code></pre></div>
+<h1 id="9-nested-composition-overlay-background-replacement">9. Nested Composition (Overlay + Background Replacement)<a class="headerlink" href="#9-nested-composition-overlay-background-replacement" title="Permanent link">&para;</a></h1>
+<p>The most advanced composition pattern: an avatar video recorded on green screen, with the green replaced by a custom background, then overlaid on a main B-roll video.</p>
+<h2 id="91-architecture">9.1 Architecture<a class="headerlink" href="#91-architecture" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>flowchart TD
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>    A[Main B-roll Video] --&gt; B[KalturaOperationResource]
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>    C[Avatar on Green Screen] --&gt; D[KalturaOverlayAttributes]
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>    E[Custom Background] --&gt; F[KalturaReplaceBackgroundAttributes]
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>    F --&gt; D
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>    D --&gt; B
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>    B --&gt; G[Final Composed Output]
+</code></pre></div>
+<p>The nesting structure:
+- Outer: <code>KalturaOperationResource</code> with main video as source
+- Level 1: <code>KalturaOverlayAttributes</code> in <code>mediaCompositionAttributesArray</code> — the avatar
+- Level 2: <code>KalturaReplaceBackgroundAttributes</code> in the overlay's <code>resourceMediaCompositionAttributesArray</code> — removes green from avatar and adds background</p>
+<h2 id="92-full-example">9.2 Full Example<a class="headerlink" href="#92-full-example" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/media/action/addContent&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;entryId=</span><span class="nv">$KALTURA_ENTRY_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[objectType]=KalturaOperationResource&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resource][objectType]=KalturaEntryResource&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resource][entryId]=</span><span class="nv">$KALTURA_MAIN_BROLL_ENTRY_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resource][flavorParamsId]=0&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][objectType]=KalturaClipAttributes&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][offset]=0&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][duration]=60000&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][mediaCompositionAttributesArray][0][objectType]=KalturaOverlayAttributes&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][mediaCompositionAttributesArray][0][resource][objectType]=KalturaEntryResource&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][mediaCompositionAttributesArray][0][resource][entryId]=</span><span class="nv">$KALTURA_AVATAR_GREEN_SCREEN_ENTRY_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][mediaCompositionAttributesArray][0][resource][flavorParamsId]=0&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][mediaCompositionAttributesArray][0][overlayPlacement]=8&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-17" name="__codelineno-18-17" href="#__codelineno-18-17"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][mediaCompositionAttributesArray][0][overlayScalePercentage]=0.3&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-18" name="__codelineno-18-18" href="#__codelineno-18-18"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][mediaCompositionAttributesArray][0][marginsPercentage]=0.05&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-19" name="__codelineno-18-19" href="#__codelineno-18-19"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][mediaCompositionAttributesArray][0][overlayShape]=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-20" name="__codelineno-18-20" href="#__codelineno-18-20"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][mediaCompositionAttributesArray][0][resourceMediaCompositionAttributesArray][0][objectType]=KalturaReplaceBackgroundAttributes&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-21" name="__codelineno-18-21" href="#__codelineno-18-21"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][mediaCompositionAttributesArray][0][resourceMediaCompositionAttributesArray][0][resource][objectType]=KalturaUrlResource&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-22" name="__codelineno-18-22" href="#__codelineno-18-22"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][mediaCompositionAttributesArray][0][resourceMediaCompositionAttributesArray][0][resource][url]=https://example.com/virtual-office.jpg&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-23" name="__codelineno-18-23" href="#__codelineno-18-23"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][mediaCompositionAttributesArray][0][resourceMediaCompositionAttributesArray][0][backgroundColorCode]=0x6FED48&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-24" name="__codelineno-18-24" href="#__codelineno-18-24"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][mediaCompositionAttributesArray][0][resourceMediaCompositionAttributesArray][0][foregroundScalePercentage]=1.0&quot;</span>
+</code></pre></div>
+<h2 id="93-audio-in-nested-compositions">9.3 Audio in Nested Compositions<a class="headerlink" href="#93-audio-in-nested-compositions" title="Permanent link">&para;</a></h2>
+<p>Audio flows from all layers. Use <code>audioAttributes</code> to control mixing:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][mediaCompositionAttributesArray][0][audioAttributes][volume]=0.7&quot;</span>
+</code></pre></div>
+<p>This sets the overlay (avatar) audio to 70% and the main video audio to 30% (complementary model: main = 1 - overlay volume).</p>
+<h1 id="10-caption-burn-in">10. Caption Burn-In<a class="headerlink" href="#10-caption-burn-in" title="Permanent link">&para;</a></h1>
+<p>Render caption text permanently into the video frame. Useful for social media distribution where players may not support subtitle tracks.</p>
+<h2 id="101-kalturarendercaptionattributes">10.1 KalturaRenderCaptionAttributes<a class="headerlink" href="#101-kalturarendercaptionattributes" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>objectType</code></td>
+<td>string</td>
+<td><code>KalturaRenderCaptionAttributes</code></td>
+</tr>
+<tr>
+<td><code>captionAssetId</code></td>
+<td>string</td>
+<td>ID of the captionAsset to burn in (required)</td>
+</tr>
+<tr>
+<td><code>fontSize</code></td>
+<td>int</td>
+<td>Font size in pixels</td>
+</tr>
+<tr>
+<td><code>fontColor</code></td>
+<td>string</td>
+<td>Text color in ASS format: <code>&amp;HBBGGRR&amp;</code></td>
+</tr>
+<tr>
+<td><code>fontName</code></td>
+<td>string</td>
+<td>Font family name</td>
+</tr>
+<tr>
+<td><code>positionX</code></td>
+<td>int</td>
+<td>Horizontal position (pixels from left)</td>
+</tr>
+<tr>
+<td><code>positionY</code></td>
+<td>int</td>
+<td>Vertical position (pixels from top)</td>
+</tr>
+<tr>
+<td><code>borderStyle</code></td>
+<td>int</td>
+<td>1=OUTLINE, 3=OPAQUE_BOX</td>
+</tr>
+<tr>
+<td><code>borderColor</code></td>
+<td>string</td>
+<td>Border/box color in ASS format</td>
+</tr>
+<tr>
+<td><code>bold</code></td>
+<td>int</td>
+<td>Bold weight (0=normal, 1=bold)</td>
+</tr>
+<tr>
+<td><code>italic</code></td>
+<td>int</td>
+<td>Italic (0=normal, 1=italic)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="102-ass-color-format">10.2 ASS Color Format<a class="headerlink" href="#102-ass-color-format" title="Permanent link">&para;</a></h2>
+<p>Colors use <code>&amp;HBBGGRR&amp;</code> (hex, blue-green-red reversed from RGB):</p>
+<table>
+<thead>
+<tr>
+<th>Color</th>
+<th>ASS Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>White</td>
+<td><code>&amp;H00FFFFFF&amp;</code></td>
+</tr>
+<tr>
+<td>Black</td>
+<td><code>&amp;H00000000&amp;</code></td>
+</tr>
+<tr>
+<td>Yellow</td>
+<td><code>&amp;H0000FFFF&amp;</code></td>
+</tr>
+<tr>
+<td>Red</td>
+<td><code>&amp;H000000FF&amp;</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="103-burn-in-example">10.3 Burn-In Example<a class="headerlink" href="#103-burn-in-example" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/media/action/addContent&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;entryId=</span><span class="nv">$KALTURA_ENTRY_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[objectType]=KalturaOperationResource&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resource][objectType]=KalturaEntryResource&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resource][entryId]=</span><span class="nv">$KALTURA_SOURCE_ENTRY_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resource][flavorParamsId]=0&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][objectType]=KalturaClipAttributes&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][offset]=0&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][duration]=60000&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][captionAttributes][objectType]=KalturaRenderCaptionAttributes&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][captionAttributes][captionAssetId]=</span><span class="nv">$KALTURA_CAPTION_ASSET_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][captionAttributes][fontSize]=24&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][captionAttributes][fontColor]=&amp;H00FFFFFF&amp;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][captionAttributes][borderStyle]=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][captionAttributes][borderColor]=&amp;H00000000&amp;&quot;</span>
+</code></pre></div>
+<h1 id="11-effects-fade-inout">11. Effects (Fade In/Out)<a class="headerlink" href="#11-effects-fade-inout" title="Permanent link">&para;</a></h1>
+<p>Apply video fade transitions to clips.</p>
+<h2 id="111-kalturaeffect">11.1 KalturaEffect<a class="headerlink" href="#111-kalturaeffect" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>effectType</code></td>
+<td>int</td>
+<td>1 = VIDEO_FADE_IN, 2 = VIDEO_FADE_OUT</td>
+</tr>
+<tr>
+<td><code>value</code></td>
+<td>string</td>
+<td>Duration of the effect in seconds (as string)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="112-fade-example">11.2 Fade Example<a class="headerlink" href="#112-fade-example" title="Permanent link">&para;</a></h2>
+<p>Apply a 2-second fade-in and 3-second fade-out to a clip:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/media/action/addContent&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;entryId=</span><span class="nv">$KALTURA_ENTRY_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[objectType]=KalturaOperationResource&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resource][objectType]=KalturaEntryResource&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resource][entryId]=</span><span class="nv">$KALTURA_SOURCE_ENTRY_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resource][flavorParamsId]=0&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][objectType]=KalturaClipAttributes&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][offset]=0&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][duration]=30000&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][effectArray][0][effectType]=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][effectArray][0][value]=2&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][effectArray][1][effectType]=2&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][effectArray][1][value]=3&quot;</span>
+</code></pre></div>
+<h1 id="12-dimension-control">12. Dimension Control<a class="headerlink" href="#12-dimension-control" title="Permanent link">&para;</a></h1>
+<p>Control output resolution when composing or concatenating sources with different dimensions.</p>
+<h2 id="121-dimension-attribute-types">12.1 Dimension Attribute Types<a class="headerlink" href="#121-dimension-attribute-types" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>KalturaAspectRatioCropAttributes</code></td>
+<td>Crops source to target aspect ratio (removes edges)</td>
+</tr>
+<tr>
+<td><code>KalturaAspectRatioScaleAttributes</code></td>
+<td>Scales to fit target ratio with letterbox/pillarbox (adds black bars)</td>
+</tr>
+<tr>
+<td><code>KalturaResolutionCropAttributes</code></td>
+<td>Crops to exact pixel dimensions</td>
+</tr>
+</tbody>
+</table>
+<h2 id="122-parameters">12.2 Parameters<a class="headerlink" href="#122-parameters" title="Permanent link">&para;</a></h2>
+<p><strong>KalturaAspectRatioCropAttributes / KalturaAspectRatioScaleAttributes:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>aspectRatioX</code></td>
+<td>int</td>
+<td>Width ratio component (e.g., 16)</td>
+</tr>
+<tr>
+<td><code>aspectRatioY</code></td>
+<td>int</td>
+<td>Height ratio component (e.g., 9)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>KalturaResolutionCropAttributes:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>width</code></td>
+<td>int</td>
+<td>Target width in pixels</td>
+</tr>
+<tr>
+<td><code>height</code></td>
+<td>int</td>
+<td>Target height in pixels</td>
+</tr>
+</tbody>
+</table>
+<h2 id="123-usage">12.3 Usage<a class="headerlink" href="#123-usage" title="Permanent link">&para;</a></h2>
+<p>Dimension attributes apply to <code>KalturaOperationResources</code> (multi-clip concat) via the <code>dimensionsAttributes</code> field:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/media/action/addContent&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;entryId=</span><span class="nv">$KALTURA_ENTRY_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[objectType]=KalturaOperationResources&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[dimensionsAttributes][objectType]=KalturaAspectRatioCropAttributes&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[dimensionsAttributes][aspectRatioX]=16&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[dimensionsAttributes][aspectRatioY]=9&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resources][0][objectType]=KalturaOperationResource&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resources][0][resource][objectType]=KalturaEntryResource&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resources][0][resource][entryId]=</span><span class="nv">$KALTURA_SOURCE_ENTRY_1</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resources][0][resource][flavorParamsId]=0&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-13" name="__codelineno-22-13" href="#__codelineno-22-13"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resources][0][operationAttributes][0][objectType]=KalturaClipAttributes&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-14" name="__codelineno-22-14" href="#__codelineno-22-14"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resources][0][operationAttributes][0][offset]=0&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-15" name="__codelineno-22-15" href="#__codelineno-22-15"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resources][0][operationAttributes][0][duration]=10000&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-16" name="__codelineno-22-16" href="#__codelineno-22-16"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resources][1][objectType]=KalturaOperationResource&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-17" name="__codelineno-22-17" href="#__codelineno-22-17"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resources][1][resource][objectType]=KalturaEntryResource&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-18" name="__codelineno-22-18" href="#__codelineno-22-18"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resources][1][resource][entryId]=</span><span class="nv">$KALTURA_SOURCE_ENTRY_2</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-19" name="__codelineno-22-19" href="#__codelineno-22-19"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resources][1][resource][flavorParamsId]=0&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-20" name="__codelineno-22-20" href="#__codelineno-22-20"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resources][1][operationAttributes][0][objectType]=KalturaClipAttributes&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-21" name="__codelineno-22-21" href="#__codelineno-22-21"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resources][1][operationAttributes][0][offset]=0&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-22" name="__codelineno-22-22" href="#__codelineno-22-22"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resources][1][operationAttributes][0][duration]=10000&quot;</span>
+</code></pre></div>
+<h1 id="13-audio-mixing">13. Audio Mixing<a class="headerlink" href="#13-audio-mixing" title="Permanent link">&para;</a></h1>
+<p>Audio from overlay and background replacement sources mixes with the main video using a <strong>complementary volume model</strong>.</p>
+<h2 id="131-volume-model">13.1 Volume Model<a class="headerlink" href="#131-volume-model" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Main Audio</th>
+<th>Overlay/BG Audio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>volume=0.0</code></td>
+<td>100%</td>
+<td>0% (muted)</td>
+</tr>
+<tr>
+<td><code>volume=0.3</code></td>
+<td>70%</td>
+<td>30%</td>
+</tr>
+<tr>
+<td><code>volume=0.5</code></td>
+<td>50%</td>
+<td>50%</td>
+</tr>
+<tr>
+<td><code>volume=0.7</code></td>
+<td>30%</td>
+<td>70%</td>
+</tr>
+<tr>
+<td><code>volume=1.0</code></td>
+<td>0% (muted)</td>
+<td>100%</td>
+</tr>
+</tbody>
+</table>
+<p>The formula: main volume = <code>1 - overlay volume</code>. Mixed with FFmpeg <code>amix</code> filter (normalize=0).</p>
+<h2 id="132-audio-attributes">13.2 Audio Attributes<a class="headerlink" href="#132-audio-attributes" title="Permanent link">&para;</a></h2>
+<p>Add <code>audioAttributes</code> to any overlay or background replacement:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][mediaCompositionAttributesArray][0][audioAttributes][volume]=0.3&quot;</span>
+</code></pre></div>
+<p>This plays the overlay audio at 30% and the main video audio at 70%.</p>
+<h2 id="133-muting-overlay-audio">13.3 Muting Overlay Audio<a class="headerlink" href="#133-muting-overlay-audio" title="Permanent link">&para;</a></h2>
+<p>To keep only the main video's audio:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[operationAttributes][0][mediaCompositionAttributesArray][0][audioAttributes][volume]=0.0&quot;</span>
+</code></pre></div>
+<h1 id="14-waveform-visualization">14. Waveform Visualization<a class="headerlink" href="#14-waveform-visualization" title="Permanent link">&para;</a></h1>
+<p>Retrieve audio amplitude data for building visual waveform displays (useful for editing UIs).</p>
+<h2 id="141-mediagetvolumemap">14.1 media.getVolumeMap<a class="headerlink" href="#141-mediagetvolumemap" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/media/action/getVolumeMap&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;entryId=</span><span class="nv">$KALTURA_ENTRY_ID</span><span class="s2">&quot;</span>
+</code></pre></div>
+<p><strong>Response:</strong> CSV text with two columns per line: <code>pts,rms_level</code></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>0.000000,-48.2
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>0.023220,-35.1
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>0.046440,-28.7
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>...
+</code></pre></div>
+<h2 id="142-resampling">14.2 Resampling<a class="headerlink" href="#142-resampling" title="Permanent link">&para;</a></h2>
+<p>Use <code>desiredLines</code> to resample the waveform to a specific number of data points:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/media/action/getVolumeMap&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;entryId=</span><span class="nv">$KALTURA_ENTRY_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;desiredLines=200&quot;</span>
+</code></pre></div>
+<h2 id="143-flavorassetgetvolumemap">14.3 flavorAsset.getVolumeMap<a class="headerlink" href="#143-flavorassetgetvolumemap" title="Permanent link">&para;</a></h2>
+<p>Get waveform for a specific transcoded rendition:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/flavorAsset/action/getVolumeMap&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;flavorId=</span><span class="nv">$KALTURA_FLAVOR_ASSET_ID</span><span class="s2">&quot;</span>
+</code></pre></div>
+<h1 id="15-error-handling">15. Error Handling<a class="headerlink" href="#15-error-handling" title="Permanent link">&para;</a></h1>
+<table>
+<thead>
+<tr>
+<th>Error Code</th>
+<th>Meaning</th>
+<th>Resolution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>FEATURE_FORBIDDEN</code></td>
+<td>Account lacks <code>FEATURE_ENTRY_REPLACEMENT</code></td>
+<td>Required for trim/updateContent operations (one-time setup by your Kaltura account team)</td>
+</tr>
+<tr>
+<td><code>ENTRY_REPLACEMENT_ALREADY_EXISTS</code></td>
+<td>Entry already has a pending replacement</td>
+<td>Wait for current replacement to complete or fail, then retry</td>
+</tr>
+<tr>
+<td><code>ENTRY_ID_NOT_FOUND</code></td>
+<td>Source entry does not exist</td>
+<td>Verify the entry ID is correct and not deleted</td>
+</tr>
+<tr>
+<td><code>FLAVOR_ASSET_ID_NOT_FOUND</code></td>
+<td>Specified flavor does not exist on the source entry</td>
+<td>Omit <code>flavorParamsId</code> to use the default source, or verify available flavors via <code>flavorAsset.list</code> with <code>entryIdEqual</code></td>
+</tr>
+<tr>
+<td><code>INVALID_ENTRY_STATUS</code></td>
+<td>Source entry is not in READY status</td>
+<td>Wait for source entry processing to complete (status=2)</td>
+</tr>
+<tr>
+<td><code>ENTRY_REPLACEMENT_FAILED</code> (replacementStatus=4)</td>
+<td>Processing of the replacement content failed</td>
+<td>Check source content validity; retry the operation</td>
+</tr>
+<tr>
+<td><code>MAX_CLIP_COUNT_EXCEEDED</code></td>
+<td>Too many clips in concatenation</td>
+<td>Default limit is 5 clips; reduce segment count or request limit increase</td>
+</tr>
+<tr>
+<td><code>MAX_DURATION_EXCEEDED</code></td>
+<td>Concatenated output exceeds maximum</td>
+<td>Default limit is 5 hours total; shorten segments</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Retry strategy:</strong> For <code>ENTRY_REPLACEMENT_ALREADY_EXISTS</code>, poll <code>baseEntry.get</code> until <code>replacementStatus</code> returns to <code>0</code> (NONE), then retry. For transient HTTP errors, use exponential backoff (1s, 2s, 4s) with up to 3 retries.</p>
+<h1 id="16-best-practices">16. Best Practices<a class="headerlink" href="#16-best-practices" title="Permanent link">&para;</a></h1>
+<ul>
+<li><strong>Use <code>baseEntry.clone</code> + <code>media.updateContent</code> for clips.</strong> This preserves the source entry's metadata on the clip and creates a clean separation between the original and the extracted segment.  </li>
+<li><strong>Use <code>media.updateContent</code> for trim (in-place).</strong> This preserves entry ID, embed codes, analytics history, and all associated metadata. Always complete the replacement flow with <code>media.approveReplace</code>.  </li>
+<li><strong>Verify source entries are READY (status=2) before editing.</strong> All operation resources require fully transcoded source content. Poll <code>media.get</code> if the source was recently uploaded.  </li>
+<li><strong>Omit <code>flavorParamsId</code> for maximum quality.</strong> When omitted, the system uses the entry's source flavor. Specify a <code>flavorParamsId</code> only when you need a particular transcoded rendition as the editing source. Use <code>flavorAsset.list</code> with <code>entryIdEqual</code> to discover available flavors.  </li>
+<li><strong>Set clip duration explicitly.</strong> Always specify both <code>offset</code> and <code>duration</code> in milliseconds. Omitting duration results in undefined behavior.  </li>
+<li><strong>Use complementary audio volume model intentionally.</strong> Setting overlay volume to 0.7 means main video drops to 0.3 — plan audio levels accordingly.  </li>
+<li><strong>Use <code>desiredLines</code> for waveform resampling.</strong> Match the number of data points to your UI's pixel width for efficient rendering.  </li>
+<li><strong>Process one replacement at a time per entry.</strong> The API enforces single-replacement locking. Queue sequential edits and wait for each to complete.  </li>
+<li><strong>Use dimension normalization for multi-source concat.</strong> When splicing sources with different resolutions, set <code>dimensionsAttributes</code> to avoid unexpected output dimensions.  </li>
+<li><strong>Use <code>KalturaAspectRatioScaleAttributes</code> over crop when preserving content matters.</strong> Crop removes pixels; scale adds black bars but preserves the full frame.  </li>
+<li><strong>Burn captions for social distribution.</strong> Use <code>KalturaRenderCaptionAttributes</code> when distributing to platforms that strip subtitle tracks (Instagram, TikTok-style sharing).  </li>
+<li><strong>Use ASS color format correctly.</strong> Colors are <code>&amp;HBBGGRR&amp;</code> (reversed from RGB). White is <code>&amp;H00FFFFFF&amp;</code>, not <code>#FFFFFF</code>.  </li>
+</ul>
+<h1 id="17-related-guides">17. Related Guides<a class="headerlink" href="#17-related-guides" title="Permanent link">&para;</a></h1>
+<ul>
+<li><strong><a href="../KALTURA_UPLOAD_AND_INGESTION_API/">Upload &amp; Ingestion API</a></strong> — Getting content into Kaltura: upload, import, resource types, entry CRUD  </li>
+<li><strong><a href="../KALTURA_CONTENT_DELIVERY_API/">Content Delivery API</a></strong> — Serve and download edited content via playManifest and CDN  </li>
+<li><strong><a href="../KALTURA_CAPTIONS_AND_TRANSCRIPTS_API/">Captions &amp; Transcripts API</a></strong> — Manage caption assets for burn-in operations  </li>
+<li><strong><a href="../KALTURA_MULTI_STREAM_API/">Multi-Stream API</a></strong> — Multi-camera entries (complementary to overlay/PiP)  </li>
+<li><strong><a href="../KALTURA_VOD_AVATAR_API/">VOD Avatar Studio</a></strong> — AI avatar video generation (source content for green-screen composition)  </li>
+<li><strong><a href="../KALTURA_REACH_API/">REACH API</a></strong> — Auto-generate captions for burn-in, or trigger enrichment after editing  </li>
+<li><strong><a href="../KALTURA_AGENTS_MANAGER_API/">Agents Manager</a></strong> — Automate editing workflows (trigger on ENTRY_READY)  </li>
+<li><strong><a href="../KALTURA_THUMBNAIL_API/">Thumbnail API</a></strong> — Generate thumbnails from edited entries  </li>
+<li><strong><a href="../KALTURA_SESSION_GUIDE/">Session Guide</a></strong> — KS generation for API authentication  </li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

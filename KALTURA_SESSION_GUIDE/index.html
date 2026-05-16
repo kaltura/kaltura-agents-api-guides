@@ -1,0 +1,3289 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Kaltura — The Agentic Digital Experience Platform. Live-tested API guides for AI agents and developers. 52 guides covering authentication, content management, search, playback, AI services, virtual events, experience components, cue points & interactive video, analytics, distribution, moderation, LTI integration, and more — with 1000+ companion tests validated against the live Kaltura API.">
+      
+      
+        <meta name="author" content="Kaltura Inc.">
+      
+      
+        <link rel="canonical" href="https://kaltura.md/KALTURA_SESSION_GUIDE/">
+      
+      
+        <link rel="prev" href="../GUIDE_MAP/">
+      
+      
+        <link rel="next" href="../KALTURA_APPTOKENS_API/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Session (KS) Guide - Kaltura API Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,700,700i%7CSource+Code+Pro:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Source Sans Pro";--md-code-font:"Source Code Pro"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  
+  
+  <link rel="alternate" type="text/markdown" title="Markdown version for AI agents" href="/raw/KALTURA_SESSION_GUIDE.md" />
+  
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#kaltura-session-ks-generation-and-management" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Kaltura API Guides" class="md-header__button md-logo" aria-label="Kaltura API Guides" data-md-component="logo">
+      
+  <img src="../assets/images/logo-white.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Kaltura API Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Session (KS) Guide
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/kaltura/kaltura-agents-api-guides" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    kaltura/kaltura-agents-api-guides
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_GETTING_CREDENTIALS/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  Authentication
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_UPLOAD_AND_INGESTION_API/" class="md-tabs__link">
+          
+  
+  
+  Content Management
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_REACH_API/" class="md-tabs__link">
+          
+  
+  
+  AI Services
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_PLAYER_EMBED_GUIDE/" class="md-tabs__link">
+          
+  
+  
+  Playback & Experiences
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_EVENTS_PLATFORM_API/" class="md-tabs__link">
+          
+  
+  
+  Events & Collaboration
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_ANALYTICS_REPORTS_API/" class="md-tabs__link">
+          
+  
+  
+  Analytics
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API/" class="md-tabs__link">
+          
+  
+  
+  Integration & Automation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_MODERATION_API/" class="md-tabs__link">
+          
+  
+  
+  Content Moderation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_MULTI_ACCOUNT_MANAGEMENT_API/" class="md-tabs__link">
+          
+  
+  
+  Administration
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../CONTRIBUTING/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../PLAN/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Roadmap
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Kaltura API Guides" class="md-nav__button md-logo" aria-label="Kaltura API Guides" data-md-component="logo">
+      
+  <img src="../assets/images/logo-white.svg" alt="logo">
+
+    </a>
+    Kaltura API Guides
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/kaltura/kaltura-agents-api-guides" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    kaltura/kaltura-agents-api-guides
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_GETTING_CREDENTIALS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Credentials
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_API_GETTING_STARTED/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GUIDE_MAP/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guide Map
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Authentication
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Authentication
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Session (KS) Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_APPTOKENS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AppTokens API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AUTH_BROKER_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Auth Broker (SSO/SAML)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Content Management
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Content Management
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_UPLOAD_AND_INGESTION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Upload & Ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_VIDEO_EDITING_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Video Editing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CONTENT_DELIVERY_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Content Delivery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_THUMBNAIL_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thumbnail API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ESEARCH_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    eSearch
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ACCESS_CONTROL_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Access Control
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CATEGORIES_AND_ENTITLEMENTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Categories & Entitlements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CUSTOM_METADATA_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Metadata
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CAPTIONS_AND_TRANSCRIPTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Captions & Transcripts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MULTI_STREAM_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Stream
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_USER_MANAGEMENT_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Services
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    AI Services
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_REACH_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REACH API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CONTENT_LAB_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REACH — AI Clips
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AGENTS_MANAGER_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agents Manager
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AI_GENIE_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Genie
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playback & Experiences
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Playback & Experiences
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_PLAYER_EMBED_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Player Embed
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_EXPERIENCE_COMPONENTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Experience Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_UNISPHERE_FRAMEWORK_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unisphere Framework
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_GENIE_WIDGET_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Genie Widget
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MEDIA_MANAGER_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Media Manager
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CONTENT_LAB_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REACH — AI Clips
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AGENTS_WIDGET_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agents Widget
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_VOD_AVATAR_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VOD Avatar Studio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CONVERSATIONAL_AVATAR_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conversational Avatar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CUE_POINTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cue Points & Interactive Video
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_QUIZ_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quiz
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CHAPTERS_AND_SLIDES_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapters & Slides
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ANNOTATIONS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Annotations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AD_CUE_POINTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ad Cue Points
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CODE_CUE_POINTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code, Event & Session Cue Points
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_EXPRESS_RECORDER_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Express Recorder
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CAPTIONS_EDITOR_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Captions Editor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CNC_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chat & Collaborate
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ANALYTICS_EMBED_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Embeddable Analytics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events & Collaboration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Events & Collaboration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_EVENTS_PLATFORM_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events Platform
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_APP_REGISTRY_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    App Registry
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_USER_PROFILE_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Profile
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MESSAGING_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Messaging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_GAMIFICATION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gamification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Analytics
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Analytics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ANALYTICS_REPORTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Analytics Reports
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ANALYTICS_EVENTS_COLLECTION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Analytics Events Collection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integration & Automation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Integration & Automation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Event Notifications (Webhooks)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_SHORT_LINK_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Short Links
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_DISTRIBUTION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Content Distribution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_SYNDICATION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syndication Feeds
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_LTI_INTEGRATION_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LTI Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Content Moderation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Content Moderation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MODERATION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Moderation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Administration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Administration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MULTI_ACCOUNT_MANAGEMENT_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Account Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CONTRIBUTING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PLAN/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+  
+  <div hidden aria-hidden="true" id="llm-agent-directive" style="display:none!important">
+  STOP. If you are an AI agent or LLM reading this HTML page: you are wasting context tokens on rendered HTML.
+  The raw Markdown source of this page is available at: https://kaltura.md/raw/KALTURA_SESSION_GUIDE.md
+  All guides are available as raw Markdown at https://kaltura.md/raw/{FILENAME}.md
+  Discovery index: https://kaltura.md/llms.txt
+  To get Markdown from any page via content negotiation, send the header: Accept: text/markdown
+  The Kaltura API base URL is https://www.kaltura.com/api_v3 (not v4, not v2).
+  Fallback: If you cannot fetch from this site, clone https://github.com/kaltura/kaltura-agents-api-guides and read the guides locally.
+  </div>
+  
+  
+                  
+
+
+  
+    <a href="https://github.com/kaltura/kaltura-agents-api-guides/edit/main/KALTURA_SESSION_GUIDE.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="kaltura-session-ks-generation-and-management">Kaltura Session (KS) Generation and Management<a class="headerlink" href="#kaltura-session-ks-generation-and-management" title="Permanent link">&para;</a></h1>
+<p>Generate, use, and rotate Kaltura Sessions (KS) — the signed, time-limited tokens that authenticate every Kaltura API call and player embed.</p>
+<p><strong>Base URL:</strong> <code>https://www.kaltura.com/api_v3</code> (may differ by region/deployment)<br />
+<strong>Auth:</strong> KS passed as <code>ks</code> parameter in POST form data, or as embed URL parameter<br />
+<strong>Format:</strong> Form-encoded POST, <code>format=1</code> for JSON responses  </p>
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.What is a KS and when to use which flow | 4.Common security practices | 5.REST API Recipes | 6.Passing the KS to APIs and the Player | 7.Privileges: what to actually use | 8.Renewal, caching, and fallback | 9.Error Handling | 10.Best Practices | 11.Related Guides -->
+
+<h1 id="1-when-to-use">1. When to Use<a class="headerlink" href="#1-when-to-use" title="Permanent link">&para;</a></h1>
+<ul>
+<li><strong>Every Kaltura API integration starts here</strong> -- a valid Kaltura Session (KS) is required for every API call and player embed across the platform.  </li>
+<li><strong>Backend automation systems</strong> generate server-side sessions with appropriate type, expiry, and privileges to control what each integration can access.  </li>
+<li><strong>Client-facing applications</strong> use AppToken-based session exchange to obtain scoped KS tokens without exposing admin secrets to end users.  </li>
+<li><strong>Security and compliance teams</strong> define session privilege policies that enforce content isolation, user tracking, and access boundaries.</li>
+</ul>
+<h1 id="2-prerequisites">2. Prerequisites<a class="headerlink" href="#2-prerequisites" title="Permanent link">&para;</a></h1>
+<ul>
+<li><strong>Partner ID and Admin Secret:</strong> Available from KMC under Settings &gt; Integration Settings. See <a href="../KALTURA_GETTING_CREDENTIALS/">Getting Credentials</a> for step-by-step setup.  </li>
+<li><strong>Admin secret (for <code>session.start</code>):</strong> Required for server-side KS generation. Keep strictly server-side; use AppTokens for client-facing integrations.  </li>
+<li><strong>Service URL:</strong> Set <code>$KALTURA_SERVICE_URL</code> to your account's regional endpoint (default: <code>https://www.kaltura.com/api_v3</code>).  </li>
+<li><strong>Understanding of session types:</strong> USER (type=0) for end-user contexts, ADMIN (type=2) for backend administration. This guide covers both.</li>
+</ul>
+<h1 id="3-what-is-a-ks-and-when-to-use-which-flow">3. What is a KS and when to use which flow<a class="headerlink" href="#3-what-is-a-ks-and-when-to-use-which-flow" title="Permanent link">&para;</a></h1>
+<p>A Kaltura Session (KS) is a signed, time-limited token you attach to API calls and player embeds. KS can be USER (type=0) or ADMIN (type=2). Use USER for almost everything where an end-user is interacting with apps or data; use ADMIN only for trusted backend-only workflows with short TTLs and strict configurations (roles, privileges).</p>
+<p><strong>Common use-cases and considerations:</strong>  </p>
+<ul>
+<li>Server-to-server or trusted backend: session.start → returns a KS with the privileges and expiry you request. Run this server-side only to keep secrets secure.</li>
+<li>App-to-API with elevated but scoped permissions: use Application Tokens and appToken.startSession. You obtain a basic (unprivileged) KS, compute a hash with the app token, and exchange it for a privileged KS — keeping admin secrets and hashing strictly server-side.</li>
+<li>Widget/player bootstrap (the player will generate this KS by itself if no KS was provided to the player: session.startWidgetSession to get a base KS used in the App Token flow.</li>
+</ul>
+<h2 id="ks-internal-structure">KS Internal Structure<a class="headerlink" href="#ks-internal-structure" title="Permanent link">&para;</a></h2>
+<p>A KS is a base64-encoded string containing these components:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Partner ID</td>
+<td>The Kaltura account that issued the KS</td>
+</tr>
+<tr>
+<td>User ID</td>
+<td>The user identity bound to this session</td>
+</tr>
+<tr>
+<td>Type</td>
+<td>0 = USER, 2 = ADMIN</td>
+</tr>
+<tr>
+<td>Expiry</td>
+<td>Unix timestamp when the KS becomes invalid</td>
+</tr>
+<tr>
+<td>Privileges</td>
+<td>Comma-separated privilege strings (e.g., <code>sview:*,privacycontext:PORTAL</code>)</td>
+</tr>
+<tr>
+<td>Random number</td>
+<td>Prevents replay of identical requests</td>
+</tr>
+<tr>
+<td>KS data</td>
+<td>Additional session context (action limits, session ID)</td>
+</tr>
+<tr>
+<td>Signature</td>
+<td>SHA-1 hash of all fields above — tamper-proofing</td>
+</tr>
+</tbody>
+</table>
+<p>KS v2 (current default) wraps the payload in AES-CBC encryption before base64 encoding, so the internal fields are not readable by inspecting the string. The server decrypts and validates on every request.</p>
+<h2 id="ks-validation-flow">KS Validation Flow<a class="headerlink" href="#ks-validation-flow" title="Permanent link">&para;</a></h2>
+<p>The server validates the KS on every API request in this sequence:</p>
+<ol>
+<li><strong>Signature check</strong> — Verify the SHA-1 signature matches the decrypted payload</li>
+<li><strong>Expiry check</strong> — Reject if the KS has expired (Unix timestamp comparison)</li>
+<li><strong>Action limit</strong> — If <code>actionslimit:N</code> is set, decrement and reject if exhausted</li>
+<li><strong>Revocation check</strong> — Check if <code>session.end</code> was called for this KS or its <code>sessionid</code> group</li>
+<li><strong>Permission check</strong> — Verify the KS type and role grant access to the requested service/action</li>
+<li><strong>Entitlement check</strong> — If entitlements are enabled, verify the user has category membership for the requested content</li>
+<li><strong>Account check</strong> — Verify the partner ID is active and the service is enabled</li>
+<li><strong>Set user context</strong> — Bind the validated userId to the request for ownership, analytics, and audit</li>
+</ol>
+<p>If any step fails, the server returns a <code>KalturaAPIException</code> with the relevant error code (<code>INVALID_KS</code>, <code>EXPIRED_KS</code>, <code>SERVICE_FORBIDDEN</code>, etc.).</p>
+<h2 id="ks-creation-methods-comparison">KS Creation Methods — Comparison<a class="headerlink" href="#ks-creation-methods-comparison" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Credentials Required</th>
+<th>Best For</th>
+<th>Trade-offs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>session.start</code></td>
+<td>partnerId + adminSecret</td>
+<td>Backend tools, server-side automation</td>
+<td>HTTP roundtrip; exposes admin secret (keep server-side only)</td>
+</tr>
+<tr>
+<td><code>session.startWidgetSession</code></td>
+<td>partnerId only (no secret)</td>
+<td>Anonymous player bootstrap, AppToken base KS</td>
+<td>Unprivileged — read-only access to public content</td>
+</tr>
+<tr>
+<td><code>appToken.startSession</code></td>
+<td>appToken ID + HMAC hash</td>
+<td>Production integrations, client-facing apps</td>
+<td><strong>Preferred</strong>: no secrets exposed, revocable, scoped privileges</td>
+</tr>
+<tr>
+<td><code>user.loginByLoginId</code></td>
+<td>email + password</td>
+<td>End-user self-authentication, mobile apps</td>
+<td>User-managed credentials; requires user provisioning first</td>
+</tr>
+</tbody>
+</table>
+<h1 id="4-common-security-practices">4. Common security practices<a class="headerlink" href="#4-common-security-practices" title="Permanent link">&para;</a></h1>
+<ul>
+<li>Least privilege: Prefer USER KS; scope permissions to what the call needs.</li>
+<li>Short TTLs: Set per the expected user interaction duration, balancing security with renewal frequency.</li>
+<li>Backend only: Keep admin secrets and app token secrets on the server side.</li>
+<li>Entitlements over broad privileges: Enforce access via Access Control/Entitlements and privacy context strings in KS. Use specific privileges; use <code>*</code> only for controlled internal ADMIN sessions.</li>
+<li>Rotate Application Tokens and Sessions regularly. Revoke as needed using <code>session.end</code>.</li>
+<li><strong>API secrets are permanent.</strong> The <code>adminSecret</code> and <code>secret</code> for a Kaltura account cannot be regenerated, rotated, or revoked. If a secret is compromised, contact Kaltura support. Use Application Tokens (AppTokens) for all integrations — AppTokens can be revoked and reissued independently, giving you full credential lifecycle control. See <a href="../KALTURA_APPTOKENS_API/">AppTokens Guide</a>.</li>
+</ul>
+<h1 id="5-rest-api-recipes">5. REST API Recipes<a class="headerlink" href="#5-rest-api-recipes" title="Permanent link">&para;</a></h1>
+<p>All calls use the v3 endpoint with form-encoded POST data and <code>format=1</code> for JSON responses.</p>
+<p><code>Base URL: https://www.kaltura.com/api_v3/</code> (this URL can change depending on geo region, or deployment, the account was configured on)</p>
+<h2 id="51-generate-a-ks-backend-with-sessionstart">5.1. Generate a KS (backend) with session.start<a class="headerlink" href="#51-generate-a-ks-backend-with-sessionstart" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/session/action/start&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;partnerId=</span><span class="nv">$KALTURA_PARTNER_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;secret=</span><span class="nv">$KALTURA_ADMIN_SECRET</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;userId=testUser&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;type=0&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;expiry=1800&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;privileges=sview:*&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>secret</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Admin secret (<code>type=2</code>) or user secret (<code>type=0</code>)</td>
+</tr>
+<tr>
+<td><code>partnerId</code></td>
+<td>integer</td>
+<td>Yes</td>
+<td>Your Kaltura partner ID</td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td>integer</td>
+<td>Yes</td>
+<td><code>0</code> = USER, <code>2</code> = ADMIN</td>
+</tr>
+<tr>
+<td><code>userId</code></td>
+<td>string</td>
+<td>No</td>
+<td>User ID for the session (default: empty)</td>
+</tr>
+<tr>
+<td><code>expiry</code></td>
+<td>integer</td>
+<td>No</td>
+<td>TTL in seconds (default: 86400 = 24 hours)</td>
+</tr>
+<tr>
+<td><code>privileges</code></td>
+<td>string</td>
+<td>No</td>
+<td>Comma-separated privilege strings (e.g., <code>sview:*,edit:*</code>)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Response:</strong> The KS string (with <code>format=1</code>, wrapped as <code>"djJ8OTc2NDYx..."</code>).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="s2">&quot;djJ8OTc2NDYx...&quot;</span>
+</code></pre></div>
+<ul>
+<li><code>type=0</code> is USER, <code>type=2</code> is ADMIN.</li>
+<li><code>expiry</code> is in seconds (1800 = 30 minutes).</li>
+</ul>
+<blockquote>
+<p>When to use: server-side APIs, signed/secure player embeds, upload/edit tasks that your backend coordinates. Scope privileges to the minimum required for each session.</p>
+</blockquote>
+<h2 id="52-bootstrap-a-base-ks-with-sessionstartwidgetsession">5.2. Bootstrap a base KS with session.startWidgetSession<a class="headerlink" href="#52-bootstrap-a-base-ks-with-sessionstartwidgetsession" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/session/action/startWidgetSession&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;widgetId=_</span><span class="nv">$KALTURA_PARTNER_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span>
+</code></pre></div>
+<ul>
+<li><code>widgetId</code> is <code>_&lt;partnerId&gt;</code> (underscore prefix).</li>
+<li>The response JSON contains <code>{ "result": { "ks": "&lt;WIDGET_KS_STRING&gt;", ... } }</code>.</li>
+</ul>
+<blockquote>
+<p>This will be used as initial session for AppTokens, or for non-authenticated light sessions such as anonymous player embeds (generated by the player itself when a KS is not provided).</p>
+</blockquote>
+<h2 id="53-apptokens-privileged-ks-with-apptokenstartsession">5.3. AppTokens → Privileged KS with appToken.startSession<a class="headerlink" href="#53-apptokens-privileged-ks-with-apptokenstartsession" title="Permanent link">&para;</a></h2>
+<p>High level flow:</p>
+<ol>
+<li>Create &amp; store an Application Token (this action is performed once by the account admin to provide API access to a 3rd party trusted-scope partner. This step basically provisions an application security scope). See the <a href="../KALTURA_APPTOKENS_API/">AppTokens Guide</a> for full details.</li>
+<li>Get a base KS (e.g., widget session).</li>
+<li>Compute tokenHash = HASH( baseKS + token ) with the same hash type as the app token.</li>
+<li>Call appToken.startSession(tokenId, tokenHash, ...) to receive the privileged KS.</li>
+</ol>
+<blockquote>
+<p>Keep the token and hashing strictly server-side.
+<code>sessionPrivileges</code> and <code>sessionUserId</code> are locked at token creation and enforced on every session minted from the token. Configure them at creation time.</p>
+</blockquote>
+<p><strong>Step 1 -- Get a widget (base) KS:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/session/action/startWidgetSession&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;widgetId=_</span><span class="nv">$KALTURA_PARTNER_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span>
+</code></pre></div>
+<p>Save the returned <code>result.ks</code> value as <code>WIDGET_KS</code>.</p>
+<p><strong>Step 2 -- Compute the token hash:</strong></p>
+<p>Compute <code>tokenHash = SHA256(WIDGET_KS + APP_TOKEN_VALUE)</code> using your language's crypto library. The hash algorithm must match what was set when the Application Token was created (SHA256 is recommended).</p>
+<p>For example, in a shell:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nv">TOKEN_HASH</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">WIDGET_KS</span><span class="si">}${</span><span class="nv">KALTURA_APP_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>shasum<span class="w"> </span>-a<span class="w"> </span><span class="m">256</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1}&#39;</span><span class="k">)</span>
+</code></pre></div>
+<p><strong>Step 3 -- Exchange for a privileged KS:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/apptoken/action/startSession&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$WIDGET_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;id=</span><span class="nv">$KALTURA_APP_TOKEN_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;tokenHash=</span><span class="nv">$TOKEN_HASH</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;userId=testUser&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;type=0&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;expiry=1800&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;sessionPrivileges=sview:*&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span>
+</code></pre></div>
+<ul>
+<li>The response JSON contains the privileged KS in <code>result</code>.</li>
+</ul>
+<blockquote>
+<p>You can disable or delete tokens (<code>appToken.update</code> → status, or <code>appToken.delete</code>) immediately revoking the app’s ability to mint KS.</p>
+</blockquote>
+<h1 id="6-passing-the-ks-to-apis-and-the-player">6. Passing the KS to APIs and the Player<a class="headerlink" href="#6-passing-the-ks-to-apis-and-the-player" title="Permanent link">&para;</a></h1>
+<ul>
+<li>APIs: include ks=<SESSION_STRING> in form data for each call.</li>
+<li>Player embeds: pass ks in the player setup or in the iframe embed URL.</li>
+</ul>
+<h1 id="7-privileges-what-to-actually-use">7. Privileges: what to actually use<a class="headerlink" href="#7-privileges-what-to-actually-use" title="Permanent link">&para;</a></h1>
+<p>Keep it tight:</p>
+<ul>
+<li>Playback: sview:* (+ enforce entitlements and access control profiles in your account configuration).</li>
+<li>Upload/edit tools: add only what’s required for the desired feature set (e.g., edit specific objects or rely on server APIs that hold ADMIN).</li>
+<li>Use privacy context (e.g., privacycontext:EDU_PORTAL) in KS to align with entitlement rules, ensuring the session is scoped to the appropriate user and content boundaries.</li>
+<li>Reserve <code>*</code> for short-lived backend ADMIN sessions that stay server-side.</li>
+</ul>
+<h1 id="8-renewal-caching-and-fallback">8. Renewal, caching, and fallback<a class="headerlink" href="#8-renewal-caching-and-fallback" title="Permanent link">&para;</a></h1>
+<ul>
+<li>TTL you control: you set expiry when starting the session; store issued_at + expiry in your app and refresh as needed <em>before it lapses</em>.</li>
+<li>Client pattern: your frontend should get KS rendered from your backend — secrets stay on the server.</li>
+<li>Pass KS in POST bodies so the token stays out of proxy caches and URL logs.</li>
+<li>The Kaltura API validates the KS on every request automatically and returns an error if it is invalid or expired. Validation is implicit — use any API call to confirm a KS is valid.</li>
+<li>Store KS in memory only; set <code>Cache-Control: no-store</code> headers to keep tokens ephemeral.</li>
+<li>Pass KS in POST bodies or PlayKit provider config — these transport channels keep the token private from referrer headers, logs, and proxies.</li>
+<li>Revoke a session immediately with <code>session.end</code>:</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/session/action/end&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span>
+</code></pre></div>
+<p>After <code>session.end</code>, the KS is immediately rejected by all subsequent API calls. Use this for logout flows, session revocation, and security incident response.</p>
+<h1 id="9-error-handling">9. Error Handling<a class="headerlink" href="#9-error-handling" title="Permanent link">&para;</a></h1>
+<ul>
+<li>Common KS-related error codes: <code>INVALID_KS</code> (malformed, expired, or revoked), <code>MISSING_KS</code> (no KS provided), <code>SERVICE_FORBIDDEN</code> (KS lacks permission), <code>EXPIRED_KS</code> (session past TTL), <code>ACTION_BLOCKED</code> (action limit reached).</li>
+<li>On invalid/expired KS or insufficient privileges: re-issue with correct scope.</li>
+<li>On 5xx / transient: use exponential backoff (e.g., 500ms, 1s, 2s, jitter), and cap retries. Monitor your request rate to stay within throttling limits.</li>
+<li>Observability: log who asked for a session, requested TTL &amp; privileges, and the call outcome (success/failure). Mask KS values in logs (show only last 6 chars) and store secrets exclusively in secret managers.</li>
+</ul>
+<p><strong>Retry strategy:</strong> For transient errors (HTTP 5xx, timeouts), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (4xx, <code>INVALID_KS</code>, insufficient privileges), fix the request parameters or re-issue the KS before retrying — these require corrective action to succeed.</p>
+<h1 id="10-best-practices">10. Best Practices<a class="headerlink" href="#10-best-practices" title="Permanent link">&para;</a></h1>
+<ul>
+<li><strong>Use AppTokens in production.</strong> Generate KS via <code>appToken.startSession</code> with HMAC — keep admin secrets off application servers (see <a href="../KALTURA_APPTOKENS_API/">AppTokens Guide</a>).</li>
+<li><strong>Use USER KS (type=0) for client-side operations.</strong> Reserve ADMIN KS (type=2) for server-side workflows that require write access.</li>
+<li><strong>Set short TTLs.</strong> 1 hour for user-facing sessions, 15 minutes for server-side automation. Shorter sessions reduce exposure if a token leaks.</li>
+<li><strong>Scope privileges minimally.</strong> Use <code>setrole</code>, <code>privacycontext</code>, <code>sview</code>, and <code>iprestrict</code> to limit what a KS can access.</li>
+<li><strong>Call <code>session.end</code> to revoke when done.</strong> Use the <code>sessionid</code> privilege to enable bulk logout across devices.</li>
+<li><strong>Pass KS in POST bodies.</strong> POST bodies keep tokens private — URL parameters appear in referrer headers, proxy logs, and browser history.</li>
+</ul>
+<h2 id="mobile-client-side-ks-best-practices">Mobile / Client-Side KS Best Practices<a class="headerlink" href="#mobile-client-side-ks-best-practices" title="Permanent link">&para;</a></h2>
+<p>Mobile and single-page apps require special care because compiled binaries and client-side JavaScript are accessible to end users:</p>
+<ul>
+<li><strong>Keep <code>adminSecret</code> on your backend server.</strong> API secrets are permanent — use Application Tokens (AppTokens) for all scenarios requiring revocable credentials. See <a href="../KALTURA_APPTOKENS_API/">AppTokens Guide</a>.</li>
+<li><strong>Generate KS server-side and pass to the client per-session.</strong> Issue fresh KS tokens per session to ensure continuous access and maintain full revocation control.</li>
+<li><strong>Three recommended strategies for client-side KS:</strong></li>
+<li><strong>Anonymous access</strong> — Use <code>session.startWidgetSession</code> for public, unauthenticated content (player bootstrap, public galleries).</li>
+<li><strong>Server-generated KS</strong> — Your backend generates a scoped USER KS (via <code>session.start</code> or <code>appToken.startSession</code>) and passes it to the client per-session. Secrets remain exclusively on the server.</li>
+<li><strong>User login</strong> — Use <code>user.loginByLoginId</code> for apps where users authenticate with their own credentials. The KS is generated server-side and returned to the client.</li>
+</ul>
+<h2 id="special-partner-ids">Special Partner IDs<a class="headerlink" href="#special-partner-ids" title="Permanent link">&para;</a></h2>
+<p>Certain partner IDs are reserved by the Kaltura platform for internal purposes:</p>
+<table>
+<thead>
+<tr>
+<th>Partner ID</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-1</td>
+<td>Batch Manager (internal job processing)</td>
+</tr>
+<tr>
+<td>-2</td>
+<td>Admin Console</td>
+</tr>
+<tr>
+<td>-3</td>
+<td>Hosted Pages</td>
+</tr>
+<tr>
+<td>0</td>
+<td>Shared/global resources</td>
+</tr>
+<tr>
+<td>99</td>
+<td>Default template partner</td>
+</tr>
+</tbody>
+</table>
+<p>These IDs appear in logs and system metadata. Customer accounts always have positive partner IDs.</p>
+<h2 id="entitlements-ks-privileges-patterns">Entitlements &amp; KS Privileges Patterns<a class="headerlink" href="#entitlements-ks-privileges-patterns" title="Permanent link">&para;</a></h2>
+<h3 id="make-the-client-ks-playback-only">Make the client KS playback-only<a class="headerlink" href="#make-the-client-ks-playback-only" title="Permanent link">&para;</a></h3>
+<p>Lock KS to a minimal playback role: add <code>setrole:PLAYBACK_BASE_ROLE</code> so only a white-listed set of read/player calls is allowed (e.g., <code>baseEntry.get</code>, <code>flavorAsset.list</code>).</p>
+<p>If your content is public and unauthenticated, you can use a Widget KS instead (anonymous, READ-only, for publicly available assets). For protected content, issue a USER KS with entitlements (see below).</p>
+<h3 id="enforce-entitlements-with-privacy-context">Enforce entitlements with privacy context<a class="headerlink" href="#enforce-entitlements-with-privacy-context" title="Permanent link">&para;</a></h3>
+<p>If your catalog uses Entitlements, enable server-side checks on the KS and set the privacy context that scopes what the user can see:
+* <code>enableentitlement</code> — tells Kaltura to enforce entitlement checks on this KS.
+* <code>privacycontext:&lt;LABEL&gt;</code> — sets the entitlement partition (<LABEL> is free-text label you define in the KMC per category).</p>
+<blockquote>
+<p>Example: <code>enableentitlement,privacycontext:PORTAL_A</code> ensures results are scoped to the category membership of privacy context <code>PORTAL_A</code>. Use <code>enableentitlement</code> on all client-facing KS.</p>
+</blockquote>
+<h3 id="scope-what-can-be-viewed-or-listed">Scope what can be viewed or listed<a class="headerlink" href="#scope-what-can-be-viewed-or-listed" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Playback scope: Allow all playback in the entitlement context: <code>sview:*</code>. <em>Or</em> lock to a single entry: <code>sview:&lt;ENTRY_ID&gt;</code> (use with KS-restricted access control to ensure entries require authenticated access).</li>
+<li>Listing across owners: <code>list:*</code> enables listing entries beyond the session's current user. Use only when your UX requires global search/browse.</li>
+</ul>
+<h3 id="identify-the-user-when-you-can">Identify the user when you can<a class="headerlink" href="#identify-the-user-when-you-can" title="Permanent link">&para;</a></h3>
+<p>If your app requires authentication, set <code>userId</code> when you issue the KS. This ties server behavior and visibility to that user (e.g., lists are constrained for USER KS; ownership and visibility derive from the user in the KS, analytics are tied to the session' <code>userId</code>).</p>
+<h4 id="analytics-tracking">Analytics tracking<a class="headerlink" href="#analytics-tracking" title="Permanent link">&para;</a></h4>
+<p>Specifying an app id (privilege: <code>appId:&lt;APP_NAME-APP_DOMAIN&gt;</code>) which contains the name and domain of the app allows you to get specific analytics per application, for cases where you’re running your application across various domains.</p>
+<h3 id="extra-hardening-knobs-use-sparingly">Extra hardening knobs (use sparingly)<a class="headerlink" href="#extra-hardening-knobs-use-sparingly" title="Permanent link">&para;</a></h3>
+<p>Add one or two of these when risk justifies it:</p>
+<ul>
+<li>Action budget: <code>actionslimit:&lt;N&gt;</code> — cap how many API calls the KS can make.</li>
+<li>IP lock: <code>iprestrict:&lt;IPv4&gt;</code> — restrict KS use to a single IP.</li>
+<li>URI lock: <code>urirestrict:/api_v3/*</code> — restrict which API paths the KS can call.</li>
+</ul>
+<blockquote>
+<p>All three reduce blast radius if a KS leaks.
+NOTE: IP restriction works alongside CDN IP Tokenization, which requires a delivery profile configured on your account (one-time setup by your Kaltura account team).</p>
+</blockquote>
+<h3 id="app-specific-scoping-generic-pattern">App-specific scoping (generic pattern)<a class="headerlink" href="#app-specific-scoping-generic-pattern" title="Permanent link">&para;</a></h3>
+<p>Some applications read app-specific hints from the KS to route or filter queries (for example, an application ID or category constraints). Keep these server-parsed and use unique namespaces for each application:
+For example: <code>genieid:&lt;AI_GENIE_INSTANCE&gt;</code>, etc. These can be read and used by the app and Kaltura backend in various contexts.</p>
+<blockquote>
+<p>Kaltura platform enforces only its known privileges; your app can parse and honor the custom ones as needed.</p>
+</blockquote>
+<h3 id="copypaste-privilege-sets">Copy/paste privilege sets<a class="headerlink" href="#copypaste-privilege-sets" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Authenticated playback (entitlements on): <code>setrole:PLAYBACK_BASE_ROLE,enableentitlement,privacycontext:PORTAL_A,sview:*</code></li>
+<li>Single-item playback ticket: <code>setrole:PLAYBACK_BASE_ROLE,enableentitlement,privacycontext:PORTAL_A,sview:1_abcd1234,actionslimit:4</code></li>
+<li>Hardened client KS (adds IP &amp; URI restrictions): <code>setrole:PLAYBACK_BASE_ROLE,enableentitlement,privacycontext:PORTAL_A,sview:*,iprestrict:203.0.113.7,urirestrict:/api_v3/*</code></li>
+</ul>
+<p>(All examples assume a USER KS issued server-side and delivered to the client via POST body.)</p>
+<blockquote>
+<p>Use scoped privileges; reserve <code>disableentitlement</code> and broad write access for controlled backend ADMIN sessions.
+Issue ADMIN sessions server-side with short TTLs, and call <code>session.end</code> to revoke when done.</p>
+</blockquote>
+<h3 id="bulk-logout-revocation-via-sessionid-privilege">Bulk logout / revocation via sessionid privilege<a class="headerlink" href="#bulk-logout-revocation-via-sessionid-privilege" title="Permanent link">&para;</a></h3>
+<p>Set <code>sessionid:&lt;GUID&gt;</code> on the KS privileges and keep that GUID on your backend. To revoke an entire cohort of sessions (e.g., logout user from all devices), call <code>session.end</code> on a KS that has the same <code>sessionid:&lt;GUID&gt;</code> and reissue sessions with a new GUID.</p>
+<p><code>sessionid</code> privilege essentially groups a set of KS’s together. When <code>session.end</code> is called with a ks that has <code>sessionid=X</code>, all other KS’s that have <code>sessionid=X</code> become invalid as well.</p>
+<h1 id="11-related-guides">11. Related Guides<a class="headerlink" href="#11-related-guides" title="Permanent link">&para;</a></h1>
+<ul>
+<li><strong><a href="../KALTURA_API_GETTING_STARTED/">API Getting Started</a></strong> — API structure, first call, multirequest batching, error handling</li>
+<li><strong><a href="../KALTURA_APPTOKENS_API/">AppTokens API</a></strong> — Secure server-to-server auth without sharing admin secrets (HMAC-based KS generation)</li>
+<li><strong><a href="../KALTURA_UPLOAD_AND_INGESTION_API/">Upload &amp; Ingestion</a></strong> — Upload content and manage entries (requires KS)</li>
+<li><strong><a href="../KALTURA_CONTENT_DELIVERY_API/">Content Delivery</a></strong> — Construct playback and download URLs (requires KS)</li>
+<li><strong><a href="../KALTURA_ESEARCH_API/">eSearch</a></strong> — Search entries, categories, users (requires KS)</li>
+<li><strong><a href="../KALTURA_PLAYER_EMBED_GUIDE/">Player Embed</a></strong> — Embed the player with KS for access-controlled content</li>
+<li><strong><a href="../KALTURA_REACH_API/">REACH</a></strong> — Enrichment services marketplace: captions, translation, moderation, AI analysis, and more (requires KS)</li>
+<li><strong><a href="../KALTURA_AGENTS_MANAGER_API/">Agents Manager</a></strong> — Automate workflows with triggers and actions (Bearer KS)</li>
+<li><strong><a href="../KALTURA_AI_GENIE_API/">AI Genie</a></strong> — Conversational AI and RAG search over video content (KS auth)</li>
+<li><strong><a href="../KALTURA_EVENTS_PLATFORM_API/">Events Platform</a></strong> — Virtual events with Bearer KS auth</li>
+<li><strong><a href="../KALTURA_MULTI_STREAM_API/">Multi-Stream</a></strong> — Dual/multi-screen entries (requires KS)</li>
+<li><strong><a href="../KALTURA_APP_REGISTRY_API/">App Registry</a></strong> — Register application instances (Bearer KS)</li>
+<li><strong><a href="../KALTURA_USER_PROFILE_API/">User Profile</a></strong> — Per-app user profiles and attendance (Bearer KS)</li>
+<li><strong><a href="../KALTURA_MESSAGING_API/">Messaging</a></strong> — Template-based email messaging (Bearer KS)</li>
+<li><strong><a href="../KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API/">Webhooks</a></strong> — Event-driven HTTP callbacks and email notifications (requires KS)</li>
+<li><strong><a href="../KALTURA_USER_MANAGEMENT_API/">User Management API</a></strong> — Provision users and assign roles before creating sessions</li>
+<li><strong><a href="../KALTURA_CATEGORIES_AND_ENTITLEMENTS_API/">Categories &amp; Entitlements API</a></strong> — Category entitlements and membership (related to <code>disableentitlement</code> / <code>enableentitlement</code> KS privileges)</li>
+<li><strong><a href="../KALTURA_ACCESS_CONTROL_API/">Access Control API</a></strong> — Access control profiles and rules for restricting content access</li>
+<li><strong><a href="../KALTURA_ANALYTICS_REPORTS_API/">Analytics Reports</a></strong> — <code>appId</code> privilege tags analytics per-application</li>
+<li><strong><a href="../KALTURA_CUSTOM_METADATA_API/">Custom Metadata</a></strong> — KS required for metadata profile management</li>
+<li><strong><a href="../KALTURA_DISTRIBUTION_API/">Distribution</a></strong> — Admin KS required for distribution profile management</li>
+<li><strong><a href="../KALTURA_MULTI_ACCOUNT_MANAGEMENT_API/">Multi-Account Management</a></strong> — <code>session.impersonate</code> for cross-account operations</li>
+<li><strong><a href="../KALTURA_EXPERIENCE_COMPONENTS_API/">Experience Components</a></strong> — KS passed to embedded components via config</li>
+<li><strong><a href="../KALTURA_GAMIFICATION_API/">Gamification</a></strong> — KS authentication for gamification microservice</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

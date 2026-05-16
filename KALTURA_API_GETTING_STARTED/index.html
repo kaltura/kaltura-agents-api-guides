@@ -1,0 +1,3440 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Kaltura — The Agentic Digital Experience Platform. Live-tested API guides for AI agents and developers. 52 guides covering authentication, content management, search, playback, AI services, virtual events, experience components, cue points & interactive video, analytics, distribution, moderation, LTI integration, and more — with 1000+ companion tests validated against the live Kaltura API.">
+      
+      
+        <meta name="author" content="Kaltura Inc.">
+      
+      
+        <link rel="canonical" href="https://kaltura.md/KALTURA_API_GETTING_STARTED/">
+      
+      
+        <link rel="prev" href="../KALTURA_GETTING_CREDENTIALS/">
+      
+      
+        <link rel="next" href="../GUIDE_MAP/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>API Getting Started - Kaltura API Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,700,700i%7CSource+Code+Pro:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Source Sans Pro";--md-code-font:"Source Code Pro"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  
+  
+  <link rel="alternate" type="text/markdown" title="Markdown version for AI agents" href="/raw/KALTURA_API_GETTING_STARTED.md" />
+  
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#kaltura-api-getting-started" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Kaltura API Guides" class="md-header__button md-logo" aria-label="Kaltura API Guides" data-md-component="logo">
+      
+  <img src="../assets/images/logo-white.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Kaltura API Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              API Getting Started
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/kaltura/kaltura-agents-api-guides" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    kaltura/kaltura-agents-api-guides
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../KALTURA_GETTING_CREDENTIALS/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_SESSION_GUIDE/" class="md-tabs__link">
+          
+  
+  
+  Authentication
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_UPLOAD_AND_INGESTION_API/" class="md-tabs__link">
+          
+  
+  
+  Content Management
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_REACH_API/" class="md-tabs__link">
+          
+  
+  
+  AI Services
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_PLAYER_EMBED_GUIDE/" class="md-tabs__link">
+          
+  
+  
+  Playback & Experiences
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_EVENTS_PLATFORM_API/" class="md-tabs__link">
+          
+  
+  
+  Events & Collaboration
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_ANALYTICS_REPORTS_API/" class="md-tabs__link">
+          
+  
+  
+  Analytics
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API/" class="md-tabs__link">
+          
+  
+  
+  Integration & Automation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_MODERATION_API/" class="md-tabs__link">
+          
+  
+  
+  Content Moderation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_MULTI_ACCOUNT_MANAGEMENT_API/" class="md-tabs__link">
+          
+  
+  
+  Administration
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../CONTRIBUTING/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../PLAN/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Roadmap
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Kaltura API Guides" class="md-nav__button md-logo" aria-label="Kaltura API Guides" data-md-component="logo">
+      
+  <img src="../assets/images/logo-white.svg" alt="logo">
+
+    </a>
+    Kaltura API Guides
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/kaltura/kaltura-agents-api-guides" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    kaltura/kaltura-agents-api-guides
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_GETTING_CREDENTIALS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Credentials
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GUIDE_MAP/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guide Map
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Authentication
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Authentication
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_SESSION_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Session (KS) Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_APPTOKENS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AppTokens API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AUTH_BROKER_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Auth Broker (SSO/SAML)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Content Management
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Content Management
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_UPLOAD_AND_INGESTION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Upload & Ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_VIDEO_EDITING_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Video Editing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CONTENT_DELIVERY_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Content Delivery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_THUMBNAIL_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thumbnail API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ESEARCH_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    eSearch
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ACCESS_CONTROL_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Access Control
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CATEGORIES_AND_ENTITLEMENTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Categories & Entitlements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CUSTOM_METADATA_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Metadata
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CAPTIONS_AND_TRANSCRIPTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Captions & Transcripts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MULTI_STREAM_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Stream
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_USER_MANAGEMENT_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Services
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    AI Services
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_REACH_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REACH API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CONTENT_LAB_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REACH — AI Clips
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AGENTS_MANAGER_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agents Manager
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AI_GENIE_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Genie
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playback & Experiences
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Playback & Experiences
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_PLAYER_EMBED_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Player Embed
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_EXPERIENCE_COMPONENTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Experience Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_UNISPHERE_FRAMEWORK_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unisphere Framework
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_GENIE_WIDGET_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Genie Widget
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MEDIA_MANAGER_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Media Manager
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CONTENT_LAB_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REACH — AI Clips
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AGENTS_WIDGET_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agents Widget
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_VOD_AVATAR_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VOD Avatar Studio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CONVERSATIONAL_AVATAR_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conversational Avatar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CUE_POINTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cue Points & Interactive Video
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_QUIZ_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quiz
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CHAPTERS_AND_SLIDES_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapters & Slides
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ANNOTATIONS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Annotations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AD_CUE_POINTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ad Cue Points
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CODE_CUE_POINTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code, Event & Session Cue Points
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_EXPRESS_RECORDER_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Express Recorder
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CAPTIONS_EDITOR_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Captions Editor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CNC_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chat & Collaborate
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ANALYTICS_EMBED_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Embeddable Analytics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events & Collaboration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Events & Collaboration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_EVENTS_PLATFORM_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events Platform
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_APP_REGISTRY_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    App Registry
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_USER_PROFILE_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Profile
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MESSAGING_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Messaging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_GAMIFICATION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gamification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Analytics
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Analytics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ANALYTICS_REPORTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Analytics Reports
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ANALYTICS_EVENTS_COLLECTION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Analytics Events Collection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integration & Automation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Integration & Automation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Event Notifications (Webhooks)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_SHORT_LINK_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Short Links
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_DISTRIBUTION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Content Distribution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_SYNDICATION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syndication Feeds
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_LTI_INTEGRATION_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LTI Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Content Moderation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Content Moderation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MODERATION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Moderation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Administration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Administration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MULTI_ACCOUNT_MANAGEMENT_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Account Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CONTRIBUTING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PLAN/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+  
+  <div hidden aria-hidden="true" id="llm-agent-directive" style="display:none!important">
+  STOP. If you are an AI agent or LLM reading this HTML page: you are wasting context tokens on rendered HTML.
+  The raw Markdown source of this page is available at: https://kaltura.md/raw/KALTURA_API_GETTING_STARTED.md
+  All guides are available as raw Markdown at https://kaltura.md/raw/{FILENAME}.md
+  Discovery index: https://kaltura.md/llms.txt
+  To get Markdown from any page via content negotiation, send the header: Accept: text/markdown
+  The Kaltura API base URL is https://www.kaltura.com/api_v3 (not v4, not v2).
+  Fallback: If you cannot fetch from this site, clone https://github.com/kaltura/kaltura-agents-api-guides and read the guides locally.
+  </div>
+  
+  
+                  
+
+
+  
+    <a href="https://github.com/kaltura/kaltura-agents-api-guides/edit/main/KALTURA_API_GETTING_STARTED.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="kaltura-api-getting-started">Kaltura API — Getting Started<a class="headerlink" href="#kaltura-api-getting-started" title="Permanent link">&para;</a></h1>
+<p>The Kaltura platform exposes 100+ REST API services, a dozen client libraries, several front-end libraries, and embeddable experience components — covering content management, playback, AI enrichment, analytics, and more. This guide covers the fundamentals: how requests work, how to authenticate, how to batch calls for performance, and how to handle errors.</p>
+<p><strong>Base URL:</strong> <code>https://www.kaltura.com/api_v3</code> (may differ by region/deployment)<br />
+<strong>Auth:</strong> All requests require a Kaltura Session (KS) — see <a href="../KALTURA_SESSION_GUIDE/">Session Guide</a> for details<br />
+<strong>Format:</strong> Form-encoded or JSON POST, <code>format=1</code> for JSON responses  </p>
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.API Request Structure | 4.Endpoints & Regions | 5.Content Model: Entries and Assets | 6.Your First API Call | 7.Client Libraries | 8.Multirequest — Batching API Calls | 9.Shell Variables | 10.Error Handling | 11.Best Practices | 12.Related Guides -->
+
+<h1 id="1-when-to-use">1. When to Use<a class="headerlink" href="#1-when-to-use" title="Permanent link">&para;</a></h1>
+<ul>
+<li><strong>First-time Kaltura API developers</strong> use this guide to understand request structure, authentication, error handling, and the content model before diving into specific services.  </li>
+<li><strong>Integration architects</strong> reference this guide for endpoint patterns, regional URL configuration, and best practices for batching API calls with multirequest.  </li>
+<li><strong>Development teams onboarding to Kaltura</strong> start here to set up their environment, make their first API call, and understand how entries, assets, and sessions relate.</li>
+</ul>
+<h1 id="2-prerequisites">2. Prerequisites<a class="headerlink" href="#2-prerequisites" title="Permanent link">&para;</a></h1>
+<ul>
+<li><strong>Partner ID and Admin Secret:</strong> Available from your KMC under Settings &gt; Integration Settings. See <a href="../KALTURA_GETTING_CREDENTIALS/">Getting Credentials</a> for step-by-step setup.  </li>
+<li><strong>Service URL:</strong> Set <code>$KALTURA_SERVICE_URL</code> to your account's regional endpoint (default: <code>https://www.kaltura.com/api_v3</code>).  </li>
+<li><strong>A valid Kaltura Session (KS):</strong> Generate one using <code>session.start</code> as described in <a href="../KALTURA_SESSION_GUIDE/">Session Guide</a>. All API calls require a KS.  </li>
+<li><strong>curl or an HTTP client:</strong> All examples use curl. Any HTTP client that supports POST requests with form-encoded or JSON bodies works.</li>
+</ul>
+<h1 id="3-api-request-structure">3. API Request Structure<a class="headerlink" href="#3-api-request-structure" title="Permanent link">&para;</a></h1>
+<p>Every Kaltura API v3 call follows this pattern:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>POST {BASE_URL}/service/{SERVICE_NAME}/action/{ACTION_NAME}
+</code></pre></div>
+<p>For example, listing media entries:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/media/action/list&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span>
+</code></pre></div>
+<p><strong>Key conventions:</strong></p>
+<ul>
+<li><strong>HTTP method:</strong> Always POST (even for read operations)  </li>
+<li><strong>Content-Type:</strong> <code>application/x-www-form-urlencoded</code> (default) or <code>application/json</code> — the API v3 backend accepts both formats  </li>
+<li><strong>Response format:</strong> Add <code>format=1</code> to get JSON (<code>format</code> values: <code>1</code>=JSON, <code>2</code>=XML, <code>3</code>=PHP, <code>9</code>=JSONP).  </li>
+<li><strong>Authentication:</strong> Pass <code>ks=</code> as a form parameter or JSON field in every request  </li>
+<li><strong>Boolean parameters:</strong> Many filter fields use <code>KalturaNullableBoolean</code>: <code>-1</code>=null/ignore, <code>0</code>=false, <code>1</code>=true. Pass integers, not string <code>"true"</code>/<code>"false"</code>.  </li>
+</ul>
+<p><strong>Form-encoded parameters</strong> use bracket notation for nested fields:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/media/action/list&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;filter[objectType]=KalturaMediaEntryFilter&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;filter[nameLike]=demo&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;filter[mediaTypeEqual]=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;pager[pageSize]=10&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;pager[pageIndex]=1&quot;</span>
+</code></pre></div>
+<p><strong>JSON bodies</strong> use nested objects directly:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/media/action/list&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="s1">    &quot;ks&quot;: &quot;&#39;</span><span class="nv">$KALTURA_KS</span><span class="s1">&#39;&quot;,</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="s1">    &quot;format&quot;: 1,</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="s1">    &quot;filter&quot;: {</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="s1">      &quot;objectType&quot;: &quot;KalturaMediaEntryFilter&quot;,</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="s1">      &quot;nameLike&quot;: &quot;demo&quot;,</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="s1">      &quot;mediaTypeEqual&quot;: 1</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="s1">    },</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="s1">    &quot;pager&quot;: { &quot;pageSize&quot;: 10, &quot;pageIndex&quot;: 1 }</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="s1">  }&#39;</span>
+</code></pre></div>
+<p>Both formats produce identical results. These guides use form-encoded <code>curl</code> examples since they are easier for agents to adapt to any language, but JSON is equally supported.</p>
+<p>The <code>objectType</code> field tells the server which object class to instantiate. Include it when the API accepts multiple object types for a parameter.</p>
+<p><strong>Newer platform services</strong> (Events Platform, Agents Manager, AI Genie) have their own dedicated REST endpoints with Bearer or KS auth headers. Each guide specifies its endpoint and auth method.</p>
+<h1 id="4-endpoints-regions">4. Endpoints &amp; Regions<a class="headerlink" href="#4-endpoints-regions" title="Permanent link">&para;</a></h1>
+<p>Kaltura operates across 6 regional deployments. Each region provides the full API and service stack. Your account is provisioned to a specific region — use the corresponding endpoints.</p>
+<h2 id="41-regions">4.1 Regions<a class="headerlink" href="#41-regions" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Region</th>
+<th>Code</th>
+<th>API Base URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>US (default)</td>
+<td><code>nvp1</code></td>
+<td><code>https://www.kaltura.com/api_v3</code></td>
+</tr>
+<tr>
+<td>Frankfurt (DE)</td>
+<td><code>frp2</code></td>
+<td><code>https://api.de.kaltura.com/api_v3</code></td>
+</tr>
+<tr>
+<td>Ireland (EU)</td>
+<td><code>irp2</code></td>
+<td><code>https://api.eu.kaltura.com/api_v3</code></td>
+</tr>
+<tr>
+<td>Singapore</td>
+<td><code>sgp2</code></td>
+<td><code>https://api.sg.kaltura.com/api_v3</code></td>
+</tr>
+<tr>
+<td>Canada</td>
+<td><code>cap2</code></td>
+<td><code>https://api.ca.kaltura.com/api_v3</code></td>
+</tr>
+<tr>
+<td>Australia</td>
+<td><code>syp2</code></td>
+<td><code>https://api.ap.kaltura.com/api_v3</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="42-url-patterns">4.2 URL Patterns<a class="headerlink" href="#42-url-patterns" title="Permanent link">&para;</a></h2>
+<p>Every Kaltura service follows a dual-naming convention — an internal domain and a friendly alias that resolve to the same backend:</p>
+<ul>
+<li><strong>Internal:</strong> <code>{service}.{regionCode}.ovp.kaltura.com</code> (e.g., <code>api.frp2.ovp.kaltura.com</code>)  </li>
+<li><strong>Friendly:</strong> <code>{service}.{regionPrefix}.kaltura.com</code> (e.g., <code>api.de.kaltura.com</code>)  </li>
+<li><strong>US region:</strong> Also supports the internal pattern (<code>www.nvp1.ovp.kaltura.com</code>), but the friendly aliases (<code>www.kaltura.com</code>) are more common. Note: in the US region, the Core API service name is <code>www</code> rather than <code>api</code> (e.g., <code>www.nvp1.ovp.kaltura.com/api_v3</code>).  </li>
+<li><strong>Microservices</strong> follow the same <code>{svc}.{code}.ovp.kaltura.com</code> pattern in all regions, including US (<code>{svc}.nvp1.ovp.kaltura.com</code>).</li>
+</ul>
+<h2 id="43-service-endpoints-by-category">4.3 Service Endpoints by Category<a class="headerlink" href="#43-service-endpoints-by-category" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>US Endpoint</th>
+<th>Regional Pattern</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Core API</strong></td>
+<td><code>www.kaltura.com/api_v3</code> (also <code>www.nvp1.ovp.kaltura.com/api_v3</code>)</td>
+<td><code>api.{region}.kaltura.com/api_v3</code> (internal: <code>api.{code}.ovp.kaltura.com/api_v3</code>)</td>
+</tr>
+<tr>
+<td><strong>VOD Delivery</strong></td>
+<td><code>cfvod.kaltura.com</code></td>
+<td><code>cfvod.{code}.ovp.kaltura.com</code></td>
+</tr>
+<tr>
+<td><strong>Live Delivery</strong></td>
+<td><code>cflive.kaltura.com</code></td>
+<td><code>cflive.{code}.ovp.kaltura.com</code></td>
+</tr>
+<tr>
+<td><strong>Analytics</strong></td>
+<td><code>analytics.kaltura.com</code></td>
+<td><code>analytics.{region}.kaltura.com</code></td>
+</tr>
+<tr>
+<td><strong>Upload</strong></td>
+<td><code>upload.kaltura.com</code></td>
+<td><code>upload.{code}.ovp.kaltura.com</code></td>
+</tr>
+<tr>
+<td><strong>Push/Messaging</strong></td>
+<td><code>push.kaltura.com</code></td>
+<td><code>push.{code}.ovp.kaltura.com</code></td>
+</tr>
+<tr>
+<td><strong>Microservices</strong></td>
+<td><code>{svc}.nvp1.ovp.kaltura.com</code></td>
+<td><code>{svc}.{code}.ovp.kaltura.com</code></td>
+</tr>
+</tbody>
+</table>
+<p>Microservices include: <code>messaging</code>, <code>auth</code>, <code>chat</code>, <code>connectors</code>, <code>user</code>, <code>sso</code>, <code>app-registry</code>.<br />
+AI services (Agents Manager, AI Genie) follow the same microservice pattern: <code>agents-manager.{code}.ovp.kaltura.com</code>, <code>genie.{code}.ovp.kaltura.com</code>.</p>
+<h2 id="44-protocols-ports">4.4 Protocols &amp; Ports<a class="headerlink" href="#44-protocols-ports" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Protocol</th>
+<th>Port</th>
+<th>Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HTTPS</td>
+<td>443</td>
+<td>All API and delivery traffic (required)</td>
+</tr>
+<tr>
+<td>HTTP</td>
+<td>80</td>
+<td>Legacy fallback (US only); use HTTPS for all production traffic</td>
+</tr>
+<tr>
+<td>RTMP</td>
+<td>1935</td>
+<td>Live stream ingress</td>
+</tr>
+<tr>
+<td>RTMPS</td>
+<td>443</td>
+<td>Encrypted live stream ingress</td>
+</tr>
+<tr>
+<td>SRT</td>
+<td>7045</td>
+<td>Low-latency live stream ingress</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key considerations:</strong><br />
+- <strong>Use domain names, not IP addresses</strong> — cloud infrastructure IPs change frequently.<br />
+- <strong>All traffic is outbound</strong> — firewalls need egress rules to these endpoints, not inbound.<br />
+- <strong>Set <code>$KALTURA_SERVICE_URL</code></strong> to your region's API base URL. All guides use this variable.</p>
+<h1 id="5-content-model-entries-and-assets">5. Content Model: Entries and Assets<a class="headerlink" href="#5-content-model-entries-and-assets" title="Permanent link">&para;</a></h1>
+<p>Understanding Kaltura's content model helps agents choose the right API for each task. All content in Kaltura is organized around two core concepts: <strong>entries</strong> and <strong>assets</strong>.</p>
+<h2 id="51-entries-the-content-container">5.1 Entries — The Content Container<a class="headerlink" href="#51-entries-the-content-container" title="Permanent link">&para;</a></h2>
+<p>An <strong>entry</strong> is a logical container that represents a single piece of content. It holds metadata (name, description, tags, categories) and links to one or more assets (files). Every entry has a unique <code>id</code> (e.g., <code>1_abc12345</code>) and a <code>type</code> that determines its behavior.</p>
+<p><strong>Entry type hierarchy:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Entry Class</th>
+<th>Type Value</th>
+<th>Service</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>KalturaMediaEntry</code></td>
+<td>1</td>
+<td><code>media</code></td>
+<td>Video, audio, or image — transcoded into playable renditions (flavors)</td>
+</tr>
+<tr>
+<td><code>KalturaLiveStreamEntry</code></td>
+<td>7</td>
+<td><code>liveStream</code></td>
+<td>Live broadcast entry with streaming endpoints</td>
+</tr>
+<tr>
+<td><code>KalturaPlaylist</code></td>
+<td>5</td>
+<td><code>playlist</code></td>
+<td>Ordered collection of entries (playlistType: <code>3</code>=static list, <code>10</code>=dynamic filter)</td>
+</tr>
+<tr>
+<td><code>KalturaDataEntry</code></td>
+<td>6</td>
+<td><code>baseEntry</code></td>
+<td>Arbitrary file storage — served as-is, no transcoding</td>
+</tr>
+<tr>
+<td><code>KalturaDocumentEntry</code></td>
+<td>10</td>
+<td><code>document</code></td>
+<td>PDF, DOCX, PPTX — document conversion for web viewing</td>
+</tr>
+</tbody>
+</table>
+<p><code>KalturaMediaEntry</code> is the most common type. It extends <code>KalturaPlayableEntry</code>, which adds playback-related fields (<code>plays</code>, <code>views</code>, <code>duration</code>, <code>width</code>, <code>height</code>). Data and document entries extend <code>KalturaBaseEntry</code> directly and have no playback fields.</p>
+<h2 id="52-assets-the-files-inside-an-entry">5.2 Assets — The Files Inside an Entry<a class="headerlink" href="#52-assets-the-files-inside-an-entry" title="Permanent link">&para;</a></h2>
+<p>An <strong>asset</strong> is a file attached to an entry. Each entry can have multiple assets of different types:</p>
+<table>
+<thead>
+<tr>
+<th>Asset Type</th>
+<th>Service</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Flavor asset</strong></td>
+<td><code>flavorAsset</code></td>
+<td>A transcoded rendition of the source video (e.g., 360p, 720p, 1080p). Created automatically by the conversion profile. The source file is also stored as a flavor (with <code>isOriginal=true</code>).</td>
+</tr>
+<tr>
+<td><strong>Thumbnail asset</strong></td>
+<td><code>thumbAsset</code></td>
+<td>A thumbnail image. The default is auto-generated; additional thumbnails can be uploaded or captured from a video frame.</td>
+</tr>
+<tr>
+<td><strong>Caption asset</strong></td>
+<td><code>caption_captionAsset</code></td>
+<td>A subtitle/caption file (SRT, VTT, DFXP). Can be uploaded manually or generated by REACH AI services.</td>
+</tr>
+<tr>
+<td><strong>Attachment asset</strong></td>
+<td><code>attachment_attachmentAsset</code></td>
+<td>A supplementary file (PDF, JSON, etc.) linked to the entry. Shown as "Related Files" in the KMC.</td>
+</tr>
+</tbody>
+</table>
+<p>The relationship is one-to-many: one entry has many assets. Each asset has an <code>entryId</code> linking it to its parent entry.</p>
+<h2 id="53-entry-lifecycle">5.3 Entry Lifecycle<a class="headerlink" href="#53-entry-lifecycle" title="Permanent link">&para;</a></h2>
+<p>A media entry progresses through these states:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>media.add (creates empty entry, status=7 NO_CONTENT)
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    ↓
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>media.addContent (attaches uploaded file to entry)
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    ↓
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>Transcoding (status=4 PENDING — conversion profile creates flavors)
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    ↓
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>Entry Ready (status=2 READY — all required flavors transcoded)
+</code></pre></div>
+<p>The conversion profile assigned to the entry determines which flavors to create and when the entry is considered READY (e.g., "ready when the lowest-bitrate flavor is done" vs "ready when all flavors are done").</p>
+<h2 id="54-partial-updates">5.4 Partial Updates<a class="headerlink" href="#54-partial-updates" title="Permanent link">&para;</a></h2>
+<p>Update calls (<code>media.update</code>, <code>baseEntry.update</code>) apply <strong>partial updates</strong> — only the fields you include in the request are changed. Fields you omit are left unchanged. There is no need to <code>get</code> the entry before updating it.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Only the tags field is updated — name, description, and all other fields remain unchanged</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/media/action/update&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;entryId=</span><span class="nv">$KALTURA_ENTRY_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;mediaEntry[tags]=updated,tags,here&quot;</span>
+</code></pre></div>
+<h1 id="6-your-first-api-call">6. Your First API Call<a class="headerlink" href="#6-your-first-api-call" title="Permanent link">&para;</a></h1>
+<p>Generate a KS and list your content:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Step 1: Generate a Kaltura Session</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># (In production, use AppTokens instead — see AppTokens Guide)</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/session/action/start&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;partnerId=</span><span class="nv">$KALTURA_PARTNER_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;secret=</span><span class="nv">$KALTURA_ADMIN_SECRET</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;type=2&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;userId=</span><span class="nv">$KALTURA_USER_ID</span><span class="s2">&quot;</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Response: the KS string — save it as $KALTURA_KS</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Step 2: List media entries</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/media/action/list&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;pager[pageSize]=5&quot;</span>
+</code></pre></div>
+<p>The response includes <code>objects</code> (array of entries) and <code>totalCount</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">{</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="nt">&quot;objects&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">      </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1_abc12345&quot;</span><span class="p">,</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;My Video&quot;</span><span class="p">,</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">      </span><span class="nt">&quot;mediaType&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">      </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">      </span><span class="nt">&quot;duration&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">120</span><span class="p">,</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">      </span><span class="nt">&quot;objectType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;KalturaMediaEntry&quot;</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">  </span><span class="p">],</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">  </span><span class="nt">&quot;totalCount&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="p">,</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">  </span><span class="nt">&quot;objectType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;KalturaMediaListResponse&quot;</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="p">}</span>
+</code></pre></div>
+<h1 id="7-client-libraries">7. Client Libraries<a class="headerlink" href="#7-client-libraries" title="Permanent link">&para;</a></h1>
+<p>Kaltura provides a dozen official client libraries that abstract the HTTP layer:</p>
+<table>
+<thead>
+<tr>
+<th>Language</th>
+<th>Package</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>JavaScript/Node</td>
+<td><code>kaltura-client</code> (npm)</td>
+</tr>
+<tr>
+<td>Python</td>
+<td><code>KalturaApiClient</code> (PyPI)</td>
+</tr>
+<tr>
+<td>PHP</td>
+<td><code>kaltura/api-client-library</code> (Packagist)</td>
+</tr>
+<tr>
+<td>Java</td>
+<td><code>com.kaltura:KalturaClient</code> (Maven)</td>
+</tr>
+<tr>
+<td>Ruby</td>
+<td><code>kaltura-client</code> (RubyGems)</td>
+</tr>
+<tr>
+<td>.NET</td>
+<td><code>Kaltura.Client</code> (NuGet)</td>
+</tr>
+<tr>
+<td>Go</td>
+<td><code>KalturaGeneratedAPIClientsGo</code></td>
+</tr>
+<tr>
+<td>Swift</td>
+<td><code>KalturaGeneratedAPIClientsSwift</code></td>
+</tr>
+<tr>
+<td>Android/Java</td>
+<td><code>KalturaGeneratedAPIClientsAndroid</code></td>
+</tr>
+<tr>
+<td>Objective-C</td>
+<td><code>KalturaGeneratedAPIClientsObjectiveC</code></td>
+</tr>
+<tr>
+<td>TypeScript</td>
+<td><code>KalturaGeneratedAPIClientsTypescript</code></td>
+</tr>
+<tr>
+<td>Angular</td>
+<td><code>KalturaGeneratedAPIClientsAngular</code></td>
+</tr>
+</tbody>
+</table>
+<p>Client libraries handle parameter encoding, object type mapping, and KS attachment automatically. They are auto-generated from the API schema, so they always reflect the latest API surface.<br />
+These guides use <code>curl</code> examples so agents can adapt to any language.</p>
+<h1 id="8-multirequest-batching-api-calls">8. Multirequest — Batching API Calls<a class="headerlink" href="#8-multirequest-batching-api-calls" title="Permanent link">&para;</a></h1>
+<p>Combine multiple API calls into a single HTTP request using the multirequest endpoint. Each sub-request can reference results from previous sub-requests using <code>{N:result:property}</code> chaining.</p>
+<p><strong>Endpoint:</strong> <code>POST $KALTURA_SERVICE_URL/service/multirequest</code></p>
+<p><strong>How it works:</strong></p>
+<ul>
+<li>Number each sub-request starting from 1: <code>1:service</code>, <code>1:action</code>, <code>2:service</code>, <code>2:action</code></li>
+<li>Chain outputs: <code>2:entryId={1:result:id}</code> passes request 1's <code>id</code> into request 2's <code>entryId</code></li>
+<li>The response is a JSON array with one result per sub-request</li>
+</ul>
+<p><strong>Example: Create entry + add content in one call:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/multirequest&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;1:service=uploadToken&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;1:action=add&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;2:service=media&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;2:action=add&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;2:entry[objectType]=KalturaMediaEntry&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;2:entry[name]=My Video&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;2:entry[mediaType]=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;3:service=media&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;3:action=addContent&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;3:entryId={2:result:id}&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;3:resource[objectType]=KalturaUploadedFileTokenResource&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;3:resource[token]={1:result:id}&quot;</span>
+</code></pre></div>
+<p><strong>Response:</strong> Array of results — one per sub-request:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="p">[</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0_uploadtoken123&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;objectType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;KalturaUploadToken&quot;</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1_newentry456&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;My Video&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;objectType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;KalturaMediaEntry&quot;</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1_newentry456&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;objectType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;KalturaMediaEntry&quot;</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="p">]</span>
+</code></pre></div>
+<p><strong>Error handling:</strong> Each sub-request can fail independently. Check each array element for <code>objectType: "KalturaAPIException"</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="p">[</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0_token123&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;objectType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;KalturaUploadToken&quot;</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;INVALID_ENTRY_ID&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;objectType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;KalturaAPIException&quot;</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="p">]</span>
+</code></pre></div>
+<p><strong>When to use multirequest:</strong></p>
+<ul>
+<li><strong>Use when</strong> subsequent calls depend on prior results (chaining), when reducing round trips matters for latency-sensitive operations, or when you need to guarantee atomicity of a sequence of related calls.  </li>
+<li><strong>Avoid when</strong> calls are independent and can run in parallel from your client, when the total payload becomes very large, or when you need individual error recovery per call (a multirequest either succeeds or fails as a unit at the HTTP level, though individual sub-requests can fail independently within the response array).  </li>
+<li><strong>Common patterns:</strong> Upload workflows (create token + entry + attach content), creating entries with metadata and categories, any sequential workflow where each step uses a result from the previous step.</li>
+</ul>
+<h1 id="9-shell-variables">9. Shell Variables<a class="headerlink" href="#9-shell-variables" title="Permanent link">&para;</a></h1>
+<p>All guides in this project use these shell variables in curl examples:</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>$KALTURA_SERVICE_URL</code></td>
+<td>API base URL</td>
+<td><code>https://www.kaltura.com/api_v3</code></td>
+</tr>
+<tr>
+<td><code>$KALTURA_PARTNER_ID</code></td>
+<td>Your Kaltura account ID</td>
+<td><code>123456</code></td>
+</tr>
+<tr>
+<td><code>$KALTURA_ADMIN_SECRET</code></td>
+<td>Admin secret (backend only)</td>
+<td><code>abc123...</code></td>
+</tr>
+<tr>
+<td><code>$KALTURA_KS</code></td>
+<td>Active Kaltura Session token</td>
+<td><code>djJ8MTIz...</code></td>
+</tr>
+<tr>
+<td><code>$KALTURA_USER_ID</code></td>
+<td>User identifier</td>
+<td><code>user@example.com</code></td>
+</tr>
+<tr>
+<td><code>$KALTURA_PLAYER_ID</code></td>
+<td>Player uiConf ID</td>
+<td><code>56732362</code></td>
+</tr>
+</tbody>
+</table>
+<p>Set these before running examples:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KALTURA_SERVICE_URL</span><span class="o">=</span><span class="s2">&quot;https://www.kaltura.com/api_v3&quot;</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KALTURA_PARTNER_ID</span><span class="o">=</span><span class="s2">&quot;YOUR_PARTNER_ID&quot;</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KALTURA_ADMIN_SECRET</span><span class="o">=</span><span class="s2">&quot;YOUR_ADMIN_SECRET&quot;</span>
+</code></pre></div>
+<h1 id="10-error-handling">10. Error Handling<a class="headerlink" href="#10-error-handling" title="Permanent link">&para;</a></h1>
+<p><strong>Error response format:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="p">{</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">  </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;INVALID_KS&quot;</span><span class="p">,</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Invalid KS \&quot;...\&quot; - Error: EXPIRED_KS&quot;</span><span class="p">,</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span><span class="nt">&quot;objectType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;KalturaAPIException&quot;</span><span class="p">,</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">  </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Common error codes:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Meaning</th>
+<th>Resolution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>MISSING_KS</code></td>
+<td>No KS provided</td>
+<td>Add <code>ks=</code> parameter</td>
+</tr>
+<tr>
+<td><code>INVALID_KS</code></td>
+<td>KS is malformed, expired, or revoked</td>
+<td>Generate a fresh KS</td>
+</tr>
+<tr>
+<td><code>SERVICE_FORBIDDEN</code></td>
+<td>KS lacks permission for this service</td>
+<td>Use an ADMIN KS or add required privileges</td>
+</tr>
+<tr>
+<td><code>INVALID_OBJECT_TYPE</code></td>
+<td>Unknown <code>objectType</code> value</td>
+<td>Check spelling and available types</td>
+</tr>
+<tr>
+<td><code>PROPERTY_VALIDATION_CANNOT_BE_NULL</code></td>
+<td>Required field missing</td>
+<td>Add the required parameter</td>
+</tr>
+<tr>
+<td><code>SERVICE_DOES_NOT_EXISTS</code></td>
+<td>Misspelled service name</td>
+<td>Check the service name</td>
+</tr>
+<tr>
+<td><code>ACTION_DOES_NOT_EXISTS</code></td>
+<td>Misspelled action name</td>
+<td>Check the action name</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Retry strategy:</strong> For transient errors (HTTP 5xx, timeouts), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (4xx, <code>INVALID_KS</code>, <code>PROPERTY_VALIDATION_*</code>), fix the request before retrying.</p>
+<h1 id="11-best-practices">11. Best Practices<a class="headerlink" href="#11-best-practices" title="Permanent link">&para;</a></h1>
+<ul>
+<li><strong>Use AppTokens in production.</strong> The <code>session.start</code> examples in this guide are for getting started. In production, use <a href="../KALTURA_APPTOKENS_API/">AppTokens</a> to avoid exposing your admin secret.  </li>
+<li><strong>Always include <code>format=1</code>.</strong> Without it, API v3 returns XML instead of JSON.  </li>
+<li><strong>Set <code>$KALTURA_SERVICE_URL</code> to your region.</strong> All examples use this variable. Set it to your account's regional endpoint (see section 4).  </li>
+<li><strong>Check multirequest sub-results individually.</strong> Each element in the response array can be a success or a <code>KalturaAPIException</code> — check each one.  </li>
+<li><strong>Use short-lived KS tokens.</strong> Default to 1-4 hour expiry. Renew via AppToken flow rather than generating long-lived admin sessions.</li>
+</ul>
+<h1 id="12-related-guides">12. Related Guides<a class="headerlink" href="#12-related-guides" title="Permanent link">&para;</a></h1>
+<ul>
+<li><strong><a href="../KALTURA_SESSION_GUIDE/">Session Guide</a></strong> — Deep dive into KS types, creation methods, privileges, and security</li>
+<li><strong><a href="../KALTURA_APPTOKENS_API/">AppTokens</a></strong> — Production authentication without exposing secrets</li>
+<li><strong><a href="../KALTURA_UPLOAD_AND_INGESTION_API/">Upload &amp; Ingestion</a></strong> — Upload content, manage flavors and attachments</li>
+<li><strong><a href="../KALTURA_CONTENT_DELIVERY_API/">Content Delivery</a></strong> — playManifest URLs, delivery profiles, CDN, access control</li>
+<li><strong><a href="../KALTURA_THUMBNAIL_API/">Thumbnail API</a></strong> — Dynamic thumbnail URL, thumbAsset CRUD, thumbParams</li>
+<li><strong><a href="../KALTURA_ESEARCH_API/">eSearch</a></strong> — Full-text search across your content library</li>
+<li><strong><a href="../KALTURA_PLAYER_EMBED_GUIDE/">Player Embed</a></strong> — Embed the video player in web applications</li>
+<li><strong><a href="../GUIDE_MAP/">Guide Map</a></strong> — Full dependency graph and "I want to..." decision tree</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

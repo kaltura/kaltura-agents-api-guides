@@ -1,0 +1,4671 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Kaltura — The Agentic Digital Experience Platform. Live-tested API guides for AI agents and developers. 52 guides covering authentication, content management, search, playback, AI services, virtual events, experience components, cue points & interactive video, analytics, distribution, moderation, LTI integration, and more — with 1000+ companion tests validated against the live Kaltura API.">
+      
+      
+        <meta name="author" content="Kaltura Inc.">
+      
+      
+        <link rel="canonical" href="https://kaltura.md/KALTURA_AUTH_BROKER_API/">
+      
+      
+        <link rel="prev" href="../KALTURA_APPTOKENS_API/">
+      
+      
+        <link rel="next" href="../KALTURA_UPLOAD_AND_INGESTION_API/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Auth Broker (SSO/SAML) - Kaltura API Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,700,700i%7CSource+Code+Pro:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Source Sans Pro";--md-code-font:"Source Code Pro"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  
+  
+  <link rel="alternate" type="text/markdown" title="Markdown version for AI agents" href="/raw/KALTURA_AUTH_BROKER_API.md" />
+  
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#kaltura-auth-broker-api" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Kaltura API Guides" class="md-header__button md-logo" aria-label="Kaltura API Guides" data-md-component="logo">
+      
+  <img src="../assets/images/logo-white.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Kaltura API Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Auth Broker (SSO/SAML)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/kaltura/kaltura-agents-api-guides" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    kaltura/kaltura-agents-api-guides
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_GETTING_CREDENTIALS/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../KALTURA_SESSION_GUIDE/" class="md-tabs__link">
+          
+  
+  
+  Authentication
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_UPLOAD_AND_INGESTION_API/" class="md-tabs__link">
+          
+  
+  
+  Content Management
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_REACH_API/" class="md-tabs__link">
+          
+  
+  
+  AI Services
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_PLAYER_EMBED_GUIDE/" class="md-tabs__link">
+          
+  
+  
+  Playback & Experiences
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_EVENTS_PLATFORM_API/" class="md-tabs__link">
+          
+  
+  
+  Events & Collaboration
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_ANALYTICS_REPORTS_API/" class="md-tabs__link">
+          
+  
+  
+  Analytics
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API/" class="md-tabs__link">
+          
+  
+  
+  Integration & Automation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_MODERATION_API/" class="md-tabs__link">
+          
+  
+  
+  Content Moderation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_MULTI_ACCOUNT_MANAGEMENT_API/" class="md-tabs__link">
+          
+  
+  
+  Administration
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../CONTRIBUTING/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../PLAN/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Roadmap
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Kaltura API Guides" class="md-nav__button md-logo" aria-label="Kaltura API Guides" data-md-component="logo">
+      
+  <img src="../assets/images/logo-white.svg" alt="logo">
+
+    </a>
+    Kaltura API Guides
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/kaltura/kaltura-agents-api-guides" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    kaltura/kaltura-agents-api-guides
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_GETTING_CREDENTIALS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Credentials
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_API_GETTING_STARTED/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GUIDE_MAP/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guide Map
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Authentication
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Authentication
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_SESSION_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Session (KS) Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_APPTOKENS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AppTokens API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Auth Broker (SSO/SAML)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Content Management
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Content Management
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_UPLOAD_AND_INGESTION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Upload & Ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_VIDEO_EDITING_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Video Editing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CONTENT_DELIVERY_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Content Delivery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_THUMBNAIL_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thumbnail API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ESEARCH_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    eSearch
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ACCESS_CONTROL_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Access Control
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CATEGORIES_AND_ENTITLEMENTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Categories & Entitlements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CUSTOM_METADATA_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Metadata
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CAPTIONS_AND_TRANSCRIPTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Captions & Transcripts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MULTI_STREAM_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Stream
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_USER_MANAGEMENT_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Services
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    AI Services
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_REACH_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REACH API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CONTENT_LAB_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REACH — AI Clips
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AGENTS_MANAGER_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agents Manager
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AI_GENIE_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Genie
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playback & Experiences
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Playback & Experiences
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_PLAYER_EMBED_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Player Embed
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_EXPERIENCE_COMPONENTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Experience Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_UNISPHERE_FRAMEWORK_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unisphere Framework
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_GENIE_WIDGET_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Genie Widget
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MEDIA_MANAGER_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Media Manager
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CONTENT_LAB_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REACH — AI Clips
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AGENTS_WIDGET_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agents Widget
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_VOD_AVATAR_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VOD Avatar Studio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CONVERSATIONAL_AVATAR_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conversational Avatar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CUE_POINTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cue Points & Interactive Video
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_QUIZ_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quiz
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CHAPTERS_AND_SLIDES_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapters & Slides
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ANNOTATIONS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Annotations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AD_CUE_POINTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ad Cue Points
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CODE_CUE_POINTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code, Event & Session Cue Points
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_EXPRESS_RECORDER_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Express Recorder
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CAPTIONS_EDITOR_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Captions Editor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CNC_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chat & Collaborate
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ANALYTICS_EMBED_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Embeddable Analytics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events & Collaboration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Events & Collaboration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_EVENTS_PLATFORM_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events Platform
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_APP_REGISTRY_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    App Registry
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_USER_PROFILE_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Profile
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MESSAGING_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Messaging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_GAMIFICATION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gamification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Analytics
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Analytics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ANALYTICS_REPORTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Analytics Reports
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ANALYTICS_EVENTS_COLLECTION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Analytics Events Collection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integration & Automation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Integration & Automation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Event Notifications (Webhooks)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_SHORT_LINK_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Short Links
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_DISTRIBUTION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Content Distribution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_SYNDICATION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syndication Feeds
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_LTI_INTEGRATION_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LTI Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Content Moderation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Content Moderation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MODERATION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Moderation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Administration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Administration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MULTI_ACCOUNT_MANAGEMENT_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Account Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CONTRIBUTING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PLAN/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+  
+  <div hidden aria-hidden="true" id="llm-agent-directive" style="display:none!important">
+  STOP. If you are an AI agent or LLM reading this HTML page: you are wasting context tokens on rendered HTML.
+  The raw Markdown source of this page is available at: https://kaltura.md/raw/KALTURA_AUTH_BROKER_API.md
+  All guides are available as raw Markdown at https://kaltura.md/raw/{FILENAME}.md
+  Discovery index: https://kaltura.md/llms.txt
+  To get Markdown from any page via content negotiation, send the header: Accept: text/markdown
+  The Kaltura API base URL is https://www.kaltura.com/api_v3 (not v4, not v2).
+  Fallback: If you cannot fetch from this site, clone https://github.com/kaltura/kaltura-agents-api-guides and read the guides locally.
+  </div>
+  
+  
+                  
+
+
+  
+    <a href="https://github.com/kaltura/kaltura-agents-api-guides/edit/main/KALTURA_AUTH_BROKER_API.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="kaltura-auth-broker-api">Kaltura Auth Broker API<a class="headerlink" href="#kaltura-auth-broker-api" title="Permanent link">&para;</a></h1>
+<p>The Auth Broker is a standalone microservice for managing SSO authentication via SAML and OAuth2/OIDC identity providers. It handles IdP profile configuration, app-to-profile subscriptions, login flows, and just-in-time user provisioning — separate from the main Kaltura API v3.</p>
+<p><strong>Base URL:</strong> <code>https://auth.nvp1.ovp.kaltura.com/api/v1</code> (production NVP region)<br />
+<strong>Auth:</strong> <code>Authorization: KS &lt;KS&gt;</code> header (KS prefix, not Bearer)<br />
+<strong>Format:</strong> JSON request/response bodies, all endpoints use POST (except SAML metadata which is GET)<br />
+<strong>Regions:</strong> NVP (default <code>nvp1</code>), EU (<code>irp2</code>), DE (<code>frp2</code>)  </p>
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Authentication | 4.Architecture Overview | 5.Auth Profile CRUD | 6.Attribute Mapping | 7.Group Sync | 8.App Subscription CRUD | 9.SSO Login Flow | 10.SPA Proxy | 11.SAML SP Metadata | 12.Multi-SSO Configuration | 13.Shared User Model | 14.Error Handling | 15.Best Practices | 16.Related Guides -->
+
+<h1 id="1-when-to-use">1. When to Use<a class="headerlink" href="#1-when-to-use" title="Permanent link">&para;</a></h1>
+<ul>
+<li><strong>IT security teams</strong> integrating Kaltura with enterprise SAML or OAuth2/OIDC identity providers for single sign-on  </li>
+<li><strong>Platform administrators</strong> configuring federated authentication across multiple video portals and applications  </li>
+<li><strong>SSO rollout projects</strong> enabling just-in-time user provisioning and group sync from IdP claims  </li>
+<li><strong>Multi-application environments</strong> routing different apps to different identity providers via app subscriptions  </li>
+<li><strong>Compliance teams</strong> enforcing centralized authentication policies across all Kaltura-powered properties</li>
+</ul>
+<h1 id="2-prerequisites">2. Prerequisites<a class="headerlink" href="#2-prerequisites" title="Permanent link">&para;</a></h1>
+<ul>
+<li><strong>KS type:</strong> ADMIN KS (type=2) with <code>FEATURE_AUTH_BROKER_PERMISSION</code> enabled on the partner account  </li>
+<li><strong>Plugins:</strong> Auth Broker microservice must be provisioned for your account (operates under system partner ID -17)  </li>
+<li><strong>Session guide:</strong> Generate a KS using <code>session.start</code> or <code>appToken.startSession</code> (see <a href="../KALTURA_SESSION_GUIDE/">Session Guide</a>)</li>
+</ul>
+<h1 id="3-authentication">3. Authentication<a class="headerlink" href="#3-authentication" title="Permanent link">&para;</a></h1>
+<p>All requests require a valid KS in the <code>Authorization</code> header with the <code>KS</code> prefix:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Authorization: KS &lt;your_kaltura_session&gt;
+</code></pre></div>
+<p>The <code>KS</code> prefix differs from other Kaltura microservices that use <code>Bearer</code>. The Auth Broker operates under system partner ID <code>-17</code> and requires the <code>FEATURE_AUTH_BROKER_PERMISSION</code> to be enabled on the partner account.</p>
+<p>Generate a KS via <code>session.start</code> (see <a href="../KALTURA_SESSION_GUIDE/">Session Guide</a>) or <code>appToken.startSession</code> (see <a href="../KALTURA_APPTOKENS_API/">AppTokens Guide</a>).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Set up environment</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KALTURA_AUTH_BROKER_URL</span><span class="o">=</span><span class="s2">&quot;https://auth.nvp1.ovp.kaltura.com/api/v1&quot;</span>
+</code></pre></div>
+<h1 id="4-architecture-overview">4. Architecture Overview<a class="headerlink" href="#4-architecture-overview" title="Permanent link">&para;</a></h1>
+<p>The Auth Broker is a NestJS microservice with four service endpoints:</p>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>URL Path</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>auth-profile</td>
+<td><code>/api/v1/auth-profile/</code></td>
+<td>CRUD for SAML/OAuth2 IdP profiles</td>
+</tr>
+<tr>
+<td>auth-manager</td>
+<td><code>/api/v1/auth-manager/</code></td>
+<td>Login flow, SAML/OIDC callbacks, SP metadata</td>
+</tr>
+<tr>
+<td>app-subscription</td>
+<td><code>/api/v1/app-subscription/</code></td>
+<td>Subscribe apps to auth profiles</td>
+</tr>
+<tr>
+<td>spa-proxy</td>
+<td><code>/api/v1/spa-proxy/</code></td>
+<td>SPA login proxy for KMC</td>
+</tr>
+</tbody>
+</table>
+<h3 id="regional-endpoints">Regional Endpoints<a class="headerlink" href="#regional-endpoints" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Region</th>
+<th>Base URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NVP (default)</td>
+<td><code>https://auth.nvp1.ovp.kaltura.com/api/v1</code></td>
+</tr>
+<tr>
+<td>EU</td>
+<td><code>https://auth.irp2.ovp.kaltura.com/api/v1</code></td>
+</tr>
+<tr>
+<td>DE</td>
+<td><code>https://auth.frp2.ovp.kaltura.com/api/v1</code></td>
+</tr>
+</tbody>
+</table>
+<p>Use the region that matches your Kaltura account deployment.</p>
+<h3 id="relationship-to-app-registry">Relationship to App Registry<a class="headerlink" href="#relationship-to-app-registry" title="Permanent link">&para;</a></h3>
+<p>The Auth Broker uses <code>appGuid</code> values from the <a href="../KALTURA_APP_REGISTRY_API/">App Registry API</a> to link SSO profiles to specific application instances. Each app subscription references an <code>appGuid</code> and one or more <code>authProfileIds</code>, creating the bridge between "which app" and "which IdP handles login."</p>
+<h1 id="5-auth-profile-crud">5. Auth Profile CRUD<a class="headerlink" href="#5-auth-profile-crud" title="Permanent link">&para;</a></h1>
+<p>Auth profiles define the connection to an identity provider (SAML or OAuth2/OIDC). Actions: <code>add</code>, <code>get</code>, <code>list</code>, <code>update</code>, <code>delete</code>, <code>generatePvKeys</code>.</p>
+<h2 id="51-auth-profile-object">5.1 Auth Profile Object<a class="headerlink" href="#51-auth-profile-object" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>string</td>
+<td>Auto-generated MongoDB ObjectId (read-only)</td>
+</tr>
+<tr>
+<td><code>objectType</code></td>
+<td>string</td>
+<td>Always <code>"AuthProfile"</code> (read-only)</td>
+</tr>
+<tr>
+<td><code>partnerId</code></td>
+<td>integer</td>
+<td>Partner ID from KS (read-only)</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>Display name for the profile</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>string</td>
+<td>Profile description</td>
+</tr>
+<tr>
+<td><code>providerType</code></td>
+<td>string</td>
+<td>Identity provider type (see enum below)</td>
+</tr>
+<tr>
+<td><code>authStrategy</code></td>
+<td>string</td>
+<td><code>saml</code> or <code>oauth2</code></td>
+</tr>
+<tr>
+<td><code>isAdminProfile</code></td>
+<td>boolean</td>
+<td>Whether this profile is for admin users</td>
+</tr>
+<tr>
+<td><code>createNewUser</code></td>
+<td>boolean</td>
+<td>Enable JIT user provisioning</td>
+</tr>
+<tr>
+<td><code>createNewGroups</code></td>
+<td>boolean</td>
+<td>Auto-create groups from IdP claims</td>
+</tr>
+<tr>
+<td><code>removeFromExistingGroups</code></td>
+<td>boolean</td>
+<td>Remove user from groups not in IdP claims</td>
+</tr>
+<tr>
+<td><code>userGroupsSyncAll</code></td>
+<td>boolean</td>
+<td>Sync all groups from IdP (overrides mapping)</td>
+</tr>
+<tr>
+<td><code>userIdAttribute</code></td>
+<td>string</td>
+<td>IdP attribute used as Kaltura user ID</td>
+</tr>
+<tr>
+<td><code>authStrategyConfig</code></td>
+<td>object</td>
+<td>IdP-specific configuration (see section 5.2)</td>
+</tr>
+<tr>
+<td><code>userAttributeMappings</code></td>
+<td>object</td>
+<td>Map IdP attributes to Kaltura user fields (see section 6)</td>
+</tr>
+<tr>
+<td><code>userGroupMappings</code></td>
+<td>object</td>
+<td>Map IdP group claims to Kaltura groups (see section 7)</td>
+</tr>
+<tr>
+<td><code>ksPrivileges</code></td>
+<td>string</td>
+<td>Additional KS privileges for authenticated users</td>
+</tr>
+<tr>
+<td><code>syncDelayTimeoutMin</code></td>
+<td>integer</td>
+<td>Minutes to wait before syncing groups</td>
+</tr>
+<tr>
+<td><code>version</code></td>
+<td>integer</td>
+<td>Auto-incrementing version (read-only)</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>string</td>
+<td><code>enabled</code> or <code>disabled</code></td>
+</tr>
+<tr>
+<td><code>createdAt</code></td>
+<td>string</td>
+<td>ISO 8601 timestamp (read-only)</td>
+</tr>
+<tr>
+<td><code>updatedAt</code></td>
+<td>string</td>
+<td>ISO 8601 timestamp (read-only)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="provider-types">Provider Types<a class="headerlink" href="#provider-types" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>azure</code></td>
+<td>Microsoft Azure AD / Entra ID</td>
+</tr>
+<tr>
+<td><code>okta</code></td>
+<td>Okta</td>
+</tr>
+<tr>
+<td><code>aws</code></td>
+<td>AWS IAM Identity Center (SSO)</td>
+</tr>
+<tr>
+<td><code>akamai</code></td>
+<td>Akamai Identity Cloud</td>
+</tr>
+<tr>
+<td><code>other</code></td>
+<td>Any other SAML/OAuth2 IdP</td>
+</tr>
+</tbody>
+</table>
+<h3 id="auth-strategies">Auth Strategies<a class="headerlink" href="#auth-strategies" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>saml</code></td>
+<td>SAML 2.0 SSO</td>
+</tr>
+<tr>
+<td><code>oauth2</code></td>
+<td>OAuth2 / OpenID Connect</td>
+</tr>
+</tbody>
+</table>
+<h2 id="52-auth-strategy-config-saml">5.2 Auth Strategy Config (SAML)<a class="headerlink" href="#52-auth-strategy-config-saml" title="Permanent link">&para;</a></h2>
+<p>The <code>authStrategyConfig</code> object for SAML profiles:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>issuer</code></td>
+<td>string</td>
+<td>SP entity ID / issuer name</td>
+</tr>
+<tr>
+<td><code>entryPoint</code></td>
+<td>string</td>
+<td>IdP SSO URL (where SAML requests are sent)</td>
+</tr>
+<tr>
+<td><code>callbackUrl</code></td>
+<td>string</td>
+<td>ACS URL — set to <code>https://auth.{region}.ovp.kaltura.com/api/v1/auth-manager/saml/ac</code></td>
+</tr>
+<tr>
+<td><code>logoutUrl</code></td>
+<td>string</td>
+<td>IdP Single Logout URL</td>
+</tr>
+<tr>
+<td><code>logoutCallbackUrl</code></td>
+<td>string</td>
+<td>SP logout callback — set to <code>https://auth.{region}.ovp.kaltura.com/api/v1/auth-manager/saml/logout</code></td>
+</tr>
+<tr>
+<td><code>cert</code></td>
+<td>string</td>
+<td>IdP signing certificate (PEM, without headers)</td>
+</tr>
+<tr>
+<td><code>validateInResponseTo</code></td>
+<td>boolean</td>
+<td>Validate SAML <code>InResponseTo</code> attribute</td>
+</tr>
+<tr>
+<td><code>digestAlgorithm</code></td>
+<td>string</td>
+<td><code>sha1</code> or <code>sha256</code></td>
+</tr>
+<tr>
+<td><code>signatureAlgorithm</code></td>
+<td>string</td>
+<td><code>sha1</code> or <code>sha256</code></td>
+</tr>
+<tr>
+<td><code>enableRequestSign</code></td>
+<td>boolean</td>
+<td>Sign SAML authentication requests</td>
+</tr>
+<tr>
+<td><code>enableAssertsDecryption</code></td>
+<td>boolean</td>
+<td>Decrypt encrypted SAML assertions</td>
+</tr>
+<tr>
+<td><code>disableRequestedAuthnContext</code></td>
+<td>boolean</td>
+<td>Omit <code>RequestedAuthnContext</code> from SAML request</td>
+</tr>
+<tr>
+<td><code>requestIdExpirationPeriodMs</code></td>
+<td>integer</td>
+<td>Request ID expiration in milliseconds (default: 28800000 = 8 hours)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="52b-auth-strategy-config-oauth2oidc">5.2b Auth Strategy Config (OAuth2/OIDC)<a class="headerlink" href="#52b-auth-strategy-config-oauth2oidc" title="Permanent link">&para;</a></h2>
+<p>The <code>authStrategyConfig</code> object for OAuth2/OIDC profiles:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>clientId</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>OAuth2 client ID registered with the IdP</td>
+</tr>
+<tr>
+<td><code>clientSecret</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>OAuth2 client secret from the IdP</td>
+</tr>
+<tr>
+<td><code>authorizationURL</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>IdP authorization endpoint URL (where the browser is redirected to authenticate)</td>
+</tr>
+<tr>
+<td><code>tokenURL</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>IdP token endpoint URL (used by the Auth Broker to exchange the authorization code for tokens)</td>
+</tr>
+<tr>
+<td><code>callbackUrl</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>OAuth2/OIDC callback URL — set to <code>https://auth.{region}.ovp.kaltura.com/api/v1/auth-manager/oidc/ac</code></td>
+</tr>
+<tr>
+<td><code>scope</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>OAuth2 scopes to request (e.g., <code>"openid profile email"</code>)</td>
+</tr>
+<tr>
+<td><code>userInfoURL</code></td>
+<td>string</td>
+<td>No</td>
+<td>IdP userinfo endpoint URL (for fetching user attributes if not included in the ID token)</td>
+</tr>
+<tr>
+<td><code>logoutUrl</code></td>
+<td>string</td>
+<td>No</td>
+<td>IdP logout endpoint URL for single logout</td>
+</tr>
+<tr>
+<td><code>logoutCallbackUrl</code></td>
+<td>string</td>
+<td>No</td>
+<td>SP logout callback URL</td>
+</tr>
+<tr>
+<td><code>responseType</code></td>
+<td>string</td>
+<td>No</td>
+<td>OAuth2 response type (default: <code>"code"</code> for authorization code flow)</td>
+</tr>
+<tr>
+<td><code>issuer</code></td>
+<td>string</td>
+<td>No</td>
+<td>Expected token issuer for validation (e.g., <code>https://login.microsoftonline.com/{tenant}/v2.0</code>)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="example-azure-ad-oauth2oidc-profile">Example: Azure AD OAuth2/OIDC Profile<a class="headerlink" href="#example-azure-ad-oauth2oidc-profile" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_AUTH_BROKER_URL</span><span class="s2">/auth-profile/add&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: KS </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="s1">    &quot;name&quot;: &quot;Azure AD OIDC - Employees&quot;,</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="s1">    &quot;description&quot;: &quot;OAuth2/OIDC SSO via Azure AD&quot;,</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="s1">    &quot;providerType&quot;: &quot;azure&quot;,</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s1">    &quot;authStrategy&quot;: &quot;oauth2&quot;,</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="s1">    &quot;isAdminProfile&quot;: false,</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="s1">    &quot;createNewUser&quot;: true,</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="s1">    &quot;createNewGroups&quot;: true,</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="s1">    &quot;removeFromExistingGroups&quot;: false,</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="s1">    &quot;userGroupsSyncAll&quot;: false,</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="s1">    &quot;userIdAttribute&quot;: &quot;email&quot;,</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="s1">    &quot;authStrategyConfig&quot;: {</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="s1">      &quot;clientId&quot;: &quot;YOUR_AZURE_APP_CLIENT_ID&quot;,</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="s1">      &quot;clientSecret&quot;: &quot;YOUR_AZURE_APP_CLIENT_SECRET&quot;,</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="s1">      &quot;authorizationURL&quot;: &quot;https://login.microsoftonline.com/YOUR_TENANT_ID/oauth2/v2.0/authorize&quot;,</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="s1">      &quot;tokenURL&quot;: &quot;https://login.microsoftonline.com/YOUR_TENANT_ID/oauth2/v2.0/token&quot;,</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="s1">      &quot;callbackUrl&quot;: &quot;https://auth.nvp1.ovp.kaltura.com/api/v1/auth-manager/oidc/ac&quot;,</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="s1">      &quot;scope&quot;: &quot;openid profile email&quot;,</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="s1">      &quot;userInfoURL&quot;: &quot;https://graph.microsoft.com/oidc/userinfo&quot;,</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="s1">      &quot;issuer&quot;: &quot;https://login.microsoftonline.com/YOUR_TENANT_ID/v2.0&quot;</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="s1">    },</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="s1">    &quot;userAttributeMappings&quot;: {</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="s1">      &quot;firstName&quot;: &quot;given_name&quot;,</span>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="s1">      &quot;lastName&quot;: &quot;family_name&quot;,</span>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="s1">      &quot;email&quot;: &quot;email&quot;</span>
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a><span class="s1">    },</span>
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="s1">    &quot;userGroupMappings&quot;: {},</span>
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a><span class="s1">    &quot;ksPrivileges&quot;: &quot;&quot;</span>
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a><span class="s1">  }&#39;</span>
+</code></pre></div>
+<h3 id="example-okta-oauth2oidc-profile">Example: Okta OAuth2/OIDC Profile<a class="headerlink" href="#example-okta-oauth2oidc-profile" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_AUTH_BROKER_URL</span><span class="s2">/auth-profile/add&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: KS </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="s1">    &quot;name&quot;: &quot;Okta OIDC - Contractors&quot;,</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="s1">    &quot;description&quot;: &quot;OAuth2/OIDC SSO via Okta&quot;,</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="s1">    &quot;providerType&quot;: &quot;okta&quot;,</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="s1">    &quot;authStrategy&quot;: &quot;oauth2&quot;,</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="s1">    &quot;createNewUser&quot;: true,</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="s1">    &quot;userIdAttribute&quot;: &quot;email&quot;,</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="s1">    &quot;authStrategyConfig&quot;: {</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="s1">      &quot;clientId&quot;: &quot;YOUR_OKTA_CLIENT_ID&quot;,</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="s1">      &quot;clientSecret&quot;: &quot;YOUR_OKTA_CLIENT_SECRET&quot;,</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="s1">      &quot;authorizationURL&quot;: &quot;https://YOUR_ORG.okta.com/oauth2/default/v1/authorize&quot;,</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="s1">      &quot;tokenURL&quot;: &quot;https://YOUR_ORG.okta.com/oauth2/default/v1/token&quot;,</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="s1">      &quot;callbackUrl&quot;: &quot;https://auth.nvp1.ovp.kaltura.com/api/v1/auth-manager/oidc/ac&quot;,</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="s1">      &quot;scope&quot;: &quot;openid profile email groups&quot;,</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="s1">      &quot;userInfoURL&quot;: &quot;https://YOUR_ORG.okta.com/oauth2/default/v1/userinfo&quot;,</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="s1">      &quot;issuer&quot;: &quot;https://YOUR_ORG.okta.com/oauth2/default&quot;</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="s1">    },</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="s1">    &quot;userAttributeMappings&quot;: {</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="s1">      &quot;firstName&quot;: &quot;given_name&quot;,</span>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="s1">      &quot;lastName&quot;: &quot;family_name&quot;,</span>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="s1">      &quot;email&quot;: &quot;email&quot;</span>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="s1">    },</span>
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a><span class="s1">    &quot;userGroupMappings&quot;: {},</span>
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="s1">    &quot;ksPrivileges&quot;: &quot;&quot;</span>
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a><span class="s1">  }&#39;</span>
+</code></pre></div>
+<h3 id="oauth2oidc-attribute-names">OAuth2/OIDC Attribute Names<a class="headerlink" href="#oauth2oidc-attribute-names" title="Permanent link">&para;</a></h3>
+<p>When using OAuth2/OIDC, attribute names come from the ID token claims or userinfo endpoint response (standard OIDC claim names):</p>
+<table>
+<thead>
+<tr>
+<th>Kaltura Field</th>
+<th>OIDC Claim</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>firstName</code></td>
+<td><code>given_name</code></td>
+</tr>
+<tr>
+<td><code>lastName</code></td>
+<td><code>family_name</code></td>
+</tr>
+<tr>
+<td><code>email</code></td>
+<td><code>email</code></td>
+</tr>
+</tbody>
+</table>
+<p>The <code>userIdAttribute</code> for OIDC profiles is typically <code>"email"</code> (the standard OIDC email claim). For Azure AD, <code>"preferred_username"</code> or <code>"email"</code> can also be used.</p>
+<h3 id="saml-vs-oauth2oidc-comparison">SAML vs OAuth2/OIDC Comparison<a class="headerlink" href="#saml-vs-oauth2oidc-comparison" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>SAML</th>
+<th>OAuth2/OIDC</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Callback URL</td>
+<td><code>/auth-manager/saml/ac</code></td>
+<td><code>/auth-manager/oidc/ac</code></td>
+</tr>
+<tr>
+<td>SP Metadata</td>
+<td>Available via GET endpoint (section 11)</td>
+<td>Not applicable (use client ID/secret registration)</td>
+</tr>
+<tr>
+<td>Request Signing</td>
+<td>Optional via <code>enableRequestSign</code> + <code>generatePvKeys</code></td>
+<td>Not applicable (uses client secret)</td>
+</tr>
+<tr>
+<td>Assertion Decryption</td>
+<td>Optional via <code>enableAssertsDecryption</code></td>
+<td>Not applicable (token-based)</td>
+</tr>
+<tr>
+<td>IdP Setup</td>
+<td>Upload SP metadata XML to IdP</td>
+<td>Register callback URL and scopes in IdP OAuth2 app settings</td>
+</tr>
+<tr>
+<td>Group Claims</td>
+<td>Via SAML attribute assertions</td>
+<td>Via OIDC <code>groups</code> scope and token claims</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>OAuth2/OIDC profiles require the IdP to support the authorization code flow. The Auth Broker exchanges the authorization code for tokens server-side, keeping the client secret secure. The <code>callbackUrl</code> must be registered as a valid redirect URI in the IdP's OAuth2 application configuration.</p>
+</blockquote>
+<h2 id="53-add-an-auth-profile">5.3 Add an Auth Profile<a class="headerlink" href="#53-add-an-auth-profile" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>POST /api/v1/auth-profile/add
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Content-Type: application/json
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Authorization: KS &lt;KS&gt;
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_AUTH_BROKER_URL</span><span class="s2">/auth-profile/add&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: KS </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="s1">    &quot;name&quot;: &quot;Corporate Okta SSO&quot;,</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="s1">    &quot;description&quot;: &quot;SAML SSO via Okta for all employees&quot;,</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="s1">    &quot;providerType&quot;: &quot;okta&quot;,</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="s1">    &quot;authStrategy&quot;: &quot;saml&quot;,</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="s1">    &quot;isAdminProfile&quot;: false,</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="s1">    &quot;createNewUser&quot;: true,</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="s1">    &quot;createNewGroups&quot;: true,</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="s1">    &quot;removeFromExistingGroups&quot;: false,</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="s1">    &quot;userGroupsSyncAll&quot;: false,</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="s1">    &quot;userIdAttribute&quot;: &quot;Core_User_Email&quot;,</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="s1">    &quot;authStrategyConfig&quot;: {</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="s1">      &quot;issuer&quot;: &quot;kaltura-sso-production&quot;,</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="s1">      &quot;entryPoint&quot;: &quot;https://your-org.okta.com/app/APPID/sso/saml&quot;,</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="s1">      &quot;callbackUrl&quot;: &quot;https://auth.nvp1.ovp.kaltura.com/api/v1/auth-manager/saml/ac&quot;,</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="s1">      &quot;logoutUrl&quot;: &quot;https://your-org.okta.com/app/APPID/slo/saml&quot;,</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="s1">      &quot;logoutCallbackUrl&quot;: &quot;https://auth.nvp1.ovp.kaltura.com/api/v1/auth-manager/saml/logout&quot;,</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="s1">      &quot;cert&quot;: &quot;MIIDnj...(IdP certificate, base64 encoded)...&quot;,</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="s1">      &quot;validateInResponseTo&quot;: false,</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="s1">      &quot;digestAlgorithm&quot;: &quot;sha1&quot;,</span>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="s1">      &quot;signatureAlgorithm&quot;: &quot;sha1&quot;,</span>
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="s1">      &quot;enableRequestSign&quot;: false,</span>
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="s1">      &quot;enableAssertsDecryption&quot;: false,</span>
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a><span class="s1">      &quot;disableRequestedAuthnContext&quot;: true,</span>
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a><span class="s1">      &quot;requestIdExpirationPeriodMs&quot;: 28800000</span>
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a><span class="s1">    },</span>
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a><span class="s1">    &quot;userAttributeMappings&quot;: {</span>
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a><span class="s1">      &quot;firstName&quot;: &quot;Core_User_FirstName&quot;,</span>
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a><span class="s1">      &quot;lastName&quot;: &quot;Core_User_LastName&quot;,</span>
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a><span class="s1">      &quot;email&quot;: &quot;Core_User_Email&quot;</span>
+<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a><span class="s1">    },</span>
+<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a><span class="s1">    &quot;userGroupMappings&quot;: {},</span>
+<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a><span class="s1">    &quot;ksPrivileges&quot;: &quot;&quot;,</span>
+<a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a><span class="s1">    &quot;syncDelayTimeoutMin&quot;: 5</span>
+<a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a><span class="s1">  }&#39;</span>
+</code></pre></div>
+<p><strong>Request body parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Display name for the profile</td>
+</tr>
+<tr>
+<td><code>providerType</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>IdP provider: <code>azure</code>, <code>okta</code>, <code>aws</code>, <code>akamai</code>, <code>other</code></td>
+</tr>
+<tr>
+<td><code>authStrategy</code></td>
+<td>string</td>
+<td>Yes</td>
+<td><code>saml</code> or <code>oauth2</code></td>
+</tr>
+<tr>
+<td><code>authStrategyConfig</code></td>
+<td>object</td>
+<td>Yes</td>
+<td>IdP connection settings (see section 5.2 for SAML, 5.2b for OAuth2/OIDC)</td>
+</tr>
+<tr>
+<td><code>userIdAttribute</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>IdP attribute used as Kaltura user ID</td>
+</tr>
+<tr>
+<td><code>userAttributeMappings</code></td>
+<td>object</td>
+<td>Yes</td>
+<td>Map IdP attributes to Kaltura user fields (see section 6)</td>
+</tr>
+<tr>
+<td><code>userGroupMappings</code></td>
+<td>object</td>
+<td>Yes</td>
+<td>Map IdP groups to Kaltura groups (required even if empty <code>{}</code>)</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>string</td>
+<td>No</td>
+<td>Profile description</td>
+</tr>
+<tr>
+<td><code>isAdminProfile</code></td>
+<td>boolean</td>
+<td>No</td>
+<td>Whether this profile is for admin users (default: <code>false</code>)</td>
+</tr>
+<tr>
+<td><code>createNewUser</code></td>
+<td>boolean</td>
+<td>No</td>
+<td>Enable JIT user provisioning (default: <code>false</code>)</td>
+</tr>
+<tr>
+<td><code>createNewGroups</code></td>
+<td>boolean</td>
+<td>No</td>
+<td>Auto-create groups from IdP claims (default: <code>false</code>)</td>
+</tr>
+<tr>
+<td><code>removeFromExistingGroups</code></td>
+<td>boolean</td>
+<td>No</td>
+<td>Remove user from groups not in IdP claims (default: <code>false</code>)</td>
+</tr>
+<tr>
+<td><code>userGroupsSyncAll</code></td>
+<td>boolean</td>
+<td>No</td>
+<td>Sync all groups from IdP (default: <code>false</code>)</td>
+</tr>
+<tr>
+<td><code>ksPrivileges</code></td>
+<td>string</td>
+<td>No</td>
+<td>Additional KS privileges for authenticated users</td>
+</tr>
+<tr>
+<td><code>syncDelayTimeoutMin</code></td>
+<td>integer</td>
+<td>No</td>
+<td>Minutes to delay group sync after login</td>
+</tr>
+</tbody>
+</table>
+<p>Save the <code>id</code> from the response as <code>AUTH_PROFILE_ID</code>.</p>
+<p>The <code>userGroupMappings</code> field is required even when empty. Omitting it results in a <code>USER_GROUPS_SYNC_ALL_FALSE_AND_GROUPS_MISSING</code> error when <code>userGroupsSyncAll</code> is <code>false</code>.</p>
+<h2 id="54-get-an-auth-profile">5.4 Get an Auth Profile<a class="headerlink" href="#54-get-an-auth-profile" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>POST /api/v1/auth-profile/get
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Content-Type: application/json
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>Authorization: KS &lt;KS&gt;
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_AUTH_BROKER_URL</span><span class="s2">/auth-profile/get&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: KS </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{\&quot;id\&quot;: \&quot;</span><span class="nv">$AUTH_PROFILE_ID</span><span class="s2">\&quot;}&quot;</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Auth profile ID (MongoDB ObjectId from the <code>add</code> response)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Response:</strong> Full auth profile object.</p>
+<h2 id="55-list-auth-profiles">5.5 List Auth Profiles<a class="headerlink" href="#55-list-auth-profiles" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>POST /api/v1/auth-profile/list
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Content-Type: application/json
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>Authorization: KS &lt;KS&gt;
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_AUTH_BROKER_URL</span><span class="s2">/auth-profile/list&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: KS </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="s1">    &quot;filter&quot;: {},</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="s1">    &quot;pager&quot;: {&quot;offset&quot;: 0, &quot;limit&quot;: 25}</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="s1">  }&#39;</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>filter</code></td>
+<td>object</td>
+<td>No</td>
+<td>Filter criteria (empty <code>{}</code> returns all profiles for the partner)</td>
+</tr>
+<tr>
+<td><code>filter.providerType</code></td>
+<td>string</td>
+<td>No</td>
+<td>Filter by provider type (<code>azure</code>, <code>okta</code>, <code>aws</code>, <code>akamai</code>, <code>other</code>)</td>
+</tr>
+<tr>
+<td><code>filter.authStrategy</code></td>
+<td>string</td>
+<td>No</td>
+<td>Filter by auth strategy (<code>saml</code> or <code>oauth2</code>)</td>
+</tr>
+<tr>
+<td><code>filter.status</code></td>
+<td>string</td>
+<td>No</td>
+<td>Filter by status (<code>enabled</code> or <code>disabled</code>)</td>
+</tr>
+<tr>
+<td><code>pager</code></td>
+<td>object</td>
+<td>No</td>
+<td>Pagination settings</td>
+</tr>
+<tr>
+<td><code>pager.offset</code></td>
+<td>integer</td>
+<td>No</td>
+<td>Number of records to skip (default: 0)</td>
+</tr>
+<tr>
+<td><code>pager.limit</code></td>
+<td>integer</td>
+<td>No</td>
+<td>Maximum records to return (default: 25)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Response:</strong> <code>{ "objects": [...], "totalCount": N }</code> containing auth profile objects.</p>
+<h2 id="56-update-an-auth-profile">5.6 Update an Auth Profile<a class="headerlink" href="#56-update-an-auth-profile" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>POST /api/v1/auth-profile/update
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>Content-Type: application/json
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>Authorization: KS &lt;KS&gt;
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_AUTH_BROKER_URL</span><span class="s2">/auth-profile/update&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: KS </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="s2">    \&quot;id\&quot;: \&quot;</span><span class="nv">$AUTH_PROFILE_ID</span><span class="s2">\&quot;,</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="s2">    \&quot;name\&quot;: \&quot;Updated Okta SSO Profile\&quot;,</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="s2">    \&quot;createNewUser\&quot;: true</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="s2">  }&quot;</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Auth profile ID to update</td>
+</tr>
+<tr>
+<td>(any writable field)</td>
+<td>varies</td>
+<td>No</td>
+<td>Any field from the auth profile object (section 5.1) except read-only fields (<code>objectType</code>, <code>partnerId</code>, <code>version</code>, <code>createdAt</code>, <code>updatedAt</code>)</td>
+</tr>
+</tbody>
+</table>
+<p>Fields not included in the request remain unchanged. The <code>version</code> increments on each successful update.</p>
+<h2 id="57-delete-an-auth-profile">5.7 Delete an Auth Profile<a class="headerlink" href="#57-delete-an-auth-profile" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>POST /api/v1/auth-profile/delete
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>Content-Type: application/json
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>Authorization: KS &lt;KS&gt;
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_AUTH_BROKER_URL</span><span class="s2">/auth-profile/delete&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: KS </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{\&quot;id\&quot;: \&quot;</span><span class="nv">$AUTH_PROFILE_ID</span><span class="s2">\&quot;}&quot;</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Auth profile ID to delete</td>
+</tr>
+</tbody>
+</table>
+<p>Remove all app subscriptions referencing this profile before deleting it.</p>
+<h2 id="58-generate-privatepublic-keys">5.8 Generate Private/Public Keys<a class="headerlink" href="#58-generate-privatepublic-keys" title="Permanent link">&para;</a></h2>
+<p>Generate a key pair for SAML request signing or assertion decryption:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_AUTH_BROKER_URL</span><span class="s2">/auth-profile/generatePvKeys&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: KS </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{\&quot;id\&quot;: \&quot;</span><span class="nv">$AUTH_PROFILE_ID</span><span class="s2">\&quot;}&quot;</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Auth profile ID to generate keys for</td>
+</tr>
+</tbody>
+</table>
+<p>Use this when <code>enableRequestSign</code> or <code>enableAssertsDecryption</code> is set to <code>true</code>. The generated public key is included in the SP metadata (see section 11). This action is only applicable to SAML auth profiles.</p>
+<h1 id="6-attribute-mapping">6. Attribute Mapping<a class="headerlink" href="#6-attribute-mapping" title="Permanent link">&para;</a></h1>
+<p>The <code>userAttributeMappings</code> object maps IdP assertion attributes to Kaltura user fields. When a user authenticates via SSO, the Auth Broker reads the IdP response attributes and sets the corresponding Kaltura user fields.</p>
+<table>
+<thead>
+<tr>
+<th>Kaltura Field</th>
+<th>Description</th>
+<th>Example IdP Attribute</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>firstName</code></td>
+<td>User's first name</td>
+<td><code>Core_User_FirstName</code></td>
+</tr>
+<tr>
+<td><code>lastName</code></td>
+<td>User's last name</td>
+<td><code>Core_User_LastName</code></td>
+</tr>
+<tr>
+<td><code>email</code></td>
+<td>User's email address</td>
+<td><code>Core_User_Email</code></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="p">{</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">  </span><span class="nt">&quot;userAttributeMappings&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">    </span><span class="nt">&quot;firstName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Core_User_FirstName&quot;</span><span class="p">,</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">    </span><span class="nt">&quot;lastName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Core_User_LastName&quot;</span><span class="p">,</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">    </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Core_User_Email&quot;</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="p">}</span>
+</code></pre></div>
+<p>The <code>userIdAttribute</code> field (top-level on the auth profile) specifies which IdP attribute is used as the Kaltura <code>userId</code>. This is typically the email attribute (e.g., <code>Core_User_Email</code>). The value from this attribute becomes the user's <code>externalId</code> in the Kaltura user record.</p>
+<h3 id="azure-ad-entra-id-attribute-names">Azure AD / Entra ID Attribute Names<a class="headerlink" href="#azure-ad-entra-id-attribute-names" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Kaltura Field</th>
+<th>Azure AD Attribute</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>firstName</code></td>
+<td><code>http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname</code></td>
+</tr>
+<tr>
+<td><code>lastName</code></td>
+<td><code>http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname</code></td>
+</tr>
+<tr>
+<td><code>email</code></td>
+<td><code>http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="okta-attribute-names-saml">Okta Attribute Names (SAML)<a class="headerlink" href="#okta-attribute-names-saml" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Kaltura Field</th>
+<th>Okta Attribute</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>firstName</code></td>
+<td><code>Core_User_FirstName</code></td>
+</tr>
+<tr>
+<td><code>lastName</code></td>
+<td><code>Core_User_LastName</code></td>
+</tr>
+<tr>
+<td><code>email</code></td>
+<td><code>Core_User_Email</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="oauth2oidc-standard-claim-names">OAuth2/OIDC Standard Claim Names<a class="headerlink" href="#oauth2oidc-standard-claim-names" title="Permanent link">&para;</a></h3>
+<p>When using <code>authStrategy: "oauth2"</code>, attribute names come from standard OIDC claims (ID token or userinfo response):</p>
+<table>
+<thead>
+<tr>
+<th>Kaltura Field</th>
+<th>OIDC Claim</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>firstName</code></td>
+<td><code>given_name</code></td>
+<td>User's first name</td>
+</tr>
+<tr>
+<td><code>lastName</code></td>
+<td><code>family_name</code></td>
+<td>User's last name</td>
+</tr>
+<tr>
+<td><code>email</code></td>
+<td><code>email</code></td>
+<td>User's email address</td>
+</tr>
+</tbody>
+</table>
+<p>These claim names are consistent across Azure AD, Okta, and other OIDC-compliant providers. The <code>userIdAttribute</code> for OIDC profiles is typically <code>"email"</code> or <code>"preferred_username"</code>.</p>
+<h1 id="7-group-sync">7. Group Sync<a class="headerlink" href="#7-group-sync" title="Permanent link">&para;</a></h1>
+<p>The Auth Broker can synchronize user group memberships from IdP claims to Kaltura groups using the <code>groupUser.sync</code> mechanism.</p>
+<h2 id="71-configuration-fields">7.1 Configuration Fields<a class="headerlink" href="#71-configuration-fields" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>createNewGroups</code></td>
+<td>boolean</td>
+<td>Auto-create Kaltura groups from IdP claims if they do not exist</td>
+</tr>
+<tr>
+<td><code>removeFromExistingGroups</code></td>
+<td>boolean</td>
+<td>Remove user from Kaltura groups not present in IdP claims</td>
+</tr>
+<tr>
+<td><code>userGroupsSyncAll</code></td>
+<td>boolean</td>
+<td>Sync all groups from the IdP group attribute (ignores <code>userGroupMappings</code>)</td>
+</tr>
+<tr>
+<td><code>userGroupMappings</code></td>
+<td>object</td>
+<td>Map specific IdP group names to Kaltura group IDs</td>
+</tr>
+<tr>
+<td><code>syncDelayTimeoutMin</code></td>
+<td>integer</td>
+<td>Minutes to delay group sync after login (allows batch processing)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="72-group-mapping-modes">7.2 Group Mapping Modes<a class="headerlink" href="#72-group-mapping-modes" title="Permanent link">&para;</a></h2>
+<p><strong>Sync all groups</strong> (<code>userGroupsSyncAll: true</code>): Every group from the IdP group attribute is synced to Kaltura. The <code>userGroupMappings</code> field is ignored.</p>
+<p><strong>Map specific groups</strong> (<code>userGroupsSyncAll: false</code>): Only groups listed in <code>userGroupMappings</code> are synced. The mapping translates IdP group names to Kaltura group IDs:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="p">{</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">  </span><span class="nt">&quot;userGroupsSyncAll&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">  </span><span class="nt">&quot;userGroupMappings&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">    </span><span class="nt">&quot;IdP_Engineering_Team&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;kaltura_engineering&quot;</span><span class="p">,</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="w">    </span><span class="nt">&quot;IdP_Marketing_Team&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;kaltura_marketing&quot;</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="p">}</span>
+</code></pre></div>
+<p>When <code>userGroupsSyncAll</code> is <code>false</code>, the <code>userGroupMappings</code> field is required (even if empty <code>{}</code>). Omitting it triggers the <code>USER_GROUPS_SYNC_ALL_FALSE_AND_GROUPS_MISSING</code> error.</p>
+<h2 id="73-group-removal">7.3 Group Removal<a class="headerlink" href="#73-group-removal" title="Permanent link">&para;</a></h2>
+<p>When <code>removeFromExistingGroups</code> is <code>true</code>, users are removed from any Kaltura groups that are not present in the current IdP assertion. This ensures Kaltura group membership stays in sync with IdP state. When <code>false</code>, groups are only added — users keep existing Kaltura group memberships even if removed from the IdP group.</p>
+<h1 id="8-app-subscription-crud">8. App Subscription CRUD<a class="headerlink" href="#8-app-subscription-crud" title="Permanent link">&para;</a></h1>
+<p>App subscriptions link registered applications (from the <a href="../KALTURA_APP_REGISTRY_API/">App Registry</a>) to auth profiles, defining which IdP handles login for each app. Actions: <code>add</code>, <code>get</code>, <code>list</code>, <code>update</code>, <code>delete</code>.</p>
+<h2 id="81-app-subscription-object">8.1 App Subscription Object<a class="headerlink" href="#81-app-subscription-object" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>string</td>
+<td>Auto-generated ID (read-only)</td>
+</tr>
+<tr>
+<td><code>objectType</code></td>
+<td>string</td>
+<td>Always <code>"AppSubscription"</code> (read-only)</td>
+</tr>
+<tr>
+<td><code>partnerId</code></td>
+<td>integer</td>
+<td>Partner ID from KS (read-only)</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>Subscription display name</td>
+</tr>
+<tr>
+<td><code>appGuid</code></td>
+<td>string</td>
+<td>App GUID from the App Registry</td>
+</tr>
+<tr>
+<td><code>authProfileIds</code></td>
+<td>string[]</td>
+<td>Array of auth profile IDs to use for this app</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>string</td>
+<td><code>enabled</code> or <code>disabled</code></td>
+</tr>
+<tr>
+<td><code>version</code></td>
+<td>integer</td>
+<td>Auto-incrementing version (read-only)</td>
+</tr>
+<tr>
+<td><code>appLandingPage</code></td>
+<td>string</td>
+<td>URL to redirect after successful login (receives KS + JWT)</td>
+</tr>
+<tr>
+<td><code>appErrorPage</code></td>
+<td>string</td>
+<td>URL to redirect on authentication error</td>
+</tr>
+<tr>
+<td><code>redirectMethod</code></td>
+<td>string</td>
+<td><code>HTTP-POST</code> or <code>HTTP-GET</code> — how to deliver credentials to landing page</td>
+</tr>
+<tr>
+<td><code>ksPrivileges</code></td>
+<td>string</td>
+<td>KS privileges for sessions created through this subscription</td>
+</tr>
+<tr>
+<td><code>permissionList</code></td>
+<td>array</td>
+<td>Permission list for fine-grained access control</td>
+</tr>
+<tr>
+<td><code>permissionListStatus</code></td>
+<td>string</td>
+<td><code>none</code>, <code>whitelist</code>, or <code>blacklist</code></td>
+</tr>
+<tr>
+<td><code>attributePermissionListStatus</code></td>
+<td>string</td>
+<td><code>none</code>, <code>whitelist</code>, or <code>blacklist</code></td>
+</tr>
+<tr>
+<td><code>userGroupsSyncAll</code></td>
+<td>boolean</td>
+<td>Override profile-level group sync for this subscription</td>
+</tr>
+<tr>
+<td><code>createdAt</code></td>
+<td>string</td>
+<td>ISO 8601 timestamp (read-only)</td>
+</tr>
+<tr>
+<td><code>updatedAt</code></td>
+<td>string</td>
+<td>ISO 8601 timestamp (read-only)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="redirect-methods">Redirect Methods<a class="headerlink" href="#redirect-methods" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>HTTP-POST</code></td>
+<td>Credentials sent as form POST body to landing page (more secure, prevents URL leakage)</td>
+</tr>
+<tr>
+<td><code>HTTP-GET</code></td>
+<td>Credentials appended as URL query parameters</td>
+</tr>
+</tbody>
+</table>
+<h2 id="82-add-an-app-subscription">8.2 Add an App Subscription<a class="headerlink" href="#82-add-an-app-subscription" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>POST /api/v1/app-subscription/add
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>Content-Type: application/json
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>Authorization: KS &lt;KS&gt;
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_AUTH_BROKER_URL</span><span class="s2">/app-subscription/add&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: KS </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="s2">    \&quot;name\&quot;: \&quot;Events Portal SSO\&quot;,</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="s2">    \&quot;appGuid\&quot;: \&quot;</span><span class="nv">$APP_GUID</span><span class="s2">\&quot;,</span>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="s2">    \&quot;authProfileIds\&quot;: [\&quot;</span><span class="nv">$AUTH_PROFILE_ID</span><span class="s2">\&quot;],</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="s2">    \&quot;appLandingPage\&quot;: \&quot;https://events.example.com/user/authenticate\&quot;,</span>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="s2">    \&quot;appErrorPage\&quot;: \&quot;https://events.example.com/user/authenticate\&quot;,</span>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="s2">    \&quot;redirectMethod\&quot;: \&quot;HTTP-POST\&quot;,</span>
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a><span class="s2">    \&quot;ksPrivileges\&quot;: \&quot;kmslogin\&quot;</span>
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a><span class="s2">  }&quot;</span>
+</code></pre></div>
+<p><strong>Request body parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Subscription display name</td>
+</tr>
+<tr>
+<td><code>appGuid</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>App GUID from the <a href="../KALTURA_APP_REGISTRY_API/">App Registry</a></td>
+</tr>
+<tr>
+<td><code>authProfileIds</code></td>
+<td>string[]</td>
+<td>Yes</td>
+<td>Array of auth profile IDs to use for this app</td>
+</tr>
+<tr>
+<td><code>appLandingPage</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>URL to redirect after successful login (receives KS + JWT)</td>
+</tr>
+<tr>
+<td><code>appErrorPage</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>URL to redirect on authentication error</td>
+</tr>
+<tr>
+<td><code>redirectMethod</code></td>
+<td>string</td>
+<td>No</td>
+<td><code>HTTP-POST</code> (default) or <code>HTTP-GET</code> — how to deliver credentials to landing page</td>
+</tr>
+<tr>
+<td><code>ksPrivileges</code></td>
+<td>string</td>
+<td>No</td>
+<td>KS privileges for sessions created through this subscription</td>
+</tr>
+<tr>
+<td><code>permissionList</code></td>
+<td>array</td>
+<td>No</td>
+<td>Permission list for fine-grained access control</td>
+</tr>
+<tr>
+<td><code>permissionListStatus</code></td>
+<td>string</td>
+<td>No</td>
+<td><code>none</code> (default), <code>whitelist</code>, or <code>blacklist</code></td>
+</tr>
+<tr>
+<td><code>attributePermissionListStatus</code></td>
+<td>string</td>
+<td>No</td>
+<td><code>none</code> (default), <code>whitelist</code>, or <code>blacklist</code></td>
+</tr>
+<tr>
+<td><code>userGroupsSyncAll</code></td>
+<td>boolean</td>
+<td>No</td>
+<td>Override profile-level group sync for this subscription</td>
+</tr>
+</tbody>
+</table>
+<p>Save the <code>id</code> from the response as <code>APP_SUBSCRIPTION_ID</code>. The <code>appGuid</code> must reference an existing, enabled app in the <a href="../KALTURA_APP_REGISTRY_API/">App Registry</a>.</p>
+<h2 id="83-get-an-app-subscription">8.3 Get an App Subscription<a class="headerlink" href="#83-get-an-app-subscription" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_AUTH_BROKER_URL</span><span class="s2">/app-subscription/get&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: KS </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{\&quot;id\&quot;: \&quot;</span><span class="nv">$APP_SUBSCRIPTION_ID</span><span class="s2">\&quot;}&quot;</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>App subscription ID</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Response:</strong> Full app subscription object.</p>
+<h2 id="84-list-app-subscriptions">8.4 List App Subscriptions<a class="headerlink" href="#84-list-app-subscriptions" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_AUTH_BROKER_URL</span><span class="s2">/app-subscription/list&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: KS </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="s1">    &quot;filter&quot;: {},</span>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="s1">    &quot;pager&quot;: {&quot;offset&quot;: 0, &quot;limit&quot;: 25}</span>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="s1">  }&#39;</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>filter</code></td>
+<td>object</td>
+<td>No</td>
+<td>Filter criteria (empty <code>{}</code> returns all subscriptions for the partner)</td>
+</tr>
+<tr>
+<td><code>filter.appGuid</code></td>
+<td>string</td>
+<td>No</td>
+<td>Filter by app GUID</td>
+</tr>
+<tr>
+<td><code>filter.status</code></td>
+<td>string</td>
+<td>No</td>
+<td>Filter by status (<code>enabled</code> or <code>disabled</code>)</td>
+</tr>
+<tr>
+<td><code>pager</code></td>
+<td>object</td>
+<td>No</td>
+<td>Pagination settings</td>
+</tr>
+<tr>
+<td><code>pager.offset</code></td>
+<td>integer</td>
+<td>No</td>
+<td>Number of records to skip (default: 0)</td>
+</tr>
+<tr>
+<td><code>pager.limit</code></td>
+<td>integer</td>
+<td>No</td>
+<td>Maximum records to return (default: 25)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Response:</strong> <code>{ "objects": [...], "totalCount": N }</code> containing app subscription objects.</p>
+<h2 id="85-update-an-app-subscription">8.5 Update an App Subscription<a class="headerlink" href="#85-update-an-app-subscription" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_AUTH_BROKER_URL</span><span class="s2">/app-subscription/update&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: KS </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{</span>
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="s2">    \&quot;id\&quot;: \&quot;</span><span class="nv">$APP_SUBSCRIPTION_ID</span><span class="s2">\&quot;,</span>
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="s2">    \&quot;appLandingPage\&quot;: \&quot;https://events.example.com/sso-redirect\&quot;,</span>
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="s2">    \&quot;redirectMethod\&quot;: \&quot;HTTP-GET\&quot;</span>
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="s2">  }&quot;</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>App subscription ID to update</td>
+</tr>
+<tr>
+<td>(any writable field)</td>
+<td>varies</td>
+<td>No</td>
+<td>Any field from the app subscription object (section 8.1) except read-only fields (<code>objectType</code>, <code>partnerId</code>, <code>version</code>, <code>createdAt</code>, <code>updatedAt</code>)</td>
+</tr>
+</tbody>
+</table>
+<p>Fields not included in the request remain unchanged. The <code>version</code> increments on each successful update.</p>
+<h2 id="86-delete-an-app-subscription">8.6 Delete an App Subscription<a class="headerlink" href="#86-delete-an-app-subscription" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_AUTH_BROKER_URL</span><span class="s2">/app-subscription/delete&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: KS </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{\&quot;id\&quot;: \&quot;</span><span class="nv">$APP_SUBSCRIPTION_ID</span><span class="s2">\&quot;}&quot;</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>App subscription ID to delete</td>
+</tr>
+</tbody>
+</table>
+<h1 id="9-sso-login-flow">9. SSO Login Flow<a class="headerlink" href="#9-sso-login-flow" title="Permanent link">&para;</a></h1>
+<p>The complete SSO login sequence involves generating a token, redirecting to the IdP, and processing the callback.</p>
+<h2 id="91-flow-sequence">9.1 Flow Sequence<a class="headerlink" href="#91-flow-sequence" title="Permanent link">&para;</a></h2>
+<p><strong>SAML flow:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>1. App calls generateAuthBrokerToken with {appGuid, authProfileId, origURL}
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>2. Auth Broker returns an encrypted token
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>3. App POSTs the token to /auth-manager/login
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>4. Auth Broker responds with 302 redirect to the IdP SAML SSO URL
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>5. User authenticates at the IdP
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>6. IdP POSTs SAML assertion to /auth-manager/saml/ac
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>7. Auth Broker validates the SAML assertion, extracts attributes
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>8. Auth Broker creates or updates the Kaltura user (JIT provisioning)
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>9. Auth Broker syncs group memberships from IdP claims
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a>10. Auth Broker generates a KS and signs a JWT
+<a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a>11. Auth Broker redirects to appLandingPage with KS and JWT
+</code></pre></div>
+<p><strong>OAuth2/OIDC flow:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>1. App calls generateAuthBrokerToken with {appGuid, authProfileId, origURL}
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>2. Auth Broker returns an encrypted token
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>3. App POSTs the token to /auth-manager/login
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>4. Auth Broker responds with 302 redirect to the IdP authorization URL (with client_id, scope, redirect_uri)
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>5. User authenticates at the IdP and grants consent
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>6. IdP redirects to /auth-manager/oidc/ac with an authorization code
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a>7. Auth Broker exchanges the code for access token + ID token at the IdP token URL
+<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>8. Auth Broker extracts user attributes from the ID token (or calls the userinfo endpoint)
+<a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a>9. Auth Broker creates or updates the Kaltura user (JIT provisioning)
+<a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a>10. Auth Broker syncs group memberships from token claims
+<a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a>11. Auth Broker generates a KS and signs a JWT
+<a id="__codelineno-24-12" name="__codelineno-24-12" href="#__codelineno-24-12"></a>12. Auth Broker redirects to appLandingPage with KS and JWT
+</code></pre></div>
+<h2 id="92-generate-auth-broker-token">9.2 Generate Auth Broker Token<a class="headerlink" href="#92-generate-auth-broker-token" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>POST /api/v1/auth-manager/generateAuthBrokerToken
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>Content-Type: application/json
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>Authorization: KS &lt;KS&gt;
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_AUTH_BROKER_URL</span><span class="s2">/auth-manager/generateAuthBrokerToken&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: KS </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{</span>
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a><span class="s2">    \&quot;appGuid\&quot;: \&quot;</span><span class="nv">$APP_GUID</span><span class="s2">\&quot;,</span>
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a><span class="s2">    \&quot;authProfileId\&quot;: \&quot;</span><span class="nv">$AUTH_PROFILE_ID</span><span class="s2">\&quot;,</span>
+<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a><span class="s2">    \&quot;origURL\&quot;: \&quot;https://events.example.com/dashboard\&quot;</span>
+<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a><span class="s2">  }&quot;</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>appGuid</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>App GUID from App Registry</td>
+</tr>
+<tr>
+<td><code>authProfileId</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Auth profile ID to use for login</td>
+</tr>
+<tr>
+<td><code>origURL</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>URL to redirect back to after login</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Response:</strong> An encrypted token string.</p>
+<h2 id="93-start-login">9.3 Start Login<a class="headerlink" href="#93-start-login" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>POST /api/v1/auth-manager/login
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>Content-Type: application/json
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>Authorization: KS &lt;KS&gt;
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_AUTH_BROKER_URL</span><span class="s2">/auth-manager/login&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: KS </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{\&quot;token\&quot;: \&quot;</span><span class="nv">$ENCRYPTED_TOKEN</span><span class="s2">\&quot;}&quot;</span>
+</code></pre></div>
+<p><strong>Response:</strong> HTTP 302 redirect to the IdP login page. The browser follows this redirect automatically.</p>
+<h2 id="94-callback-endpoints">9.4 Callback Endpoints<a class="headerlink" href="#94-callback-endpoints" title="Permanent link">&para;</a></h2>
+<p>After the user authenticates at the IdP, the IdP sends the response to one of these callback URLs:</p>
+<table>
+<thead>
+<tr>
+<th>Protocol</th>
+<th>Callback URL</th>
+<th>HTTP Method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SAML</td>
+<td><code>/api/v1/auth-manager/saml/ac</code></td>
+<td>POST</td>
+</tr>
+<tr>
+<td>OIDC</td>
+<td><code>/api/v1/auth-manager/oidc/ac</code></td>
+<td>GET or POST</td>
+</tr>
+<tr>
+<td>OAuth2</td>
+<td><code>/api/v1/auth-manager/oauth2/ac</code></td>
+<td>GET</td>
+</tr>
+</tbody>
+</table>
+<p>These callbacks are configured in the IdP and must match the <code>callbackUrl</code> in the auth profile's <code>authStrategyConfig</code>. The Auth Broker processes the callback, provisions the user, and redirects to the <code>appLandingPage</code> with credentials.</p>
+<h1 id="10-spa-proxy">10. SPA Proxy<a class="headerlink" href="#10-spa-proxy" title="Permanent link">&para;</a></h1>
+<p>The SPA Proxy provides a login entry point for single-page applications like KMC that need to discover the correct auth profile and redirect flow.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>POST /api/v1/spa-proxy/login
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>Content-Type: application/json
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>Authorization: KS &lt;KS&gt;
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_AUTH_BROKER_URL</span><span class="s2">/spa-proxy/login&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: KS </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a><span class="s1">    &quot;appType&quot;: &quot;kmc&quot;,</span>
+<a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a><span class="s1">    &quot;email&quot;: &quot;user@example.com&quot;</span>
+<a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a><span class="s1">  }&#39;</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>appType</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Application type (e.g., <code>kmc</code>, <code>kms</code>)</td>
+</tr>
+<tr>
+<td><code>email</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>User email for IdP discovery</td>
+</tr>
+<tr>
+<td><code>organizationId</code></td>
+<td>string</td>
+<td>No</td>
+<td>Organization ID for multi-tenant setups</td>
+</tr>
+<tr>
+<td><code>authProfileId</code></td>
+<td>string</td>
+<td>No</td>
+<td>Specific auth profile to use (skips discovery)</td>
+</tr>
+</tbody>
+</table>
+<p>The SPA Proxy resolves the correct auth profile based on the email domain and app type, then initiates the login flow.</p>
+<h3 id="per-app-integration-patterns">Per-App Integration Patterns<a class="headerlink" href="#per-app-integration-patterns" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Application</th>
+<th>Login Method</th>
+<th>Landing Page</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MediaSpace (KMS)</td>
+<td><code>generateAuthBrokerToken</code></td>
+<td><code>/user/authenticate</code></td>
+</tr>
+<tr>
+<td>KMC</td>
+<td><code>sso.login</code> with fallback to <code>spa-proxy/login</code></td>
+<td><code>/index.php/kmcng/actions/persist-login-by-ks</code></td>
+</tr>
+<tr>
+<td>Events Platform</td>
+<td>Template-based auth profiles</td>
+<td><code>{epServer}/sso-redirect</code></td>
+</tr>
+</tbody>
+</table>
+<h1 id="11-saml-sp-metadata">11. SAML SP Metadata<a class="headerlink" href="#11-saml-sp-metadata" title="Permanent link">&para;</a></h1>
+<p>Retrieve the SAML Service Provider metadata XML for a specific auth profile. This metadata is provided to the IdP during SSO setup.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>GET /api/v1/auth-manager/saml/metadata/{partnerId}/{profileId}
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_AUTH_BROKER_URL</span><span class="s2">/auth-manager/saml/metadata/</span><span class="nv">$PARTNER_ID</span><span class="s2">/</span><span class="nv">$AUTH_PROFILE_ID</span><span class="s2">&quot;</span>
+</code></pre></div>
+<p><strong>Response:</strong> XML document containing the SP entity ID, ACS URL, logout URL, and (if generated) the SP signing/encryption certificate. Provide this metadata URL or download the XML file and upload it to your IdP configuration.</p>
+<h1 id="12-multi-sso-configuration">12. Multi-SSO Configuration<a class="headerlink" href="#12-multi-sso-configuration" title="Permanent link">&para;</a></h1>
+<p>A partner can configure multiple identity providers and control how they are selected per application. This is useful when different user populations authenticate through different IdPs (e.g., employees via Azure AD, contractors via Okta).</p>
+<h2 id="121-multiple-auth-profiles-per-partner">12.1 Multiple Auth Profiles per Partner<a class="headerlink" href="#121-multiple-auth-profiles-per-partner" title="Permanent link">&para;</a></h2>
+<p>Each call to <code>auth-profile/add</code> creates an independent IdP configuration. A single partner can have any number of auth profiles — one per identity provider or per authentication strategy:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="c1"># Create an Azure AD profile</span>
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_AUTH_BROKER_URL</span><span class="s2">/auth-profile/add&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: KS </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a><span class="s1">    &quot;name&quot;: &quot;Azure AD - Employees&quot;,</span>
+<a id="__codelineno-33-7" name="__codelineno-33-7" href="#__codelineno-33-7"></a><span class="s1">    &quot;providerType&quot;: &quot;azure&quot;,</span>
+<a id="__codelineno-33-8" name="__codelineno-33-8" href="#__codelineno-33-8"></a><span class="s1">    &quot;authStrategy&quot;: &quot;saml&quot;,</span>
+<a id="__codelineno-33-9" name="__codelineno-33-9" href="#__codelineno-33-9"></a><span class="s1">    &quot;createNewUser&quot;: true,</span>
+<a id="__codelineno-33-10" name="__codelineno-33-10" href="#__codelineno-33-10"></a><span class="s1">    &quot;userIdAttribute&quot;: &quot;http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress&quot;,</span>
+<a id="__codelineno-33-11" name="__codelineno-33-11" href="#__codelineno-33-11"></a><span class="s1">    &quot;authStrategyConfig&quot;: { ... },</span>
+<a id="__codelineno-33-12" name="__codelineno-33-12" href="#__codelineno-33-12"></a><span class="s1">    &quot;userAttributeMappings&quot;: { ... },</span>
+<a id="__codelineno-33-13" name="__codelineno-33-13" href="#__codelineno-33-13"></a><span class="s1">    &quot;userGroupMappings&quot;: {}</span>
+<a id="__codelineno-33-14" name="__codelineno-33-14" href="#__codelineno-33-14"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-33-15" name="__codelineno-33-15" href="#__codelineno-33-15"></a><span class="c1"># Save response id as AZURE_PROFILE_ID</span>
+<a id="__codelineno-33-16" name="__codelineno-33-16" href="#__codelineno-33-16"></a>
+<a id="__codelineno-33-17" name="__codelineno-33-17" href="#__codelineno-33-17"></a><span class="c1"># Create an Okta profile</span>
+<a id="__codelineno-33-18" name="__codelineno-33-18" href="#__codelineno-33-18"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_AUTH_BROKER_URL</span><span class="s2">/auth-profile/add&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-33-19" name="__codelineno-33-19" href="#__codelineno-33-19"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: KS </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-33-20" name="__codelineno-33-20" href="#__codelineno-33-20"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-33-21" name="__codelineno-33-21" href="#__codelineno-33-21"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-33-22" name="__codelineno-33-22" href="#__codelineno-33-22"></a><span class="s1">    &quot;name&quot;: &quot;Okta - Contractors&quot;,</span>
+<a id="__codelineno-33-23" name="__codelineno-33-23" href="#__codelineno-33-23"></a><span class="s1">    &quot;providerType&quot;: &quot;okta&quot;,</span>
+<a id="__codelineno-33-24" name="__codelineno-33-24" href="#__codelineno-33-24"></a><span class="s1">    &quot;authStrategy&quot;: &quot;saml&quot;,</span>
+<a id="__codelineno-33-25" name="__codelineno-33-25" href="#__codelineno-33-25"></a><span class="s1">    &quot;createNewUser&quot;: true,</span>
+<a id="__codelineno-33-26" name="__codelineno-33-26" href="#__codelineno-33-26"></a><span class="s1">    &quot;userIdAttribute&quot;: &quot;Core_User_Email&quot;,</span>
+<a id="__codelineno-33-27" name="__codelineno-33-27" href="#__codelineno-33-27"></a><span class="s1">    &quot;authStrategyConfig&quot;: { ... },</span>
+<a id="__codelineno-33-28" name="__codelineno-33-28" href="#__codelineno-33-28"></a><span class="s1">    &quot;userAttributeMappings&quot;: { ... },</span>
+<a id="__codelineno-33-29" name="__codelineno-33-29" href="#__codelineno-33-29"></a><span class="s1">    &quot;userGroupMappings&quot;: {}</span>
+<a id="__codelineno-33-30" name="__codelineno-33-30" href="#__codelineno-33-30"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-33-31" name="__codelineno-33-31" href="#__codelineno-33-31"></a><span class="c1"># Save response id as OKTA_PROFILE_ID</span>
+</code></pre></div>
+<p>Each profile has its own IdP connection settings, attribute mappings, group sync rules, and JIT provisioning behavior.</p>
+<h2 id="122-app-level-profile-selection">12.2 App-Level Profile Selection<a class="headerlink" href="#122-app-level-profile-selection" title="Permanent link">&para;</a></h2>
+<p>An app subscription can reference multiple auth profiles via the <code>authProfileIds</code> array. When a login flow is initiated for that app, the system uses the <code>authProfileId</code> parameter in <code>generateAuthBrokerToken</code> to route the user to a specific IdP:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_AUTH_BROKER_URL</span><span class="s2">/app-subscription/add&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: KS </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-34-5" name="__codelineno-34-5" href="#__codelineno-34-5"></a><span class="s1">    &quot;name&quot;: &quot;Multi-SSO App&quot;,</span>
+<a id="__codelineno-34-6" name="__codelineno-34-6" href="#__codelineno-34-6"></a><span class="s1">    &quot;appGuid&quot;: &quot;&#39;</span><span class="nv">$APP_GUID</span><span class="s1">&#39;&quot;,</span>
+<a id="__codelineno-34-7" name="__codelineno-34-7" href="#__codelineno-34-7"></a><span class="s1">    &quot;authProfileIds&quot;: [&quot;&#39;</span><span class="nv">$AZURE_PROFILE_ID</span><span class="s1">&#39;&quot;, &quot;&#39;</span><span class="nv">$OKTA_PROFILE_ID</span><span class="s1">&#39;&quot;],</span>
+<a id="__codelineno-34-8" name="__codelineno-34-8" href="#__codelineno-34-8"></a><span class="s1">    &quot;appLandingPage&quot;: &quot;https://myapp.example.com/auth/callback&quot;,</span>
+<a id="__codelineno-34-9" name="__codelineno-34-9" href="#__codelineno-34-9"></a><span class="s1">    &quot;appErrorPage&quot;: &quot;https://myapp.example.com/auth/error&quot;,</span>
+<a id="__codelineno-34-10" name="__codelineno-34-10" href="#__codelineno-34-10"></a><span class="s1">    &quot;ksPrivileges&quot;: &quot;kmslogin&quot;</span>
+<a id="__codelineno-34-11" name="__codelineno-34-11" href="#__codelineno-34-11"></a><span class="s1">  }&#39;</span>
+</code></pre></div>
+<p>When calling <code>generateAuthBrokerToken</code>, specify which profile to use:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a><span class="c1"># Route to Azure AD</span>
+<a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_AUTH_BROKER_URL</span><span class="s2">/auth-manager/generateAuthBrokerToken&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: KS </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-35-4" name="__codelineno-35-4" href="#__codelineno-35-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-35-5" name="__codelineno-35-5" href="#__codelineno-35-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{</span>
+<a id="__codelineno-35-6" name="__codelineno-35-6" href="#__codelineno-35-6"></a><span class="s2">    \&quot;appGuid\&quot;: \&quot;</span><span class="nv">$APP_GUID</span><span class="s2">\&quot;,</span>
+<a id="__codelineno-35-7" name="__codelineno-35-7" href="#__codelineno-35-7"></a><span class="s2">    \&quot;authProfileId\&quot;: \&quot;</span><span class="nv">$AZURE_PROFILE_ID</span><span class="s2">\&quot;,</span>
+<a id="__codelineno-35-8" name="__codelineno-35-8" href="#__codelineno-35-8"></a><span class="s2">    \&quot;origURL\&quot;: \&quot;https://myapp.example.com/dashboard\&quot;</span>
+<a id="__codelineno-35-9" name="__codelineno-35-9" href="#__codelineno-35-9"></a><span class="s2">  }&quot;</span>
+</code></pre></div>
+<p>The specified <code>authProfileId</code> must be listed in the subscription's <code>authProfileIds</code> array.</p>
+<h2 id="123-per-subscription-overrides">12.3 Per-Subscription Overrides<a class="headerlink" href="#123-per-subscription-overrides" title="Permanent link">&para;</a></h2>
+<p>Each app subscription can override <code>ksPrivileges</code> from the auth profile, allowing the same IdP profile to produce different session privileges per application. The <code>userIdAttribute</code> on the auth profile determines user identity, but the subscription's <code>ksPrivileges</code> controls what the resulting KS can access:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Auth Profile Level</th>
+<th>App Subscription Level</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ksPrivileges</code></td>
+<td>Default privileges for all apps</td>
+<td>Override for this specific app</td>
+<td>Subscription value takes precedence when set</td>
+</tr>
+<tr>
+<td><code>userGroupsSyncAll</code></td>
+<td>Default group sync mode</td>
+<td>Override for this specific app</td>
+<td>Subscription value takes precedence when set</td>
+</tr>
+</tbody>
+</table>
+<p>This allows a single Azure AD profile to grant <code>kmslogin</code> privileges for a MediaSpace subscription and different privileges for an Events Platform subscription, without duplicating the IdP configuration.</p>
+<h2 id="124-organization-based-routing">12.4 Organization-Based Routing<a class="headerlink" href="#124-organization-based-routing" title="Permanent link">&para;</a></h2>
+<p>For <code>spa-proxy/login</code>, when no <code>authProfileId</code> is specified, the system can route users to the correct IdP based on <code>organizationId</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_AUTH_BROKER_URL</span><span class="s2">/spa-proxy/login&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: KS </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-36-5" name="__codelineno-36-5" href="#__codelineno-36-5"></a><span class="s1">    &quot;appType&quot;: &quot;kmc&quot;,</span>
+<a id="__codelineno-36-6" name="__codelineno-36-6" href="#__codelineno-36-6"></a><span class="s1">    &quot;email&quot;: &quot;user@example.com&quot;,</span>
+<a id="__codelineno-36-7" name="__codelineno-36-7" href="#__codelineno-36-7"></a><span class="s1">    &quot;organizationId&quot;: &quot;org-acme-corp&quot;</span>
+<a id="__codelineno-36-8" name="__codelineno-36-8" href="#__codelineno-36-8"></a><span class="s1">  }&#39;</span>
+</code></pre></div>
+<p>The <code>organizationId</code> enables domain-based IdP discovery: the system resolves which auth profile is associated with the organization and initiates the login flow with that IdP. This is useful in multi-tenant setups where different organizations within the same partner account use different identity providers.</p>
+<h1 id="13-shared-user-model">13. Shared User Model<a class="headerlink" href="#13-shared-user-model" title="Permanent link">&para;</a></h1>
+<p>The Auth Broker integrates with the core Kaltura user system through the <code>externalId</code> field on the <code>KalturaUser</code> object.</p>
+<h2 id="131-external-id-linking">13.1 External ID Linking<a class="headerlink" href="#131-external-id-linking" title="Permanent link">&para;</a></h2>
+<p>When a user authenticates via SSO, the Auth Broker sets the <code>externalId</code> on the Kaltura user record to the value of the <code>userIdAttribute</code> from the IdP assertion. This <code>externalId</code> is the key for all subsequent SSO lookups — if the user logs in again, the Auth Broker finds the existing Kaltura user by <code>externalId</code>.</p>
+<h2 id="132-jit-user-provisioning">13.2 JIT User Provisioning<a class="headerlink" href="#132-jit-user-provisioning" title="Permanent link">&para;</a></h2>
+<p>When <code>createNewUser</code> is <code>true</code> on the auth profile, the Auth Broker automatically creates a new Kaltura user if no user with the matching <code>externalId</code> exists. The user's <code>firstName</code>, <code>lastName</code>, and <code>email</code> are populated from the <code>userAttributeMappings</code>.</p>
+<p>When <code>createNewUser</code> is <code>false</code>, users must already exist in Kaltura — SSO login fails for unknown users.</p>
+<h2 id="133-group-sync-via-groupuser">13.3 Group Sync via groupUser<a class="headerlink" href="#133-group-sync-via-groupuser" title="Permanent link">&para;</a></h2>
+<p>After user provisioning, the Auth Broker calls the <code>groupUser.sync</code> API to update group memberships based on IdP claims. This uses the <code>userGroupMappings</code> or <code>userGroupsSyncAll</code> configuration from the auth profile (see section 7).</p>
+<h1 id="14-error-handling">14. Error Handling<a class="headerlink" href="#14-error-handling" title="Permanent link">&para;</a></h1>
+<p>Application-level errors return HTTP 200 with an error object:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a><span class="p">{</span>
+<a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a><span class="w">  </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;OBJECT_NOT_FOUND&quot;</span><span class="p">,</span>
+<a id="__codelineno-37-3" name="__codelineno-37-3" href="#__codelineno-37-3"></a><span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Description of the error&quot;</span><span class="p">,</span>
+<a id="__codelineno-37-4" name="__codelineno-37-4" href="#__codelineno-37-4"></a><span class="w">  </span><span class="nt">&quot;objectType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;KalturaAPIException&quot;</span>
+<a id="__codelineno-37-5" name="__codelineno-37-5" href="#__codelineno-37-5"></a><span class="p">}</span>
+</code></pre></div>
+<p>Validation errors (missing required fields, invalid values) return HTTP 400.</p>
+<table>
+<thead>
+<tr>
+<th>Error Code</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>OBJECT_NOT_FOUND</code></td>
+<td>Auth profile or subscription not found for your partner</td>
+</tr>
+<tr>
+<td><code>USER_GROUPS_SYNC_ALL_FALSE_AND_GROUPS_MISSING</code></td>
+<td><code>userGroupsSyncAll</code> is <code>false</code> but <code>userGroupMappings</code> field is missing — include <code>userGroupMappings</code> (even empty <code>{}</code>)</td>
+</tr>
+<tr>
+<td><code>INVALID_AUTH_STRATEGY</code></td>
+<td><code>authStrategy</code> value is not <code>saml</code> or <code>oauth2</code></td>
+</tr>
+<tr>
+<td><code>INVALID_PROVIDER_TYPE</code></td>
+<td><code>providerType</code> value is not one of <code>azure</code>, <code>okta</code>, <code>aws</code>, <code>akamai</code>, <code>other</code></td>
+</tr>
+<tr>
+<td><code>FEATURE_AUTH_BROKER_PERMISSION</code></td>
+<td>Partner does not have Auth Broker enabled — contact Kaltura support</td>
+</tr>
+<tr>
+<td><code>INVALID_KS</code></td>
+<td>KS is expired, malformed, or missing</td>
+</tr>
+<tr>
+<td><code>UNKNOWN_PARTNER_ID</code></td>
+<td>KS does not contain a valid partner ID</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Retry strategy:</strong> For transient errors (HTTP 5xx, timeouts), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (HTTP 400, <code>OBJECT_NOT_FOUND</code>, <code>USER_GROUPS_SYNC_ALL_FALSE_AND_GROUPS_MISSING</code>), fix the request before retrying — these will not resolve on their own.</p>
+<h1 id="15-best-practices">15. Best Practices<a class="headerlink" href="#15-best-practices" title="Permanent link">&para;</a></h1>
+<ul>
+<li><strong>Always include <code>userGroupMappings</code> when creating profiles.</strong> Even if empty (<code>{}</code>), this field is required when <code>userGroupsSyncAll</code> is <code>false</code> to avoid validation errors.</li>
+<li><strong>Use <code>HTTP-POST</code> as the redirect method.</strong> This prevents KS and JWT tokens from appearing in browser URL bars, server logs, and referrer headers.</li>
+<li><strong>Match callback URLs to your region.</strong> The <code>callbackUrl</code> and <code>logoutCallbackUrl</code> in <code>authStrategyConfig</code> must use the same regional hostname as your Auth Broker base URL.</li>
+<li><strong>Download SP metadata for IdP setup.</strong> Use the <code>/auth-manager/saml/metadata/{partnerId}/{profileId}</code> endpoint to get the SP metadata XML and upload it to your IdP.</li>
+<li><strong>Use <code>generatePvKeys</code> before enabling request signing.</strong> Generate a key pair first, then set <code>enableRequestSign: true</code> on the profile update.</li>
+<li><strong>Set <code>createNewUser: true</code> for self-service SSO.</strong> JIT provisioning reduces manual user management. Combine with group sync to automate role assignment.</li>
+<li><strong>Use <code>removeFromExistingGroups: true</code> for strict access control.</strong> This ensures Kaltura group membership mirrors IdP state exactly, revoking access when users leave IdP groups.</li>
+<li><strong>Use AppTokens for production integrations.</strong> Generate KS via <code>appToken.startSession</code> with HMAC — keep admin secrets off application servers.</li>
+<li><strong>Test with a single app subscription first.</strong> Validate the full SSO flow (token generation, IdP redirect, callback, user provisioning) with one app before rolling out to multiple applications.</li>
+</ul>
+<h1 id="16-related-guides">16. Related Guides<a class="headerlink" href="#16-related-guides" title="Permanent link">&para;</a></h1>
+<ul>
+<li><strong><a href="../KALTURA_SESSION_GUIDE/">Session Guide</a></strong> — KS generation and management (Auth Broker uses KS prefix auth)</li>
+<li><strong><a href="../KALTURA_APPTOKENS_API/">AppTokens API</a></strong> — Secure server-to-server auth for production</li>
+<li><strong><a href="../KALTURA_USER_MANAGEMENT_API/">User Management API</a></strong> — Core user CRUD (Auth Broker provisions users via this API)</li>
+<li><strong><a href="../KALTURA_USER_PROFILE_API/">User Profile API</a></strong> — Per-app user profiles and event registration data</li>
+<li><strong><a href="../KALTURA_APP_REGISTRY_API/">App Registry API</a></strong> — Application instance registry (provides <code>appGuid</code> for subscriptions)</li>
+<li><strong><a href="../KALTURA_EVENTS_PLATFORM_API/">Events Platform API</a></strong> — Virtual events (uses Auth Broker for SSO login)</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

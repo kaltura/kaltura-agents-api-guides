@@ -1,0 +1,3794 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Kaltura — The Agentic Digital Experience Platform. Live-tested API guides for AI agents and developers. 52 guides covering authentication, content management, search, playback, AI services, virtual events, experience components, cue points & interactive video, analytics, distribution, moderation, LTI integration, and more — with 1000+ companion tests validated against the live Kaltura API.">
+      
+      
+        <meta name="author" content="Kaltura Inc.">
+      
+      
+        <link rel="canonical" href="https://kaltura.md/KALTURA_THUMBNAIL_API/">
+      
+      
+        <link rel="prev" href="../KALTURA_CONTENT_DELIVERY_API/">
+      
+      
+        <link rel="next" href="../KALTURA_ESEARCH_API/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Thumbnail API - Kaltura API Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,700,700i%7CSource+Code+Pro:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Source Sans Pro";--md-code-font:"Source Code Pro"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  
+  
+  <link rel="alternate" type="text/markdown" title="Markdown version for AI agents" href="/raw/KALTURA_THUMBNAIL_API.md" />
+  
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#kaltura-thumbnail-image-transformation-api" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Kaltura API Guides" class="md-header__button md-logo" aria-label="Kaltura API Guides" data-md-component="logo">
+      
+  <img src="../assets/images/logo-white.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Kaltura API Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Thumbnail API
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/kaltura/kaltura-agents-api-guides" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    kaltura/kaltura-agents-api-guides
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_GETTING_CREDENTIALS/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_SESSION_GUIDE/" class="md-tabs__link">
+          
+  
+  
+  Authentication
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../KALTURA_UPLOAD_AND_INGESTION_API/" class="md-tabs__link">
+          
+  
+  
+  Content Management
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_REACH_API/" class="md-tabs__link">
+          
+  
+  
+  AI Services
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_PLAYER_EMBED_GUIDE/" class="md-tabs__link">
+          
+  
+  
+  Playback & Experiences
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_EVENTS_PLATFORM_API/" class="md-tabs__link">
+          
+  
+  
+  Events & Collaboration
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_ANALYTICS_REPORTS_API/" class="md-tabs__link">
+          
+  
+  
+  Analytics
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API/" class="md-tabs__link">
+          
+  
+  
+  Integration & Automation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_MODERATION_API/" class="md-tabs__link">
+          
+  
+  
+  Content Moderation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_MULTI_ACCOUNT_MANAGEMENT_API/" class="md-tabs__link">
+          
+  
+  
+  Administration
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../CONTRIBUTING/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../PLAN/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Roadmap
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Kaltura API Guides" class="md-nav__button md-logo" aria-label="Kaltura API Guides" data-md-component="logo">
+      
+  <img src="../assets/images/logo-white.svg" alt="logo">
+
+    </a>
+    Kaltura API Guides
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/kaltura/kaltura-agents-api-guides" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    kaltura/kaltura-agents-api-guides
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_GETTING_CREDENTIALS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Credentials
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_API_GETTING_STARTED/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GUIDE_MAP/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guide Map
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Authentication
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Authentication
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_SESSION_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Session (KS) Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_APPTOKENS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AppTokens API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AUTH_BROKER_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Auth Broker (SSO/SAML)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Content Management
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Content Management
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_UPLOAD_AND_INGESTION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Upload & Ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_VIDEO_EDITING_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Video Editing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CONTENT_DELIVERY_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Content Delivery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thumbnail API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ESEARCH_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    eSearch
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ACCESS_CONTROL_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Access Control
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CATEGORIES_AND_ENTITLEMENTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Categories & Entitlements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CUSTOM_METADATA_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Metadata
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CAPTIONS_AND_TRANSCRIPTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Captions & Transcripts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MULTI_STREAM_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Stream
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_USER_MANAGEMENT_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Services
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    AI Services
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_REACH_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REACH API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CONTENT_LAB_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REACH — AI Clips
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AGENTS_MANAGER_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agents Manager
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AI_GENIE_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Genie
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playback & Experiences
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Playback & Experiences
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_PLAYER_EMBED_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Player Embed
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_EXPERIENCE_COMPONENTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Experience Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_UNISPHERE_FRAMEWORK_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unisphere Framework
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_GENIE_WIDGET_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Genie Widget
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MEDIA_MANAGER_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Media Manager
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CONTENT_LAB_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REACH — AI Clips
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AGENTS_WIDGET_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agents Widget
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_VOD_AVATAR_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VOD Avatar Studio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CONVERSATIONAL_AVATAR_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conversational Avatar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CUE_POINTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cue Points & Interactive Video
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_QUIZ_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quiz
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CHAPTERS_AND_SLIDES_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapters & Slides
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ANNOTATIONS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Annotations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AD_CUE_POINTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ad Cue Points
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CODE_CUE_POINTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code, Event & Session Cue Points
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_EXPRESS_RECORDER_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Express Recorder
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CAPTIONS_EDITOR_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Captions Editor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CNC_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chat & Collaborate
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ANALYTICS_EMBED_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Embeddable Analytics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events & Collaboration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Events & Collaboration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_EVENTS_PLATFORM_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events Platform
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_APP_REGISTRY_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    App Registry
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_USER_PROFILE_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Profile
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MESSAGING_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Messaging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_GAMIFICATION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gamification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Analytics
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Analytics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ANALYTICS_REPORTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Analytics Reports
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ANALYTICS_EVENTS_COLLECTION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Analytics Events Collection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integration & Automation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Integration & Automation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Event Notifications (Webhooks)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_SHORT_LINK_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Short Links
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_DISTRIBUTION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Content Distribution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_SYNDICATION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syndication Feeds
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_LTI_INTEGRATION_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LTI Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Content Moderation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Content Moderation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MODERATION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Moderation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Administration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Administration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MULTI_ACCOUNT_MANAGEMENT_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Account Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CONTRIBUTING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PLAN/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+  
+  <div hidden aria-hidden="true" id="llm-agent-directive" style="display:none!important">
+  STOP. If you are an AI agent or LLM reading this HTML page: you are wasting context tokens on rendered HTML.
+  The raw Markdown source of this page is available at: https://kaltura.md/raw/KALTURA_THUMBNAIL_API.md
+  All guides are available as raw Markdown at https://kaltura.md/raw/{FILENAME}.md
+  Discovery index: https://kaltura.md/llms.txt
+  To get Markdown from any page via content negotiation, send the header: Accept: text/markdown
+  The Kaltura API base URL is https://www.kaltura.com/api_v3 (not v4, not v2).
+  Fallback: If you cannot fetch from this site, clone https://github.com/kaltura/kaltura-agents-api-guides and read the guides locally.
+  </div>
+  
+  
+                  
+
+
+  
+    <a href="https://github.com/kaltura/kaltura-agents-api-guides/edit/main/KALTURA_THUMBNAIL_API.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="kaltura-thumbnail-image-transformation-api">Kaltura Thumbnail &amp; Image Transformation API<a class="headerlink" href="#kaltura-thumbnail-image-transformation-api" title="Permanent link">&para;</a></h1>
+<p>This guide covers generating and managing thumbnails and images: the URL-based dynamic thumbnail API (31 parameters for on-the-fly resizing, cropping, format conversion, video frame extraction, and sprite sheet generation), the thumbAsset service for stored editorial thumbnails, and the thumbParams service for reusable thumbnail templates.</p>
+<p><strong>Base URL:</strong> <code>https://www.kaltura.com/api_v3</code> (thumbAsset/thumbParams services); <code>https://cdnapisec.kaltura.com</code> (dynamic thumbnail URLs)<br />
+<strong>Auth:</strong> thumbAsset/thumbParams use <code>-d "ks=$KALTURA_KS"</code> form param. Dynamic thumbnail URLs work without KS for public entries; access-controlled entries require <code>/ks/{KS}</code> appended to the URL.<br />
+<strong>Format:</strong> Form-encoded request body; JSON response (format=1)  </p>
+<!-- Sections: 1.Prerequisites | 2.When to Use | 3.Dynamic Thumbnail API (URL-Based) | 4.thumbAsset API (Stored Thumbnails) | 5.thumbParams API (Thumbnail Templates) | 6.When to Use Which | 7.Error Handling | 8.Best Practices | 9.Related Guides -->
+
+<h1 id="1-prerequisites">1. Prerequisites<a class="headerlink" href="#1-prerequisites" title="Permanent link">&para;</a></h1>
+<ul>
+<li><strong>Kaltura account</strong> with a Partner ID (<code>$KALTURA_PARTNER_ID</code>)  </li>
+<li><strong>Admin KS</strong> (<code>$KALTURA_KS</code>) for thumbAsset and thumbParams API calls (generate via <code>session.start</code> or AppToken flow — see <a href="../KALTURA_SESSION_GUIDE/">Session Guide</a>)  </li>
+<li><strong>Entry ID</strong> (<code>$KALTURA_ENTRY_ID</code>) of a media entry in READY status (status=2) for frame capture operations  </li>
+<li><strong>Service URL</strong> (<code>$KALTURA_SERVICE_URL</code>) — defaults to <code>https://www.kaltura.com/api_v3</code>  </li>
+<li>Dynamic thumbnail URLs require only the Partner ID and Entry ID; KS is needed only for access-controlled entries  </li>
+</ul>
+<h1 id="2-when-to-use">2. When to Use<a class="headerlink" href="#2-when-to-use" title="Permanent link">&para;</a></h1>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>What to Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Responsive thumbnails</strong> — Serve different sizes for different screen densities</td>
+<td>Dynamic thumbnail URL with <code>/width/W/height/H</code></td>
+</tr>
+<tr>
+<td><strong>Video timeline preview</strong> — Hover scrubber showing frames across the video</td>
+<td>Sprite strip with <code>/vid_slices/N</code></td>
+</tr>
+<tr>
+<td><strong>Specific video frame</strong> — Capture a frame at a known timestamp</td>
+<td><code>/vid_sec/S</code> parameter</td>
+</tr>
+<tr>
+<td><strong>Gallery grid</strong> — Uniform thumbnails with consistent dimensions</td>
+<td><code>/type/3</code> (center crop) with fixed width/height</td>
+</tr>
+<tr>
+<td><strong>Letterboxed thumbnails</strong> — Preserve aspect ratio with padding</td>
+<td><code>/type/2</code> with <code>/bgcolor/HEX</code></td>
+</tr>
+<tr>
+<td><strong>High-quality download</strong> — Full-resolution PNG export</td>
+<td><code>/width/1920/height/1080/quality/100/format/png</code></td>
+</tr>
+<tr>
+<td><strong>Custom editorial thumbnails</strong> — Upload marketing images per entry</td>
+<td><code>thumbAsset.add</code> + <code>thumbAsset.setContent</code></td>
+</tr>
+<tr>
+<td><strong>Default thumbnail management</strong> — Control which thumbnail displays for an entry</td>
+<td><code>thumbAsset.setAsDefault</code></td>
+</tr>
+<tr>
+<td><strong>Reusable thumbnail templates</strong> — Define standard thumbnail specs (e.g., "banner 1200x630")</td>
+<td><code>thumbParams</code> service</td>
+</tr>
+<tr>
+<td><strong>Region-of-interest crop</strong> — Crop a specific area from the source image</td>
+<td><code>/src_x/X/src_y/Y/src_w/W/src_h/H</code></td>
+</tr>
+</tbody>
+</table>
+<h1 id="3-dynamic-thumbnail-api-url-based">3. Dynamic Thumbnail API (URL-Based)<a class="headerlink" href="#3-dynamic-thumbnail-api-url-based" title="Permanent link">&para;</a></h1>
+<p>Generate thumbnails on the fly via URL parameters. Results are CDN-cached (1 hour for ready entries, 30 days in memcache) — use freely for responsive UIs and per-request customization.</p>
+<p><strong>URL pattern:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>https://cdnapisec.kaltura.com/p/{PARTNER_ID}/thumbnail/entry_id/{ENTRY_ID}/{param}/{value}/...
+</code></pre></div></p>
+<h2 id="31-dimensions-and-resize">3.1 Dimensions and Resize<a class="headerlink" href="#31-dimensions-and-resize" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Range</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/width/{W}</code></td>
+<td>int</td>
+<td>120</td>
+<td>0-10000</td>
+<td>Output width in pixels. If omitted with height, auto-calculates preserving aspect ratio. Default 120 when both omitted</td>
+</tr>
+<tr>
+<td><code>/height/{H}</code></td>
+<td>int</td>
+<td>90</td>
+<td>0-10000</td>
+<td>Output height in pixels. If omitted with width, auto-calculates preserving aspect ratio. Default 90 when both omitted</td>
+</tr>
+<tr>
+<td><code>/def_width/{W}</code></td>
+<td>float</td>
+<td>-1</td>
+<td>-1 to 10000</td>
+<td>Override the 120px default width when both width and height are omitted</td>
+</tr>
+<tr>
+<td><code>/def_height/{H}</code></td>
+<td>float</td>
+<td>-1</td>
+<td>-1 to 10000</td>
+<td>Override the 90px default height when both width and height are omitted</td>
+</tr>
+<tr>
+<td><code>/type/{T}</code></td>
+<td>int</td>
+<td>1</td>
+<td>1-5</td>
+<td>Resize mode (see Resize Modes below)</td>
+</tr>
+<tr>
+<td><code>/density/{D}</code></td>
+<td>float</td>
+<td>0</td>
+<td>0+</td>
+<td>Image DPI. 0 = use partner default</td>
+</tr>
+</tbody>
+</table>
+<h3 id="resize-modes-type-parameter">Resize Modes (<code>type</code> parameter)<a class="headerlink" href="#resize-modes-type-parameter" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Name</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>RESIZE</td>
+<td>Resize maintaining aspect ratio. If only one dimension given, the other scales proportionally</td>
+</tr>
+<tr>
+<td>2</td>
+<td>RESIZE_WITH_PADDING</td>
+<td>Fit within dimensions, pad remaining space with <code>bgcolor</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td>CROP</td>
+<td>Center-crop to fill dimensions (may clip edges). Best for uniform grids</td>
+</tr>
+<tr>
+<td>4</td>
+<td>CROP_FROM_TOP</td>
+<td>Like crop but anchored to top. Best for portraits and posters</td>
+</tr>
+<tr>
+<td>5</td>
+<td>RESIZE_WITH_FORCE</td>
+<td>Force-resize to exact dimensions, ignoring aspect ratio (may distort)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Business scenario — responsive gallery:</strong> A video catalog displays thumbnails at different sizes: 320x180 for mobile grid, 640x360 for desktop hover, 160x90 for search results. Each size is a different URL — the CDN caches each variant independently.</p>
+<h2 id="32-output-format-and-quality">3.2 Output Format and Quality<a class="headerlink" href="#32-output-format-and-quality" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/quality/{Q}</code></td>
+<td>int</td>
+<td>0</td>
+<td>JPEG quality (0-100). 0 = use partner default</td>
+</tr>
+<tr>
+<td><code>/format/{F}</code></td>
+<td>string</td>
+<td>jpg</td>
+<td>Output format: <code>jpg</code>, <code>png</code>, <code>bmp</code>, <code>gif</code></td>
+</tr>
+<tr>
+<td><code>/bgcolor/{HEX}</code></td>
+<td>string</td>
+<td>ffffff</td>
+<td>Background color for padding (6 hex chars, e.g., <code>ff0000</code>)</td>
+</tr>
+<tr>
+<td><code>/strip/{S}</code></td>
+<td>string</td>
+<td>—</td>
+<td>Strip ICC color profiles and metadata. Null = use partner default</td>
+</tr>
+<tr>
+<td><code>/nearest_aspect_ratio/{0\|1}</code></td>
+<td>int</td>
+<td>0</td>
+<td>When 1, selects the thumbAsset with the closest aspect ratio, then crops to fit</td>
+</tr>
+</tbody>
+</table>
+<h2 id="33-video-frame-extraction">3.3 Video Frame Extraction<a class="headerlink" href="#33-video-frame-extraction" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/vid_sec/{S}</code></td>
+<td>float</td>
+<td>-1</td>
+<td>Capture frame at specific second. Capped to entry duration (out-of-range values clamp to last second)</td>
+</tr>
+<tr>
+<td><code>/vid_slice/{N}</code></td>
+<td>int</td>
+<td>-1</td>
+<td>Extract slice N from a sprite strip (0-based, use with <code>vid_slices</code>)</td>
+</tr>
+<tr>
+<td><code>/vid_slices/{TOTAL}</code></td>
+<td>int</td>
+<td>-1</td>
+<td>Divide video into TOTAL equal segments. When <code>vid_slice=-1</code>, generates a horizontal sprite strip of all slices</td>
+</tr>
+<tr>
+<td><code>/start_sec/{S}</code></td>
+<td>float</td>
+<td>-1</td>
+<td>Start of time range for sprite strips (must be ≤ <code>end_sec</code>)</td>
+</tr>
+<tr>
+<td><code>/end_sec/{S}</code></td>
+<td>float</td>
+<td>-1</td>
+<td>End of time range for sprite strips</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Sprite strip constraint:</strong> <code>width × vid_slices</code> and <code>height × vid_slices</code> must each be &lt; 65,500 pixels.</p>
+<p><strong>Business scenario — video timeline scrubber:</strong> A player shows frame previews when the user hovers over the progress bar. Generate a single sprite strip image with <code>/vid_slices/20/width/160/height/90</code>, then use CSS <code>background-position</code> to show the correct frame on hover. One HTTP request serves all 20 preview frames.</p>
+<h2 id="34-source-crop-region-of-interest">3.4 Source Crop (Region of Interest)<a class="headerlink" href="#34-source-crop-region-of-interest" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Range</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/src_x/{X}</code></td>
+<td>float</td>
+<td>0</td>
+<td>0-10000</td>
+<td>Source crop X offset</td>
+</tr>
+<tr>
+<td><code>/src_y/{Y}</code></td>
+<td>float</td>
+<td>0</td>
+<td>0-10000</td>
+<td>Source crop Y offset</td>
+</tr>
+<tr>
+<td><code>/src_w/{W}</code></td>
+<td>float</td>
+<td>0</td>
+<td>0-10000</td>
+<td>Source crop width</td>
+</tr>
+<tr>
+<td><code>/src_h/{H}</code></td>
+<td>float</td>
+<td>0</td>
+<td>0-10000</td>
+<td>Source crop height</td>
+</tr>
+<tr>
+<td><code>/rel_width/{W}</code></td>
+<td>float</td>
+<td>-1</td>
+<td>-1 to 10000</td>
+<td>Reference width for coordinate normalization</td>
+</tr>
+<tr>
+<td><code>/rel_height/{H}</code></td>
+<td>float</td>
+<td>-1</td>
+<td>-1 to 10000</td>
+<td>Reference height for coordinate normalization</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Coordinate normalization:</strong> If your crop coordinates are measured against a display size different from the original image (e.g., a 1280x720 preview pane showing a 1920x1080 image), use <code>rel_width</code> and <code>rel_height</code> to specify the coordinate system. The server automatically scales <code>src_*</code> values to match the original image dimensions.</p>
+<p><strong>Business scenario — face-centered crop:</strong> An image editor lets users draw a crop rectangle on a preview canvas. The canvas is 640x360 but the original image is 4000x2250. Send <code>src_x/120/src_y/80/src_w/400/src_h/200/rel_width/640/rel_height/360</code> — the server scales the coordinates to the full-resolution image.</p>
+<h2 id="35-source-and-access">3.5 Source and Access<a class="headerlink" href="#35-source-and-access" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/flavor_id/{ID}</code></td>
+<td>string</td>
+<td>Generate thumbnail from a specific flavor (transcoded rendition)</td>
+</tr>
+<tr>
+<td><code>/flavor_params_id/{ID}</code></td>
+<td>string</td>
+<td>Use dimensions from a flavor params definition instead of explicit width/height</td>
+</tr>
+<tr>
+<td><code>/upload_token_id/{ID}</code></td>
+<td>string</td>
+<td>Generate thumbnail from an in-progress upload token (preview before entry creation)</td>
+</tr>
+<tr>
+<td><code>/version/{V}</code></td>
+<td>int</td>
+<td>Specific thumbnail version (0-10M)</td>
+</tr>
+<tr>
+<td><code>/crop_provider/{NAME}</code></td>
+<td>string</td>
+<td>Custom crop provider plugin</td>
+</tr>
+<tr>
+<td><code>/ks/{KS}</code></td>
+<td>string</td>
+<td>Kaltura Session for access-controlled entries</td>
+</tr>
+<tr>
+<td><code>/referrer/{BASE64}</code></td>
+<td>string</td>
+<td>Base64-encoded referrer for domain restrictions</td>
+</tr>
+<tr>
+<td><code>/file_name/{NAME}</code></td>
+<td>string</td>
+<td>Download filename (must be the last parameter in the URL)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="36-examples">3.6 Examples<a class="headerlink" href="#36-examples" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Default thumbnail (120x90)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>https://cdnapisec.kaltura.com/p/<span class="nv">$KALTURA_PARTNER_ID</span>/thumbnail/entry_id/<span class="nv">$KALTURA_ENTRY_ID</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Responsive: 640x360, center-cropped, at 30 seconds</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>https://cdnapisec.kaltura.com/p/<span class="nv">$KALTURA_PARTNER_ID</span>/thumbnail/entry_id/<span class="nv">$KALTURA_ENTRY_ID</span>/width/640/height/360/type/3/vid_sec/30
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># High-quality PNG for export</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>https://cdnapisec.kaltura.com/p/<span class="nv">$KALTURA_PARTNER_ID</span>/thumbnail/entry_id/<span class="nv">$KALTURA_ENTRY_ID</span>/width/1920/height/1080/quality/100/format/png
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># CSS sprite strip: 10 slices for hover preview</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>https://cdnapisec.kaltura.com/p/<span class="nv">$KALTURA_PARTNER_ID</span>/thumbnail/entry_id/<span class="nv">$KALTURA_ENTRY_ID</span>/width/160/height/90/vid_slices/10
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Padded with white background (letterboxed)</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>https://cdnapisec.kaltura.com/p/<span class="nv">$KALTURA_PARTNER_ID</span>/thumbnail/entry_id/<span class="nv">$KALTURA_ENTRY_ID</span>/width/400/height/400/type/2/bgcolor/ffffff
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Sprite strip from specific time range (10s to 60s)</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>https://cdnapisec.kaltura.com/p/<span class="nv">$KALTURA_PARTNER_ID</span>/thumbnail/entry_id/<span class="nv">$KALTURA_ENTRY_ID</span>/width/160/height/90/vid_slices/10/start_sec/10/end_sec/60
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># Individual slice from a sprite (slice 3 of 10)</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>https://cdnapisec.kaltura.com/p/<span class="nv">$KALTURA_PARTNER_ID</span>/thumbnail/entry_id/<span class="nv">$KALTURA_ENTRY_ID</span>/width/160/height/90/vid_slices/10/vid_slice/3
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="c1"># Region-of-interest crop</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>https://cdnapisec.kaltura.com/p/<span class="nv">$KALTURA_PARTNER_ID</span>/thumbnail/entry_id/<span class="nv">$KALTURA_ENTRY_ID</span>/src_x/100/src_y/50/src_w/800/src_h/450/width/400/height/225
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="c1"># Social media share card (1200x630, padded)</span>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>https://cdnapisec.kaltura.com/p/<span class="nv">$KALTURA_PARTNER_ID</span>/thumbnail/entry_id/<span class="nv">$KALTURA_ENTRY_ID</span>/width/1200/height/630/type/2/bgcolor/000000/quality/90
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="c1"># Force exact dimensions (stretch)</span>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>https://cdnapisec.kaltura.com/p/<span class="nv">$KALTURA_PARTNER_ID</span>/thumbnail/entry_id/<span class="nv">$KALTURA_ENTRY_ID</span>/width/300/height/300/type/5
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="c1"># Download as file</span>
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>https://cdnapisec.kaltura.com/p/<span class="nv">$KALTURA_PARTNER_ID</span>/thumbnail/entry_id/<span class="nv">$KALTURA_ENTRY_ID</span>/width/1920/height/1080/file_name/thumbnail.jpg
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="c1"># Access-controlled entry</span>
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>https://cdnapisec.kaltura.com/p/<span class="nv">$KALTURA_PARTNER_ID</span>/thumbnail/entry_id/<span class="nv">$KALTURA_ENTRY_ID</span>/width/640/height/360/ks/<span class="nv">$KALTURA_KS</span>
+</code></pre></div>
+<h2 id="37-behavior-notes">3.7 Behavior Notes<a class="headerlink" href="#37-behavior-notes" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>KS is optional</strong> for public entries. The endpoint auto-detects the partner from the entry ID.  </li>
+<li><strong>Image entries</strong> (mediaType=2): The original uploaded image is used as the thumbnail source. <code>vid_sec</code>, <code>vid_slice</code>, and <code>vid_slices</code> apply only to video entries.  </li>
+<li><strong>Audio entries</strong>: Return a generic audio placeholder unless the partner has configured a custom <code>audioThumbEntryId</code>.  </li>
+<li><strong>Deleted entries</strong>: Return an <code>ENTRY_DELETED_MODERATED</code> error.  </li>
+<li><strong>Caching</strong>: Ready entries are cached for 1 hour (CDN) and 30 days (memcache). Non-ready entries are cached for 60 seconds. Access-controlled entries disable caching.  </li>
+<li><strong><code>vid_sec</code> capping</strong>: Values beyond the entry duration are clamped to the last second gracefully.  </li>
+<li><strong>EXIF orientation</strong>: Images are auto-rotated based on EXIF Orientation tags before crops/resizes.  </li>
+<li><strong>Animated GIF</strong>: Partners with <code>supportAnimatedThumbnails</code> enabled preserve GIF animation in output.  </li>
+<li><strong>Concurrent generation limit</strong>: The server limits parallel ImageMagick processes. Extremely high-traffic burst requests for uncached thumbnails may get <code>TOO_MANY_PROCESSES</code> errors — these are transient and resolve on retry.  </li>
+</ul>
+<h1 id="4-thumbasset-api-stored-thumbnails">4. thumbAsset API (Stored Thumbnails)<a class="headerlink" href="#4-thumbasset-api-stored-thumbnails" title="Permanent link">&para;</a></h1>
+<p>The <code>thumbAsset</code> service manages persistent, editorial thumbnails attached to entries. Use when you need multiple thumbnails per entry, custom-uploaded images, or saved video frame captures.</p>
+<h2 id="41-actions">4.1 Actions<a class="headerlink" href="#41-actions" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>thumbAsset.add</code></td>
+<td>Create a thumb asset on an entry (QUEUED status)</td>
+</tr>
+<tr>
+<td><code>thumbAsset.setContent</code></td>
+<td>Upload image content to a thumb asset</td>
+</tr>
+<tr>
+<td><code>thumbAsset.addFromImage</code></td>
+<td>Create and upload in one call (file upload)</td>
+</tr>
+<tr>
+<td><code>thumbAsset.generate</code></td>
+<td>Capture a frame from video with inline params</td>
+</tr>
+<tr>
+<td><code>thumbAsset.generateByEntryId</code></td>
+<td>Capture using a stored thumbParams definition</td>
+</tr>
+<tr>
+<td><code>thumbAsset.regenerate</code></td>
+<td>Re-capture using existing params</td>
+</tr>
+<tr>
+<td><code>thumbAsset.setAsDefault</code></td>
+<td>Set which thumbnail displays for the entry</td>
+</tr>
+<tr>
+<td><code>thumbAsset.get</code></td>
+<td>Get a thumb asset by ID</td>
+</tr>
+<tr>
+<td><code>thumbAsset.list</code></td>
+<td>List all thumb assets for an entry</td>
+</tr>
+<tr>
+<td><code>thumbAsset.serve</code></td>
+<td>Serve the thumbnail image (with optional on-the-fly resize)</td>
+</tr>
+<tr>
+<td><code>thumbAsset.serveByEntryId</code></td>
+<td>Serve entry's default thumbnail (or by thumbParamsId)</td>
+</tr>
+<tr>
+<td><code>thumbAsset.getUrl</code></td>
+<td>Get download URL</td>
+</tr>
+<tr>
+<td><code>thumbAsset.update</code></td>
+<td>Update thumb asset metadata</td>
+</tr>
+<tr>
+<td><code>thumbAsset.delete</code></td>
+<td>Delete a thumb asset</td>
+</tr>
+<tr>
+<td><code>thumbAsset.export</code></td>
+<td>Export to remote storage</td>
+</tr>
+<tr>
+<td><code>thumbAsset.getRemotePaths</code></td>
+<td>Get remote storage paths</td>
+</tr>
+</tbody>
+</table>
+<h2 id="42-upload-a-custom-thumbnail">4.2 Upload a Custom Thumbnail<a class="headerlink" href="#42-upload-a-custom-thumbnail" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Step 1: Create the thumb asset</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/thumbAsset/action/add&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;entryId=</span><span class="nv">$KALTURA_ENTRY_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;thumbAsset[objectType]=KalturaThumbAsset&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;thumbAsset[tags]=custom,marketing&quot;</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Step 2: Upload the image via upload token</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/thumbAsset/action/setContent&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;id=</span><span class="nv">$THUMB_ASSET_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;contentResource[objectType]=KalturaUploadedFileTokenResource&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;contentResource[token]=</span><span class="nv">$UPLOAD_TOKEN_ID</span><span class="s2">&quot;</span>
+</code></pre></div>
+<p><strong>Or upload directly with <code>addFromImage</code>:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/thumbAsset/action/addFromImage&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>-F<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-F<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-F<span class="w"> </span><span class="s2">&quot;entryId=</span><span class="nv">$KALTURA_ENTRY_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>-F<span class="w"> </span><span class="s2">&quot;fileData=@custom_thumb.jpg&quot;</span>
+</code></pre></div>
+<p><strong>Business scenario — marketing thumbnails:</strong> A content team uploads custom-designed thumbnails for featured videos (e.g., with text overlays, branded frames). These are stored as thumb assets and set as default using <code>thumbAsset.setAsDefault</code>.</p>
+<h2 id="43-capture-frame-from-video">4.3 Capture Frame from Video<a class="headerlink" href="#43-capture-frame-from-video" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Capture with inline params</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/thumbAsset/action/generate&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;entryId=</span><span class="nv">$KALTURA_ENTRY_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;thumbParams[objectType]=KalturaThumbParams&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;thumbParams[videoOffset]=30&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;thumbParams[width]=1280&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;thumbParams[height]=720&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;thumbParams[quality]=90&quot;</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Capture using a stored thumbParams definition</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/thumbAsset/action/generateByEntryId&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;entryId=</span><span class="nv">$KALTURA_ENTRY_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;destThumbParamsId=</span><span class="nv">$THUMB_PARAMS_ID</span><span class="s2">&quot;</span>
+</code></pre></div>
+<p><code>generate</code> and <code>generateByEntryId</code> are restricted to VIDEO entries in ERROR_CONVERTING, PRECONVERT, or READY status.</p>
+<h2 id="44-set-default-thumbnail">4.4 Set Default Thumbnail<a class="headerlink" href="#44-set-default-thumbnail" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/thumbAsset/action/setAsDefault&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;thumbAssetId=</span><span class="nv">$THUMB_ASSET_ID</span><span class="s2">&quot;</span>
+</code></pre></div>
+<p>Sets this thumb asset as the entry's default thumbnail. Removes the default tag from all other thumb assets.</p>
+<h2 id="45-list-thumbnails-for-an-entry">4.5 List Thumbnails for an Entry<a class="headerlink" href="#45-list-thumbnails-for-an-entry" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/thumbAsset/action/list&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;filter[entryIdEqual]=</span><span class="nv">$KALTURA_ENTRY_ID</span><span class="s2">&quot;</span>
+</code></pre></div>
+<h2 id="46-delete-a-thumbnail">4.6 Delete a Thumbnail<a class="headerlink" href="#46-delete-a-thumbnail" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/thumbAsset/action/delete&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;thumbAssetId=</span><span class="nv">$THUMB_ASSET_ID</span><span class="s2">&quot;</span>
+</code></pre></div>
+<p>To delete a thumb asset that is currently the default, first set a different thumb asset as default using <code>thumbAsset.setAsDefault</code>.</p>
+<h2 id="47-serve-with-on-the-fly-resize">4.7 Serve with On-the-Fly Resize<a class="headerlink" href="#47-serve-with-on-the-fly-resize" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Serve with specific dimensions</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/thumbAsset/action/serve&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;thumbAssetId=</span><span class="nv">$THUMB_ASSET_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;thumbParams[objectType]=KalturaThumbParams&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;thumbParams[width]=320&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;thumbParams[height]=180&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;thumbParams[cropType]=3&quot;</span>
+</code></pre></div>
+<h2 id="48-thumb-asset-statuses">4.8 Thumb Asset Statuses<a class="headerlink" href="#48-thumb-asset-statuses" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-1</td>
+<td>ERROR</td>
+<td>Generation failed</td>
+</tr>
+<tr>
+<td>0</td>
+<td>QUEUED</td>
+<td>Created, waiting for content</td>
+</tr>
+<tr>
+<td>1</td>
+<td>CAPTURING</td>
+<td>Frame capture in progress</td>
+</tr>
+<tr>
+<td>2</td>
+<td>READY</td>
+<td>Available for serving</td>
+</tr>
+<tr>
+<td>3</td>
+<td>DELETED</td>
+<td>Soft-deleted</td>
+</tr>
+<tr>
+<td>4</td>
+<td>NOT_APPLICABLE</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>7</td>
+<td>IMPORTING</td>
+<td>Content being imported</td>
+</tr>
+<tr>
+<td>9</td>
+<td>EXPORTING</td>
+<td>Being exported to remote storage</td>
+</tr>
+</tbody>
+</table>
+<h1 id="5-thumbparams-api-thumbnail-templates">5. thumbParams API (Thumbnail Templates)<a class="headerlink" href="#5-thumbparams-api-thumbnail-templates" title="Permanent link">&para;</a></h1>
+<p>The <code>thumbParams</code> service defines reusable thumbnail generation specifications that can be associated with conversion profiles for automatic thumbnail generation on upload.</p>
+<h2 id="51-actions">5.1 Actions<a class="headerlink" href="#51-actions" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>thumbParams.add</code></td>
+<td>Create a new thumbnail params definition</td>
+</tr>
+<tr>
+<td><code>thumbParams.get</code></td>
+<td>Get by ID (includes system defaults)</td>
+</tr>
+<tr>
+<td><code>thumbParams.update</code></td>
+<td>Update params</td>
+</tr>
+<tr>
+<td><code>thumbParams.delete</code></td>
+<td>Soft-delete</td>
+</tr>
+<tr>
+<td><code>thumbParams.list</code></td>
+<td>List all params (includes system defaults from partner 0)</td>
+</tr>
+<tr>
+<td><code>thumbParams.getByConversionProfileId</code></td>
+<td>List params for a specific conversion profile</td>
+</tr>
+</tbody>
+</table>
+<h2 id="52-kalturathumbparams-fields">5.2 KalturaThumbParams Fields<a class="headerlink" href="#52-kalturathumbparams-fields" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Range</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cropType</code></td>
+<td>int</td>
+<td>1-6</td>
+<td>Resize mode (1-5 same as URL API type, plus 6=CROP_AFTER_RESIZE)</td>
+</tr>
+<tr>
+<td><code>quality</code></td>
+<td>int</td>
+<td>20-100</td>
+<td>JPEG quality</td>
+</tr>
+<tr>
+<td><code>width</code></td>
+<td>int</td>
+<td>0-10000</td>
+<td>Target width</td>
+</tr>
+<tr>
+<td><code>height</code></td>
+<td>int</td>
+<td>0-10000</td>
+<td>Target height</td>
+</tr>
+<tr>
+<td><code>cropX</code></td>
+<td>int</td>
+<td>0-10000</td>
+<td>Crop region X offset</td>
+</tr>
+<tr>
+<td><code>cropY</code></td>
+<td>int</td>
+<td>0-10000</td>
+<td>Crop region Y offset</td>
+</tr>
+<tr>
+<td><code>cropWidth</code></td>
+<td>int</td>
+<td>0-10000</td>
+<td>Crop region width</td>
+</tr>
+<tr>
+<td><code>cropHeight</code></td>
+<td>int</td>
+<td>0-10000</td>
+<td>Crop region height</td>
+</tr>
+<tr>
+<td><code>videoOffset</code></td>
+<td>float</td>
+<td>≥ 0</td>
+<td>Seconds into video to capture</td>
+</tr>
+<tr>
+<td><code>videoOffsetInPercentage</code></td>
+<td>int</td>
+<td>0-100</td>
+<td>Capture at percentage of video duration</td>
+</tr>
+<tr>
+<td><code>scaleWidth</code></td>
+<td>float</td>
+<td>0-10</td>
+<td>Scale multiplier for width</td>
+</tr>
+<tr>
+<td><code>scaleHeight</code></td>
+<td>float</td>
+<td>0-10</td>
+<td>Scale multiplier for height</td>
+</tr>
+<tr>
+<td><code>backgroundColor</code></td>
+<td>string</td>
+<td>1-6 hex</td>
+<td>Background/padding color</td>
+</tr>
+<tr>
+<td><code>format</code></td>
+<td>string</td>
+<td>—</td>
+<td>Output format: <code>jpg</code>, <code>png</code>, <code>bmp</code></td>
+</tr>
+<tr>
+<td><code>density</code></td>
+<td>int</td>
+<td>≥ 0</td>
+<td>Image DPI</td>
+</tr>
+<tr>
+<td><code>stripProfiles</code></td>
+<td>bool</td>
+<td>—</td>
+<td>Strip ICC profiles and comments</td>
+</tr>
+<tr>
+<td><code>interval</code></td>
+<td>int</td>
+<td>≥ 1</td>
+<td>Interval in seconds for periodic thumbnails</td>
+</tr>
+<tr>
+<td><code>sourceParamsId</code></td>
+<td>int</td>
+<td>—</td>
+<td>ID of source flavor/thumb params to capture from</td>
+</tr>
+</tbody>
+</table>
+<h3 id="additional-resize-mode-thumbparams-only">Additional Resize Mode (thumbParams only)<a class="headerlink" href="#additional-resize-mode-thumbparams-only" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Name</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>6</td>
+<td>CROP_AFTER_RESIZE</td>
+<td>Force-resize to dimensions, then crop. <code>cropX</code>/<code>cropY</code> control gravity: -1=NW/W/SW, 0=N/Center/S, 1=NE/E/SE</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Create a &quot;social card&quot; thumbnail template</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/thumbParams/action/add&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;thumbParams[objectType]=KalturaThumbParams&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;thumbParams[name]=Social Card 1200x630&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;thumbParams[width]=1200&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;thumbParams[height]=630&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;thumbParams[cropType]=3&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;thumbParams[quality]=90&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;thumbParams[videoOffsetInPercentage]=25&quot;</span>
+</code></pre></div>
+<p><strong>Business scenario — automatic thumbnail on upload:</strong> Associate a thumbParams definition with a conversion profile. When new videos are uploaded, Kaltura automatically generates thumbnails at the configured dimensions, quality, and video offset — no additional API calls needed.</p>
+<h1 id="6-when-to-use-which">6. When to Use Which<a class="headerlink" href="#6-when-to-use-which" title="Permanent link">&para;</a></h1>
+<table>
+<thead>
+<tr>
+<th>Need</th>
+<th>Use</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Display thumbnails in a UI at various sizes</td>
+<td><strong>Dynamic Thumbnail URL</strong></td>
+<td>CDN-cached, no stored assets, infinite size combinations</td>
+</tr>
+<tr>
+<td>Hover preview / timeline scrubber</td>
+<td><strong>Dynamic Thumbnail URL</strong> with <code>vid_slices</code></td>
+<td>Single HTTP request for all preview frames</td>
+</tr>
+<tr>
+<td>Custom-designed marketing thumbnail</td>
+<td><strong>thumbAsset.add + setContent</strong></td>
+<td>Persistent, editable, independent of video content</td>
+</tr>
+<tr>
+<td>Capture and save a specific video frame</td>
+<td><strong>thumbAsset.generate</strong></td>
+<td>Stored permanently, can be set as default</td>
+</tr>
+<tr>
+<td>Auto-generate thumbnails on upload</td>
+<td><strong>thumbParams</strong> + conversion profile</td>
+<td>Zero-touch automation</td>
+</tr>
+<tr>
+<td>Change which thumbnail shows by default</td>
+<td><strong>thumbAsset.setAsDefault</strong></td>
+<td>Controls the entry's <code>thumbnailUrl</code> property</td>
+</tr>
+<tr>
+<td>Extract a frame without storing it</td>
+<td><strong>Dynamic Thumbnail URL</strong> with <code>vid_sec</code></td>
+<td>Transient, CDN-cached, no asset created</td>
+</tr>
+</tbody>
+</table>
+<h1 id="7-error-handling">7. Error Handling<a class="headerlink" href="#7-error-handling" title="Permanent link">&para;</a></h1>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Meaning</th>
+<th>Resolution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ENTRY_ID_NOT_FOUND</code></td>
+<td>Entry does not exist</td>
+<td>Verify entry ID</td>
+</tr>
+<tr>
+<td><code>ENTRY_DELETED_MODERATED</code></td>
+<td>Entry was deleted or rejected</td>
+<td>Entry no longer available</td>
+</tr>
+<tr>
+<td><code>THUMB_ASSET_ID_NOT_FOUND</code></td>
+<td>Thumb asset does not exist</td>
+<td>Verify thumb asset ID</td>
+</tr>
+<tr>
+<td><code>THUMB_ASSET_IS_DEFAULT</code></td>
+<td>Attempted to delete the current default thumb asset</td>
+<td>Set a different thumb as default first, then delete</td>
+</tr>
+<tr>
+<td><code>TOO_MANY_PROCESSES</code></td>
+<td>Server at concurrent ImageMagick process limit</td>
+<td>Transient — retry after a brief delay</td>
+</tr>
+<tr>
+<td><code>FILE_DOES_NOT_EXIST_ON_CURRENT_DC</code></td>
+<td>Source file on a different data center</td>
+<td>Request is auto-redirected; retry follows redirect</td>
+</tr>
+<tr>
+<td>Blank/placeholder image</td>
+<td>Entry not yet READY or no source for frame capture</td>
+<td>Wait for entry to reach READY status</td>
+</tr>
+<tr>
+<td><code>FEATURE_BLOCK_THUMBNAIL_CAPTURE</code></td>
+<td>Frame capture blocked by access control</td>
+<td>Entry has <code>LIMIT_THUMBNAIL_CAPTURE</code> rule</td>
+</tr>
+</tbody>
+</table>
+<h1 id="8-best-practices">8. Best Practices<a class="headerlink" href="#8-best-practices" title="Permanent link">&para;</a></h1>
+<ul>
+<li><strong>Use the dynamic thumbnail URL for display.</strong> The URL API serves images at any size with CDN caching — stored thumb assets are for editorial purposes (custom uploads, saved captures).  </li>
+<li><strong>Use <code>type=3</code> (center crop) for uniform grids.</strong> It guarantees exact dimensions while keeping the most important part of the image (center).  </li>
+<li><strong>Use <code>type=2</code> (resize with padding) for mixed aspect ratios.</strong> It preserves the full image within fixed dimensions, padding with <code>bgcolor</code>.  </li>
+<li><strong>Use sprite strips for timeline scrubbers.</strong> A single <code>/vid_slices/20/width/160/height/90</code> request creates a 3200×90 sprite. Parse in CSS with <code>background-position</code>.  </li>
+<li><strong>Use <code>nearest_aspect_ratio=1</code> for multi-thumbnail entries.</strong> If an entry has both landscape and portrait thumb assets, this parameter automatically selects the one that best matches the requested dimensions.  </li>
+<li><strong>Set <code>vid_sec</code> for consistent thumbnails.</strong> Specifying a timestamp (e.g., <code>/vid_sec/5</code>) ensures every entry in a gallery uses the same relative frame position, producing a uniform visual grid.  </li>
+<li><strong>Use short-lived URLs for access-controlled content.</strong> Thumbnail URLs with <code>/ks/{KS}</code> are cached per KS value. Use KS with appropriate expiry to prevent stale access.  </li>
+<li><strong>Keep sprite dimensions within pixel limits.</strong> Ensure <code>width × vid_slices &lt; 65,500</code> and <code>height × vid_slices &lt; 65,500</code>.  </li>
+<li><strong>Upload custom thumbnails for editorial control.</strong> For featured content, upload purpose-designed thumbnails via <code>thumbAsset.addFromImage</code> to ensure the ideal visual representation.  </li>
+<li><strong>Use thumbParams for automation.</strong> Associate thumbnail templates with conversion profiles so every upload automatically gets correctly-sized thumbnails.  </li>
+</ul>
+<h1 id="9-related-guides">9. Related Guides<a class="headerlink" href="#9-related-guides" title="Permanent link">&para;</a></h1>
+<ul>
+<li><strong><a href="../KALTURA_UPLOAD_AND_INGESTION_API/">Upload &amp; Ingestion API</a></strong> — Upload content (upload tokens needed for thumbAsset.setContent)  </li>
+<li><strong><a href="../KALTURA_CONTENT_DELIVERY_API/">Content Delivery API</a></strong> — playManifest streaming URLs, raw serve, download URLs  </li>
+<li><strong><a href="../KALTURA_SESSION_GUIDE/">Session Guide</a></strong> — KS generation for access-controlled thumbnails  </li>
+<li><strong><a href="../KALTURA_PLAYER_EMBED_GUIDE/">Player Embed Guide</a></strong> — Player uses thumbnail URLs for poster images and scrubber previews  </li>
+<li><strong><a href="../KALTURA_ESEARCH_API/">eSearch Guide</a></strong> — Search results include thumbnail URLs  </li>
+<li><strong><a href="../KALTURA_CHAPTERS_AND_SLIDES_API/">Chapters &amp; Slides API</a></strong> — Slide images use thumb assets  </li>
+<li><strong><a href="../KALTURA_CUE_POINTS_API/">Cue Points API</a></strong> — Thumbnail cue points for timed slide sync  </li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

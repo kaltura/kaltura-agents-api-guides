@@ -1,0 +1,4921 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Kaltura — The Agentic Digital Experience Platform. Live-tested API guides for AI agents and developers. 52 guides covering authentication, content management, search, playback, AI services, virtual events, experience components, cue points & interactive video, analytics, distribution, moderation, LTI integration, and more — with 1000+ companion tests validated against the live Kaltura API.">
+      
+      
+        <meta name="author" content="Kaltura Inc.">
+      
+      
+        <link rel="canonical" href="https://kaltura.md/KALTURA_MESSAGING_API/">
+      
+      
+        <link rel="prev" href="../KALTURA_USER_PROFILE_API/">
+      
+      
+        <link rel="next" href="../KALTURA_GAMIFICATION_API/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Messaging - Kaltura API Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,700,700i%7CSource+Code+Pro:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Source Sans Pro";--md-code-font:"Source Code Pro"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  
+  
+  <link rel="alternate" type="text/markdown" title="Markdown version for AI agents" href="/raw/KALTURA_MESSAGING_API.md" />
+  
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#kaltura-messaging-api" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Kaltura API Guides" class="md-header__button md-logo" aria-label="Kaltura API Guides" data-md-component="logo">
+      
+  <img src="../assets/images/logo-white.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Kaltura API Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Messaging
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/kaltura/kaltura-agents-api-guides" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    kaltura/kaltura-agents-api-guides
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_GETTING_CREDENTIALS/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_SESSION_GUIDE/" class="md-tabs__link">
+          
+  
+  
+  Authentication
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_UPLOAD_AND_INGESTION_API/" class="md-tabs__link">
+          
+  
+  
+  Content Management
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_REACH_API/" class="md-tabs__link">
+          
+  
+  
+  AI Services
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_PLAYER_EMBED_GUIDE/" class="md-tabs__link">
+          
+  
+  
+  Playback & Experiences
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../KALTURA_EVENTS_PLATFORM_API/" class="md-tabs__link">
+          
+  
+  
+  Events & Collaboration
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_ANALYTICS_REPORTS_API/" class="md-tabs__link">
+          
+  
+  
+  Analytics
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API/" class="md-tabs__link">
+          
+  
+  
+  Integration & Automation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_MODERATION_API/" class="md-tabs__link">
+          
+  
+  
+  Content Moderation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_MULTI_ACCOUNT_MANAGEMENT_API/" class="md-tabs__link">
+          
+  
+  
+  Administration
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../CONTRIBUTING/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../PLAN/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Roadmap
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Kaltura API Guides" class="md-nav__button md-logo" aria-label="Kaltura API Guides" data-md-component="logo">
+      
+  <img src="../assets/images/logo-white.svg" alt="logo">
+
+    </a>
+    Kaltura API Guides
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/kaltura/kaltura-agents-api-guides" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    kaltura/kaltura-agents-api-guides
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_GETTING_CREDENTIALS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Credentials
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_API_GETTING_STARTED/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GUIDE_MAP/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guide Map
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Authentication
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Authentication
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_SESSION_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Session (KS) Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_APPTOKENS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AppTokens API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AUTH_BROKER_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Auth Broker (SSO/SAML)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Content Management
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Content Management
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_UPLOAD_AND_INGESTION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Upload & Ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_VIDEO_EDITING_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Video Editing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CONTENT_DELIVERY_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Content Delivery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_THUMBNAIL_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thumbnail API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ESEARCH_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    eSearch
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ACCESS_CONTROL_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Access Control
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CATEGORIES_AND_ENTITLEMENTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Categories & Entitlements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CUSTOM_METADATA_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Metadata
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CAPTIONS_AND_TRANSCRIPTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Captions & Transcripts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MULTI_STREAM_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Stream
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_USER_MANAGEMENT_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Services
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    AI Services
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_REACH_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REACH API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CONTENT_LAB_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REACH — AI Clips
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AGENTS_MANAGER_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agents Manager
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AI_GENIE_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Genie
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playback & Experiences
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Playback & Experiences
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_PLAYER_EMBED_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Player Embed
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_EXPERIENCE_COMPONENTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Experience Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_UNISPHERE_FRAMEWORK_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unisphere Framework
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_GENIE_WIDGET_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Genie Widget
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MEDIA_MANAGER_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Media Manager
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CONTENT_LAB_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REACH — AI Clips
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AGENTS_WIDGET_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agents Widget
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_VOD_AVATAR_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VOD Avatar Studio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CONVERSATIONAL_AVATAR_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conversational Avatar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CUE_POINTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cue Points & Interactive Video
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_QUIZ_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quiz
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CHAPTERS_AND_SLIDES_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapters & Slides
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ANNOTATIONS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Annotations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AD_CUE_POINTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ad Cue Points
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CODE_CUE_POINTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code, Event & Session Cue Points
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_EXPRESS_RECORDER_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Express Recorder
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CAPTIONS_EDITOR_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Captions Editor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CNC_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chat & Collaborate
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ANALYTICS_EMBED_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Embeddable Analytics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events & Collaboration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Events & Collaboration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_EVENTS_PLATFORM_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events Platform
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_APP_REGISTRY_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    App Registry
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_USER_PROFILE_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Profile
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Messaging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_GAMIFICATION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gamification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Analytics
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Analytics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ANALYTICS_REPORTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Analytics Reports
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ANALYTICS_EVENTS_COLLECTION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Analytics Events Collection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integration & Automation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Integration & Automation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Event Notifications (Webhooks)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_SHORT_LINK_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Short Links
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_DISTRIBUTION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Content Distribution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_SYNDICATION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syndication Feeds
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_LTI_INTEGRATION_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LTI Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Content Moderation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Content Moderation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MODERATION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Moderation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Administration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Administration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MULTI_ACCOUNT_MANAGEMENT_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Account Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CONTRIBUTING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PLAN/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+  
+  <div hidden aria-hidden="true" id="llm-agent-directive" style="display:none!important">
+  STOP. If you are an AI agent or LLM reading this HTML page: you are wasting context tokens on rendered HTML.
+  The raw Markdown source of this page is available at: https://kaltura.md/raw/KALTURA_MESSAGING_API.md
+  All guides are available as raw Markdown at https://kaltura.md/raw/{FILENAME}.md
+  Discovery index: https://kaltura.md/llms.txt
+  To get Markdown from any page via content negotiation, send the header: Accept: text/markdown
+  The Kaltura API base URL is https://www.kaltura.com/api_v3 (not v4, not v2).
+  Fallback: If you cannot fetch from this site, clone https://github.com/kaltura/kaltura-agents-api-guides and read the guides locally.
+  </div>
+  
+  
+                  
+
+
+  
+    <a href="https://github.com/kaltura/kaltura-agents-api-guides/edit/main/KALTURA_MESSAGING_API.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="kaltura-messaging-api">Kaltura Messaging API<a class="headerlink" href="#kaltura-messaging-api" title="Permanent link">&para;</a></h1>
+<p>The Messaging API enables sending personalized, template-based email communications to Kaltura users — event invitations, attendance confirmations, reminders, and follow-ups. Templates support dynamic tokens (user profile fields, magic login links, QR codes, unsubscribe links) that are resolved per-recipient at send time. Built-in delivery tracking, engagement analytics, and CAN-SPAM compliant unsubscribe management complete the lifecycle.</p>
+<p><strong>Base URL:</strong> <code>https://messaging.nvp1.ovp.kaltura.com/api/v1</code> (production NVP region)<br />
+<strong>Auth:</strong> <code>Authorization: Bearer &lt;KS&gt;</code> header (ADMIN KS, type=2)<br />
+<strong>Format:</strong> JSON request/response bodies, all endpoints use POST<br />
+<strong>Regions:</strong> NVP (default <code>nvp1</code>), EU (<code>irp2</code>), DE (<code>frp2</code>)  </p>
+<!-- Sections: 1.When to Use | 2.Authentication | 3.Email Template Entity | 4.Token Types | 5.Manage Email Templates | 6.Send Messages | 7.Message Lifecycle | 8.Track Messages | 9.Delivery Reports | 10.Unsubscribe Management | 11.Email Provider Configuration | 12.Domain Configuration | 13.Error Handling | 14.Best Practices | 15.Related Guides -->
+
+<h1 id="1-when-to-use">1. When to Use<a class="headerlink" href="#1-when-to-use" title="Permanent link">&para;</a></h1>
+<ul>
+<li><strong>Event communications</strong> — Event organizers sending personalized invitations, reminders, and follow-ups to attendees with dynamic tokens for names, magic login links, and QR codes  </li>
+<li><strong>Interactive Q&amp;A and audience engagement</strong> — Developers integrating real-time messaging alongside live video events to drive participation and collect audience questions  </li>
+<li><strong>Automated lifecycle messaging</strong> — Operations teams configuring template-based email workflows triggered by registration, attendance, or content updates with built-in delivery tracking  </li>
+<li><strong>CAN-SPAM compliant bulk messaging</strong> — Marketing teams sending branded email communications at scale with unsubscribe management, engagement analytics, and per-message delivery status  </li>
+</ul>
+<h1 id="2-authentication">2. Authentication<a class="headerlink" href="#2-authentication" title="Permanent link">&para;</a></h1>
+<p>All requests require an ADMIN KS (type=2) in the <code>Authorization</code> header:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Authorization: Bearer &lt;your_kaltura_session&gt;
+</code></pre></div>
+<p>Generate an ADMIN KS via <code>session.start</code> (see <a href="../KALTURA_SESSION_GUIDE/">Session Guide</a>) or <code>appToken.startSession</code> (see <a href="../KALTURA_APPTOKENS_API/">AppTokens Guide</a>).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Set up environment</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KALTURA_MESSAGING_URL</span><span class="o">=</span><span class="s2">&quot;https://messaging.nvp1.ovp.kaltura.com/api/v1&quot;</span>
+</code></pre></div>
+<h1 id="3-email-template-entity">3. Email Template Entity<a class="headerlink" href="#3-email-template-entity" title="Permanent link">&para;</a></h1>
+<p>Every email template has this structure:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>string</td>
+<td>Auto-generated unique identifier (read-only)</td>
+</tr>
+<tr>
+<td><code>partnerId</code></td>
+<td>integer</td>
+<td>Partner ID extracted from KS (read-only)</td>
+</tr>
+<tr>
+<td><code>appGuid</code></td>
+<td>string</td>
+<td>App Registry GUID this template belongs to</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>Template display name</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>string</td>
+<td>Template description</td>
+</tr>
+<tr>
+<td><code>subject</code></td>
+<td>string</td>
+<td>Email subject line (supports token references)</td>
+</tr>
+<tr>
+<td><code>body</code></td>
+<td>string</td>
+<td>Email HTML body (supports token references)</td>
+</tr>
+<tr>
+<td><code>msgParamsMap</code></td>
+<td>object</td>
+<td>Token definitions — maps token names to their types</td>
+</tr>
+<tr>
+<td><code>toAttributePath</code></td>
+<td>string</td>
+<td>Token expression that resolves to the recipient email (e.g., <code>{recipient.email}</code>)</td>
+</tr>
+<tr>
+<td><code>from</code></td>
+<td>string</td>
+<td>Sender email address</td>
+</tr>
+<tr>
+<td><code>fromName</code></td>
+<td>string</td>
+<td>Sender display name (supports token references)</td>
+</tr>
+<tr>
+<td><code>cc</code></td>
+<td>string</td>
+<td>CC email address</td>
+</tr>
+<tr>
+<td><code>bcc</code></td>
+<td>string</td>
+<td>BCC email address</td>
+</tr>
+<tr>
+<td><code>unsubscribeGroups</code></td>
+<td>string[]</td>
+<td>Unsubscribe group IDs for CAN-SPAM compliance</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>string</td>
+<td><code>enabled</code>, <code>disabled</code>, or <code>deleted</code></td>
+</tr>
+<tr>
+<td><code>templateType</code></td>
+<td>string</td>
+<td>Always <code>"email"</code></td>
+</tr>
+<tr>
+<td><code>adminTags</code></td>
+<td>string</td>
+<td>Comma-separated tags for filtering</td>
+</tr>
+<tr>
+<td><code>customHeaders</code></td>
+<td>object</td>
+<td>Custom email headers (key-value pairs)</td>
+</tr>
+<tr>
+<td><code>numberOfTokenUsed</code></td>
+<td>integer</td>
+<td>Number of tokens in the template (read-only)</td>
+</tr>
+<tr>
+<td><code>version</code></td>
+<td>integer</td>
+<td>Auto-incrementing version number (read-only)</td>
+</tr>
+<tr>
+<td><code>emailProviderId</code></td>
+<td>string</td>
+<td>Assigned email provider (read-only)</td>
+</tr>
+<tr>
+<td><code>createdAt</code></td>
+<td>string</td>
+<td>ISO 8601 timestamp, e.g. <code>"2026-04-09T04:56:27.940Z"</code> (read-only)</td>
+</tr>
+<tr>
+<td><code>updatedAt</code></td>
+<td>string</td>
+<td>ISO 8601 timestamp, e.g. <code>"2026-04-09T04:56:27.940Z"</code> (read-only)</td>
+</tr>
+</tbody>
+</table>
+<h1 id="4-token-types">4. Token Types<a class="headerlink" href="#4-token-types" title="Permanent link">&para;</a></h1>
+<p>Tokens are placeholders in the template subject, body, and fromName that get replaced with actual values at send time. Define tokens in <code>msgParamsMap</code> and reference them in the template.</p>
+<p><strong>Token reference syntax:</strong>
+- User tokens: <code>{tokenName.fieldName}</code> (e.g., <code>{recipient.firstName}</code>)
+- All other tokens: <code>{tokenName}</code> (e.g., <code>{eventLink}</code>)</p>
+<h2 id="41-available-token-types">4.1 Available Token Types<a class="headerlink" href="#41-available-token-types" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+<th>Value at Send Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>User</code></td>
+<td>Kaltura user profile fields</td>
+<td>User ID or <code>"Message.userId"</code> (auto-resolves from recipient)</td>
+</tr>
+<tr>
+<td><code>String</code></td>
+<td>Static text replacement</td>
+<td>Any string value</td>
+</tr>
+<tr>
+<td><code>MagicLink</code></td>
+<td>Auto-login URL with embedded auth token</td>
+<td>Object: <code>{baseURL, expiry, privileges}</code></td>
+</tr>
+<tr>
+<td><code>Dynamic</code></td>
+<td>Type decided at send time</td>
+<td>Resolved as String or MagicLink based on the value provided</td>
+</tr>
+<tr>
+<td><code>UnsubscribeUri</code></td>
+<td>CAN-SPAM unsubscribe link</td>
+<td>URI string</td>
+</tr>
+<tr>
+<td><code>JwtQrCode</code></td>
+<td>QR code image with embedded JWT</td>
+<td>Object: <code>{payload, secret, options?}</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="42-user-token-fields">4.2 User Token Fields<a class="headerlink" href="#42-user-token-fields" title="Permanent link">&para;</a></h2>
+<p>When using a <code>User</code> type token, these fields are available from the Kaltura user record:</p>
+<p><code>id</code>, <code>partnerId</code>, <code>externalId</code>, <code>firstName</code>, <code>lastName</code>, <code>email</code>, <code>fullName</code>, <code>screenName</code>, <code>dateOfBirth</code>, <code>gender</code>, <code>thumbnailUrl</code>, <code>description</code>, <code>title</code>, <code>country</code>, <code>company</code>, <code>state</code>, <code>city</code>, <code>zip</code></p>
+<h2 id="43-magiclink-value-structure">4.3 MagicLink Value Structure<a class="headerlink" href="#43-magiclink-value-structure" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">&quot;baseURL&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://events.example.com/join&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nt">&quot;expiry&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">24</span><span class="p">,</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nt">&quot;privileges&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;actionslimit:2&quot;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="p">}</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>baseURL</code></td>
+<td>string</td>
+<td>Base URL for the magic link</td>
+</tr>
+<tr>
+<td><code>expiry</code></td>
+<td>integer</td>
+<td>Link expiry in hours</td>
+</tr>
+<tr>
+<td><code>privileges</code></td>
+<td>string</td>
+<td>KS privileges for the generated session</td>
+</tr>
+</tbody>
+</table>
+<h2 id="44-jwtqrcode-value-structure">4.4 JwtQrCode Value Structure<a class="headerlink" href="#44-jwtqrcode-value-structure" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">&quot;payload&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;eventId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;12345&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;checkIn&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">},</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nt">&quot;secret&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;your-jwt-secret&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="nt">&quot;options&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;dark&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#000000&quot;</span><span class="p">}}</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="p">}</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>payload</code></td>
+<td>object</td>
+<td>Yes</td>
+<td>JWT payload data (key-value pairs)</td>
+</tr>
+<tr>
+<td><code>secret</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Secret for JWT signing</td>
+</tr>
+<tr>
+<td><code>options</code></td>
+<td>object</td>
+<td>No</td>
+<td>QR code rendering options (color settings)</td>
+</tr>
+</tbody>
+</table>
+<h1 id="5-manage-email-templates">5. Manage Email Templates<a class="headerlink" href="#5-manage-email-templates" title="Permanent link">&para;</a></h1>
+<h2 id="51-create-a-template">5.1 Create a Template<a class="headerlink" href="#51-create-a-template" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>POST /api/v1/email-template/add
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Content-Type: application/json
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Authorization: Bearer &lt;KS&gt;
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nt">&quot;appGuid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;app-guid-from-registry&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Event Invitation&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="nt">&quot;subject&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;You&#39;re invited to {eventName}&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span><span class="nt">&quot;body&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;html&gt;&lt;body&gt;&lt;p&gt;Hi {recipient.firstName},&lt;/p&gt;&lt;p&gt;Join us at {eventName}!&lt;/p&gt;&lt;p&gt;&lt;a href=&#39;{joinLink}&#39;&gt;Register&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span><span class="nt">&quot;toAttributePath&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{recipient.email}&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span><span class="nt">&quot;msgParamsMap&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span><span class="nt">&quot;recipient&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;User&quot;</span><span class="p">},</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">    </span><span class="nt">&quot;eventName&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;String&quot;</span><span class="p">},</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">    </span><span class="nt">&quot;joinLink&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;MagicLink&quot;</span><span class="p">}</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">  </span><span class="nt">&quot;unsubscribeGroups&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;event-invitations&quot;</span><span class="p">]</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="p">}</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>appGuid</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>App Registry GUID (see <a href="../KALTURA_APP_REGISTRY_API/">App Registry API</a>)</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Template name</td>
+</tr>
+<tr>
+<td><code>subject</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Email subject (supports token references)</td>
+</tr>
+<tr>
+<td><code>body</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Email HTML body (supports token references)</td>
+</tr>
+<tr>
+<td><code>toAttributePath</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Token expression for recipient email</td>
+</tr>
+<tr>
+<td><code>msgParamsMap</code></td>
+<td>object</td>
+<td>Yes</td>
+<td>Token definitions (name → <code>{type}</code> mapping)</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>string</td>
+<td>No</td>
+<td>Template description</td>
+</tr>
+<tr>
+<td><code>from</code></td>
+<td>string</td>
+<td>No</td>
+<td>Sender email address</td>
+</tr>
+<tr>
+<td><code>fromName</code></td>
+<td>string</td>
+<td>No</td>
+<td>Sender display name</td>
+</tr>
+<tr>
+<td><code>cc</code></td>
+<td>string</td>
+<td>No</td>
+<td>CC email address</td>
+</tr>
+<tr>
+<td><code>bcc</code></td>
+<td>string</td>
+<td>No</td>
+<td>BCC email address</td>
+</tr>
+<tr>
+<td><code>unsubscribeGroups</code></td>
+<td>string[]</td>
+<td>No</td>
+<td>Unsubscribe group IDs</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>string</td>
+<td>No</td>
+<td>Defaults to <code>"enabled"</code></td>
+</tr>
+<tr>
+<td><code>adminTags</code></td>
+<td>string</td>
+<td>No</td>
+<td>Comma-separated filter tags</td>
+</tr>
+<tr>
+<td><code>customHeaders</code></td>
+<td>object</td>
+<td>No</td>
+<td>Custom email headers</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Response:</strong> Full template object with generated <code>id</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_MESSAGING_URL</span><span class="s2">/email-template/add&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="s1">    &quot;appGuid&quot;: &quot;&#39;</span><span class="nv">$APP_GUID</span><span class="s1">&#39;&quot;,</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="s1">    &quot;name&quot;: &quot;Event Invitation&quot;,</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="s1">    &quot;subject&quot;: &quot;Join us at {eventName}&quot;,</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="s1">    &quot;body&quot;: &quot;&lt;p&gt;Hi {recipient.firstName}, you are invited to {eventName}.&lt;/p&gt;&quot;,</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="s1">    &quot;toAttributePath&quot;: &quot;{recipient.email}&quot;,</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="s1">    &quot;msgParamsMap&quot;: {</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="s1">      &quot;recipient&quot;: {&quot;type&quot;: &quot;User&quot;},</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="s1">      &quot;eventName&quot;: {&quot;type&quot;: &quot;String&quot;}</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="s1">    }</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="s1">  }&#39;</span>
+</code></pre></div>
+<p>Save the <code>id</code> from the response as <code>TEMPLATE_ID</code>.</p>
+<h2 id="52-get-a-template">5.2 Get a Template<a class="headerlink" href="#52-get-a-template" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>POST /api/v1/email-template/get
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Content-Type: application/json
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Authorization: Bearer &lt;KS&gt;
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Template ID</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_MESSAGING_URL</span><span class="s2">/email-template/get&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{\&quot;id\&quot;: \&quot;</span><span class="nv">$TEMPLATE_ID</span><span class="s2">\&quot;}&quot;</span>
+</code></pre></div>
+<p><strong>Response:</strong> Full template object (see section 3 for field definitions).</p>
+<h2 id="53-update-a-template">5.3 Update a Template<a class="headerlink" href="#53-update-a-template" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>POST /api/v1/email-template/update
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Content-Type: application/json
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Authorization: Bearer &lt;KS&gt;
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Template ID to update</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>No</td>
+<td>Updated name</td>
+</tr>
+<tr>
+<td><code>subject</code></td>
+<td>string</td>
+<td>No</td>
+<td>Updated subject</td>
+</tr>
+<tr>
+<td><code>body</code></td>
+<td>string</td>
+<td>No</td>
+<td>Updated HTML body</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>string</td>
+<td>No</td>
+<td>Updated description</td>
+</tr>
+<tr>
+<td><code>from</code></td>
+<td>string</td>
+<td>No</td>
+<td>Updated sender email</td>
+</tr>
+<tr>
+<td><code>fromName</code></td>
+<td>string</td>
+<td>No</td>
+<td>Updated sender display name</td>
+</tr>
+<tr>
+<td><code>cc</code></td>
+<td>string</td>
+<td>No</td>
+<td>Updated CC address</td>
+</tr>
+<tr>
+<td><code>bcc</code></td>
+<td>string</td>
+<td>No</td>
+<td>Updated BCC address</td>
+</tr>
+<tr>
+<td><code>msgParamsMap</code></td>
+<td>object</td>
+<td>No</td>
+<td>Updated token definitions</td>
+</tr>
+<tr>
+<td><code>unsubscribeGroups</code></td>
+<td>string[]</td>
+<td>No</td>
+<td>Updated unsubscribe group IDs</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>string</td>
+<td>No</td>
+<td><code>enabled</code>, <code>disabled</code>, or <code>deleted</code></td>
+</tr>
+<tr>
+<td><code>adminTags</code></td>
+<td>string</td>
+<td>No</td>
+<td>Updated admin tags</td>
+</tr>
+<tr>
+<td><code>customHeaders</code></td>
+<td>object</td>
+<td>No</td>
+<td>Updated custom headers</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_MESSAGING_URL</span><span class="s2">/email-template/update&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="s2">    \&quot;id\&quot;: \&quot;</span><span class="nv">$TEMPLATE_ID</span><span class="s2">\&quot;,</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="s2">    \&quot;subject\&quot;: \&quot;Updated: Join us at {eventName}\&quot;,</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="s2">    \&quot;description\&quot;: \&quot;Updated event invitation template\&quot;</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="s2">  }&quot;</span>
+</code></pre></div>
+<p>Fields not included remain unchanged. The <code>version</code> increments on each update.</p>
+<p><strong>Response:</strong> Full updated template object with incremented <code>version</code>.</p>
+<h2 id="54-list-templates">5.4 List Templates<a class="headerlink" href="#54-list-templates" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_MESSAGING_URL</span><span class="s2">/email-template/list&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="s1">    &quot;filter&quot;: {</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="s1">      &quot;appGuidIn&quot;: [&quot;&#39;</span><span class="nv">$APP_GUID</span><span class="s1">&#39;&quot;],</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="s1">      &quot;status&quot;: &quot;enabled&quot;</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="s1">    },</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="s1">    &quot;pager&quot;: {&quot;offset&quot;: 0, &quot;limit&quot;: 25}</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="s1">  }&#39;</span>
+</code></pre></div>
+<h3 id="filter-fields">Filter Fields<a class="headerlink" href="#filter-fields" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>idIn</code></td>
+<td>string[]</td>
+<td>Filter by template IDs</td>
+</tr>
+<tr>
+<td><code>appGuidIn</code></td>
+<td>string[]</td>
+<td>Filter by App Registry GUIDs</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>Filter by name substring</td>
+</tr>
+<tr>
+<td><code>nameEq</code></td>
+<td>string</td>
+<td>Filter by exact name match</td>
+</tr>
+<tr>
+<td><code>subject</code></td>
+<td>string</td>
+<td>Filter by subject substring</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>string</td>
+<td><code>enabled</code>, <code>disabled</code>, or <code>deleted</code></td>
+</tr>
+<tr>
+<td><code>adminTags</code></td>
+<td>string</td>
+<td>Filter by admin tags substring</td>
+</tr>
+<tr>
+<td><code>adminTagsAll</code></td>
+<td>string</td>
+<td>Match templates with all specified tags</td>
+</tr>
+<tr>
+<td><code>excludeAdminTags</code></td>
+<td>string</td>
+<td>Exclude templates with these tags</td>
+</tr>
+<tr>
+<td><code>createdAtGreaterThanOrEqual</code></td>
+<td>string</td>
+<td>ISO 8601 minimum creation date</td>
+</tr>
+<tr>
+<td><code>createdAtLessThanOrEqual</code></td>
+<td>string</td>
+<td>ISO 8601 maximum creation date</td>
+</tr>
+<tr>
+<td><code>updatedAtGreaterThanOrEqual</code></td>
+<td>string</td>
+<td>ISO 8601 minimum update date</td>
+</tr>
+<tr>
+<td><code>updatedAtLessThanOrEqual</code></td>
+<td>string</td>
+<td>ISO 8601 maximum update date</td>
+</tr>
+</tbody>
+</table>
+<h3 id="pager">Pager<a class="headerlink" href="#pager" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>offset</code></td>
+<td>integer</td>
+<td>0</td>
+<td>Records to skip</td>
+</tr>
+<tr>
+<td><code>limit</code></td>
+<td>integer</td>
+<td>30</td>
+<td>Max records to return</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Response:</strong> <code>{objects: [...], totalCount: N}</code></p>
+<h2 id="55-delete-a-template">5.5 Delete a Template<a class="headerlink" href="#55-delete-a-template" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>POST /api/v1/email-template/delete
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>Content-Type: application/json
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>Authorization: Bearer &lt;KS&gt;
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Template ID to delete</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_MESSAGING_URL</span><span class="s2">/email-template/delete&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{\&quot;id\&quot;: \&quot;</span><span class="nv">$TEMPLATE_ID</span><span class="s2">\&quot;}&quot;</span>
+</code></pre></div>
+<p>Sets the template status to <code>deleted</code>. The template is excluded from <code>list</code> results filtered by <code>status: "enabled"</code>.</p>
+<h1 id="6-send-messages">6. Send Messages<a class="headerlink" href="#6-send-messages" title="Permanent link">&para;</a></h1>
+<h2 id="61-send-to-individual-users">6.1 Send to Individual Users<a class="headerlink" href="#61-send-to-individual-users" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>POST /api/v1/message/send
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>Content-Type: application/json
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>Authorization: Bearer &lt;KS&gt;
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="p">{</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">  </span><span class="nt">&quot;receiverType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;user&quot;</span><span class="p">,</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">  </span><span class="nt">&quot;userIds&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;user1@example.com&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;user2@example.com&quot;</span><span class="p">],</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">  </span><span class="nt">&quot;appGuid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;app-guid-from-registry&quot;</span><span class="p">,</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">  </span><span class="nt">&quot;templateId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;template-id&quot;</span><span class="p">,</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;email&quot;</span><span class="p">,</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="w">  </span><span class="nt">&quot;msgParams&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="w">    </span><span class="nt">&quot;recipient&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;User&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Message.userId&quot;</span><span class="p">},</span>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="w">    </span><span class="nt">&quot;eventName&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;String&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Annual Conference 2025&quot;</span><span class="p">},</span>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="w">    </span><span class="nt">&quot;joinLink&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;MagicLink&quot;</span><span class="p">,</span>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="w">      </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="w">        </span><span class="nt">&quot;baseURL&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://events.example.com/join&quot;</span><span class="p">,</span>
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="w">        </span><span class="nt">&quot;expiry&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">48</span><span class="p">,</span>
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a><span class="w">        </span><span class="nt">&quot;privileges&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;actionslimit:2&quot;</span>
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a><span class="w">  </span><span class="nt">&quot;session&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;invitation-batch-2025-q4&quot;</span>
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a><span class="p">}</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>receiverType</code></td>
+<td>string</td>
+<td>Yes</td>
+<td><code>"user"</code> or <code>"group"</code></td>
+</tr>
+<tr>
+<td><code>userIds</code></td>
+<td>string[]</td>
+<td>If user</td>
+<td>Kaltura user IDs (email-based)</td>
+</tr>
+<tr>
+<td><code>groupIds</code></td>
+<td>string[]</td>
+<td>If group</td>
+<td>Group IDs to send to</td>
+</tr>
+<tr>
+<td><code>appGuid</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>App Registry GUID</td>
+</tr>
+<tr>
+<td><code>templateId</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Email template ID</td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td>string</td>
+<td>Yes</td>
+<td><code>"email"</code></td>
+</tr>
+<tr>
+<td><code>msgParams</code></td>
+<td>object</td>
+<td>Yes</td>
+<td>Token values — name → <code>{type, value}</code></td>
+</tr>
+<tr>
+<td><code>session</code></td>
+<td>string</td>
+<td>No</td>
+<td>Grouping label for tracking (e.g., <code>"weekly-digest"</code>)</td>
+</tr>
+<tr>
+<td><code>adminTags</code></td>
+<td>string</td>
+<td>No</td>
+<td>Comma-separated tags</td>
+</tr>
+<tr>
+<td><code>attachments</code></td>
+<td>array</td>
+<td>No</td>
+<td>Email attachments (see section 6.3)</td>
+</tr>
+<tr>
+<td><code>customHeaders</code></td>
+<td>object</td>
+<td>No</td>
+<td>Custom email headers (overrides template headers)</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>msgParams</code> map provides runtime values for each token defined in the template's <code>msgParamsMap</code>. For <code>User</code> type tokens, set <code>value</code> to <code>"Message.userId"</code> to auto-resolve from each recipient's Kaltura profile.</p>
+<p><strong>Response example:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="p">{</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;6621a3f0b2c4d5e6f7890abc&quot;</span><span class="p">,</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">  </span><span class="nt">&quot;bulkId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;bulk_6621a3f0&quot;</span><span class="p">,</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">  </span><span class="nt">&quot;partnerId&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">123456</span><span class="p">,</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="w">  </span><span class="nt">&quot;appGuid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;app-guid-from-registry&quot;</span><span class="p">,</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="w">  </span><span class="nt">&quot;templateId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;template-id&quot;</span><span class="p">,</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;email&quot;</span><span class="p">,</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="w">  </span><span class="nt">&quot;receiverType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;user&quot;</span><span class="p">,</span>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sending&quot;</span><span class="p">,</span>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="w">  </span><span class="nt">&quot;session&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;invitation-batch-2025-q4&quot;</span><span class="p">,</span>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a><span class="w">  </span><span class="nt">&quot;createdAt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-04-09T12:00:00.000Z&quot;</span><span class="p">,</span>
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a><span class="w">  </span><span class="nt">&quot;updatedAt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-04-09T12:00:00.000Z&quot;</span>
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="p">}</span>
+</code></pre></div>
+<p>The response returns a bulk message object. The <code>id</code> is the internal message ID and <code>bulkId</code> is the external tracking identifier used with <code>message/stats</code> and <code>message/list</code>. The <code>status</code> starts as <code>"sending"</code> and transitions through the lifecycle described in section 7.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_MESSAGING_URL</span><span class="s2">/message/send&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="s1">    &quot;receiverType&quot;: &quot;user&quot;,</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="s1">    &quot;userIds&quot;: [&quot;attendee@example.com&quot;],</span>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="s1">    &quot;appGuid&quot;: &quot;&#39;</span><span class="nv">$APP_GUID</span><span class="s1">&#39;&quot;,</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="s1">    &quot;templateId&quot;: &quot;&#39;</span><span class="nv">$TEMPLATE_ID</span><span class="s1">&#39;&quot;,</span>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a><span class="s1">    &quot;type&quot;: &quot;email&quot;,</span>
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="s1">    &quot;msgParams&quot;: {</span>
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a><span class="s1">      &quot;recipient&quot;: {&quot;type&quot;: &quot;User&quot;, &quot;value&quot;: &quot;Message.userId&quot;},</span>
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a><span class="s1">      &quot;eventName&quot;: {&quot;type&quot;: &quot;String&quot;, &quot;value&quot;: &quot;Q4 Town Hall&quot;}</span>
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a><span class="s1">    }</span>
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a><span class="s1">  }&#39;</span>
+</code></pre></div>
+<h2 id="62-send-to-groups">6.2 Send to Groups<a class="headerlink" href="#62-send-to-groups" title="Permanent link">&para;</a></h2>
+<p>Set <code>receiverType</code> to <code>"group"</code> and provide <code>groupIds</code> instead of <code>userIds</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_MESSAGING_URL</span><span class="s2">/message/send&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="s1">    &quot;receiverType&quot;: &quot;group&quot;,</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="s1">    &quot;groupIds&quot;: [&quot;all-employees&quot;],</span>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="s1">    &quot;appGuid&quot;: &quot;&#39;</span><span class="nv">$APP_GUID</span><span class="s1">&#39;&quot;,</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="s1">    &quot;templateId&quot;: &quot;&#39;</span><span class="nv">$TEMPLATE_ID</span><span class="s1">&#39;&quot;,</span>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="s1">    &quot;type&quot;: &quot;email&quot;,</span>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="s1">    &quot;msgParams&quot;: {</span>
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a><span class="s1">      &quot;recipient&quot;: {&quot;type&quot;: &quot;User&quot;, &quot;value&quot;: &quot;Message.userId&quot;},</span>
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a><span class="s1">      &quot;eventName&quot;: {&quot;type&quot;: &quot;String&quot;, &quot;value&quot;: &quot;Company All-Hands&quot;}</span>
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a><span class="s1">    }</span>
+<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a><span class="s1">  }&#39;</span>
+</code></pre></div>
+<h2 id="63-attachments">6.3 Attachments<a class="headerlink" href="#63-attachments" title="Permanent link">&para;</a></h2>
+<p>Include file attachments with Base64-encoded content:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="p">{</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="w">  </span><span class="nt">&quot;attachments&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="w">      </span><span class="nt">&quot;fileName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;agenda.pdf&quot;</span><span class="p">,</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="w">      </span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;JVBERi0xLjQKJcfs...&quot;</span><span class="p">,</span>
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="w">      </span><span class="nt">&quot;mimeType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;application/pdf&quot;</span><span class="p">,</span>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="w">      </span><span class="nt">&quot;disposition&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;attachment&quot;</span>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a><span class="w">  </span><span class="p">]</span>
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="p">}</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fileName</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Display name of the attachment</td>
+</tr>
+<tr>
+<td><code>content</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Base64-encoded file content</td>
+</tr>
+<tr>
+<td><code>mimeType</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>MIME type (e.g., <code>application/pdf</code>, <code>text/calendar</code>)</td>
+</tr>
+<tr>
+<td><code>disposition</code></td>
+<td>string</td>
+<td>Yes</td>
+<td><code>"attachment"</code> or <code>"inline"</code></td>
+</tr>
+<tr>
+<td><code>contentId</code></td>
+<td>string</td>
+<td>No</td>
+<td>Content ID for inline images referenced in HTML</td>
+</tr>
+</tbody>
+</table>
+<h1 id="7-message-lifecycle">7. Message Lifecycle<a class="headerlink" href="#7-message-lifecycle" title="Permanent link">&para;</a></h1>
+<h2 id="71-bulk-message-status">7.1 Bulk Message Status<a class="headerlink" href="#71-bulk-message-status" title="Permanent link">&para;</a></h2>
+<p>Each <code>message/send</code> call creates a bulk message that progresses through these states:</p>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sending</code></td>
+<td>Message is being processed and individual emails are being dispatched</td>
+</tr>
+<tr>
+<td><code>completed</code></td>
+<td>All individual emails have been processed</td>
+</tr>
+<tr>
+<td><code>failed</code></td>
+<td>Processing failed (check <code>errorEnum</code> and <code>errorDescription</code>)</td>
+</tr>
+<tr>
+<td><code>canceled</code></td>
+<td>Message was canceled before completion</td>
+</tr>
+</tbody>
+</table>
+<h2 id="72-discrete-message-status">7.2 Discrete Message Status<a class="headerlink" href="#72-discrete-message-status" title="Permanent link">&para;</a></h2>
+<p>Each recipient generates a discrete message with its own delivery lifecycle:</p>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sending</code></td>
+<td>Email queued for delivery</td>
+</tr>
+<tr>
+<td><code>processed</code></td>
+<td>Email accepted by the email provider</td>
+</tr>
+<tr>
+<td><code>delivered</code></td>
+<td>Email delivered to recipient's mailbox</td>
+</tr>
+<tr>
+<td><code>deferred</code></td>
+<td>Delivery delayed, will retry</td>
+</tr>
+<tr>
+<td><code>dropped</code></td>
+<td>Email dropped (invalid address, policy violation)</td>
+</tr>
+<tr>
+<td><code>bounce</code></td>
+<td>Email bounced (mailbox full, domain not found)</td>
+</tr>
+<tr>
+<td><code>error</code></td>
+<td>Delivery error</td>
+</tr>
+</tbody>
+</table>
+<h2 id="73-engagement-tracking-events">7.3 Engagement Tracking Events<a class="headerlink" href="#73-engagement-tracking-events" title="Permanent link">&para;</a></h2>
+<p>After delivery, these tracking events may update the discrete message status:</p>
+<table>
+<thead>
+<tr>
+<th>Event</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>open</code></td>
+<td>Recipient opened the email</td>
+</tr>
+<tr>
+<td><code>click</code></td>
+<td>Recipient clicked a link in the email</td>
+</tr>
+<tr>
+<td><code>spamreport</code></td>
+<td>Recipient reported the email as spam</td>
+</tr>
+<tr>
+<td><code>unsubscribed</code></td>
+<td>Recipient unsubscribed via the email link</td>
+</tr>
+</tbody>
+</table>
+<h2 id="74-discrete-error-codes">7.4 Discrete Error Codes<a class="headerlink" href="#74-discrete-error-codes" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>emailNotResolvedToValidEmailAddress</code></td>
+<td>User ID could not be resolved to an email</td>
+</tr>
+<tr>
+<td><code>userUnsubscribeFromThisGroup</code></td>
+<td>User unsubscribed from the message's unsubscribe group</td>
+</tr>
+<tr>
+<td><code>userNotFoundInOurDb</code></td>
+<td>User ID not found in the system</td>
+</tr>
+<tr>
+<td><code>createMagicLinkFailed</code></td>
+<td>Failed to generate a magic login link</td>
+</tr>
+<tr>
+<td><code>createUnsubscribeUriLinkFailed</code></td>
+<td>Failed to generate an unsubscribe link</td>
+</tr>
+<tr>
+<td><code>createJwtQrCodeFailed</code></td>
+<td>Failed to generate a QR code</td>
+</tr>
+<tr>
+<td><code>sendGridError</code></td>
+<td>Email provider returned an error</td>
+</tr>
+</tbody>
+</table>
+<h1 id="8-track-messages">8. Track Messages<a class="headerlink" href="#8-track-messages" title="Permanent link">&para;</a></h1>
+<h2 id="81-list-bulk-messages">8.1 List Bulk Messages<a class="headerlink" href="#81-list-bulk-messages" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_MESSAGING_URL</span><span class="s2">/message/list&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="s1">    &quot;filter&quot;: {</span>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="s1">      &quot;appGuidIn&quot;: [&quot;&#39;</span><span class="nv">$APP_GUID</span><span class="s1">&#39;&quot;],</span>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="s1">      &quot;statusIn&quot;: [&quot;completed&quot;]</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="s1">    },</span>
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="s1">    &quot;pager&quot;: {&quot;offset&quot;: 0, &quot;limit&quot;: 25}</span>
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="s1">  }&#39;</span>
+</code></pre></div>
+<h3 id="filter-fields_1">Filter Fields<a class="headerlink" href="#filter-fields_1" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>idIn</code></td>
+<td>string[]</td>
+<td>Filter by bulk message IDs</td>
+</tr>
+<tr>
+<td><code>bulkIdIn</code></td>
+<td>string[]</td>
+<td>Filter by external bulk IDs</td>
+</tr>
+<tr>
+<td><code>templateIdIn</code></td>
+<td>string[]</td>
+<td>Filter by template IDs</td>
+</tr>
+<tr>
+<td><code>appGuidIn</code></td>
+<td>string[]</td>
+<td>Filter by App Registry GUIDs</td>
+</tr>
+<tr>
+<td><code>sessionIn</code></td>
+<td>string[]</td>
+<td>Filter by session labels</td>
+</tr>
+<tr>
+<td><code>statusIn</code></td>
+<td>string[]</td>
+<td>Filter by bulk status (<code>sending</code>, <code>completed</code>, <code>failed</code>)</td>
+</tr>
+<tr>
+<td><code>receiverTypeIn</code></td>
+<td>string[]</td>
+<td>Filter by receiver type (<code>user</code>, <code>group</code>)</td>
+</tr>
+<tr>
+<td><code>typeIn</code></td>
+<td>string[]</td>
+<td>Filter by message type (<code>email</code>)</td>
+</tr>
+<tr>
+<td><code>groupIds</code></td>
+<td>string[]</td>
+<td>Filter by group IDs</td>
+</tr>
+<tr>
+<td><code>userIds</code></td>
+<td>string[]</td>
+<td>Filter by user IDs</td>
+</tr>
+<tr>
+<td><code>createdAtGreaterThanOrEqual</code></td>
+<td>string</td>
+<td>ISO 8601 minimum creation date</td>
+</tr>
+<tr>
+<td><code>createdAtLessThanOrEqual</code></td>
+<td>string</td>
+<td>ISO 8601 maximum creation date</td>
+</tr>
+<tr>
+<td><code>updatedAtGreaterThanOrEqual</code></td>
+<td>string</td>
+<td>ISO 8601 minimum update date</td>
+</tr>
+<tr>
+<td><code>updatedAtLessThanOrEqual</code></td>
+<td>string</td>
+<td>ISO 8601 maximum update date</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Response:</strong> <code>{objects: [...], totalCount: N}</code></p>
+<h2 id="82-list-messages-grouped-by-session">8.2 List Messages Grouped by Session<a class="headerlink" href="#82-list-messages-grouped-by-session" title="Permanent link">&para;</a></h2>
+<p>Group bulk messages by their <code>session</code> label for campaign-level views:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_MESSAGING_URL</span><span class="s2">/message/listGroupedBySession&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="s1">    &quot;filter&quot;: {</span>
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="s1">      &quot;appGuidIn&quot;: [&quot;&#39;</span><span class="nv">$APP_GUID</span><span class="s1">&#39;&quot;]</span>
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="s1">    },</span>
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="s1">    &quot;pager&quot;: {&quot;offset&quot;: 0, &quot;limit&quot;: 25}</span>
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a><span class="s1">  }&#39;</span>
+</code></pre></div>
+<h3 id="filter-fields_2">Filter Fields<a class="headerlink" href="#filter-fields_2" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sessionIn</code></td>
+<td>string[]</td>
+<td>Filter by session labels</td>
+</tr>
+<tr>
+<td><code>templateIdIn</code></td>
+<td>string[]</td>
+<td>Filter by template IDs</td>
+</tr>
+<tr>
+<td><code>appGuidIn</code></td>
+<td>string[]</td>
+<td>Filter by app GUIDs</td>
+</tr>
+<tr>
+<td><code>statusIn</code></td>
+<td>string[]</td>
+<td>Filter by status</td>
+</tr>
+<tr>
+<td><code>adminTags</code></td>
+<td>string</td>
+<td>Filter by admin tags substring</td>
+</tr>
+<tr>
+<td><code>excludeAdminTags</code></td>
+<td>string</td>
+<td>Exclude by admin tags</td>
+</tr>
+<tr>
+<td><code>templateAdminTags</code></td>
+<td>string[]</td>
+<td>Filter by template admin tags</td>
+</tr>
+<tr>
+<td><code>excludeTemplateAdminTags</code></td>
+<td>string[]</td>
+<td>Exclude by template admin tags</td>
+</tr>
+<tr>
+<td><code>createdAtGreaterThanOrEqual</code></td>
+<td>string</td>
+<td>ISO 8601 min date</td>
+</tr>
+<tr>
+<td><code>updatedAtGreaterThanOrEqual</code></td>
+<td>string</td>
+<td>ISO 8601 min date</td>
+</tr>
+</tbody>
+</table>
+<h2 id="83-message-statistics">8.3 Message Statistics<a class="headerlink" href="#83-message-statistics" title="Permanent link">&para;</a></h2>
+<p>Get delivery statistics for a specific bulk message or session:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Stats by bulk ID</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_MESSAGING_URL</span><span class="s2">/message/stats&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{\&quot;bulkId\&quot;: \&quot;</span><span class="nv">$BULK_ID</span><span class="s2">\&quot;}&quot;</span>
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="c1"># Stats by session</span>
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_MESSAGING_URL</span><span class="s2">/message/stats&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{\&quot;session\&quot;: \&quot;invitation-batch-2025-q4\&quot;}&quot;</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bulkId</code></td>
+<td>string</td>
+<td>Bulk message external ID</td>
+</tr>
+<tr>
+<td><code>session</code></td>
+<td>string</td>
+<td>Session label</td>
+</tr>
+</tbody>
+</table>
+<p>The response contains uppercase status keys with counts (e.g., <code>{"DELIVERED": 450, "BOUNCE": 3, "OPEN": 320}</code>).</p>
+<h2 id="84-discrete-message-details">8.4 Discrete Message Details<a class="headerlink" href="#84-discrete-message-details" title="Permanent link">&para;</a></h2>
+<p>Track individual recipient delivery status:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_MESSAGING_URL</span><span class="s2">/message/listDiscreteAggregateMessages&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="s1">    &quot;filter&quot;: {</span>
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="s1">      &quot;sessionIn&quot;: [&quot;invitation-batch-2025-q4&quot;],</span>
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="s1">      &quot;statusIn&quot;: [&quot;bounce&quot;, &quot;error&quot;]</span>
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a><span class="s1">    },</span>
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a><span class="s1">    &quot;pager&quot;: {&quot;offset&quot;: 0, &quot;limit&quot;: 50}</span>
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a><span class="s1">  }&#39;</span>
+</code></pre></div>
+<h3 id="filter-fields_3">Filter Fields<a class="headerlink" href="#filter-fields_3" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>appGuidIn</code></td>
+<td>string[]</td>
+<td>Filter by app GUIDs</td>
+</tr>
+<tr>
+<td><code>userId</code></td>
+<td>string</td>
+<td>Filter by specific user ID</td>
+</tr>
+<tr>
+<td><code>sessionIn</code></td>
+<td>string[]</td>
+<td>Filter by session labels</td>
+</tr>
+<tr>
+<td><code>statusIn</code></td>
+<td>string[]</td>
+<td>Filter by discrete status</td>
+</tr>
+</tbody>
+</table>
+<h1 id="9-delivery-reports">9. Delivery Reports<a class="headerlink" href="#9-delivery-reports" title="Permanent link">&para;</a></h1>
+<p>Generate CSV delivery reports for a bulk message or session:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>POST /api/v1/report/create
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>Content-Type: application/json
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>Authorization: Bearer &lt;KS&gt;
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_MESSAGING_URL</span><span class="s2">/report/create&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{\&quot;bulkId\&quot;: \&quot;</span><span class="nv">$BULK_ID</span><span class="s2">\&quot;}&quot;</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bulkId</code></td>
+<td>string</td>
+<td>Bulk message external ID</td>
+</tr>
+<tr>
+<td><code>session</code></td>
+<td>string</td>
+<td>Session label</td>
+</tr>
+</tbody>
+</table>
+<p>Provide either <code>bulkId</code> or <code>session</code> to scope the report.</p>
+<p><strong>Response:</strong> A report object with a download URL for the CSV file. The report generation may be asynchronous; poll the returned report ID if the URL is not immediately available.</p>
+<h1 id="10-unsubscribe-management">10. Unsubscribe Management<a class="headerlink" href="#10-unsubscribe-management" title="Permanent link">&para;</a></h1>
+<p>CAN-SPAM compliant unsubscribe management with group-based opt-out.</p>
+<h2 id="101-list-unsubscribe-groups">10.1 List Unsubscribe Groups<a class="headerlink" href="#101-list-unsubscribe-groups" title="Permanent link">&para;</a></h2>
+<p>List all unsubscribe groups defined across your templates:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_MESSAGING_URL</span><span class="s2">/unsubscribe-groups/list&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{}&#39;</span>
+</code></pre></div>
+<p>Groups are defined in template <code>unsubscribeGroups</code> arrays. This endpoint returns all unique groups.</p>
+<h2 id="102-check-user-unsubscribe-status">10.2 Check User Unsubscribe Status<a class="headerlink" href="#102-check-user-unsubscribe-status" title="Permanent link">&para;</a></h2>
+<p>Get the unsubscribe groups a specific user has opted out of (requires a user-scoped KS):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_MESSAGING_URL</span><span class="s2">/unsubscribe-users/userGroupsStatus&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$USER_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{}&#39;</span>
+</code></pre></div>
+<h2 id="103-sync-user-unsubscribe-preferences">10.3 Sync User Unsubscribe Preferences<a class="headerlink" href="#103-sync-user-unsubscribe-preferences" title="Permanent link">&para;</a></h2>
+<p>Subscribe or unsubscribe a user from specific groups:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_MESSAGING_URL</span><span class="s2">/unsubscribe-users/syncGroups&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$USER_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a><span class="s1">    &quot;unsubscribed&quot;: [&quot;marketing-emails&quot;],</span>
+<a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a><span class="s1">    &quot;subscribed&quot;: [&quot;event-updates&quot;]</span>
+<a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a><span class="s1">  }&#39;</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>unsubscribed</code></td>
+<td>string[]</td>
+<td>Groups to unsubscribe from</td>
+</tr>
+<tr>
+<td><code>subscribed</code></td>
+<td>string[]</td>
+<td>Groups to re-subscribe to</td>
+</tr>
+</tbody>
+</table>
+<h2 id="104-list-unsubscribed-users">10.4 List Unsubscribed Users<a class="headerlink" href="#104-list-unsubscribed-users" title="Permanent link">&para;</a></h2>
+<p>List all users who have unsubscribed from groups:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_MESSAGING_URL</span><span class="s2">/unsubscribe-users/list&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a><span class="s1">    &quot;filter&quot;: {},</span>
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a><span class="s1">    &quot;pager&quot;: {&quot;offset&quot;: 0, &quot;limit&quot;: 50}</span>
+<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a><span class="s1">  }&#39;</span>
+</code></pre></div>
+<h2 id="105-unsubscribe-uri-configuration">10.5 Unsubscribe URI Configuration<a class="headerlink" href="#105-unsubscribe-uri-configuration" title="Permanent link">&para;</a></h2>
+<p>Configure custom unsubscribe endpoints for specific applications.</p>
+<h3 id="add-an-unsubscribe-uri">Add an Unsubscribe URI<a class="headerlink" href="#add-an-unsubscribe-uri" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_MESSAGING_URL</span><span class="s2">/unsubscribe-uri/add&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a><span class="s1">    &quot;appGuid&quot;: &quot;&#39;</span><span class="nv">$APP_GUID</span><span class="s1">&#39;&quot;,</span>
+<a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a><span class="s1">    &quot;uri&quot;: &quot;https://events.example.com/unsubscribe&quot;</span>
+<a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a><span class="s1">  }&#39;</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>appGuid</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>App Registry GUID</td>
+</tr>
+<tr>
+<td><code>uri</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Custom unsubscribe endpoint URL</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>string</td>
+<td>No</td>
+<td>Defaults to <code>"enabled"</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="get-an-unsubscribe-uri">Get an Unsubscribe URI<a class="headerlink" href="#get-an-unsubscribe-uri" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Unsubscribe URI ID</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_MESSAGING_URL</span><span class="s2">/unsubscribe-uri/get&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{\&quot;id\&quot;: \&quot;</span><span class="nv">$URI_ID</span><span class="s2">\&quot;}&quot;</span>
+</code></pre></div>
+<p><strong>Response:</strong> Full unsubscribe URI object with <code>id</code>, <code>appGuid</code>, <code>uri</code>, <code>status</code>, <code>version</code>.</p>
+<h3 id="update-an-unsubscribe-uri">Update an Unsubscribe URI<a class="headerlink" href="#update-an-unsubscribe-uri" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Unsubscribe URI ID to update</td>
+</tr>
+<tr>
+<td><code>uri</code></td>
+<td>string</td>
+<td>No</td>
+<td>Updated unsubscribe endpoint URL</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>string</td>
+<td>No</td>
+<td><code>enabled</code>, <code>disabled</code>, or <code>deleted</code></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_MESSAGING_URL</span><span class="s2">/unsubscribe-uri/update&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{\&quot;id\&quot;: \&quot;</span><span class="nv">$URI_ID</span><span class="s2">\&quot;, \&quot;uri\&quot;: \&quot;https://events.example.com/unsubscribe-v2\&quot;}&quot;</span>
+</code></pre></div>
+<p><strong>Response:</strong> Updated unsubscribe URI object with incremented <code>version</code>.</p>
+<h3 id="delete-an-unsubscribe-uri">Delete an Unsubscribe URI<a class="headerlink" href="#delete-an-unsubscribe-uri" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Unsubscribe URI ID to delete</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_MESSAGING_URL</span><span class="s2">/unsubscribe-uri/delete&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{\&quot;id\&quot;: \&quot;</span><span class="nv">$URI_ID</span><span class="s2">\&quot;}&quot;</span>
+</code></pre></div>
+<p>Permanently deletes the unsubscribe URI. Subsequent <code>get</code> calls return a not-found error.</p>
+<h3 id="list-unsubscribe-uris">List Unsubscribe URIs<a class="headerlink" href="#list-unsubscribe-uris" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_MESSAGING_URL</span><span class="s2">/unsubscribe-uri/list&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-34-5" name="__codelineno-34-5" href="#__codelineno-34-5"></a><span class="s1">    &quot;filter&quot;: {&quot;appGuidIn&quot;: [&quot;&#39;</span><span class="nv">$APP_GUID</span><span class="s1">&#39;&quot;]},</span>
+<a id="__codelineno-34-6" name="__codelineno-34-6" href="#__codelineno-34-6"></a><span class="s1">    &quot;pager&quot;: {&quot;offset&quot;: 0, &quot;limit&quot;: 25}</span>
+<a id="__codelineno-34-7" name="__codelineno-34-7" href="#__codelineno-34-7"></a><span class="s1">  }&#39;</span>
+</code></pre></div>
+<h3 id="filter-fields_4">Filter Fields<a class="headerlink" href="#filter-fields_4" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>idIn</code></td>
+<td>string[]</td>
+<td>Filter by URI IDs</td>
+</tr>
+<tr>
+<td><code>appGuidIn</code></td>
+<td>string[]</td>
+<td>Filter by app GUIDs</td>
+</tr>
+<tr>
+<td><code>uriIn</code></td>
+<td>string[]</td>
+<td>Filter by URI values</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>string</td>
+<td><code>enabled</code>, <code>disabled</code>, or <code>deleted</code></td>
+</tr>
+<tr>
+<td><code>createdAtGreaterThanOrEqual</code></td>
+<td>string</td>
+<td>ISO 8601 min date</td>
+</tr>
+<tr>
+<td><code>updatedAtGreaterThanOrEqual</code></td>
+<td>string</td>
+<td>ISO 8601 min date</td>
+</tr>
+</tbody>
+</table>
+<h1 id="11-email-provider-configuration">11. Email Provider Configuration<a class="headerlink" href="#11-email-provider-configuration" title="Permanent link">&para;</a></h1>
+<p>Configure a custom email service provider (SendGrid) for your account. By default, Kaltura provides a shared email provider. For branded sending domains and dedicated deliverability, configure your own.</p>
+<h2 id="111-provider-entity">11.1 Provider Entity<a class="headerlink" href="#111-provider-entity" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>string</td>
+<td>Auto-generated identifier (read-only)</td>
+</tr>
+<tr>
+<td><code>partnerId</code></td>
+<td>integer</td>
+<td>Partner ID (read-only)</td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td>string</td>
+<td>Provider type: <code>"sendGrid"</code></td>
+</tr>
+<tr>
+<td><code>apiKey</code></td>
+<td>string</td>
+<td>SendGrid API key</td>
+</tr>
+<tr>
+<td><code>sendgridWebhookKey</code></td>
+<td>string</td>
+<td>SendGrid webhook verification key</td>
+</tr>
+<tr>
+<td><code>domains</code></td>
+<td>string[]</td>
+<td>Verified sender domains</td>
+</tr>
+<tr>
+<td><code>defaultSender</code></td>
+<td>string</td>
+<td>Default sender email address</td>
+</tr>
+<tr>
+<td><code>unsubscribeClickTracking</code></td>
+<td>boolean</td>
+<td>Enable SendGrid click tracking for unsubscribe links</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>string</td>
+<td><code>enabled</code>, <code>disabled</code>, or <code>deleted</code></td>
+</tr>
+<tr>
+<td><code>overrideResidency</code></td>
+<td>string</td>
+<td>Data residency override: <code>"EU"</code> or <code>"GLOBAL"</code></td>
+</tr>
+<tr>
+<td><code>version</code></td>
+<td>integer</td>
+<td>Auto-incrementing version (read-only)</td>
+</tr>
+<tr>
+<td><code>createdAt</code></td>
+<td>string</td>
+<td>ISO 8601 timestamp (read-only)</td>
+</tr>
+<tr>
+<td><code>updatedAt</code></td>
+<td>string</td>
+<td>ISO 8601 timestamp (read-only)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="112-add-a-provider">11.2 Add a Provider<a class="headerlink" href="#112-add-a-provider" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>type</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Provider type: <code>"sendGrid"</code></td>
+</tr>
+<tr>
+<td><code>apiKey</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>SendGrid API key</td>
+</tr>
+<tr>
+<td><code>sendgridWebhookKey</code></td>
+<td>string</td>
+<td>No</td>
+<td>SendGrid webhook verification key</td>
+</tr>
+<tr>
+<td><code>domains</code></td>
+<td>string[]</td>
+<td>No</td>
+<td>Verified sender domains</td>
+</tr>
+<tr>
+<td><code>defaultSender</code></td>
+<td>string</td>
+<td>No</td>
+<td>Default sender email address</td>
+</tr>
+<tr>
+<td><code>unsubscribeClickTracking</code></td>
+<td>boolean</td>
+<td>No</td>
+<td>Enable SendGrid click tracking for unsubscribe links</td>
+</tr>
+<tr>
+<td><code>overrideResidency</code></td>
+<td>string</td>
+<td>No</td>
+<td>Data residency override: <code>"EU"</code> or <code>"GLOBAL"</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Response:</strong> Full provider object with generated <code>id</code>, <code>version</code>, and timestamps.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_MESSAGING_URL</span><span class="s2">/email-provider/add&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-35-4" name="__codelineno-35-4" href="#__codelineno-35-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-35-5" name="__codelineno-35-5" href="#__codelineno-35-5"></a><span class="s1">    &quot;type&quot;: &quot;sendGrid&quot;,</span>
+<a id="__codelineno-35-6" name="__codelineno-35-6" href="#__codelineno-35-6"></a><span class="s1">    &quot;apiKey&quot;: &quot;SG.your-sendgrid-api-key&quot;,</span>
+<a id="__codelineno-35-7" name="__codelineno-35-7" href="#__codelineno-35-7"></a><span class="s1">    &quot;sendgridWebhookKey&quot;: &quot;your-webhook-verification-key&quot;,</span>
+<a id="__codelineno-35-8" name="__codelineno-35-8" href="#__codelineno-35-8"></a><span class="s1">    &quot;domains&quot;: [&quot;events.example.com&quot;],</span>
+<a id="__codelineno-35-9" name="__codelineno-35-9" href="#__codelineno-35-9"></a><span class="s1">    &quot;defaultSender&quot;: &quot;events@events.example.com&quot;</span>
+<a id="__codelineno-35-10" name="__codelineno-35-10" href="#__codelineno-35-10"></a><span class="s1">  }&#39;</span>
+</code></pre></div>
+<h2 id="113-list-providers">11.3 List Providers<a class="headerlink" href="#113-list-providers" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_MESSAGING_URL</span><span class="s2">/email-provider/list&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{}&#39;</span>
+</code></pre></div>
+<h2 id="114-provider-lookup">11.4 Provider Lookup<a class="headerlink" href="#114-provider-lookup" title="Permanent link">&para;</a></h2>
+<p>Resolve which email provider will be used for a given app context.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>appGuid</code></td>
+<td>string</td>
+<td>No</td>
+<td>App Registry GUID to check provider resolution for</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Response:</strong> The resolved provider object. Resolution order: partner + appGuid, then partner, then default (partner 0).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_MESSAGING_URL</span><span class="s2">/email-provider/lookup&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-37-3" name="__codelineno-37-3" href="#__codelineno-37-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-37-4" name="__codelineno-37-4" href="#__codelineno-37-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{\&quot;appGuid\&quot;: \&quot;</span><span class="nv">$APP_GUID</span><span class="s2">\&quot;}&quot;</span>
+</code></pre></div>
+<p>The resolution order is: partner + appGuid → partner → default (partner 0).</p>
+<h2 id="115-assign-provider-to-app">11.5 Assign Provider to App<a class="headerlink" href="#115-assign-provider-to-app" title="Permanent link">&para;</a></h2>
+<p>Assign a specific provider to an app context.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Email provider ID</td>
+</tr>
+<tr>
+<td><code>appGuid</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>App Registry GUID to assign the provider to</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_MESSAGING_URL</span><span class="s2">/email-provider/emailProviderAssignment&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-38-3" name="__codelineno-38-3" href="#__codelineno-38-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-38-4" name="__codelineno-38-4" href="#__codelineno-38-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{</span>
+<a id="__codelineno-38-5" name="__codelineno-38-5" href="#__codelineno-38-5"></a><span class="s2">    \&quot;id\&quot;: \&quot;</span><span class="nv">$PROVIDER_ID</span><span class="s2">\&quot;,</span>
+<a id="__codelineno-38-6" name="__codelineno-38-6" href="#__codelineno-38-6"></a><span class="s2">    \&quot;appGuid\&quot;: \&quot;</span><span class="nv">$APP_GUID</span><span class="s2">\&quot;</span>
+<a id="__codelineno-38-7" name="__codelineno-38-7" href="#__codelineno-38-7"></a><span class="s2">  }&quot;</span>
+</code></pre></div>
+<p><strong>Response:</strong> EmailProviderAssignmentRule object with <code>id</code>, <code>emailProviderId</code>, <code>appGuid</code>, <code>version</code>.</p>
+<h2 id="116-enable-disable-a-provider">11.6 Enable / Disable a Provider<a class="headerlink" href="#116-enable-disable-a-provider" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Email provider ID</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Response:</strong> Updated provider object with new status.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a><span class="c1"># Enable</span>
+<a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_MESSAGING_URL</span><span class="s2">/email-provider/enable&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-39-4" name="__codelineno-39-4" href="#__codelineno-39-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-39-5" name="__codelineno-39-5" href="#__codelineno-39-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{\&quot;id\&quot;: \&quot;</span><span class="nv">$PROVIDER_ID</span><span class="s2">\&quot;}&quot;</span>
+<a id="__codelineno-39-6" name="__codelineno-39-6" href="#__codelineno-39-6"></a>
+<a id="__codelineno-39-7" name="__codelineno-39-7" href="#__codelineno-39-7"></a><span class="c1"># Disable</span>
+<a id="__codelineno-39-8" name="__codelineno-39-8" href="#__codelineno-39-8"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_MESSAGING_URL</span><span class="s2">/email-provider/disable&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-39-9" name="__codelineno-39-9" href="#__codelineno-39-9"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-39-10" name="__codelineno-39-10" href="#__codelineno-39-10"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-39-11" name="__codelineno-39-11" href="#__codelineno-39-11"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{\&quot;id\&quot;: \&quot;</span><span class="nv">$PROVIDER_ID</span><span class="s2">\&quot;}&quot;</span>
+</code></pre></div>
+<h2 id="117-delete-a-provider">11.7 Delete a Provider<a class="headerlink" href="#117-delete-a-provider" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Email provider ID to delete</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_MESSAGING_URL</span><span class="s2">/email-provider/delete&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-40-4" name="__codelineno-40-4" href="#__codelineno-40-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{\&quot;id\&quot;: \&quot;</span><span class="nv">$PROVIDER_ID</span><span class="s2">\&quot;}&quot;</span>
+</code></pre></div>
+<h1 id="12-domain-configuration">12. Domain Configuration<a class="headerlink" href="#12-domain-configuration" title="Permanent link">&para;</a></h1>
+<p>Verify sender domains with your email provider for improved deliverability.</p>
+<h2 id="121-add-a-domain">12.1 Add a Domain<a class="headerlink" href="#121-add-a-domain" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>domain</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>The sender domain to verify (e.g., <code>events.example.com</code>)</td>
+</tr>
+<tr>
+<td><code>subdomain</code></td>
+<td>string</td>
+<td>No</td>
+<td>Subdomain prefix for DNS records (e.g., <code>mail</code>)</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_MESSAGING_URL</span><span class="s2">/domain/add&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-41-3" name="__codelineno-41-3" href="#__codelineno-41-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-41-4" name="__codelineno-41-4" href="#__codelineno-41-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-41-5" name="__codelineno-41-5" href="#__codelineno-41-5"></a><span class="s1">    &quot;domain&quot;: &quot;events.example.com&quot;,</span>
+<a id="__codelineno-41-6" name="__codelineno-41-6" href="#__codelineno-41-6"></a><span class="s1">    &quot;subdomain&quot;: &quot;mail&quot;</span>
+<a id="__codelineno-41-7" name="__codelineno-41-7" href="#__codelineno-41-7"></a><span class="s1">  }&#39;</span>
+</code></pre></div>
+<p><strong>Response:</strong> Contains the DNS records (CNAME, TXT) to configure for domain verification. Add these records to your DNS configuration before activating.</p>
+<h2 id="122-activate-a-domain">12.2 Activate a Domain<a class="headerlink" href="#122-activate-a-domain" title="Permanent link">&para;</a></h2>
+<p>After DNS propagation, activate the domain.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>domain</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>The domain to activate (must match a previously added domain)</td>
+</tr>
+<tr>
+<td><code>subdomain</code></td>
+<td>string</td>
+<td>No</td>
+<td>Subdomain prefix (must match the value used in <code>domain/add</code>)</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_MESSAGING_URL</span><span class="s2">/domain/activate&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-42-2" name="__codelineno-42-2" href="#__codelineno-42-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-42-3" name="__codelineno-42-3" href="#__codelineno-42-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-42-4" name="__codelineno-42-4" href="#__codelineno-42-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-42-5" name="__codelineno-42-5" href="#__codelineno-42-5"></a><span class="s1">    &quot;domain&quot;: &quot;events.example.com&quot;,</span>
+<a id="__codelineno-42-6" name="__codelineno-42-6" href="#__codelineno-42-6"></a><span class="s1">    &quot;subdomain&quot;: &quot;mail&quot;</span>
+<a id="__codelineno-42-7" name="__codelineno-42-7" href="#__codelineno-42-7"></a><span class="s1">  }&#39;</span>
+</code></pre></div>
+<p><strong>Response:</strong> Confirmation of domain activation. If DNS records are not yet propagated, the activation fails with an error.</p>
+<h1 id="13-error-handling">13. Error Handling<a class="headerlink" href="#13-error-handling" title="Permanent link">&para;</a></h1>
+<p>Validation errors return HTTP 400. Application-level errors follow this structure:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a><span class="p">{</span>
+<a id="__codelineno-43-2" name="__codelineno-43-2" href="#__codelineno-43-2"></a><span class="w">  </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ERROR_CODE&quot;</span><span class="p">,</span>
+<a id="__codelineno-43-3" name="__codelineno-43-3" href="#__codelineno-43-3"></a><span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Description of the error&quot;</span>
+<a id="__codelineno-43-4" name="__codelineno-43-4" href="#__codelineno-43-4"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="bulk-message-error-codes">Bulk Message Error Codes<a class="headerlink" href="#bulk-message-error-codes" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>noActiveGroups</code></td>
+<td>All specified groups are inactive</td>
+</tr>
+<tr>
+<td><code>noActiveGroupUsers</code></td>
+<td>No active users found in any specified group</td>
+</tr>
+<tr>
+<td><code>someGroupsHaveNoActiveUsers</code></td>
+<td>Some groups have no active users</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Retry strategy:</strong> For transient errors (HTTP 5xx, timeouts), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (HTTP 400, <code>noActiveGroups</code>, <code>noActiveGroupUsers</code>, validation errors), fix the request before retrying — these will not resolve on their own. For async operations (message delivery tracking), poll with increasing intervals (5s, 10s, 30s) rather than tight loops.</p>
+<h1 id="14-best-practices">14. Best Practices<a class="headerlink" href="#14-best-practices" title="Permanent link">&para;</a></h1>
+<ul>
+<li><strong>Use CAN-SPAM compliant unsubscribe groups.</strong> Assign unsubscribe groups to all marketing/event emails and include <code>{unsubLink}</code> tokens — users who unsubscribe are automatically excluded from future sends.</li>
+<li><strong>Use dynamic tokens for personalization.</strong> Leverage <code>{recipient.*}</code>, <code>{magicLink}</code>, <code>{qrCodeLink}</code>, and custom tokens to create engaging, per-recipient emails without manual string substitution.</li>
+<li><strong>Configure domain authentication.</strong> Set up SPF and DKIM records for your sending domain to maximize deliverability and avoid spam filters.</li>
+<li><strong>Track delivery stats and follow up on failures.</strong> Use <code>msg-history/getStats</code> and <code>msg-history/getFiltered</code> to monitor bounce rates, open rates, and re-send to failed recipients.</li>
+<li><strong>Use AppTokens for production access.</strong> Generate KS via <code>appToken.startSession</code> with HMAC — keep admin secrets off application servers.</li>
+<li><strong>Use the Messaging Service for all email communications.</strong> Prefer the Messaging API over custom SMTP integrations — it provides tracking, analytics, and compliance out of the box.</li>
+</ul>
+<h2 id="common-integration-patterns">Common Integration Patterns<a class="headerlink" href="#common-integration-patterns" title="Permanent link">&para;</a></h2>
+<h3 id="event-invitation-workflow">Event Invitation Workflow<a class="headerlink" href="#event-invitation-workflow" title="Permanent link">&para;</a></h3>
+<p>Complete flow from virtual event to personalized invitations:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a><span class="c1"># Prerequisites</span>
+<a id="__codelineno-44-2" name="__codelineno-44-2" href="#__codelineno-44-2"></a><span class="c1"># KALTURA_MESSAGING_URL=&quot;https://messaging.nvp1.ovp.kaltura.com/api/v1&quot;</span>
+<a id="__codelineno-44-3" name="__codelineno-44-3" href="#__codelineno-44-3"></a><span class="c1"># KALTURA_APP_REGISTRY_URL=&quot;https://app-registry.nvp1.ovp.kaltura.com/api/v1&quot;</span>
+<a id="__codelineno-44-4" name="__codelineno-44-4" href="#__codelineno-44-4"></a><span class="c1"># KALTURA_KS=&quot;&lt;your admin KS&gt;&quot;</span>
+<a id="__codelineno-44-5" name="__codelineno-44-5" href="#__codelineno-44-5"></a>
+<a id="__codelineno-44-6" name="__codelineno-44-6" href="#__codelineno-44-6"></a><span class="c1"># Step 1: Get App GUID for your event</span>
+<a id="__codelineno-44-7" name="__codelineno-44-7" href="#__codelineno-44-7"></a><span class="nv">APP_GUID</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_APP_REGISTRY_URL</span><span class="s2">/app-registry/list&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-44-8" name="__codelineno-44-8" href="#__codelineno-44-8"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-44-9" name="__codelineno-44-9" href="#__codelineno-44-9"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-44-10" name="__codelineno-44-10" href="#__codelineno-44-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{\&quot;filter\&quot;: {\&quot;appCustomIdIn\&quot;: [\&quot;</span><span class="nv">$VIRTUAL_EVENT_ID</span><span class="s2">\&quot;]}}&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-44-11" name="__codelineno-44-11" href="#__codelineno-44-11"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.objects[0].id&#39;</span><span class="k">)</span>
+<a id="__codelineno-44-12" name="__codelineno-44-12" href="#__codelineno-44-12"></a>
+<a id="__codelineno-44-13" name="__codelineno-44-13" href="#__codelineno-44-13"></a><span class="c1"># Step 2: Create an invitation template</span>
+<a id="__codelineno-44-14" name="__codelineno-44-14" href="#__codelineno-44-14"></a><span class="nv">TEMPLATE_ID</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_MESSAGING_URL</span><span class="s2">/email-template/add&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-44-15" name="__codelineno-44-15" href="#__codelineno-44-15"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-44-16" name="__codelineno-44-16" href="#__codelineno-44-16"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-44-17" name="__codelineno-44-17" href="#__codelineno-44-17"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{</span>
+<a id="__codelineno-44-18" name="__codelineno-44-18" href="#__codelineno-44-18"></a><span class="s2">    \&quot;appGuid\&quot;: \&quot;</span><span class="nv">$APP_GUID</span><span class="s2">\&quot;,</span>
+<a id="__codelineno-44-19" name="__codelineno-44-19" href="#__codelineno-44-19"></a><span class="s2">    \&quot;name\&quot;: \&quot;Event Invitation\&quot;,</span>
+<a id="__codelineno-44-20" name="__codelineno-44-20" href="#__codelineno-44-20"></a><span class="s2">    \&quot;subject\&quot;: \&quot;You&#39;re invited: {eventName}\&quot;,</span>
+<a id="__codelineno-44-21" name="__codelineno-44-21" href="#__codelineno-44-21"></a><span class="s2">    \&quot;body\&quot;: \&quot;&lt;p&gt;Hi {recipient.firstName},&lt;/p&gt;&lt;p&gt;Join us at {eventName}!&lt;/p&gt;&lt;p&gt;&lt;a href=&#39;{joinLink}&#39;&gt;Join Event&lt;/a&gt;&lt;/p&gt;\&quot;,</span>
+<a id="__codelineno-44-22" name="__codelineno-44-22" href="#__codelineno-44-22"></a><span class="s2">    \&quot;toAttributePath\&quot;: \&quot;{recipient.email}\&quot;,</span>
+<a id="__codelineno-44-23" name="__codelineno-44-23" href="#__codelineno-44-23"></a><span class="s2">    \&quot;msgParamsMap\&quot;: {</span>
+<a id="__codelineno-44-24" name="__codelineno-44-24" href="#__codelineno-44-24"></a><span class="s2">      \&quot;recipient\&quot;: {\&quot;type\&quot;: \&quot;User\&quot;},</span>
+<a id="__codelineno-44-25" name="__codelineno-44-25" href="#__codelineno-44-25"></a><span class="s2">      \&quot;eventName\&quot;: {\&quot;type\&quot;: \&quot;String\&quot;},</span>
+<a id="__codelineno-44-26" name="__codelineno-44-26" href="#__codelineno-44-26"></a><span class="s2">      \&quot;joinLink\&quot;: {\&quot;type\&quot;: \&quot;MagicLink\&quot;}</span>
+<a id="__codelineno-44-27" name="__codelineno-44-27" href="#__codelineno-44-27"></a><span class="s2">    }</span>
+<a id="__codelineno-44-28" name="__codelineno-44-28" href="#__codelineno-44-28"></a><span class="s2">  }&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.id&#39;</span><span class="k">)</span>
+<a id="__codelineno-44-29" name="__codelineno-44-29" href="#__codelineno-44-29"></a>
+<a id="__codelineno-44-30" name="__codelineno-44-30" href="#__codelineno-44-30"></a><span class="c1"># Step 3: Send invitations</span>
+<a id="__codelineno-44-31" name="__codelineno-44-31" href="#__codelineno-44-31"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_MESSAGING_URL</span><span class="s2">/message/send&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-44-32" name="__codelineno-44-32" href="#__codelineno-44-32"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-44-33" name="__codelineno-44-33" href="#__codelineno-44-33"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-44-34" name="__codelineno-44-34" href="#__codelineno-44-34"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{</span>
+<a id="__codelineno-44-35" name="__codelineno-44-35" href="#__codelineno-44-35"></a><span class="s2">    \&quot;receiverType\&quot;: \&quot;user\&quot;,</span>
+<a id="__codelineno-44-36" name="__codelineno-44-36" href="#__codelineno-44-36"></a><span class="s2">    \&quot;userIds\&quot;: [\&quot;attendee1@example.com\&quot;, \&quot;attendee2@example.com\&quot;],</span>
+<a id="__codelineno-44-37" name="__codelineno-44-37" href="#__codelineno-44-37"></a><span class="s2">    \&quot;appGuid\&quot;: \&quot;</span><span class="nv">$APP_GUID</span><span class="s2">\&quot;,</span>
+<a id="__codelineno-44-38" name="__codelineno-44-38" href="#__codelineno-44-38"></a><span class="s2">    \&quot;templateId\&quot;: \&quot;</span><span class="nv">$TEMPLATE_ID</span><span class="s2">\&quot;,</span>
+<a id="__codelineno-44-39" name="__codelineno-44-39" href="#__codelineno-44-39"></a><span class="s2">    \&quot;type\&quot;: \&quot;email\&quot;,</span>
+<a id="__codelineno-44-40" name="__codelineno-44-40" href="#__codelineno-44-40"></a><span class="s2">    \&quot;msgParams\&quot;: {</span>
+<a id="__codelineno-44-41" name="__codelineno-44-41" href="#__codelineno-44-41"></a><span class="s2">      \&quot;recipient\&quot;: {\&quot;type\&quot;: \&quot;User\&quot;, \&quot;value\&quot;: \&quot;Message.userId\&quot;},</span>
+<a id="__codelineno-44-42" name="__codelineno-44-42" href="#__codelineno-44-42"></a><span class="s2">      \&quot;eventName\&quot;: {\&quot;type\&quot;: \&quot;String\&quot;, \&quot;value\&quot;: \&quot;Annual Conference 2025\&quot;},</span>
+<a id="__codelineno-44-43" name="__codelineno-44-43" href="#__codelineno-44-43"></a><span class="s2">      \&quot;joinLink\&quot;: {\&quot;type\&quot;: \&quot;MagicLink\&quot;, \&quot;value\&quot;: {\&quot;baseURL\&quot;: \&quot;https://events.example.com/join\&quot;, \&quot;expiry\&quot;: 48, \&quot;privileges\&quot;: \&quot;actionslimit:2\&quot;}}</span>
+<a id="__codelineno-44-44" name="__codelineno-44-44" href="#__codelineno-44-44"></a><span class="s2">    },</span>
+<a id="__codelineno-44-45" name="__codelineno-44-45" href="#__codelineno-44-45"></a><span class="s2">    \&quot;session\&quot;: \&quot;conference-2025-invitations\&quot;</span>
+<a id="__codelineno-44-46" name="__codelineno-44-46" href="#__codelineno-44-46"></a><span class="s2">  }&quot;</span>
+</code></pre></div>
+<h3 id="delivery-tracking-dashboard">Delivery Tracking Dashboard<a class="headerlink" href="#delivery-tracking-dashboard" title="Permanent link">&para;</a></h3>
+<p>After sending, monitor delivery and engagement:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a><span class="c1"># Get overall delivery stats</span>
+<a id="__codelineno-45-2" name="__codelineno-45-2" href="#__codelineno-45-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_MESSAGING_URL</span><span class="s2">/message/stats&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-45-3" name="__codelineno-45-3" href="#__codelineno-45-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-45-4" name="__codelineno-45-4" href="#__codelineno-45-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-45-5" name="__codelineno-45-5" href="#__codelineno-45-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;session&quot;: &quot;conference-2025-invitations&quot;}&#39;</span>
+<a id="__codelineno-45-6" name="__codelineno-45-6" href="#__codelineno-45-6"></a>
+<a id="__codelineno-45-7" name="__codelineno-45-7" href="#__codelineno-45-7"></a><span class="c1"># Find failed deliveries for follow-up</span>
+<a id="__codelineno-45-8" name="__codelineno-45-8" href="#__codelineno-45-8"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_MESSAGING_URL</span><span class="s2">/message/listDiscreteAggregateMessages&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-45-9" name="__codelineno-45-9" href="#__codelineno-45-9"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-45-10" name="__codelineno-45-10" href="#__codelineno-45-10"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-45-11" name="__codelineno-45-11" href="#__codelineno-45-11"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-45-12" name="__codelineno-45-12" href="#__codelineno-45-12"></a><span class="s1">    &quot;filter&quot;: {</span>
+<a id="__codelineno-45-13" name="__codelineno-45-13" href="#__codelineno-45-13"></a><span class="s1">      &quot;sessionIn&quot;: [&quot;conference-2025-invitations&quot;],</span>
+<a id="__codelineno-45-14" name="__codelineno-45-14" href="#__codelineno-45-14"></a><span class="s1">      &quot;statusIn&quot;: [&quot;bounce&quot;, &quot;error&quot;, &quot;dropped&quot;]</span>
+<a id="__codelineno-45-15" name="__codelineno-45-15" href="#__codelineno-45-15"></a><span class="s1">    }</span>
+<a id="__codelineno-45-16" name="__codelineno-45-16" href="#__codelineno-45-16"></a><span class="s1">  }&#39;</span>
+</code></pre></div>
+<h3 id="unsubscribe-aware-messaging">Unsubscribe-Aware Messaging<a class="headerlink" href="#unsubscribe-aware-messaging" title="Permanent link">&para;</a></h3>
+<p>Set up templates with unsubscribe groups to respect user preferences:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-46-1" name="__codelineno-46-1" href="#__codelineno-46-1"></a><span class="c1"># Step 1: Create unsubscribe URI for your app</span>
+<a id="__codelineno-46-2" name="__codelineno-46-2" href="#__codelineno-46-2"></a><span class="nv">URI_ID</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_MESSAGING_URL</span><span class="s2">/unsubscribe-uri/add&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-46-3" name="__codelineno-46-3" href="#__codelineno-46-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-46-4" name="__codelineno-46-4" href="#__codelineno-46-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-46-5" name="__codelineno-46-5" href="#__codelineno-46-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{</span>
+<a id="__codelineno-46-6" name="__codelineno-46-6" href="#__codelineno-46-6"></a><span class="s2">    \&quot;appGuid\&quot;: \&quot;</span><span class="nv">$APP_GUID</span><span class="s2">\&quot;,</span>
+<a id="__codelineno-46-7" name="__codelineno-46-7" href="#__codelineno-46-7"></a><span class="s2">    \&quot;uri\&quot;: \&quot;https://events.example.com/unsubscribe\&quot;</span>
+<a id="__codelineno-46-8" name="__codelineno-46-8" href="#__codelineno-46-8"></a><span class="s2">  }&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.id&#39;</span><span class="k">)</span>
+<a id="__codelineno-46-9" name="__codelineno-46-9" href="#__codelineno-46-9"></a>
+<a id="__codelineno-46-10" name="__codelineno-46-10" href="#__codelineno-46-10"></a><span class="c1"># Step 2: Create template with unsubscribe group</span>
+<a id="__codelineno-46-11" name="__codelineno-46-11" href="#__codelineno-46-11"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_MESSAGING_URL</span><span class="s2">/email-template/add&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-46-12" name="__codelineno-46-12" href="#__codelineno-46-12"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-46-13" name="__codelineno-46-13" href="#__codelineno-46-13"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-46-14" name="__codelineno-46-14" href="#__codelineno-46-14"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{</span>
+<a id="__codelineno-46-15" name="__codelineno-46-15" href="#__codelineno-46-15"></a><span class="s2">    \&quot;appGuid\&quot;: \&quot;</span><span class="nv">$APP_GUID</span><span class="s2">\&quot;,</span>
+<a id="__codelineno-46-16" name="__codelineno-46-16" href="#__codelineno-46-16"></a><span class="s2">    \&quot;name\&quot;: \&quot;Event Updates\&quot;,</span>
+<a id="__codelineno-46-17" name="__codelineno-46-17" href="#__codelineno-46-17"></a><span class="s2">    \&quot;subject\&quot;: \&quot;Update: {eventName}\&quot;,</span>
+<a id="__codelineno-46-18" name="__codelineno-46-18" href="#__codelineno-46-18"></a><span class="s2">    \&quot;body\&quot;: \&quot;&lt;p&gt;{recipient.firstName}, here&#39;s an update.&lt;/p&gt;&lt;p&gt;&lt;a href=&#39;{unsubLink}&#39;&gt;Unsubscribe&lt;/a&gt;&lt;/p&gt;\&quot;,</span>
+<a id="__codelineno-46-19" name="__codelineno-46-19" href="#__codelineno-46-19"></a><span class="s2">    \&quot;toAttributePath\&quot;: \&quot;{recipient.email}\&quot;,</span>
+<a id="__codelineno-46-20" name="__codelineno-46-20" href="#__codelineno-46-20"></a><span class="s2">    \&quot;msgParamsMap\&quot;: {</span>
+<a id="__codelineno-46-21" name="__codelineno-46-21" href="#__codelineno-46-21"></a><span class="s2">      \&quot;recipient\&quot;: {\&quot;type\&quot;: \&quot;User\&quot;},</span>
+<a id="__codelineno-46-22" name="__codelineno-46-22" href="#__codelineno-46-22"></a><span class="s2">      \&quot;eventName\&quot;: {\&quot;type\&quot;: \&quot;String\&quot;},</span>
+<a id="__codelineno-46-23" name="__codelineno-46-23" href="#__codelineno-46-23"></a><span class="s2">      \&quot;unsubLink\&quot;: {\&quot;type\&quot;: \&quot;UnsubscribeUri\&quot;}</span>
+<a id="__codelineno-46-24" name="__codelineno-46-24" href="#__codelineno-46-24"></a><span class="s2">    },</span>
+<a id="__codelineno-46-25" name="__codelineno-46-25" href="#__codelineno-46-25"></a><span class="s2">    \&quot;unsubscribeGroups\&quot;: [\&quot;event-updates\&quot;]</span>
+<a id="__codelineno-46-26" name="__codelineno-46-26" href="#__codelineno-46-26"></a><span class="s2">  }&quot;</span>
+</code></pre></div>
+<p>Users who unsubscribe from the <code>"event-updates"</code> group will be automatically excluded from future messages sent with that group.</p>
+<h1 id="15-related-guides">15. Related Guides<a class="headerlink" href="#15-related-guides" title="Permanent link">&para;</a></h1>
+<ul>
+<li><strong><a href="../KALTURA_SESSION_GUIDE/">Session Guide</a></strong> — KS generation and management</li>
+<li><strong><a href="../KALTURA_APPTOKENS_API/">AppTokens API</a></strong> — Secure server-to-server auth</li>
+<li><strong><a href="../KALTURA_APP_REGISTRY_API/">App Registry API</a></strong> — App GUID management (required for templates and messages)</li>
+<li><strong><a href="../KALTURA_USER_PROFILE_API/">User Profile API</a></strong> — User registration data (triggers messaging workflows)</li>
+<li><strong><a href="../KALTURA_EVENTS_PLATFORM_API/">Events Platform API</a></strong> — Virtual events (messaging for event communications)</li>
+<li><strong><a href="../KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API/">Webhooks API</a></strong> — Event-driven HTTP callbacks; email notifications are delivered via the Messaging Service</li>
+<li><strong><a href="../KALTURA_USER_MANAGEMENT_API/">User Management API</a></strong> — Manage recipient users and groups for targeted messaging</li>
+<li><strong><a href="../KALTURA_ANALYTICS_REPORTS_API/">Analytics Reports</a></strong> — <code>message/stats</code> for delivery statistics</li>
+<li><strong><a href="../KALTURA_GAMIFICATION_API/">Gamification</a></strong> — Messaging events can trigger gamification rules</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

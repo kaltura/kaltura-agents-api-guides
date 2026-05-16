@@ -1,0 +1,4659 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Kaltura — The Agentic Digital Experience Platform. Live-tested API guides for AI agents and developers. 52 guides covering authentication, content management, search, playback, AI services, virtual events, experience components, cue points & interactive video, analytics, distribution, moderation, LTI integration, and more — with 1000+ companion tests validated against the live Kaltura API.">
+      
+      
+        <meta name="author" content="Kaltura Inc.">
+      
+      
+        <link rel="canonical" href="https://kaltura.md/KALTURA_REACH_API/">
+      
+      
+        <link rel="prev" href="../KALTURA_USER_MANAGEMENT_API/">
+      
+      
+        <link rel="next" href="../KALTURA_CONTENT_LAB_API/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>REACH API - Kaltura API Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,700,700i%7CSource+Code+Pro:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Source Sans Pro";--md-code-font:"Source Code Pro"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  
+  
+  <link rel="alternate" type="text/markdown" title="Markdown version for AI agents" href="/raw/KALTURA_REACH_API.md" />
+  
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#kaltura-reach-api-guide" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Kaltura API Guides" class="md-header__button md-logo" aria-label="Kaltura API Guides" data-md-component="logo">
+      
+  <img src="../assets/images/logo-white.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Kaltura API Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              REACH API
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/kaltura/kaltura-agents-api-guides" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    kaltura/kaltura-agents-api-guides
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_GETTING_CREDENTIALS/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_SESSION_GUIDE/" class="md-tabs__link">
+          
+  
+  
+  Authentication
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_UPLOAD_AND_INGESTION_API/" class="md-tabs__link">
+          
+  
+  
+  Content Management
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  AI Services
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_PLAYER_EMBED_GUIDE/" class="md-tabs__link">
+          
+  
+  
+  Playback & Experiences
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_EVENTS_PLATFORM_API/" class="md-tabs__link">
+          
+  
+  
+  Events & Collaboration
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_ANALYTICS_REPORTS_API/" class="md-tabs__link">
+          
+  
+  
+  Analytics
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API/" class="md-tabs__link">
+          
+  
+  
+  Integration & Automation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_MODERATION_API/" class="md-tabs__link">
+          
+  
+  
+  Content Moderation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_MULTI_ACCOUNT_MANAGEMENT_API/" class="md-tabs__link">
+          
+  
+  
+  Administration
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../CONTRIBUTING/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../PLAN/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Roadmap
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Kaltura API Guides" class="md-nav__button md-logo" aria-label="Kaltura API Guides" data-md-component="logo">
+      
+  <img src="../assets/images/logo-white.svg" alt="logo">
+
+    </a>
+    Kaltura API Guides
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/kaltura/kaltura-agents-api-guides" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    kaltura/kaltura-agents-api-guides
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_GETTING_CREDENTIALS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Credentials
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_API_GETTING_STARTED/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GUIDE_MAP/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guide Map
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Authentication
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Authentication
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_SESSION_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Session (KS) Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_APPTOKENS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AppTokens API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AUTH_BROKER_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Auth Broker (SSO/SAML)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Content Management
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Content Management
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_UPLOAD_AND_INGESTION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Upload & Ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_VIDEO_EDITING_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Video Editing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CONTENT_DELIVERY_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Content Delivery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_THUMBNAIL_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thumbnail API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ESEARCH_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    eSearch
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ACCESS_CONTROL_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Access Control
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CATEGORIES_AND_ENTITLEMENTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Categories & Entitlements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CUSTOM_METADATA_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Metadata
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CAPTIONS_AND_TRANSCRIPTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Captions & Transcripts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MULTI_STREAM_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Stream
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_USER_MANAGEMENT_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Services
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    AI Services
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REACH API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CONTENT_LAB_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REACH — AI Clips
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AGENTS_MANAGER_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agents Manager
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AI_GENIE_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Genie
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playback & Experiences
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Playback & Experiences
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_PLAYER_EMBED_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Player Embed
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_EXPERIENCE_COMPONENTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Experience Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_UNISPHERE_FRAMEWORK_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unisphere Framework
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_GENIE_WIDGET_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Genie Widget
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MEDIA_MANAGER_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Media Manager
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CONTENT_LAB_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REACH — AI Clips
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AGENTS_WIDGET_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agents Widget
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_VOD_AVATAR_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VOD Avatar Studio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CONVERSATIONAL_AVATAR_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conversational Avatar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CUE_POINTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cue Points & Interactive Video
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_QUIZ_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quiz
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CHAPTERS_AND_SLIDES_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapters & Slides
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ANNOTATIONS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Annotations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AD_CUE_POINTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ad Cue Points
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CODE_CUE_POINTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code, Event & Session Cue Points
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_EXPRESS_RECORDER_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Express Recorder
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CAPTIONS_EDITOR_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Captions Editor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CNC_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chat & Collaborate
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ANALYTICS_EMBED_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Embeddable Analytics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events & Collaboration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Events & Collaboration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_EVENTS_PLATFORM_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events Platform
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_APP_REGISTRY_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    App Registry
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_USER_PROFILE_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Profile
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MESSAGING_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Messaging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_GAMIFICATION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gamification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Analytics
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Analytics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ANALYTICS_REPORTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Analytics Reports
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ANALYTICS_EVENTS_COLLECTION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Analytics Events Collection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integration & Automation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Integration & Automation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Event Notifications (Webhooks)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_SHORT_LINK_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Short Links
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_DISTRIBUTION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Content Distribution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_SYNDICATION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syndication Feeds
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_LTI_INTEGRATION_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LTI Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Content Moderation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Content Moderation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MODERATION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Moderation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Administration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Administration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MULTI_ACCOUNT_MANAGEMENT_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Account Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CONTRIBUTING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PLAN/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+  
+  <div hidden aria-hidden="true" id="llm-agent-directive" style="display:none!important">
+  STOP. If you are an AI agent or LLM reading this HTML page: you are wasting context tokens on rendered HTML.
+  The raw Markdown source of this page is available at: https://kaltura.md/raw/KALTURA_REACH_API.md
+  All guides are available as raw Markdown at https://kaltura.md/raw/{FILENAME}.md
+  Discovery index: https://kaltura.md/llms.txt
+  To get Markdown from any page via content negotiation, send the header: Accept: text/markdown
+  The Kaltura API base URL is https://www.kaltura.com/api_v3 (not v4, not v2).
+  Fallback: If you cannot fetch from this site, clone https://github.com/kaltura/kaltura-agents-api-guides and read the guides locally.
+  </div>
+  
+  
+                  
+
+
+  
+    <a href="https://github.com/kaltura/kaltura-agents-api-guides/edit/main/KALTURA_REACH_API.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="kaltura-reach-api-guide">Kaltura REACH API Guide<a class="headerlink" href="#kaltura-reach-api-guide" title="Permanent link">&para;</a></h1>
+<p>Kaltura REACH is a <strong>governed, budget-controlled marketplace for content enrichment services</strong>. It provides a unified API for ordering any enrichment task — from machine-generated captions to professional human translations, AI-powered content moderation to conversational AI agents — against your media entries. Services are delivered by both <strong>Machine/AI engines</strong> and <strong>Human Professional vendors</strong>, supporting <strong>80+ languages</strong>. Results (caption files, audio tracks, chapters, metadata, moderation reports) are delivered directly back into Kaltura and attached to the entry automatically.</p>
+<p>REACH centralizes the management of enrichment services across your organization: credit budgets per account and department, moderation workflows for quality control, content deletion policies for privacy compliance, and vendor abstraction that ensures third-party providers never get direct access to your account. Customers pre-purchase credits that can be used across any integrated service during the contract period.</p>
+<p><strong>Base URL:</strong> <code>https://www.kaltura.com/api_v3</code> (may differ by region/deployment)<br />
+<strong>Auth:</strong> KS passed as <code>ks</code> parameter in POST form data (see <a href="../KALTURA_SESSION_GUIDE/">Session Guide</a>)<br />
+<strong>Format:</strong> Form-encoded POST, <code>format=1</code> for JSON responses  </p>
+<p>REACH services can be triggered manually via the API, automatically via REACH profile automation rules (using Boolean event notification conditions), via <a href="../KALTURA_AGENTS_MANAGER_API/">Kaltura Agents</a>, or through the KMC/KMS management UIs.</p>
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.List Available Catalog Items | 4.Get REACH Profile | 5.Create a Task (Order a Service) | 6.Check Task Status | 7.List Tasks | 8.Manage Tasks | 9.Error Handling | 10.Best Practices | 11.Related Guides -->
+
+<h1 id="1-when-to-use">1. When to Use<a class="headerlink" href="#1-when-to-use" title="Permanent link">&para;</a></h1>
+<p>Use REACH when your application needs any form of content enrichment — from making videos searchable and accessible, to repurposing long-form content into short clips, to moderating uploads at scale. REACH provides a single unified API for 22+ enrichment services across 80+ languages, delivered by both machine/AI engines and human professional vendors.</p>
+<p><strong>Concrete scenarios where REACH is the right approach:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>REACH Services</th>
+<th>Outcome</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Make a video library searchable by spoken content</td>
+<td>Machine Captions (ASR) → eSearch indexes transcripts</td>
+<td>Users find videos by keywords spoken in them</td>
+</tr>
+<tr>
+<td>Localize training content for global teams</td>
+<td>Captions + Translation (80+ languages) or Dubbing</td>
+<td>Multi-language captions or dubbed audio tracks on each entry</td>
+</tr>
+<tr>
+<td>Meet accessibility compliance (WCAG, Section 508)</td>
+<td>Professional Captions + Audio Description + Sign Language</td>
+<td>Closed captions, narrated visuals, and sign language tracks</td>
+</tr>
+<tr>
+<td>Auto-generate social clips from webinars</td>
+<td>AI Clips (Content Lab)</td>
+<td>Multiple short highlight clips with AI-generated titles and descriptions</td>
+</tr>
+<tr>
+<td>Build a quiz from a lecture recording</td>
+<td>Quiz generation</td>
+<td>Interactive quiz questions attached as cue points on the entry</td>
+</tr>
+<tr>
+<td>Moderate user-generated uploads before publishing</td>
+<td>Content Moderation (AI)</td>
+<td>Moderation scores and flags; auto-block or queue for review</td>
+</tr>
+<tr>
+<td>Create chapter navigation for long recordings</td>
+<td>Chaptering (AI + human review)</td>
+<td>Chapter cue points for in-player navigation</td>
+</tr>
+<tr>
+<td>Summarize meetings for async viewers</td>
+<td>Summary</td>
+<td>AI-generated summary and auto-chapters in entry metadata</td>
+</tr>
+<tr>
+<td>Extract key topics and tags for content discovery</td>
+<td>Intelligent Tagging + Metadata Enrichment</td>
+<td>Auto-generated tags and keywords on each entry</td>
+</tr>
+<tr>
+<td>Caption live events in real time</td>
+<td>Live Captions or Live Translation</td>
+<td>Real-time subtitles injected into the HLS stream</td>
+</tr>
+<tr>
+<td>Add conversational AI over a content library</td>
+<td>Immersive Agent (Chat or Call)</td>
+<td>Text or voice-based Q&amp;A grounded in video content</td>
+</tr>
+<tr>
+<td>Generate avatar videos from scripts</td>
+<td>Avatar VOD</td>
+<td>Pre-recorded avatar videos from text input</td>
+</tr>
+</tbody>
+</table>
+<p><strong>When to use REACH vs. other approaches:</strong></p>
+<ul>
+<li><strong>REACH API directly</strong> — Use for on-demand, per-entry enrichment requests from your application code.</li>
+<li><strong>REACH Automation Rules</strong> — Use for automatic enrichment of all uploads (or uploads matching conditions) without writing per-entry code. Configure once on your REACH profile.</li>
+<li><strong>Agents Manager</strong> — Use for multi-step orchestrated workflows (e.g., "caption, then translate to 3 languages, then summarize") with event-driven triggers and retry logic.</li>
+<li><strong>Content Lab widget</strong> — Use to give end-users a self-service UI for ordering clips, summaries, chapters, and quizzes from within the Kaltura player experience.</li>
+</ul>
+<h1 id="2-prerequisites">2. Prerequisites<a class="headerlink" href="#2-prerequisites" title="Permanent link">&para;</a></h1>
+<ul>
+<li>Know how to generate Kaltura Sessions (KS) in your backend (see <a href="../KALTURA_SESSION_GUIDE/">Session Guide</a>)</li>
+<li>Have a Kaltura account with REACH services enabled (contact your Kaltura account manager to provision)</li>
+</ul>
+<p><strong>Endpoint pattern:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>POST https://www.kaltura.com/api_v3/service/{serviceName}/action/{actionName}
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Content-Type: application/x-www-form-urlencoded
+</code></pre></div></p>
+<p>All parameters are passed as form data. Always include <code>ks=&lt;YOUR_KS&gt;</code> and <code>format=1</code> (JSON response).</p>
+<h2 id="what-reach-provides">What REACH Provides<a class="headerlink" href="#what-reach-provides" title="Permanent link">&para;</a></h2>
+<p>REACH is an open marketplace — the services listed below are current as of this writing, but the platform is designed to integrate any enrichment service. Each service can be provided by Machine/AI engines, Human Professional vendors, or both, depending on vendor availability for your account.</p>
+<h3 id="captioning-transcription">Captioning &amp; Transcription<a class="headerlink" href="#captioning-transcription" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Machine Captions (ASR)</strong> — AI-powered, ~85% accuracy, up to 2-hour turnaround. Supports custom vocabularies/dictionaries for domain-specific terminology.</li>
+<li><strong>Professional (Human) Captions</strong> — 99%+ accuracy, 3-48 hour turnaround depending on SLA tier. Compliant with closed captioning standards.</li>
+<li><strong>Live Captions</strong> — Real-time machine-generated captions for scheduled live events.</li>
+<li><strong>Alignment</strong> — Upload an existing transcript file and REACH syncs it to the audio timeline.</li>
+</ul>
+<h3 id="translation-localization">Translation &amp; Localization<a class="headerlink" href="#translation-localization" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Translation</strong> — Three modes: (1) translate directly from audio, (2) translate from existing captions file, (3) order professional captions first, then translate. 80+ languages supported.</li>
+<li><strong>Live Translation</strong> — Real-time machine-generated subtitles in a different language during live events.</li>
+<li><strong>Dubbing</strong> — Machine-based translated audio via text-to-speech, synced to original dialogue timing.</li>
+</ul>
+<h3 id="accessibility">Accessibility<a class="headerlink" href="#accessibility" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Standard Audio Description</strong> — Narration of visual elements mixed with original audio.</li>
+<li><strong>Extended Audio Description</strong> — Pauses video to allow detailed narration of visual content. Uses speech synthesis from time-coded VTT. Requires player plugin.</li>
+<li><strong>Sign Language</strong> — Creates a child entry with sign language video (ASL or BSL) linked to the parent entry.</li>
+</ul>
+<h3 id="intelligence-analysis">Intelligence &amp; Analysis<a class="headerlink" href="#intelligence-analysis" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>AI Clips</strong> — Automatically generate short clips/highlights from longer content using AI analysis. Machine-powered, immediate turnaround.</li>
+<li><strong>Quiz</strong> — AI-generated quiz questions from video content.</li>
+<li><strong>Video Analysis</strong> — Visual content analysis including OCR (optical character recognition).</li>
+<li><strong>Intelligent Tagging</strong> — Automatic topic extraction and semantic tagging from transcript content.</li>
+<li><strong>Sentiment Analysis</strong> — AI-powered sentiment and tone analysis of spoken content.</li>
+<li><strong>Content Moderation</strong> — Screen video transcripts and frames against configurable moderation policies using LLMs and computer vision. See <a href="../KALTURA_MODERATION_API/">Moderation API</a> for policies, rules, and scoring.</li>
+</ul>
+<h3 id="content-enrichment">Content Enrichment<a class="headerlink" href="#content-enrichment" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Chaptering</strong> — AI-based chapter detection, reviewed by professionals. 24-hour turnaround.</li>
+<li><strong>Summary</strong> — AI-generated content summary with auto-chaptering.</li>
+<li><strong>Metadata Enrichment</strong> — Automatic tags, keywords, and metadata extraction.</li>
+<li><strong>Document Enrichment</strong> — AI-powered enrichment for document-type entries.</li>
+</ul>
+<h3 id="conversational-ai">Conversational AI<a class="headerlink" href="#conversational-ai" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Immersive Agent Chat</strong> — Text-based conversational AI agent interaction over content.</li>
+<li><strong>Immersive Agent Call</strong> — Voice-based conversational AI agent interaction over content.</li>
+</ul>
+<h3 id="governance-billing">Governance &amp; Billing<a class="headerlink" href="#governance-billing" title="Permanent link">&para;</a></h3>
+<p>REACH services are billed in <strong>credits</strong>, defined per REACH profile. Credit balances, usage, and limits are managed through the REACH profile configuration. Key governance features:</p>
+<ul>
+<li><strong>Credit management</strong> — Per-account, per-instance (KMS/KAF app), and per-department budgets. Central reporting of usage and billing.</li>
+<li><strong>Moderation workflows</strong> — Approval/rejection of enrichment task requests with email notifications, controlling when credits are spent.</li>
+<li><strong>Content deletion policy</strong> — Configure when source content is deleted from vendor systems after processing, ensuring compliance with data privacy regulations (GDPR, DPA).</li>
+<li><strong>Vendor abstraction</strong> — Third-party vendors receive only time-expired tokens with access to the specific entry being processed, never your account credentials or broader content access.</li>
+<li><strong>Automation rules</strong> — Define per-channel/category or account-wide rules for automatic enrichment ordering based on content events.</li>
+</ul>
+<h3 id="language-support">Language Support<a class="headerlink" href="#language-support" title="Permanent link">&para;</a></h3>
+<p>REACH services support 80+ languages including: English, Spanish, French, German, Portuguese, Arabic, Mandarin Chinese, Cantonese, Japanese, Korean, Russian, Hindi, Hebrew, Italian, Thai, Swedish, Polish, Danish, Finnish, Norwegian, Dutch, Hungarian, Romanian, Vietnamese, Czech, Greek, Indonesian, Turkish, Ukrainian, Welsh, Irish, Catalan, Tamil, Bulgarian, Estonian, Lithuanian, Slovak, Slovenian, Croatian, Farsi, Galician, Malay, Marathi, Mongolian, Taiwanese Mandarin, Afrikaans, Icelandic, Malayalam, Urdu, Zulu, Azerbaijani, Burmese, Bosnian, Georgian, Gujarati, Javanese, Kannada, Kazakh, Macedonian, Nepali, Punjabi, Serbian, Uzbek, Xhosa, Simplified Chinese, Traditional Chinese, and more. Language availability varies by service type and vendor.</p>
+<h2 id="core-concepts">Core Concepts<a class="headerlink" href="#core-concepts" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>What It Is</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>REACH Profile</strong></td>
+<td>Per-account configuration that defines credit allocation, output preferences (format, moderation, metadata extraction, speaker identification, profanity removal), dictionaries, and content deletion policy.</td>
+</tr>
+<tr>
+<td><strong>Vendor Catalog Item</strong></td>
+<td>A specific service offering from a vendor — e.g., "English Machine Captions, 2-hour TAT" or "Spanish Human Translation, 5 Business Days". Each has a unique <code>catalogItemId</code>.</td>
+</tr>
+<tr>
+<td><strong>Entry Vendor Task</strong></td>
+<td>A single unit of work: one service applied to one entry. Created by referencing a <code>catalogItemId</code> and an <code>entryId</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>The typical flow: discover available catalog items for your account, then create a task against an entry using the desired catalog item.</p>
+<h2 id="key-enums-reference">Key Enums Reference<a class="headerlink" href="#key-enums-reference" title="Permanent link">&para;</a></h2>
+<h3 id="service-features-servicefeature">Service Features (<code>serviceFeature</code>)<a class="headerlink" href="#service-features-servicefeature" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>CAPTIONS</td>
+<td>Speech-to-text captioning (machine ASR or human professional)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>TRANSLATION</td>
+<td>Caption/audio translation</td>
+</tr>
+<tr>
+<td>3</td>
+<td>ALIGNMENT</td>
+<td>Transcript-to-audio alignment</td>
+</tr>
+<tr>
+<td>4</td>
+<td>AUDIO_DESCRIPTION</td>
+<td>Standard audio description narration</td>
+</tr>
+<tr>
+<td>5</td>
+<td>CHAPTERING</td>
+<td>AI chapter detection</td>
+</tr>
+<tr>
+<td>6</td>
+<td>INTELLIGENT_TAGGING</td>
+<td>Automatic topic extraction and semantic tagging</td>
+</tr>
+<tr>
+<td>7</td>
+<td>DUBBING</td>
+<td>Text-to-speech dubbed audio</td>
+</tr>
+<tr>
+<td>8</td>
+<td>LIVE_CAPTION</td>
+<td>Real-time live captions</td>
+</tr>
+<tr>
+<td>9</td>
+<td>EXTENDED_AUDIO_DESCRIPTION</td>
+<td>Extended audio description (pauses video, VTT-based)</td>
+</tr>
+<tr>
+<td>10</td>
+<td>CLIPS</td>
+<td>AI-powered clip generation from longer content</td>
+</tr>
+<tr>
+<td>11</td>
+<td>LIVE_TRANSLATION</td>
+<td>Real-time live translation</td>
+</tr>
+<tr>
+<td>12</td>
+<td>QUIZ</td>
+<td>Quiz generation from video content</td>
+</tr>
+<tr>
+<td>13</td>
+<td>SUMMARY</td>
+<td>Content summarization with auto-chaptering</td>
+</tr>
+<tr>
+<td>14</td>
+<td>VIDEO_ANALYSIS</td>
+<td>Video content analysis (OCR, visual recognition)</td>
+</tr>
+<tr>
+<td>15</td>
+<td>MODERATION</td>
+<td>Content moderation (text + visual policy evaluation)</td>
+</tr>
+<tr>
+<td>16</td>
+<td>METADATA_ENRICHMENT</td>
+<td>Automatic tags, keywords, and metadata extraction</td>
+</tr>
+<tr>
+<td>17</td>
+<td>SENTIMENT_ANALYSIS</td>
+<td>Sentiment and tone analysis of spoken content</td>
+</tr>
+<tr>
+<td>18</td>
+<td>DOCUMENT_ENRICHMENT</td>
+<td>AI enrichment for document-type entries</td>
+</tr>
+<tr>
+<td>19</td>
+<td>SIGN_LANGUAGE</td>
+<td>Sign language video (ASL, BSL)</td>
+</tr>
+<tr>
+<td>21</td>
+<td>IMMERSIVE_AGENT_CALL</td>
+<td>Voice-based conversational AI agent interaction</td>
+</tr>
+<tr>
+<td>22</td>
+<td>IMMERSIVE_AGENT_CHAT</td>
+<td>Text-based conversational AI agent interaction</td>
+</tr>
+<tr>
+<td>23</td>
+<td>AVATAR_VOD</td>
+<td>Pre-recorded avatar video generation from scripts</td>
+</tr>
+</tbody>
+</table>
+<h3 id="service-types-servicetype">Service Types (<code>serviceType</code>)<a class="headerlink" href="#service-types-servicetype" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>HUMAN</td>
+<td>Professional human processing</td>
+</tr>
+<tr>
+<td>2</td>
+<td>MACHINE</td>
+<td>AI/machine processing</td>
+</tr>
+</tbody>
+</table>
+<h3 id="task-statuses-status">Task Statuses (<code>status</code>)<a class="headerlink" href="#task-statuses-status" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>PENDING</td>
+<td>Created, waiting to be picked up</td>
+</tr>
+<tr>
+<td>2</td>
+<td>READY</td>
+<td>Ready for vendor processing</td>
+</tr>
+<tr>
+<td>3</td>
+<td>PROCESSING</td>
+<td>Vendor is actively working</td>
+</tr>
+<tr>
+<td>4</td>
+<td>PENDING_MODERATION</td>
+<td>Completed, awaiting review</td>
+</tr>
+<tr>
+<td>5</td>
+<td>REJECTED</td>
+<td>Rejected after moderation</td>
+</tr>
+<tr>
+<td>6</td>
+<td>ERROR</td>
+<td>Processing failed</td>
+</tr>
+<tr>
+<td>7</td>
+<td>ABORTED</td>
+<td>Cancelled</td>
+</tr>
+<tr>
+<td>8</td>
+<td>PENDING_ENTRY_READY</td>
+<td>Waiting for media entry to finish processing</td>
+</tr>
+<tr>
+<td>9</td>
+<td>SCHEDULED</td>
+<td>Scheduled for future execution (live events)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="task-status-flow">Task Status Flow<a class="headerlink" href="#task-status-flow" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>  Task created ──► PENDING_ENTRY_READY (8)  ──► PENDING (1)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>                        (if entry not ready)        │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>                                                    │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  Task created ──► PENDING (1) ─────────────────────┤
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>                                                    │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>                        ┌───────────────────────────┤
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>                        │                           │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>                        ▼                           ▼
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>                   PENDING_MODERATION (4)       READY (2)
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>                        │                           │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>                   ┌────┴────┐                      │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>                   ▼         ▼                      ▼
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>              REJECTED (5)  approved            PROCESSING (3)
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>                            │                       │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>                            ▼                  ┌────┴────┐
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>                        READY (2) ──►...       ▼         ▼
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>                                           success    ERROR (6)
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>                                               │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>                                               ▼
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>                                        PENDING_MODERATION (4)
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>                                          or READY (2)
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>  ABORTED (7) ◄── abort() from PENDING or PENDING_MODERATION
+</code></pre></div>
+<h3 id="output-formats-outputformat">Output Formats (<code>outputFormat</code>)<a class="headerlink" href="#output-formats-outputformat" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Name</th>
+<th>When to Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>SRT</td>
+<td>Most widely supported format. Use as the default for web players, video editors, and subtitle tools. Simple text-based timing format.</td>
+</tr>
+<tr>
+<td>2</td>
+<td>DFXP</td>
+<td>XML-based format (TTML subset). Use when you need styling/positioning metadata or for broadcast/TV workflows that require TTML compliance.</td>
+</tr>
+<tr>
+<td>3</td>
+<td>VTT</td>
+<td>WebVTT — the native HTML5 <code>&lt;track&gt;</code> format. Use when captions are delivered directly via HTML5 video elements or when you need CSS-based caption styling.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="turn-around-times-turnaroundtime">Turn-Around Times (<code>turnAroundTime</code>)<a class="headerlink" href="#turn-around-times-turnaroundtime" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-1</td>
+<td>BEST_EFFORT</td>
+</tr>
+<tr>
+<td>0</td>
+<td>IMMEDIATE</td>
+</tr>
+<tr>
+<td>1-7</td>
+<td>1-7 BUSINESS_DAYS</td>
+</tr>
+<tr>
+<td>1800</td>
+<td>30 minutes</td>
+</tr>
+<tr>
+<td>7200</td>
+<td>2 hours</td>
+</tr>
+<tr>
+<td>10800</td>
+<td>3 hours</td>
+</tr>
+<tr>
+<td>21600</td>
+<td>6 hours</td>
+</tr>
+<tr>
+<td>28800</td>
+<td>8 hours</td>
+</tr>
+<tr>
+<td>43200</td>
+<td>12 hours</td>
+</tr>
+<tr>
+<td>86400</td>
+<td>24 hours</td>
+</tr>
+<tr>
+<td>172800</td>
+<td>48 hours</td>
+</tr>
+</tbody>
+</table>
+<h3 id="processing-regions-vendortaskprocessingregion">Processing Regions (<code>vendorTaskProcessingRegion</code>)<a class="headerlink" href="#processing-regions-vendortaskprocessingregion" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>US</td>
+</tr>
+<tr>
+<td>2</td>
+<td>EU</td>
+</tr>
+<tr>
+<td>3</td>
+<td>CA</td>
+</tr>
+</tbody>
+</table>
+<h3 id="creation-mode-creationmode">Creation Mode (<code>creationMode</code>)<a class="headerlink" href="#creation-mode-creationmode" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>MANUAL</td>
+<td>Created via API or UI by a user</td>
+</tr>
+<tr>
+<td>2</td>
+<td>AUTOMATIC</td>
+<td>Created automatically by a rule or agent</td>
+</tr>
+</tbody>
+</table>
+<h1 id="3-list-available-catalog-items">3. List Available Catalog Items<a class="headerlink" href="#3-list-available-catalog-items" title="Permanent link">&para;</a></h1>
+<p>Discover which services are available for your account.</p>
+<p><strong><code>vendorCatalogItem.list</code></strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>POST /api_v3/service/reach_vendorCatalogItem/action/list
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ks=&lt;YOUR_KS&gt;
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>&amp;format=1
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>&amp;filter[serviceTypeEqual]=2
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>&amp;filter[serviceFeatureEqual]=1
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>&amp;filter[statusEqual]=2
+</code></pre></div>
+<p><strong>Filter parameters</strong></p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>filter[serviceTypeEqual]</code></td>
+<td>int</td>
+<td>Filter by HUMAN (1) or MACHINE (2)</td>
+</tr>
+<tr>
+<td><code>filter[serviceFeatureEqual]</code></td>
+<td>int</td>
+<td>Filter by feature (1=captions, 2=translation, etc.)</td>
+</tr>
+<tr>
+<td><code>filter[sourceLanguageEqual]</code></td>
+<td>string</td>
+<td>Filter by source language (e.g., "English"). For best results, also filter client-side to ensure language matches.</td>
+</tr>
+<tr>
+<td><code>filter[statusEqual]</code></td>
+<td>int</td>
+<td>Filter by status; use 2 (ACTIVE) for available items</td>
+</tr>
+<tr>
+<td><code>filter[turnAroundTimeEqual]</code></td>
+<td>int</td>
+<td>Filter by TAT</td>
+</tr>
+<tr>
+<td><code>pager[pageSize]</code></td>
+<td>int</td>
+<td>Results per page (default 30, max 500)</td>
+</tr>
+<tr>
+<td><code>pager[pageIndex]</code></td>
+<td>int</td>
+<td>Page number (1-based)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Response</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">&quot;objectType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;KalturaVendorCatalogItemListResponse&quot;</span><span class="p">,</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="nt">&quot;objects&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">      </span><span class="nt">&quot;objectType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;KalturaVendorCaptionsCatalogItem&quot;</span><span class="p">,</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">      </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">101</span><span class="p">,</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">      </span><span class="nt">&quot;vendorPartnerId&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5555</span><span class="p">,</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;English Machine Captions&quot;</span><span class="p">,</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">      </span><span class="nt">&quot;serviceType&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">      </span><span class="nt">&quot;serviceFeature&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">      </span><span class="nt">&quot;sourceLanguage&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;English&quot;</span><span class="p">,</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">      </span><span class="nt">&quot;turnAroundTime&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">7200</span><span class="p">,</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">      </span><span class="nt">&quot;outputFormat&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">      </span><span class="nt">&quot;allowResubmission&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">      </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">  </span><span class="p">],</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">  </span><span class="nt">&quot;totalCount&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="p">}</span>
+</code></pre></div></p>
+<p>Save the <code>id</code> — this is the <code>catalogItemId</code> you use when creating tasks.</p>
+<p><strong>Catalog item <code>objectType</code> by service feature:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Service Feature</th>
+<th>objectType</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CAPTIONS (1)</td>
+<td><code>KalturaVendorCaptionsCatalogItem</code></td>
+</tr>
+<tr>
+<td>TRANSLATION (2)</td>
+<td><code>KalturaVendorTranslationCatalogItem</code></td>
+</tr>
+<tr>
+<td>CHAPTERING (5)</td>
+<td><code>KalturaVendorChapteringCatalogItem</code></td>
+</tr>
+<tr>
+<td>DUBBING (7)</td>
+<td><code>KalturaVendorDubbingCatalogItem</code></td>
+</tr>
+<tr>
+<td>LIVE_CAPTION (8)</td>
+<td><code>KalturaVendorLiveCaptionCatalogItem</code></td>
+</tr>
+<tr>
+<td>CLIPS (10)</td>
+<td><code>KalturaVendorClipsCatalogItem</code></td>
+</tr>
+<tr>
+<td>LIVE_TRANSLATION (11)</td>
+<td><code>KalturaVendorLiveTranslationCatalogItem</code></td>
+</tr>
+<tr>
+<td>QUIZ (12)</td>
+<td><code>KalturaVendorQuizCatalogItem</code></td>
+</tr>
+<tr>
+<td>SUMMARY (13)</td>
+<td><code>KalturaVendorSummaryCatalogItem</code></td>
+</tr>
+<tr>
+<td>VIDEO_ANALYSIS (14)</td>
+<td><code>KalturaVendorVideoAnalysisCatalogItem</code></td>
+</tr>
+<tr>
+<td>MODERATION (15)</td>
+<td><code>KalturaVendorModerationCatalogItem</code></td>
+</tr>
+<tr>
+<td>METADATA_ENRICHMENT (16)</td>
+<td><code>KalturaVendorMetadataEnrichmentCatalogItem</code></td>
+</tr>
+<tr>
+<td>DOCUMENT_ENRICHMENT (18)</td>
+<td><code>KalturaVendorDocumentEnrichmentCatalogItem</code></td>
+</tr>
+</tbody>
+</table>
+<p>When creating tasks via <code>entryVendorTask.add</code>, always use <code>objectType=KalturaEntryVendorTask</code> regardless of the catalog item type.</p>
+<h1 id="4-get-reach-profile">4. Get REACH Profile<a class="headerlink" href="#4-get-reach-profile" title="Permanent link">&para;</a></h1>
+<p>Retrieve your REACH profile to understand account-level settings (credit balance, output preferences, dictionaries).</p>
+<p><strong><code>reachProfile.list</code></strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>POST /api_v3/service/reach_reachProfile/action/list
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ks=&lt;YOUR_KS&gt;
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>&amp;format=1
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>&amp;filter[statusEqual]=2
+</code></pre></div>
+<p><strong>Response</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">{</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="nt">&quot;objects&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">      </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1001</span><span class="p">,</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Production Profile&quot;</span><span class="p">,</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">      </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">      </span><span class="nt">&quot;profileType&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">      </span><span class="nt">&quot;defaultOutputFormat&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">      </span><span class="nt">&quot;enableMachineModeration&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">      </span><span class="nt">&quot;enableHumanModeration&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">      </span><span class="nt">&quot;autoDisplayMachineCaptionsOnPlayer&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">      </span><span class="nt">&quot;autoDisplayHumanCaptionsOnPlayer&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">      </span><span class="nt">&quot;enableMetadataExtraction&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="w">      </span><span class="nt">&quot;enableSpeakerChangeIndication&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="w">      </span><span class="nt">&quot;enableProfanityRemoval&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="w">      </span><span class="nt">&quot;maxCharactersPerCaptionLine&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="p">,</span>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="w">      </span><span class="nt">&quot;contentDeletionPolicy&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="w">      </span><span class="nt">&quot;vendorTaskProcessingRegion&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="w">      </span><span class="nt">&quot;credit&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;credit&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">10000</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;fromDate&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1704067200</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;toDate&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1735689600</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="w">      </span><span class="nt">&quot;usedCredit&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">1250.5</span><span class="p">,</span>
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a><span class="w">      </span><span class="nt">&quot;dictionaries&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a><span class="w">      </span><span class="nt">&quot;flavorParamsIds&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a><span class="w">  </span><span class="p">],</span>
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a><span class="w">  </span><span class="nt">&quot;totalCount&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a><span class="p">}</span>
+</code></pre></div></p>
+<p><strong>Key REACH Profile fields</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>defaultOutputFormat</code></td>
+<td>Default caption format: SRT (1), DFXP (2), VTT (3)</td>
+</tr>
+<tr>
+<td><code>enableMachineModeration</code></td>
+<td>If true, machine results go to PENDING_MODERATION before applying</td>
+</tr>
+<tr>
+<td><code>enableHumanModeration</code></td>
+<td>If true, human results go to PENDING_MODERATION before applying</td>
+</tr>
+<tr>
+<td><code>autoDisplayMachineCaptionsOnPlayer</code></td>
+<td>Auto-display machine captions in the player</td>
+</tr>
+<tr>
+<td><code>autoDisplayHumanCaptionsOnPlayer</code></td>
+<td>Auto-display human captions in the player</td>
+</tr>
+<tr>
+<td><code>enableMetadataExtraction</code></td>
+<td>Extract tags/keywords from caption content</td>
+</tr>
+<tr>
+<td><code>enableSpeakerChangeIndication</code></td>
+<td>Mark speaker changes in captions</td>
+</tr>
+<tr>
+<td><code>enableProfanityRemoval</code></td>
+<td>Remove profanity from captions</td>
+</tr>
+<tr>
+<td><code>maxCharactersPerCaptionLine</code></td>
+<td>Line length limit for caption formatting</td>
+</tr>
+<tr>
+<td><code>contentDeletionPolicy</code></td>
+<td>When to delete source content after processing (1=never, 2=once processed, 3=after week, 4=after month, 5=after 3 months)</td>
+</tr>
+<tr>
+<td><code>vendorTaskProcessingRegion</code></td>
+<td>Data residency region: US (1), EU (2), CA (3)</td>
+</tr>
+<tr>
+<td><code>credit</code></td>
+<td>Credit allocation and validity period</td>
+</tr>
+<tr>
+<td><code>usedCredit</code></td>
+<td>Credits consumed so far</td>
+</tr>
+<tr>
+<td><code>dictionaries</code></td>
+<td>Custom vocabularies per language for machine captioning</td>
+</tr>
+<tr>
+<td><code>flavorParamsIds</code></td>
+<td>Preferred video flavor IDs for processing (comma-separated)</td>
+</tr>
+</tbody>
+</table>
+<h1 id="5-create-a-task-order-a-service">5. Create a Task (Order a Service)<a class="headerlink" href="#5-create-a-task-order-a-service" title="Permanent link">&para;</a></h1>
+<p>Submit a captioning, translation, or enrichment request for a specific entry.</p>
+<p><strong><code>entryVendorTask.add</code></strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>POST /api_v3/service/reach_entryVendorTask/action/add
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ks=&lt;YOUR_KS&gt;
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>&amp;format=1
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>&amp;entryVendorTask[objectType]=KalturaEntryVendorTask
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>&amp;entryVendorTask[entryId]=1_abc123def
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>&amp;entryVendorTask[reachProfileId]=1001
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>&amp;entryVendorTask[catalogItemId]=101
+</code></pre></div>
+<p><strong>Required parameters</strong></p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>entryVendorTask[entryId]</code></td>
+<td>string</td>
+<td>The media entry ID to process</td>
+</tr>
+<tr>
+<td><code>entryVendorTask[reachProfileId]</code></td>
+<td>int</td>
+<td>Your REACH profile ID (from step 2)</td>
+</tr>
+<tr>
+<td><code>entryVendorTask[catalogItemId]</code></td>
+<td>int</td>
+<td>The catalog item ID (from step 1)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Optional parameters</strong></p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>entryVendorTask[notes]</code></td>
+<td>string</td>
+<td>Instructions for human vendors (terminology guidance, context)</td>
+</tr>
+<tr>
+<td><code>entryVendorTask[context]</code></td>
+<td>string</td>
+<td>Task context identifier (for filtering/grouping)</td>
+</tr>
+<tr>
+<td><code>entryVendorTask[partnerData]</code></td>
+<td>string</td>
+<td>JSON string with extra data for your own tracking</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Response</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="p">{</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">98765</span><span class="p">,</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="nt">&quot;partnerId&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">12345</span><span class="p">,</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span><span class="nt">&quot;entryId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1_abc123def&quot;</span><span class="p">,</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span><span class="nt">&quot;reachProfileId&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1001</span><span class="p">,</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">  </span><span class="nt">&quot;catalogItemId&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">101</span><span class="p">,</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">  </span><span class="nt">&quot;price&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">2.5</span><span class="p">,</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">  </span><span class="nt">&quot;createdAt&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1712345678</span><span class="p">,</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">  </span><span class="nt">&quot;expectedFinishTime&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1712352878</span><span class="p">,</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">  </span><span class="nt">&quot;serviceType&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">  </span><span class="nt">&quot;serviceFeature&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="w">  </span><span class="nt">&quot;turnAroundTime&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">7200</span><span class="p">,</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="w">  </span><span class="nt">&quot;creationMode&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="w">  </span><span class="nt">&quot;accessKey&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;djJ8MTIzNDV8...&quot;</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="p">}</span>
+</code></pre></div></p>
+<p>The task begins in <code>PENDING</code> (1) status. If the entry is still processing, it starts in <code>PENDING_ENTRY_READY</code> (8) and moves to <code>PENDING</code> once the entry is ready. If moderation is enabled on your REACH profile, completed tasks will go to <code>PENDING_MODERATION</code> (4) before results are applied.</p>
+<h1 id="6-check-task-status">6. Check Task Status<a class="headerlink" href="#6-check-task-status" title="Permanent link">&para;</a></h1>
+<p><strong><code>entryVendorTask.get</code></strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>POST /api_v3/service/reach_entryVendorTask/action/get
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ks=&lt;YOUR_KS&gt;
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>&amp;format=1
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>&amp;id=&lt;VENDOR_TASK_ID&gt;
+</code></pre></div>
+<p><strong>Response</strong> — same structure as the <code>add</code> response, with updated <code>status</code>, <code>finishTime</code>, <code>outputObjectId</code>, and <code>accuracy</code> fields once complete.</p>
+<p><strong>Key fields to check:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>status</code></td>
+<td>Current status (see enum above)</td>
+</tr>
+<tr>
+<td><code>outputObjectId</code></td>
+<td>ID of the created output asset (caption ID, flavor ID, cue point ID, etc.)</td>
+</tr>
+<tr>
+<td><code>accuracy</code></td>
+<td>Result accuracy percentage (0-100)</td>
+</tr>
+<tr>
+<td><code>errDescription</code></td>
+<td>Error details if status is ERROR (6)</td>
+</tr>
+<tr>
+<td><code>finishTime</code></td>
+<td>Unix timestamp when processing completed</td>
+</tr>
+</tbody>
+</table>
+<h1 id="7-list-tasks">7. List Tasks<a class="headerlink" href="#7-list-tasks" title="Permanent link">&para;</a></h1>
+<p>Query tasks with filters for monitoring and reporting.</p>
+<p><strong><code>entryVendorTask.list</code></strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>POST /api_v3/service/reach_entryVendorTask/action/list
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>ks=&lt;YOUR_KS&gt;
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>&amp;format=1
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>&amp;filter[entryIdEqual]=1_abc123def
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>&amp;filter[statusIn]=1,2,3
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>&amp;pager[pageSize]=50
+</code></pre></div>
+<p><strong>Common filter parameters</strong></p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>filter[entryIdEqual]</code></td>
+<td>string</td>
+<td>Filter by entry ID</td>
+</tr>
+<tr>
+<td><code>filter[statusEqual]</code></td>
+<td>int</td>
+<td>Filter by exact status</td>
+</tr>
+<tr>
+<td><code>filter[statusIn]</code></td>
+<td>string</td>
+<td>Filter by multiple statuses (comma-separated)</td>
+</tr>
+<tr>
+<td><code>filter[catalogItemIdEqual]</code></td>
+<td>int</td>
+<td>Filter by catalog item</td>
+</tr>
+<tr>
+<td><code>filter[reachProfileIdEqual]</code></td>
+<td>int</td>
+<td>Filter by REACH profile</td>
+</tr>
+<tr>
+<td><code>filter[createdAtGreaterThanOrEqual]</code></td>
+<td>int</td>
+<td>Unix timestamp — tasks created after</td>
+</tr>
+<tr>
+<td><code>filter[createdAtLessThanOrEqual]</code></td>
+<td>int</td>
+<td>Unix timestamp — tasks created before</td>
+</tr>
+<tr>
+<td><code>filter[freeText]</code></td>
+<td>string</td>
+<td>Free text search</td>
+</tr>
+<tr>
+<td><code>pager[pageSize]</code></td>
+<td>int</td>
+<td>Results per page (default 30, max 500)</td>
+</tr>
+<tr>
+<td><code>pager[pageIndex]</code></td>
+<td>int</td>
+<td>Page number (1-based)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Order by:</strong> <code>+createdAt</code>, <code>-createdAt</code>, <code>+updatedAt</code>, <code>-updatedAt</code>, <code>+status</code>, <code>-status</code>, <code>+price</code>, <code>-price</code>, <code>+expectedFinishTime</code>, <code>-expectedFinishTime</code></p>
+<h1 id="8-manage-tasks">8. Manage Tasks<a class="headerlink" href="#8-manage-tasks" title="Permanent link">&para;</a></h1>
+<h3 id="approve-a-moderated-task">Approve a moderated task<a class="headerlink" href="#approve-a-moderated-task" title="Permanent link">&para;</a></h3>
+<p><strong><code>entryVendorTask.approve</code></strong></p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>int</td>
+<td>Yes</td>
+<td>The vendor task ID to approve</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>POST /api_v3/service/reach_entryVendorTask/action/approve
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>ks=&lt;YOUR_KS&gt;
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>&amp;format=1
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>&amp;id=&lt;VENDOR_TASK_ID&gt;
+</code></pre></div>
+<p>Moves the task from <code>PENDING_MODERATION</code> (4) to <code>READY</code> (2), applying the results to the entry.</p>
+<h3 id="reject-a-moderated-task">Reject a moderated task<a class="headerlink" href="#reject-a-moderated-task" title="Permanent link">&para;</a></h3>
+<p><strong><code>entryVendorTask.reject</code></strong></p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>int</td>
+<td>Yes</td>
+<td>The vendor task ID to reject</td>
+</tr>
+<tr>
+<td><code>rejectReason</code></td>
+<td>string</td>
+<td>No</td>
+<td>Reason for rejection (logged for audit)</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>POST /api_v3/service/reach_entryVendorTask/action/reject
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>ks=&lt;YOUR_KS&gt;
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>&amp;format=1
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>&amp;id=&lt;VENDOR_TASK_ID&gt;
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>&amp;rejectReason=Quality+below+threshold
+</code></pre></div>
+<p>Moves the task from <code>PENDING_MODERATION</code> (4) to <code>REJECTED</code> (5). The entry remains unchanged — results are discarded.</p>
+<h3 id="cancel-a-pending-task">Cancel a pending task<a class="headerlink" href="#cancel-a-pending-task" title="Permanent link">&para;</a></h3>
+<p><strong><code>entryVendorTask.abort</code></strong></p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>int</td>
+<td>Yes</td>
+<td>The vendor task ID to cancel</td>
+</tr>
+<tr>
+<td><code>abortReason</code></td>
+<td>string</td>
+<td>No</td>
+<td>Reason for cancellation</td>
+</tr>
+</tbody>
+</table>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>POST /api_v3/service/reach_entryVendorTask/action/abort
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>ks=&lt;YOUR_KS&gt;
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>&amp;format=1
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>&amp;id=&lt;VENDOR_TASK_ID&gt;
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>&amp;abortReason=No+longer+needed
+</code></pre></div>
+Applies to tasks in PENDING (1) or PENDING_MODERATION (4) status. Once aborted, the task is removed from the system; use <code>entryVendorTask.list</code> to confirm it is gone.</p>
+<p><strong>Response</strong> — The aborted task object with <code>status: 7</code> (ABORTED):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="p">{</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">98765</span><span class="p">,</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="w">  </span><span class="nt">&quot;entryId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1_abc123def&quot;</span><span class="p">,</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="w">  </span><span class="nt">&quot;catalogItemId&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">101</span><span class="p">,</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="w">  </span><span class="nt">&quot;objectType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;KalturaEntryVendorTask&quot;</span>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="export-tasks-to-csv">Export tasks to CSV<a class="headerlink" href="#export-tasks-to-csv" title="Permanent link">&para;</a></h3>
+<p><strong><code>entryVendorTask.exportToCsv</code></strong></p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>filter[statusEqual]</code></td>
+<td>int</td>
+<td>No</td>
+<td>Filter exported tasks by status (e.g., 2 = READY)</td>
+</tr>
+<tr>
+<td><code>filter[entryIdEqual]</code></td>
+<td>string</td>
+<td>No</td>
+<td>Filter by entry ID</td>
+</tr>
+<tr>
+<td><code>filter[catalogItemIdEqual]</code></td>
+<td>int</td>
+<td>No</td>
+<td>Filter by catalog item</td>
+</tr>
+<tr>
+<td><code>filter[reachProfileIdEqual]</code></td>
+<td>int</td>
+<td>No</td>
+<td>Filter by REACH profile</td>
+</tr>
+<tr>
+<td><code>filter[createdAtGreaterThanOrEqual]</code></td>
+<td>int</td>
+<td>No</td>
+<td>Unix timestamp — tasks created after</td>
+</tr>
+<tr>
+<td><code>filter[createdAtLessThanOrEqual]</code></td>
+<td>int</td>
+<td>No</td>
+<td>Unix timestamp — tasks created before</td>
+</tr>
+</tbody>
+</table>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>POST /api_v3/service/reach_entryVendorTask/action/exportToCsv
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>ks=&lt;YOUR_KS&gt;
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>&amp;format=1
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>&amp;filter[statusEqual]=2
+</code></pre></div>
+Creates a batch job that emails a CSV download link with the filtered tasks.</p>
+<h2 id="full-example-order-machine-captions-for-an-entry">Full Example: Order Machine Captions for an Entry<a class="headerlink" href="#full-example-order-machine-captions-for-an-entry" title="Permanent link">&para;</a></h2>
+<h3 id="step-by-step-curl-example">Step-by-Step curl Example<a class="headerlink" href="#step-by-step-curl-example" title="Permanent link">&para;</a></h3>
+<p>Set up shell variables (see <a href="../KALTURA_SESSION_GUIDE/">Session Guide</a> for generating a KS):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KALTURA_SERVICE_URL</span><span class="o">=</span><span class="s2">&quot;https://www.kaltura.com/api_v3&quot;</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KALTURA_PARTNER_ID</span><span class="o">=</span><span class="s2">&quot;YOUR_PARTNER_ID&quot;</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KALTURA_KS</span><span class="o">=</span><span class="s2">&quot;YOUR_KS&quot;</span>
+</code></pre></div>
+<p><strong>Step 1: Find available machine caption catalog items</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/reach_vendorCatalogItem/action/list&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;filter[serviceTypeEqual]=2&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;filter[serviceFeatureEqual]=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;filter[sourceLanguageEqual]=English&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;filter[statusEqual]=2&quot;</span>
+</code></pre></div>
+<p>From the response, note the <code>id</code> of the desired catalog item (e.g., <code>101</code>). Always verify the <code>sourceLanguage</code> field in the returned objects matches your target language — the server-side filter works best when combined with client-side validation.</p>
+<p><strong>Step 2: Get your REACH profile ID</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/reach_reachProfile/action/list&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;filter[statusEqual]=2&quot;</span>
+</code></pre></div>
+<p>From the response, note the <code>id</code> of your active REACH profile (e.g., <code>1001</code>).</p>
+<p><strong>Step 3: Order captions for an entry</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/reach_entryVendorTask/action/add&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;entryVendorTask[objectType]=KalturaEntryVendorTask&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;entryVendorTask[entryId]=</span><span class="nv">$KALTURA_ENTRY_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;entryVendorTask[reachProfileId]=</span><span class="nv">$REACH_PROFILE_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;entryVendorTask[catalogItemId]=</span><span class="nv">$CATALOG_ITEM_ID</span><span class="s2">&quot;</span>
+</code></pre></div>
+<p>From the response, note the task <code>id</code> (e.g., <code>98765</code>) and <code>expectedFinishTime</code>.</p>
+<p><strong>Step 4: Poll for completion</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/reach_entryVendorTask/action/get&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;id=</span><span class="nv">$VENDOR_TASK_ID</span><span class="s2">&quot;</span>
+</code></pre></div>
+<p>Poll every 30 seconds until <code>status</code> is <code>2</code> (READY) or <code>6</code> (ERROR). When READY, the response includes <code>outputObjectId</code> (the caption asset ID) and <code>accuracy</code> (percentage). If ERROR, check <code>errDescription</code> for details.</p>
+<h2 id="ai-clips-workflow-content-lab">AI Clips Workflow (Content Lab)<a class="headerlink" href="#ai-clips-workflow-content-lab" title="Permanent link">&para;</a></h2>
+<p>AI Clips uses the REACH task system to analyze a video and automatically generate multiple short highlight clips with AI-generated titles, descriptions, and tags. This is exposed in the KMC as "Content Lab".</p>
+<p>The workflow has two phases: <strong>Generate</strong> (AI creates clip suggestions as child entries) and <strong>Save</strong> (clone a clip into a standalone entry with trimmed content).</p>
+<h3 id="phase-1-generate-ai-clips">Phase 1: Generate AI Clips<a class="headerlink" href="#phase-1-generate-ai-clips" title="Permanent link">&para;</a></h3>
+<p>Order clip generation by creating a REACH task with <code>KalturaClipsVendorTaskData</code>:</p>
+<p><strong><code>entryVendorTask.add</code></strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>ks=&lt;YOUR_KS&gt;
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>&amp;format=1
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>&amp;entryVendorTask[objectType]=KalturaEntryVendorTask
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>&amp;entryVendorTask[entryId]=1_abc123def
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>&amp;entryVendorTask[reachProfileId]=1001
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>&amp;entryVendorTask[catalogItemId]=34832
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>&amp;entryVendorTask[taskJobData][objectType]=KalturaClipsVendorTaskData
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>&amp;entryVendorTask[taskJobData][outputLanguage]=English
+<a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a>&amp;entryVendorTask[taskJobData][clipsDuration]=120
+<a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a>&amp;entryVendorTask[taskJobData][instruction]=Generate highlights focusing on key announcements
+<a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a>&amp;entryVendorTask[taskJobData][eventSessionContextId]=
+</code></pre></div>
+<p><strong><code>KalturaClipsVendorTaskData</code> fields:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>outputLanguage</code></td>
+<td>string</td>
+<td>Language for generated clip titles/descriptions (e.g., "English")</td>
+</tr>
+<tr>
+<td><code>clipsDuration</code></td>
+<td>int</td>
+<td>Maximum duration per clip in <strong>seconds</strong></td>
+</tr>
+<tr>
+<td><code>instruction</code></td>
+<td>string</td>
+<td>Free-text instruction for the AI (topic focus, style guidance)</td>
+</tr>
+<tr>
+<td><code>eventSessionContextId</code></td>
+<td>string</td>
+<td>Optional session context ID for tracking</td>
+</tr>
+</tbody>
+</table>
+<p>The task starts in <code>PENDING</code> (1) and moves to <code>PROCESSING</code> (3). Poll with <code>entryVendorTask.get</code> until <code>READY</code> (2). Typical completion time is 30-60 seconds.</p>
+<h3 id="phase-2-list-generated-clips">Phase 2: List Generated Clips<a class="headerlink" href="#phase-2-list-generated-clips" title="Permanent link">&para;</a></h3>
+<p>Once the task is <code>READY</code>, the AI has created multiple child entries linked to the source. Retrieve them:</p>
+<p><strong><code>baseEntry.list</code></strong> — find clips by source entry ID:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>ks=&lt;YOUR_KS&gt;
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>&amp;format=1
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>&amp;filter[rootEntryIdIn]=1_abc123def
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>&amp;filter[statusIn]=1,2,4
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>&amp;filter[orderBy]=-createdAt
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>&amp;pager[pageSize]=500
+</code></pre></div>
+<p>Each generated clip is a full media entry with:
+- AI-generated <code>name</code> (clip title)
+- AI-generated <code>description</code> (clip summary)
+- AI-generated <code>tags</code>
+- <code>rootEntryId</code> pointing back to the source entry
+- Its own <code>duration</code>, <code>thumbnailUrl</code>, etc.</p>
+<p><strong><code>playlist.list</code></strong> — clips may also be grouped in a path playlist:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>ks=&lt;YOUR_KS&gt;
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>&amp;format=1
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>&amp;filter[referenceIdEqual]=1_abc123def
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>&amp;filter[playListTypeEqual]=3
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>&amp;pager[pageSize]=500
+</code></pre></div>
+<h3 id="phase-3-save-a-clip-as-a-standalone-entry">Phase 3: Save a Clip as a Standalone Entry<a class="headerlink" href="#phase-3-save-a-clip-as-a-standalone-entry" title="Permanent link">&para;</a></h3>
+<p>To save a specific clip as an independent entry (with its own trimmed video content), use the three-step pattern: <strong>clone → trim → set metadata</strong>.</p>
+<p><strong>Step 1: Clone the source entry</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>ks=&lt;YOUR_KS&gt;
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>&amp;format=1
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>&amp;entryId=1_abc123def
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a>&amp;cloneOptions:item1:objectType=KalturaBaseEntryCloneOptionComponent
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>&amp;cloneOptions:item1:itemType=5
+<a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a>&amp;cloneOptions:item1:rule=1
+<a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a>&amp;cloneOptions:item2:objectType=KalturaBaseEntryCloneOptionComponent
+<a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a>&amp;cloneOptions:item2:itemType=2
+<a id="__codelineno-28-9" name="__codelineno-28-9" href="#__codelineno-28-9"></a>&amp;cloneOptions:item2:rule=1
+<a id="__codelineno-28-10" name="__codelineno-28-10" href="#__codelineno-28-10"></a>&amp;cloneOptions:item3:objectType=KalturaBaseEntryCloneOptionComponent
+<a id="__codelineno-28-11" name="__codelineno-28-11" href="#__codelineno-28-11"></a>&amp;cloneOptions:item3:itemType=6
+<a id="__codelineno-28-12" name="__codelineno-28-12" href="#__codelineno-28-12"></a>&amp;cloneOptions:item3:rule=1
+<a id="__codelineno-28-13" name="__codelineno-28-13" href="#__codelineno-28-13"></a>&amp;cloneOptions:item4:objectType=KalturaBaseEntryCloneOptionComponent
+<a id="__codelineno-28-14" name="__codelineno-28-14" href="#__codelineno-28-14"></a>&amp;cloneOptions:item4:itemType=7
+<a id="__codelineno-28-15" name="__codelineno-28-15" href="#__codelineno-28-15"></a>&amp;cloneOptions:item4:rule=1
+<a id="__codelineno-28-16" name="__codelineno-28-16" href="#__codelineno-28-16"></a>&amp;cloneOptions:item5:objectType=KalturaBaseEntryCloneOptionComponent
+<a id="__codelineno-28-17" name="__codelineno-28-17" href="#__codelineno-28-17"></a>&amp;cloneOptions:item5:itemType=1
+<a id="__codelineno-28-18" name="__codelineno-28-18" href="#__codelineno-28-18"></a>&amp;cloneOptions:item5:rule=1
+</code></pre></div>
+<p>Clone option <code>itemType</code> values: <code>1</code> (content), <code>2</code> (access control), <code>5</code> (categories), <code>6</code> (metadata), <code>7</code> (flavors).</p>
+<p><strong>Step 2: Trim the cloned entry to clip boundaries</strong></p>
+<p>Use <code>media.updateContent</code> with <code>KalturaClipAttributes</code>. Offset and duration are in <strong>milliseconds</strong>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>ks=&lt;YOUR_KS&gt;
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>&amp;format=1
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>&amp;entryId=&lt;CLONED_ENTRY_ID&gt;
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>&amp;resource[objectType]=KalturaOperationResources
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>&amp;resource[resources][0][objectType]=KalturaOperationResource
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>&amp;resource[resources][0][resource][objectType]=KalturaEntryResource
+<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a>&amp;resource[resources][0][resource][entryId]=1_abc123def
+<a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a>&amp;resource[resources][0][resource][flavorParamsId]=487091
+<a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a>&amp;resource[resources][0][operationAttributes][0][objectType]=KalturaClipAttributes
+<a id="__codelineno-29-10" name="__codelineno-29-10" href="#__codelineno-29-10"></a>&amp;resource[resources][0][operationAttributes][0][offset]=350
+<a id="__codelineno-29-11" name="__codelineno-29-11" href="#__codelineno-29-11"></a>&amp;resource[resources][0][operationAttributes][0][duration]=205930
+</code></pre></div>
+<p>To include burned-in captions, add <code>captionAttributes</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>&amp;resource[resources][0][operationAttributes][0][captionAttributes][0][objectType]=KalturaRenderCaptionAttributes
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>&amp;resource[resources][0][operationAttributes][0][captionAttributes][0][captionAssetId]=$CAPTION_ASSET_ID
+</code></pre></div>
+<ul>
+<li><code>offset</code> — Start position in milliseconds from the source entry</li>
+<li><code>duration</code> — Clip length in milliseconds</li>
+<li><code>flavorParamsId</code> — Get from <code>flavorAsset.list</code> on the source entry (use the original or a ready flavor)</li>
+<li><code>captionAssetId</code> — Optional; get from <code>captionAsset.list</code> to burn captions into the clip</li>
+</ul>
+<p><strong>Step 3: Set metadata on the saved clip</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>ks=&lt;YOUR_KS&gt;
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>&amp;format=1
+<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>&amp;entryId=&lt;CLONED_ENTRY_ID&gt;
+<a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a>&amp;mediaEntry[objectType]=KalturaMediaEntry
+<a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a>&amp;mediaEntry[name]=Introduction to DLI and Its Importance
+<a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a>&amp;mediaEntry[description]=Stephen Wells introduces the session...
+<a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a>&amp;mediaEntry[tags]=DLI, Deep Learning Institute, AI Education
+<a id="__codelineno-31-8" name="__codelineno-31-8" href="#__codelineno-31-8"></a>&amp;mediaEntry[displayInSearch]=1
+</code></pre></div>
+<p>The saved clip will go through server-side transcoding (status <code>4</code> = PENDING) and become <code>READY</code> (2) when processing completes.</p>
+<h3 id="step-by-step-curl-example-full-ai-clips-workflow">Step-by-Step curl Example: Full AI Clips Workflow<a class="headerlink" href="#step-by-step-curl-example-full-ai-clips-workflow" title="Permanent link">&para;</a></h3>
+<p>Set up shell variables (see <a href="../KALTURA_SESSION_GUIDE/">Session Guide</a> for generating a KS):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KALTURA_SERVICE_URL</span><span class="o">=</span><span class="s2">&quot;https://www.kaltura.com/api_v3&quot;</span>
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KALTURA_PARTNER_ID</span><span class="o">=</span><span class="s2">&quot;YOUR_PARTNER_ID&quot;</span>
+<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KALTURA_KS</span><span class="o">=</span><span class="s2">&quot;YOUR_KS&quot;</span>
+</code></pre></div>
+<p><strong>Step 1: Order AI clip generation</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/reach_entryVendorTask/action/add&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;entryVendorTask[objectType]=KalturaEntryVendorTask&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;entryVendorTask[entryId]=</span><span class="nv">$KALTURA_ENTRY_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;entryVendorTask[reachProfileId]=</span><span class="nv">$REACH_PROFILE_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-33-7" name="__codelineno-33-7" href="#__codelineno-33-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;entryVendorTask[catalogItemId]=</span><span class="nv">$CATALOG_ITEM_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-33-8" name="__codelineno-33-8" href="#__codelineno-33-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;entryVendorTask[taskJobData][objectType]=KalturaClipsVendorTaskData&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-33-9" name="__codelineno-33-9" href="#__codelineno-33-9"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;entryVendorTask[taskJobData][outputLanguage]=English&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-33-10" name="__codelineno-33-10" href="#__codelineno-33-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;entryVendorTask[taskJobData][clipsDuration]=120&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-33-11" name="__codelineno-33-11" href="#__codelineno-33-11"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;entryVendorTask[taskJobData][instruction]=Generate+highlight+clips&quot;</span>
+</code></pre></div>
+<p>From the response, note the task <code>id</code> (e.g., <code>98765</code>).</p>
+<p><strong>Step 2: Poll for completion</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/reach_entryVendorTask/action/get&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;id=</span><span class="nv">$VENDOR_TASK_ID</span><span class="s2">&quot;</span>
+</code></pre></div>
+<p>Poll every 30 seconds until <code>status</code> is <code>2</code> (READY) or <code>6</code> (ERROR). Typical completion time for AI clips is 30-60 seconds.</p>
+<p><strong>Step 3: List generated clips</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/baseEntry/action/list&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-35-4" name="__codelineno-35-4" href="#__codelineno-35-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;filter[rootEntryIdIn]=</span><span class="nv">$KALTURA_ENTRY_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-35-5" name="__codelineno-35-5" href="#__codelineno-35-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;filter[statusIn]=1,2,4&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-35-6" name="__codelineno-35-6" href="#__codelineno-35-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;filter[orderBy]=-createdAt&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-35-7" name="__codelineno-35-7" href="#__codelineno-35-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;pager[pageSize]=500&quot;</span>
+</code></pre></div>
+<p>Each object in the response is a generated clip entry with AI-generated <code>name</code>, <code>description</code>, <code>tags</code>, and <code>duration</code>. Note the clip <code>id</code>, <code>duration</code>, and metadata for the next steps.</p>
+<p><strong>Step 4: Save a clip as a standalone entry</strong></p>
+<p>First, get a source flavor ID for trimming:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/flavorAsset/action/list&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;filter[entryIdEqual]=</span><span class="nv">$KALTURA_ENTRY_ID</span><span class="s2">&quot;</span>
+</code></pre></div>
+<p>From the response, find a flavor with <code>status</code> = <code>2</code> (READY) and note its <code>flavorParamsId</code> (e.g., <code>487091</code>).</p>
+<p>Clone the source entry:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/baseEntry/action/clone&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-37-3" name="__codelineno-37-3" href="#__codelineno-37-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-37-4" name="__codelineno-37-4" href="#__codelineno-37-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;entryId=</span><span class="nv">$KALTURA_ENTRY_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-37-5" name="__codelineno-37-5" href="#__codelineno-37-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;cloneOptions:item1:objectType=KalturaBaseEntryCloneOptionComponent&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-37-6" name="__codelineno-37-6" href="#__codelineno-37-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;cloneOptions:item1:itemType=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-37-7" name="__codelineno-37-7" href="#__codelineno-37-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;cloneOptions:item1:rule=1&quot;</span>
+</code></pre></div>
+<p>From the response, note the cloned entry <code>id</code> (e.g., <code>1_newclone99</code>).</p>
+<p>Trim the cloned entry to the clip boundaries (offset and duration in <strong>milliseconds</strong>):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/media/action/updateContent&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-38-3" name="__codelineno-38-3" href="#__codelineno-38-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-38-4" name="__codelineno-38-4" href="#__codelineno-38-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;entryId=</span><span class="nv">$CLONE_ENTRY_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-38-5" name="__codelineno-38-5" href="#__codelineno-38-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[objectType]=KalturaOperationResources&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-38-6" name="__codelineno-38-6" href="#__codelineno-38-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resources][0][objectType]=KalturaOperationResource&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-38-7" name="__codelineno-38-7" href="#__codelineno-38-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resources][0][resource][objectType]=KalturaEntryResource&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-38-8" name="__codelineno-38-8" href="#__codelineno-38-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resources][0][resource][entryId]=</span><span class="nv">$KALTURA_ENTRY_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-38-9" name="__codelineno-38-9" href="#__codelineno-38-9"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resources][0][resource][flavorParamsId]=</span><span class="nv">$FLAVOR_PARAMS_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-38-10" name="__codelineno-38-10" href="#__codelineno-38-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resources][0][operationAttributes][0][objectType]=KalturaClipAttributes&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-38-11" name="__codelineno-38-11" href="#__codelineno-38-11"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resources][0][operationAttributes][0][offset]=0&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-38-12" name="__codelineno-38-12" href="#__codelineno-38-12"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;resource[resources][0][operationAttributes][0][duration]=120000&quot;</span>
+</code></pre></div>
+<p>Set metadata on the saved clip using the AI-generated values from Step 3:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/media/action/update&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-39-4" name="__codelineno-39-4" href="#__codelineno-39-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;entryId=</span><span class="nv">$CLONE_ENTRY_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-39-5" name="__codelineno-39-5" href="#__codelineno-39-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;mediaEntry[objectType]=KalturaMediaEntry&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-39-6" name="__codelineno-39-6" href="#__codelineno-39-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;mediaEntry[name]=Introduction+to+DLI+and+Its+Importance&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-39-7" name="__codelineno-39-7" href="#__codelineno-39-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;mediaEntry[description]=Stephen+Wells+introduces+the+session&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-39-8" name="__codelineno-39-8" href="#__codelineno-39-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;mediaEntry[tags]=DLI,+Deep+Learning+Institute,+AI+Education&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-39-9" name="__codelineno-39-9" href="#__codelineno-39-9"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;mediaEntry[displayInSearch]=1&quot;</span>
+</code></pre></div>
+<p>The saved clip will go through server-side transcoding (entry status <code>4</code> = PENDING) and become <code>READY</code> (status <code>2</code>) when processing completes.</p>
+<h2 id="output-types-by-service">Output Types by Service<a class="headerlink" href="#output-types-by-service" title="Permanent link">&para;</a></h2>
+<p>When a task completes, the result is automatically attached to the entry. The <code>outputObjectId</code> field tells you what was created.</p>
+<table>
+<thead>
+<tr>
+<th>Service Feature</th>
+<th>Output Type</th>
+<th>How It's Attached</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Captions</strong> (1)</td>
+<td>Caption asset (SRT/DFXP/VTT)</td>
+<td><code>captionAsset</code> on the entry, auto-displayed if configured in REACH profile</td>
+</tr>
+<tr>
+<td><strong>Translation</strong> (2)</td>
+<td>Caption asset in target language</td>
+<td><code>captionAsset</code> with target language</td>
+</tr>
+<tr>
+<td><strong>Alignment</strong> (3)</td>
+<td>Time-synced caption asset</td>
+<td><code>captionAsset</code> aligned to audio</td>
+</tr>
+<tr>
+<td><strong>Audio Description</strong> (4)</td>
+<td>Audio flavor track</td>
+<td><code>flavorAsset</code> added to the entry (narration mixed with original audio)</td>
+</tr>
+<tr>
+<td><strong>Chaptering</strong> (5)</td>
+<td>Cue points</td>
+<td><code>cuePoint</code> entries marking chapter boundaries</td>
+</tr>
+<tr>
+<td><strong>Dubbing</strong> (7)</td>
+<td>Audio flavor track</td>
+<td><code>flavorAsset</code> with dubbed audio in target language</td>
+</tr>
+<tr>
+<td><strong>Live Caption</strong> (8)</td>
+<td>Real-time stream</td>
+<td>Captions injected into the live HLS stream via WebSocket</td>
+</tr>
+<tr>
+<td><strong>Extended Audio Description</strong> (9)</td>
+<td>VTT caption asset</td>
+<td><code>captionAsset</code> with <code>usage=1</code> (EAD), <code>displayOnPlayer=false</code></td>
+</tr>
+<tr>
+<td><strong>Clips</strong> (10)</td>
+<td>Child entries</td>
+<td>New media entries linked via <code>rootEntryId</code> — each with AI-generated name/description/tags. See <a href="#ai-clips-workflow-content-lab">AI Clips Workflow</a></td>
+</tr>
+<tr>
+<td><strong>Live Translation</strong> (11)</td>
+<td>Real-time stream</td>
+<td>Translated captions injected into the live stream</td>
+</tr>
+<tr>
+<td><strong>Quiz</strong> (12)</td>
+<td>Cue points</td>
+<td>Quiz question cue points attached to the entry</td>
+</tr>
+<tr>
+<td><strong>Summary</strong> (13)</td>
+<td>Metadata</td>
+<td>Summary and auto-generated chapters applied to entry metadata</td>
+</tr>
+<tr>
+<td><strong>Video Analysis</strong> (14)</td>
+<td>Metadata</td>
+<td>OCR text and visual analysis results applied to entry metadata</td>
+</tr>
+<tr>
+<td><strong>Moderation</strong> (15)</td>
+<td>Metadata</td>
+<td>Moderation flags and scores applied to entry metadata</td>
+</tr>
+<tr>
+<td><strong>Metadata Enrichment</strong> (16)</td>
+<td>Tags/keywords</td>
+<td>Applied to entry metadata</td>
+</tr>
+<tr>
+<td><strong>Document Enrichment</strong> (18)</td>
+<td>Metadata</td>
+<td>Enriched metadata for document entries</td>
+</tr>
+<tr>
+<td><strong>Sign Language</strong> (19)</td>
+<td>Child entry</td>
+<td>New media entry linked via <code>parentEntryId</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="reach-automation-rules">REACH Automation Rules<a class="headerlink" href="#reach-automation-rules" title="Permanent link">&para;</a></h2>
+<p>REACH profiles support automation rules that automatically order services when specific conditions are met — no application code required. Rules are evaluated by the <code>kReachManager</code> engine whenever content events occur (entry created, entry becomes READY, entry added to category, etc.).</p>
+<p>Each rule has <strong>conditions</strong> (when to trigger) and <strong>actions</strong> (what to order):</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>API Object Type</th>
+<th>Key Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rule</td>
+<td><code>KalturaRule</code></td>
+<td><code>conditions</code>, <code>actions</code>, <code>stopProcessing</code></td>
+<td>Container for one automation rule</td>
+</tr>
+<tr>
+<td>Boolean Condition</td>
+<td><code>KalturaBooleanEventNotificationCondition</code></td>
+<td><code>booleanEventNotificationIds</code></td>
+<td>References Boolean event notification template IDs that define complex conditions</td>
+</tr>
+<tr>
+<td>Category Condition</td>
+<td><code>KalturaCategoryEntryCondition</code></td>
+<td><code>categoryId</code></td>
+<td>Triggers when an entry is assigned to a specific category</td>
+</tr>
+<tr>
+<td>Action</td>
+<td><code>KalturaAddEntryVendorTaskAction</code></td>
+<td><code>catalogItemIds</code>, <code>entryObjectType</code></td>
+<td>Auto-orders the specified vendor catalog items</td>
+</tr>
+</tbody>
+</table>
+<h3 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h3>
+<ol>
+<li>A content event fires (e.g., entry reaches READY status)</li>
+<li><code>kReachManager</code> loads all active REACH profiles for the partner</li>
+<li>For each profile, it evaluates the <code>rules</code> array:</li>
+<li><strong>Boolean conditions</strong> — retrieves the referenced Boolean event notification templates and evaluates their <code>eventConditions</code> against the event scope</li>
+<li><strong>Category conditions</strong> — checks if the entry belongs to the specified category</li>
+<li><strong>No conditions</strong> — rule always triggers</li>
+<li>If conditions are met, <code>kReachManager</code> creates <code>EntryVendorTask</code> records for each <code>catalogItemId</code> in the rule's action</li>
+<li>Tasks are created with <code>creationMode = 2</code> (AUTOMATIC)</li>
+</ol>
+<h3 id="configure-rules-via-boolean-event-notification-templates">Configure Rules via Boolean Event Notification Templates<a class="headerlink" href="#configure-rules-via-boolean-event-notification-templates" title="Permanent link">&para;</a></h3>
+<p>Boolean event notification templates (see <a href="../KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API/">Webhooks API</a>) define reusable condition logic — "entry tags match a pattern", "entry status changed to READY", "metadata field contains a value". They evaluate conditions and return true/false — serving purely as filters that REACH rules reference by ID.</p>
+<p><strong>Step 1: Discover available Boolean system templates</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/eventnotification_eventnotificationtemplate/action/listTemplates&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-40-4" name="__codelineno-40-4" href="#__codelineno-40-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;filter[objectType]=KalturaEventNotificationTemplateFilter&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-40-5" name="__codelineno-40-5" href="#__codelineno-40-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;filter[typeEqual]=booleanNotification.Boolean&quot;</span>
+</code></pre></div>
+<p><strong>Step 2: Clone a Boolean template for your account</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/eventnotification_eventnotificationtemplate/action/clone&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-41-3" name="__codelineno-41-3" href="#__codelineno-41-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-41-4" name="__codelineno-41-4" href="#__codelineno-41-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;id=</span><span class="nv">$BOOLEAN_SYSTEM_TEMPLATE_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-41-5" name="__codelineno-41-5" href="#__codelineno-41-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;eventNotificationTemplate[objectType]=KalturaBooleanNotificationTemplate&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-41-6" name="__codelineno-41-6" href="#__codelineno-41-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;eventNotificationTemplate[name]=Entry Ready for Captioning&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-41-7" name="__codelineno-41-7" href="#__codelineno-41-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;eventNotificationTemplate[status]=2&quot;</span>
+</code></pre></div>
+<p>Save the cloned template's <code>id</code> — this is the <code>booleanEventNotificationIds</code> value for the REACH rule.</p>
+<p><strong>Step 3: Add the rule to your REACH profile</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/reach_reachProfile/action/update&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-42-2" name="__codelineno-42-2" href="#__codelineno-42-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-42-3" name="__codelineno-42-3" href="#__codelineno-42-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-42-4" name="__codelineno-42-4" href="#__codelineno-42-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;id=</span><span class="nv">$REACH_PROFILE_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-42-5" name="__codelineno-42-5" href="#__codelineno-42-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;reachProfile[rules][0][objectType]=KalturaRule&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-42-6" name="__codelineno-42-6" href="#__codelineno-42-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;reachProfile[rules][0][description]=Auto-caption when Boolean condition met&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-42-7" name="__codelineno-42-7" href="#__codelineno-42-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;reachProfile[rules][0][conditions][0][objectType]=KalturaBooleanEventNotificationCondition&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-42-8" name="__codelineno-42-8" href="#__codelineno-42-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;reachProfile[rules][0][conditions][0][booleanEventNotificationIds]=</span><span class="nv">$BOOLEAN_TEMPLATE_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-42-9" name="__codelineno-42-9" href="#__codelineno-42-9"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;reachProfile[rules][0][actions][0][objectType]=KalturaAddEntryVendorTaskAction&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-42-10" name="__codelineno-42-10" href="#__codelineno-42-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;reachProfile[rules][0][actions][0][catalogItemIds]=</span><span class="nv">$CATALOG_ITEM_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-42-11" name="__codelineno-42-11" href="#__codelineno-42-11"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;reachProfile[rules][0][actions][0][entryObjectType]=1&quot;</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>rules[N][objectType]</code></td>
+<td>string</td>
+<td>Always <code>KalturaRule</code></td>
+</tr>
+<tr>
+<td><code>rules[N][description]</code></td>
+<td>string</td>
+<td>Human-readable rule description</td>
+</tr>
+<tr>
+<td><code>rules[N][stopProcessing]</code></td>
+<td>boolean</td>
+<td>If true, stop evaluating subsequent rules after this one matches</td>
+</tr>
+<tr>
+<td><code>rules[N][conditions][M][objectType]</code></td>
+<td>string</td>
+<td><code>KalturaBooleanEventNotificationCondition</code> or <code>KalturaCategoryEntryCondition</code></td>
+</tr>
+<tr>
+<td><code>rules[N][conditions][M][booleanEventNotificationIds]</code></td>
+<td>string</td>
+<td>Comma-separated Boolean template IDs</td>
+</tr>
+<tr>
+<td><code>rules[N][actions][M][objectType]</code></td>
+<td>string</td>
+<td><code>KalturaAddEntryVendorTaskAction</code></td>
+</tr>
+<tr>
+<td><code>rules[N][actions][M][catalogItemIds]</code></td>
+<td>string</td>
+<td>Comma-separated vendor catalog item IDs to auto-order</td>
+</tr>
+<tr>
+<td><code>rules[N][actions][M][entryObjectType]</code></td>
+<td>integer</td>
+<td>1=ENTRY (default), 2=ASSET</td>
+</tr>
+</tbody>
+</table>
+<h3 id="category-based-rules">Category-Based Rules<a class="headerlink" href="#category-based-rules" title="Permanent link">&para;</a></h3>
+<p>For simpler triggers, use a category condition — auto-order services when an entry is added to a specific category:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/reach_reachProfile/action/update&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-43-2" name="__codelineno-43-2" href="#__codelineno-43-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-43-3" name="__codelineno-43-3" href="#__codelineno-43-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-43-4" name="__codelineno-43-4" href="#__codelineno-43-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;id=</span><span class="nv">$REACH_PROFILE_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-43-5" name="__codelineno-43-5" href="#__codelineno-43-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;reachProfile[rules][0][objectType]=KalturaRule&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-43-6" name="__codelineno-43-6" href="#__codelineno-43-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;reachProfile[rules][0][description]=Auto-caption entries in Training Videos category&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-43-7" name="__codelineno-43-7" href="#__codelineno-43-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;reachProfile[rules][0][conditions][0][objectType]=KalturaCategoryEntryCondition&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-43-8" name="__codelineno-43-8" href="#__codelineno-43-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;reachProfile[rules][0][conditions][0][categoryId]=</span><span class="nv">$CATEGORY_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-43-9" name="__codelineno-43-9" href="#__codelineno-43-9"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;reachProfile[rules][0][actions][0][objectType]=KalturaAddEntryVendorTaskAction&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-43-10" name="__codelineno-43-10" href="#__codelineno-43-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;reachProfile[rules][0][actions][0][catalogItemIds]=</span><span class="nv">$CATALOG_ITEM_ID</span><span class="s2">&quot;</span>
+</code></pre></div>
+<h3 id="always-on-rules">Always-On Rules<a class="headerlink" href="#always-on-rules" title="Permanent link">&para;</a></h3>
+<p>A rule with no conditions triggers for every entry that becomes READY:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/reach_reachProfile/action/update&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-44-2" name="__codelineno-44-2" href="#__codelineno-44-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-44-3" name="__codelineno-44-3" href="#__codelineno-44-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-44-4" name="__codelineno-44-4" href="#__codelineno-44-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;id=</span><span class="nv">$REACH_PROFILE_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-44-5" name="__codelineno-44-5" href="#__codelineno-44-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;reachProfile[rules][0][objectType]=KalturaRule&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-44-6" name="__codelineno-44-6" href="#__codelineno-44-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;reachProfile[rules][0][description]=Auto-caption all new entries&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-44-7" name="__codelineno-44-7" href="#__codelineno-44-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;reachProfile[rules][0][actions][0][objectType]=KalturaAddEntryVendorTaskAction&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-44-8" name="__codelineno-44-8" href="#__codelineno-44-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;reachProfile[rules][0][actions][0][catalogItemIds]=</span><span class="nv">$CAPTION_CATALOG_ID</span><span class="s2">,</span><span class="nv">$TRANSLATION_CATALOG_ID</span><span class="s2">&quot;</span>
+</code></pre></div>
+<p>Multiple <code>catalogItemIds</code> (comma-separated) orders multiple services simultaneously — e.g., captions and translation in one rule.</p>
+<h3 id="multiple-rules-with-priority">Multiple Rules with Priority<a class="headerlink" href="#multiple-rules-with-priority" title="Permanent link">&para;</a></h3>
+<p>Rules are evaluated in array order. Set <code>stopProcessing=1</code> so evaluation stops after the matching rule:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;reachProfile[rules][0][objectType]=KalturaRule&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-45-2" name="__codelineno-45-2" href="#__codelineno-45-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;reachProfile[rules][0][stopProcessing]=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-45-3" name="__codelineno-45-3" href="#__codelineno-45-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;reachProfile[rules][0][conditions][0][objectType]=KalturaBooleanEventNotificationCondition&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-45-4" name="__codelineno-45-4" href="#__codelineno-45-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;reachProfile[rules][0][conditions][0][booleanEventNotificationIds]=</span><span class="nv">$NOTIFICATION_ID_1</span><span class="s2">,</span><span class="nv">$NOTIFICATION_ID_2</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-45-5" name="__codelineno-45-5" href="#__codelineno-45-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;reachProfile[rules][0][actions][0][objectType]=KalturaAddEntryVendorTaskAction&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-45-6" name="__codelineno-45-6" href="#__codelineno-45-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;reachProfile[rules][0][actions][0][catalogItemIds]=</span><span class="nv">$CATALOG_ITEM_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-45-7" name="__codelineno-45-7" href="#__codelineno-45-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;reachProfile[rules][1][objectType]=KalturaRule&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-45-8" name="__codelineno-45-8" href="#__codelineno-45-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;reachProfile[rules][1][conditions][0][objectType]=KalturaCategoryEntryCondition&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-45-9" name="__codelineno-45-9" href="#__codelineno-45-9"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;reachProfile[rules][1][conditions][0][categoryId]=</span><span class="nv">$CATEGORY_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-45-10" name="__codelineno-45-10" href="#__codelineno-45-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;reachProfile[rules][1][actions][0][objectType]=KalturaAddEntryVendorTaskAction&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-45-11" name="__codelineno-45-11" href="#__codelineno-45-11"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;reachProfile[rules][1][actions][0][catalogItemIds]=</span><span class="nv">$CATALOG_ITEM_ID_2</span><span class="s2">&quot;</span>
+</code></pre></div>
+<p>When rule 0's Boolean conditions are met and <code>stopProcessing=1</code>, rule evaluation stops — only rule 0's actions execute.</p>
+<h3 id="verifying-automatic-task-creation">Verifying Automatic Task Creation<a class="headerlink" href="#verifying-automatic-task-creation" title="Permanent link">&para;</a></h3>
+<p>After triggering an event that matches your rule conditions, verify the task was created automatically:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-46-1" name="__codelineno-46-1" href="#__codelineno-46-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/reach_entryVendorTask/action/list&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-46-2" name="__codelineno-46-2" href="#__codelineno-46-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-46-3" name="__codelineno-46-3" href="#__codelineno-46-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-46-4" name="__codelineno-46-4" href="#__codelineno-46-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;filter[objectType]=KalturaEntryVendorTaskFilter&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-46-5" name="__codelineno-46-5" href="#__codelineno-46-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;filter[entryIdEqual]=</span><span class="nv">$KALTURA_ENTRY_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-46-6" name="__codelineno-46-6" href="#__codelineno-46-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;filter[creationModeEqual]=2&quot;</span>
+</code></pre></div>
+<p>Filter by <code>creationModeEqual=2</code> (AUTOMATIC) to see only rule-generated tasks. The task's <code>reachProfileId</code> indicates which profile's rule triggered it.</p>
+<h2 id="reach-with-kaltura-agents">REACH with Kaltura Agents<a class="headerlink" href="#reach-with-kaltura-agents" title="Permanent link">&para;</a></h2>
+<p>When used through the <a href="../KALTURA_AGENTS_MANAGER_API/">Agents Manager</a>, REACH tasks are created automatically. The Agents Manager's Action Definitions API returns <code>catalogItemId</code> values that map directly to the REACH <code>vendorCatalogItem</code> IDs described in this guide.</p>
+<ul>
+<li>Agents set <code>creationMode = 2</code> (AUTOMATIC) on tasks they create</li>
+<li>The agent handles task creation, status tracking, and retry logic</li>
+<li>Results are applied to entries in the same way as manual REACH orders</li>
+</ul>
+<p>The Agents Manager supports these REACH services as automated actions: <strong>captions, translation, dubbing, summary, moderation, and metadata enrichment</strong>. For <strong>AI Clips, Quiz, Live Captions, Live Translation, and Video Analysis</strong>, use the REACH API directly via <code>entryVendorTask.add</code>. See the <a href="../KALTURA_AGENTS_MANAGER_API/#kaltura-reach--the-services-behind-agent-actions">Agents Manager guide</a> for the full mapping.</p>
+<p>You can mix approaches: use Agents for automated bulk processing, the REACH API directly for on-demand requests, and REACH automation rules for condition-based automatic ordering.</p>
+<h2 id="dictionaries-custom-vocabularies">Dictionaries (Custom Vocabularies)<a class="headerlink" href="#dictionaries-custom-vocabularies" title="Permanent link">&para;</a></h2>
+<p>For machine captioning, you can configure <strong>dictionaries</strong> on your REACH profile to improve accuracy for domain-specific terminology.</p>
+<ul>
+<li>One dictionary per language</li>
+<li>Maximum 8,000 characters</li>
+<li>Words/phrases separated by line breaks</li>
+<li>Configured via the <code>dictionaries</code> field on the REACH profile</li>
+<li>Passed automatically to the machine captioning engine with each task</li>
+</ul>
+<p>For human captioning, use the <code>notes</code> field on the task to provide terminology guidance and context to the human editor.</p>
+<h1 id="9-error-handling">9. Error Handling<a class="headerlink" href="#9-error-handling" title="Permanent link">&para;</a></h1>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>What Happens</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Entry not ready yet</td>
+<td>Task starts in PENDING_ENTRY_READY (8), auto-transitions to PENDING (1) when ready</td>
+</tr>
+<tr>
+<td>Vendor processing fails</td>
+<td>Task status becomes ERROR (6), check <code>errDescription</code> for details</td>
+</tr>
+<tr>
+<td>Credit limit exceeded</td>
+<td>Task creation fails with an API error</td>
+</tr>
+<tr>
+<td>Access key expired</td>
+<td>Vendor-side issue; key auto-extends based on catalog item TAT</td>
+</tr>
+<tr>
+<td>KS expired / invalid</td>
+<td>API returns 401/403; generate a new KS and retry</td>
+</tr>
+<tr>
+<td>Kaltura API error</td>
+<td>Response <code>objectType</code> is <code>KalturaAPIException</code> with <code>code</code> and <code>message</code> fields</td>
+</tr>
+</tbody>
+</table>
+<h3 id="common-api-error-codes">Common API Error Codes<a class="headerlink" href="#common-api-error-codes" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ENTRY_VENDOR_TASK_NOT_FOUND</code></td>
+<td>Task was cancelled/aborted (and deleted) or never existed</td>
+</tr>
+<tr>
+<td><code>ENTRY_NOT_READY</code></td>
+<td>The entry must have content and be fully processed (status=2 READY) before ordering a task</td>
+</tr>
+<tr>
+<td><code>SERVICE_ACCESS_CONTROL_RESTRICTED</code></td>
+<td>Verify the <code>serviceUrl</code> configuration is correct for your region</td>
+</tr>
+<tr>
+<td><code>INVALID_KS</code></td>
+<td>KS is expired, malformed, or lacks required privileges</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Retry strategy:</strong> For transient errors (HTTP 5xx, timeouts), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (<code>INVALID_KS</code>, <code>ENTRY_VENDOR_TASK_NOT_FOUND</code>, credit limit exceeded), correct the request before retrying — these require a valid request to succeed. For async operations (task processing), poll with increasing intervals (5s, 10s, 30s) to balance responsiveness with efficiency.</p>
+<h1 id="10-best-practices">10. Best Practices<a class="headerlink" href="#10-best-practices" title="Permanent link">&para;</a></h1>
+<ul>
+<li><strong>Use REACH Automation Rules for automatic processing.</strong> Set always-on rules or Boolean condition rules on your REACH profile to automatically enrich every new entry — the platform handles per-entry task submission for you.</li>
+<li><strong>Use Agents Manager for multi-step workflows.</strong> For "caption → translate → summarize" pipelines, use Agents Manager — it handles sequencing, status tracking, and retry logic automatically.</li>
+<li><strong>Check credit before bulk operations.</strong> Query <code>reachProfile.get</code> to compare <code>credit</code> vs <code>usedCredit</code> before submitting large batches.</li>
+<li><strong>Use machine captions (serviceType=2) for speed.</strong> Machine captions complete in minutes; human captions take hours. Use machine for time-sensitive content and human for high-accuracy needs.</li>
+<li><strong>Poll task status with backoff.</strong> Use <code>entryVendorTask.get</code> with increasing intervals. For machine captions (serviceType=2), start polling after 30 seconds with 30-second intervals — tasks typically complete in 1-5 minutes. For human captions (serviceType=1), poll every 15-30 minutes — tasks take hours to days depending on the turn-around time. For AI clips, poll every 30 seconds after submission. Prefer webhooks on <code>ENTRY_VENDOR_TASK</code> events for the most efficient completion notifications.</li>
+<li><strong>Use <code>creationModeEqual=2</code> filter</strong> to distinguish auto-created tasks (from automation rules) from manually submitted tasks in reports.</li>
+<li><strong>Use webhooks for task completion notifications.</strong> Set up an HTTP webhook on <code>ENTRY_VENDOR_TASK</code> events for real-time status change notifications with minimal overhead.</li>
+<li><strong>Configure dictionaries for domain-specific content.</strong> Add custom vocabulary (product names, technical terms) to improve machine captioning accuracy.</li>
+</ul>
+<h1 id="11-related-guides">11. Related Guides<a class="headerlink" href="#11-related-guides" title="Permanent link">&para;</a></h1>
+<ul>
+<li><strong><a href="../KALTURA_SESSION_GUIDE/">Session Guide</a></strong> — Generate the KS required for all REACH API calls</li>
+<li><strong><a href="../KALTURA_APPTOKENS_API/">AppTokens</a></strong> — Secure server-to-server auth for production REACH integrations</li>
+<li><strong><a href="../KALTURA_UPLOAD_AND_INGESTION_API/">Upload &amp; Ingestion</a></strong> — Upload content before ordering REACH enrichment services</li>
+<li><strong><a href="../KALTURA_ESEARCH_API/">eSearch</a></strong> — Search entries enriched by REACH-generated captions, metadata, and tags</li>
+<li><strong><a href="../KALTURA_AI_GENIE_API/">AI Genie</a></strong> — Conversational AI that benefits from REACH-generated transcripts and enrichment</li>
+<li><strong><a href="../KALTURA_PLAYER_EMBED_GUIDE/">Player Embed</a></strong> — Play entries with REACH-generated captions, translations, and audio descriptions</li>
+<li><strong><a href="../KALTURA_AGENTS_MANAGER_API/">Agents Manager</a></strong> — Automate REACH tasks with event-driven agents</li>
+<li><strong><a href="../KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API/">Webhooks API</a></strong> — Boolean templates as REACH automation rule conditions; HTTP callbacks for task completion events</li>
+<li><strong><a href="../KALTURA_CAPTIONS_AND_TRANSCRIPTS_API/">Captions &amp; Transcripts API</a></strong> — Caption assets created and managed by REACH tasks; format conversion, multi-language workflows</li>
+<li><strong><a href="../KALTURA_CUSTOM_METADATA_API/">Custom Metadata API</a></strong> — Custom metadata schemas for content enrichment</li>
+<li><strong><a href="../KALTURA_ANALYTICS_REPORTS_API/">Analytics Reports</a></strong> — Monitor REACH task volumes and costs via reports  </li>
+<li><strong><a href="../KALTURA_MODERATION_API/">Moderation API</a></strong> — AI moderation via REACH (serviceFeature=15), policies, rules, and category auto-action  </li>
+<li><strong><a href="../KALTURA_CONTENT_LAB_API/">Content Lab</a></strong> — Unisphere widget UI for REACH enrichment (summaries, chapters, clips, quizzes)  </li>
+<li><strong><a href="../KALTURA_AGENTS_WIDGET_API/">Agents Widget</a></strong> — Management UI for automated REACH enrichment tasks  </li>
+<li><strong><a href="../KALTURA_EVENTS_PLATFORM_API/">Events Platform</a></strong> — Auto-enrich virtual event recordings with REACH services  </li>
+<li><strong><a href="../KALTURA_CAPTIONS_EDITOR_API/">Captions Editor</a></strong> — Interactive editing of REACH-generated captions  </li>
+<li><strong><a href="../KALTURA_MULTI_STREAM_API/">Multi-Stream</a></strong> — Apply REACH enrichment to parent and child stream entries  </li>
+<li><strong><a href="../KALTURA_VOD_AVATAR_API/">VOD Avatar</a></strong> — Enrich generated avatar videos with REACH services</li>
+<li><strong><a href="../KALTURA_CUE_POINTS_API/">Cue Points &amp; Interactive Video</a></strong> — Chapters, quizzes, and clips generated by REACH services are stored as cue points</li>
+<li><strong><a href="../KALTURA_QUIZ_API/">Quiz API</a></strong> — Quiz questions generated by REACH / Content Lab</li>
+<li><strong><a href="../KALTURA_CHAPTERS_AND_SLIDES_API/">Chapters &amp; Slides API</a></strong> — Chapters and slides generated by REACH enrichment</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

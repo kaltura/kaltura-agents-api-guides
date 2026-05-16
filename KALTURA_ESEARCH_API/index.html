@@ -1,0 +1,3591 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Kaltura — The Agentic Digital Experience Platform. Live-tested API guides for AI agents and developers. 52 guides covering authentication, content management, search, playback, AI services, virtual events, experience components, cue points & interactive video, analytics, distribution, moderation, LTI integration, and more — with 1000+ companion tests validated against the live Kaltura API.">
+      
+      
+        <meta name="author" content="Kaltura Inc.">
+      
+      
+        <link rel="canonical" href="https://kaltura.md/KALTURA_ESEARCH_API/">
+      
+      
+        <link rel="prev" href="../KALTURA_THUMBNAIL_API/">
+      
+      
+        <link rel="next" href="../KALTURA_ACCESS_CONTROL_API/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>eSearch - Kaltura API Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,700,700i%7CSource+Code+Pro:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Source Sans Pro";--md-code-font:"Source Code Pro"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  
+  
+  <link rel="alternate" type="text/markdown" title="Markdown version for AI agents" href="/raw/KALTURA_ESEARCH_API.md" />
+  
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#kaltura-esearch-api" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Kaltura API Guides" class="md-header__button md-logo" aria-label="Kaltura API Guides" data-md-component="logo">
+      
+  <img src="../assets/images/logo-white.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Kaltura API Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              eSearch
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/kaltura/kaltura-agents-api-guides" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    kaltura/kaltura-agents-api-guides
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_GETTING_CREDENTIALS/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_SESSION_GUIDE/" class="md-tabs__link">
+          
+  
+  
+  Authentication
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../KALTURA_UPLOAD_AND_INGESTION_API/" class="md-tabs__link">
+          
+  
+  
+  Content Management
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_REACH_API/" class="md-tabs__link">
+          
+  
+  
+  AI Services
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_PLAYER_EMBED_GUIDE/" class="md-tabs__link">
+          
+  
+  
+  Playback & Experiences
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_EVENTS_PLATFORM_API/" class="md-tabs__link">
+          
+  
+  
+  Events & Collaboration
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_ANALYTICS_REPORTS_API/" class="md-tabs__link">
+          
+  
+  
+  Analytics
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API/" class="md-tabs__link">
+          
+  
+  
+  Integration & Automation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_MODERATION_API/" class="md-tabs__link">
+          
+  
+  
+  Content Moderation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_MULTI_ACCOUNT_MANAGEMENT_API/" class="md-tabs__link">
+          
+  
+  
+  Administration
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../CONTRIBUTING/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../PLAN/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Roadmap
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Kaltura API Guides" class="md-nav__button md-logo" aria-label="Kaltura API Guides" data-md-component="logo">
+      
+  <img src="../assets/images/logo-white.svg" alt="logo">
+
+    </a>
+    Kaltura API Guides
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/kaltura/kaltura-agents-api-guides" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    kaltura/kaltura-agents-api-guides
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_GETTING_CREDENTIALS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Credentials
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_API_GETTING_STARTED/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GUIDE_MAP/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guide Map
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Authentication
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Authentication
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_SESSION_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Session (KS) Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_APPTOKENS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AppTokens API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AUTH_BROKER_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Auth Broker (SSO/SAML)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Content Management
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Content Management
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_UPLOAD_AND_INGESTION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Upload & Ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_VIDEO_EDITING_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Video Editing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CONTENT_DELIVERY_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Content Delivery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_THUMBNAIL_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thumbnail API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    eSearch
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ACCESS_CONTROL_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Access Control
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CATEGORIES_AND_ENTITLEMENTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Categories & Entitlements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CUSTOM_METADATA_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Metadata
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CAPTIONS_AND_TRANSCRIPTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Captions & Transcripts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MULTI_STREAM_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Stream
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_USER_MANAGEMENT_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Services
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    AI Services
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_REACH_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REACH API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CONTENT_LAB_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REACH — AI Clips
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AGENTS_MANAGER_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agents Manager
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AI_GENIE_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Genie
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playback & Experiences
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Playback & Experiences
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_PLAYER_EMBED_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Player Embed
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_EXPERIENCE_COMPONENTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Experience Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_UNISPHERE_FRAMEWORK_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unisphere Framework
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_GENIE_WIDGET_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Genie Widget
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MEDIA_MANAGER_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Media Manager
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CONTENT_LAB_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REACH — AI Clips
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AGENTS_WIDGET_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agents Widget
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_VOD_AVATAR_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VOD Avatar Studio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CONVERSATIONAL_AVATAR_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conversational Avatar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CUE_POINTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cue Points & Interactive Video
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_QUIZ_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quiz
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CHAPTERS_AND_SLIDES_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapters & Slides
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ANNOTATIONS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Annotations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AD_CUE_POINTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ad Cue Points
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CODE_CUE_POINTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code, Event & Session Cue Points
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_EXPRESS_RECORDER_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Express Recorder
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CAPTIONS_EDITOR_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Captions Editor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CNC_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chat & Collaborate
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ANALYTICS_EMBED_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Embeddable Analytics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events & Collaboration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Events & Collaboration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_EVENTS_PLATFORM_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events Platform
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_APP_REGISTRY_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    App Registry
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_USER_PROFILE_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Profile
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MESSAGING_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Messaging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_GAMIFICATION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gamification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Analytics
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Analytics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ANALYTICS_REPORTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Analytics Reports
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ANALYTICS_EVENTS_COLLECTION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Analytics Events Collection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integration & Automation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Integration & Automation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Event Notifications (Webhooks)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_SHORT_LINK_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Short Links
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_DISTRIBUTION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Content Distribution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_SYNDICATION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syndication Feeds
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_LTI_INTEGRATION_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LTI Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Content Moderation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Content Moderation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MODERATION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Moderation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Administration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Administration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MULTI_ACCOUNT_MANAGEMENT_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Account Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CONTRIBUTING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PLAN/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+  
+  <div hidden aria-hidden="true" id="llm-agent-directive" style="display:none!important">
+  STOP. If you are an AI agent or LLM reading this HTML page: you are wasting context tokens on rendered HTML.
+  The raw Markdown source of this page is available at: https://kaltura.md/raw/KALTURA_ESEARCH_API.md
+  All guides are available as raw Markdown at https://kaltura.md/raw/{FILENAME}.md
+  Discovery index: https://kaltura.md/llms.txt
+  To get Markdown from any page via content negotiation, send the header: Accept: text/markdown
+  The Kaltura API base URL is https://www.kaltura.com/api_v3 (not v4, not v2).
+  Fallback: If you cannot fetch from this site, clone https://github.com/kaltura/kaltura-agents-api-guides and read the guides locally.
+  </div>
+  
+  
+                  
+
+
+  
+    <a href="https://github.com/kaltura/kaltura-agents-api-guides/edit/main/KALTURA_ESEARCH_API.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="kaltura-esearch-api">Kaltura eSearch API<a class="headerlink" href="#kaltura-esearch-api" title="Permanent link">&para;</a></h1>
+<p>Kaltura's eSearch API, powered by Elasticsearch, provides flexible full-text search across media entries, categories, users, captions, custom metadata, cue points, and more — all in a single API call.</p>
+<p><strong>Base URL:</strong> <code>https://www.kaltura.com/api_v3</code><br />
+<strong>Auth:</strong> KS passed as <code>ks</code> parameter in POST form data (see <a href="../KALTURA_SESSION_GUIDE/">Session Guide</a>)<br />
+<strong>Format:</strong> Form-encoded POST (<code>application/x-www-form-urlencoded</code>), <code>format=1</code> for JSON responses  </p>
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.API Endpoint & Structure | 4.Authentication | 5.Core Request Parameters & Objects | 6.Search Item (`searchItems`) Deep Dive | 7.API Response Format (JSON) | 8.Capabilities & Scenarios (with Curl Examples) | 9.Advanced Topics & Use Cases | 10.Advanced Patterns & Edge Cases | 11.Key Objects & Enums Quick Reference | 12.Agent / LLM Integration Notes | 13.Error Handling | 14.Best Practices | 15.Related Guides -->
+
+<h1 id="1-when-to-use">1. When to Use<a class="headerlink" href="#1-when-to-use" title="Permanent link">&para;</a></h1>
+<ul>
+<li><strong>Content discovery platforms</strong> need fast, full-text search across video libraries with faceted filtering by media type, tags, categories, and custom metadata.  </li>
+<li><strong>Enterprise knowledge management</strong> requires searching inside captions, transcripts, and cue points to find the exact moment a topic is discussed.  </li>
+<li><strong>AI-powered content workflows</strong> use eSearch aggregations and cross-entity queries to analyze content distribution, identify gaps, and surface relevant media.  </li>
+<li><strong>Custom portal and app builders</strong> implement search-as-you-type experiences with ranked results, highlighted matches, and paginated browsing.</li>
+</ul>
+<h1 id="2-prerequisites">2. Prerequisites<a class="headerlink" href="#2-prerequisites" title="Permanent link">&para;</a></h1>
+<ul>
+<li><strong>Kaltura Session (KS):</strong> USER KS (type=0) is sufficient for search operations; ADMIN KS (type=2) for searching across all content regardless of ownership. See <a href="../KALTURA_SESSION_GUIDE/">Session Guide</a> for generation methods.  </li>
+<li><strong>Partner ID and API credentials:</strong> Available from your Kaltura Management Console (KMC) under Settings &gt; Integration Settings.  </li>
+<li><strong>Service URL:</strong> Set <code>$KALTURA_SERVICE_URL</code> to your account's regional endpoint (default: <code>https://www.kaltura.com/api_v3</code>).  </li>
+<li><strong>eSearch enabled:</strong> eSearch (Elasticsearch-based) is enabled by default on all Kaltura accounts. Content is indexed automatically upon creation and update.</li>
+</ul>
+<h1 id="3-api-endpoint-structure">3. API Endpoint &amp; Structure<a class="headerlink" href="#3-api-endpoint-structure" title="Permanent link">&para;</a></h1>
+<ul>
+<li><strong>Service:</strong> <code>elasticsearch_esearch</code></li>
+<li><strong>Primary Actions:</strong><ul>
+<li><code>searchEntry</code>: Search across media entries and their related data.</li>
+<li><code>searchCategory</code>: Search category objects.</li>
+<li><code>searchUser</code>: Search user objects.</li>
+<li><code>searchGroup</code>: Search group objects.</li>
+</ul>
+</li>
+<li><strong>Endpoint Format:</strong> <code>$KALTURA_SERVICE_URL/service/elasticsearch_esearch/action/{action}</code></li>
+<li><strong>HTTP Method:</strong> <code>POST</code></li>
+<li><strong>Data Format:</strong> <code>application/x-www-form-urlencoded</code> (Form Data). Nested parameters use standard array notation (e.g., <code>param[key][subkey]=value</code>).</li>
+</ul>
+<h1 id="4-authentication">4. Authentication<a class="headerlink" href="#4-authentication" title="Permanent link">&para;</a></h1>
+<p>Include the <code>ks</code> as part of the POST form data:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span>
+</code></pre></div>
+<h1 id="5-core-request-parameters-objects">5. Core Request Parameters &amp; Objects<a class="headerlink" href="#5-core-request-parameters-objects" title="Permanent link">&para;</a></h1>
+<p>Requests are built using specific Kaltura objects passed as form parameters.</p>
+<ul>
+<li><strong><code>ks</code></strong> (String): Your valid Kaltura Session string.</li>
+<li><strong><code>format</code></strong> (Integer): Response format. Use <code>1</code> for JSON (recommended).</li>
+<li><strong><code>searchParams</code></strong> (Object): The primary container for your search criteria. The specific type depends on the action (e.g., <code>KalturaESearchEntryParams</code> for <code>searchEntry</code>).<ul>
+<li><strong><code>searchOperator</code></strong> (Object, e.g., <code>KalturaESearchEntryOperator</code>): Defines the core search logic.<ul>
+<li><code>operator</code> (Enum <code>KalturaESearchOperatorType</code>): How to combine the <code>searchItems</code>.<ul>
+<li><code>1</code> (<code>AND_OP</code>): All conditions must be met.</li>
+<li><code>2</code> (<code>OR_OP</code>): At least one condition must be met.</li>
+<li><code>3</code> (<code>NOT_OP</code>): Excludes items matching the nested conditions (typically used within an AND/OR operator).</li>
+</ul>
+</li>
+<li><code>searchItems</code> (Array): An array of one or more Search Item objects (see Section 7) defining the specific criteria.</li>
+</ul>
+</li>
+<li><strong><code>orderBy</code></strong> (Object <code>KalturaESearchOrderBy</code>, optional): Defines sorting.<ul>
+<li><code>orderItems</code> (Array): Each item specifies sorting. Use the <strong>concrete</strong> type for the search action: <code>KalturaESearchEntryOrderByItem</code> for <code>searchEntry</code>, <code>KalturaESearchCategoryOrderByItem</code> for <code>searchCategory</code>, <code>KalturaESearchUserOrderByItem</code> for <code>searchUser</code>, <code>KalturaESearchGroupOrderByItem</code> for <code>searchGroup</code>. The abstract <code>KalturaESearchOrderByItem</code> returns <code>OBJECT_TYPE_ABSTRACT</code>.<ul>
+<li><code>sortField</code> (Enum, e.g., <code>KalturaESearchEntryOrderByFieldName</code>): Field like <code>created_at</code>, <code>plays</code>, <code>name</code>, <code>last_played_at</code>.</li>
+<li><code>sortOrder</code> (Enum <code>KalturaESearchSortOrder</code>): <code>asc</code> or <code>desc</code>.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong><code>aggregations</code></strong> (Object <code>KalturaESearchAggregation</code>, optional): Defines aggregations (see Example G in Section 8). Note the double nesting: <code>searchParams[aggregations][aggregations][0]</code> — the outer <code>aggregations</code> is the container object, the inner <code>aggregations</code> is the array of items.<ul>
+<li><code>aggregations</code> (Array of <code>KalturaESearchAggregationItem</code>): Each item specifies:<ul>
+<li><code>fieldName</code> (Enum, e.g., <code>KalturaESearchEntryAggregateByFieldName</code>): Field to group by, like <code>media_type</code>.</li>
+<li><code>size</code> (Integer): Max number of aggregation buckets to return.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong><code>pager</code></strong> (Object <code>KalturaPager</code>, optional): Controls pagination.<ul>
+<li><code>pageIndex</code> (Integer): The page number to retrieve (starts at 1).</li>
+<li><code>pageSize</code> (Integer): Number of results per page (default 30, max 500).</li>
+</ul>
+</li>
+</ul>
+<h1 id="6-search-item-searchitems-deep-dive">6. Search Item (<code>searchItems</code>) Deep Dive<a class="headerlink" href="#6-search-item-searchitems-deep-dive" title="Permanent link">&para;</a></h1>
+<p>These objects define <em>what</em> you're searching for within the <code>searchOperator.searchItems</code> array.</p>
+<p><strong>Common Search Item Types:</strong></p>
+<ul>
+<li><code>KalturaESearchUnifiedItem</code>: Searches across multiple standard fields (name, description, tags, captions, etc.). Ideal for general keyword searches.</li>
+<li><code>KalturaESearchEntryItem</code>: Targets specific fields within a <code>KalturaMediaEntry</code> or <code>KalturaBaseEntry</code>.</li>
+<li><code>KalturaESearchCaptionItem</code>: Searches specifically within caption content.</li>
+<li><code>KalturaESearchEntryMetadataItem</code>: Searches within custom metadata fields linked to entries.</li>
+<li><code>KalturaESearchCuePointItem</code>: Searches within data fields of cue points linked to entries.</li>
+<li><em>(Similar items exist for Category, User, Group searches, e.g., <code>KalturaESearchCategoryItem</code>)</em></li>
+</ul>
+<p><strong>Key Properties for Search Items:</strong></p>
+<ul>
+<li><code>objectType</code> (String): <em>Required.</em> The specific Kaltura class name (e.g., <code>"KalturaESearchUnifiedItem"</code>).</li>
+<li><code>searchTerm</code> (String): The keyword, phrase, or value to search for. Ignored if <code>itemType</code> is <code>EXISTS</code> or <code>RANGE</code>.</li>
+<li><code>itemType</code> (Enum <code>KalturaESearchItemType</code>): <em>Required.</em> Defines the matching strategy:<ul>
+<li><code>1</code> (<code>EXACT_MATCH</code>): Matches the exact term (case-insensitive, tokenized).</li>
+<li><code>2</code> (<code>PARTIAL</code>): Allows partial word matches and utilizes synonym expansion (e.g., 'delicious' finds 'yummy').</li>
+<li><code>3</code> (<code>STARTS_WITH</code>): Matches terms that begin with the <code>searchTerm</code>.</li>
+<li><code>4</code> (<code>EXISTS</code>): Checks if the specified <code>fieldName</code> has <em>any</em> value.</li>
+<li><code>5</code> (<code>RANGE</code>): Performs a range query using the <code>range</code> property.</li>
+</ul>
+</li>
+<li><code>fieldName</code> (Enum): <em>Required for non-Unified items.</em> Specifies the target field (e.g., <code>KalturaESearchEntryFieldName::NAME</code>, <code>KalturaESearchCaptionFieldName::CONTENT</code>).</li>
+<li><code>addHighlight</code> (Boolean, optional): Default <code>false</code>. Set to <code>true</code> to receive highlighted snippets in the response showing where matches occurred.</li>
+<li><code>range</code> (Object <code>KalturaESearchRange</code>): <em>Required if <code>itemType</code> is <code>RANGE</code>.</em> Defines the boundaries:<ul>
+<li><code>greaterThanOrEqual</code> (Integer)</li>
+<li><code>lessThanOrEqual</code> (Integer)</li>
+<li><code>greaterThan</code> (Integer)</li>
+<li><code>lessThan</code> (Integer)</li>
+<li><em>(Use epoch timestamps in seconds for date fields like <code>created_at</code>)</em>.</li>
+</ul>
+</li>
+<li><code>metadataProfileId</code> (Integer, for Metadata items): ID of the metadata profile to search within.</li>
+<li><code>xpath</code> (String, optional for Metadata items): Targets a specific XML path within the metadata. If omitted, searches all fields in the profile.</li>
+</ul>
+<h1 id="7-api-response-format-json">7. API Response Format (JSON)<a class="headerlink" href="#7-api-response-format-json" title="Permanent link">&para;</a></h1>
+<p>The API typically returns a JSON object structured as follows:</p>
+<ul>
+<li><strong><code>totalCount</code></strong> (Integer): The total number of results matching the query, irrespective of pagination.</li>
+<li><strong><code>objects</code></strong> (Array): An array where each element represents a matched item (e.g., an entry result).<ul>
+<li><strong><code>object</code></strong> (Object): The core Kaltura object itself (e.g., <code>KalturaMediaEntry</code>, <code>KalturaCategory</code>) containing its standard properties (<code>id</code>, <code>name</code>, <code>description</code>, <code>createdAt</code>, etc.).</li>
+<li><strong><code>highlight</code></strong> (Array, optional): An array of <code>KalturaESearchHighlight</code> objects, present if <code>addHighlight</code> was requested.<ul>
+<li><code>fieldName</code> (String): The field where a match was found (e.g., <code>"name"</code>, <code>"description"</code>, <code>"captions_content"</code>).</li>
+<li><code>hits</code> (Array): An array of <code>KalturaString</code> objects, each containing:<ul>
+<li><code>value</code> (String): The text snippet with the match highlighted via <code>&lt;em&gt;...&lt;/em&gt;</code> tags.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong><code>itemsData</code></strong> (Array, optional): Contains more granular results when searching within nested data like captions or metadata. Each element is a <code>KalturaESearchItemDataResult</code>.<ul>
+<li><code>totalCount</code> (Integer): Number of specific items found (e.g., matching caption lines).</li>
+<li><code>items</code> (Array): Array of specific data items (e.g., <code>KalturaESearchCaptionItemData</code>, <code>KalturaESearchMetadataItemData</code>). These objects contain details like the specific caption line text, start/end times, or metadata field values. They might <em>also</em> contain their own nested <code>highlight</code> array.</li>
+<li><code>itemsType</code> (String): Indicates the type of items (e.g., <code>"caption"</code>, <code>"metadata"</code>).</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong><code>aggregations</code></strong> (Array, optional): Present if aggregations were requested. Contains <code>KalturaESearchAggregationResponseItem</code> objects.<ul>
+<li><code>fieldName</code> (String): The field used for aggregation (e.g., <code>"media_type"</code>).</li>
+<li><code>buckets</code> (Array): Array of <code>KalturaESearchAggregationBucket</code> objects.<ul>
+<li><code>value</code> (String): The specific value for the bucket (e.g., <code>"1"</code> for video media type).</li>
+<li><code>count</code> (Integer): The number of results falling into this bucket.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="8-capabilities-scenarios-with-curl-examples">8. Capabilities &amp; Scenarios (with Curl Examples)<a class="headerlink" href="#8-capabilities-scenarios-with-curl-examples" title="Permanent link">&para;</a></h1>
+<p>Examples pipe to <code>jq</code> for readability.</p>
+<p><strong>A. Basic Unified Keyword Search with Highlighting</strong>
+* <strong>Goal:</strong> Find entries matching "visual studio code" anywhere, show highlights.
+* <strong>Capability:</strong> Unified search, Highlighting, Partial/Synonym matching.
+* <strong>Curl:</strong>
+    <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/elasticsearch_esearch/action/searchEntry&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][objectType]=KalturaESearchUnifiedItem&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][searchTerm]=visual studio code&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][itemType]=2&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][addHighlight]=true&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][objectType]=KalturaESearchEntryOperator&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[objectType]=KalturaESearchEntryParams&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+</code></pre></div></p>
+<p><strong>Response:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">&quot;totalCount&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="p">,</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nt">&quot;objects&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">      </span><span class="nt">&quot;object&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1_abc123&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;objectType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;KalturaMediaEntry&quot;</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">      </span><span class="nt">&quot;highlight&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nt">&quot;fieldName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;name&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;hits&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;em&gt;search term&lt;/em&gt; in title&quot;</span><span class="w"> </span><span class="p">}],</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">      </span><span class="nt">&quot;itemsData&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="err">...</span><span class="p">]</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span><span class="p">],</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span><span class="nt">&quot;objectType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;KalturaESearchEntryResponse&quot;</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="p">}</span>
+</code></pre></div></p>
+<p><strong>B. Field-Specific Search (Entry Name, Starts With)</strong>
+* <strong>Goal:</strong> Find entries where the name starts with "AI Hacker".
+* <strong>Capability:</strong> Field-specific search, Starts With matching.
+* <strong>Curl:</strong>
+    <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/elasticsearch_esearch/action/searchEntry&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][objectType]=KalturaESearchEntryItem&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][searchTerm]=AI Hacker&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][itemType]=3&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][fieldName]=name&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][objectType]=KalturaESearchEntryOperator&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[objectType]=KalturaESearchEntryParams&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+</code></pre></div></p>
+<p><strong>C. Multi-Language Caption Search</strong>
+* <strong>Goal:</strong> Find entries with the Chinese word 食谱 ("recipe") in captions.
+* <strong>Capability:</strong> Multi-language, Field-specific search.
+* <strong>Curl:</strong>
+    <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/elasticsearch_esearch/action/searchEntry&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][objectType]=KalturaESearchCaptionItem&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][searchTerm]=食谱&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][itemType]=2&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][fieldName]=content&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][addHighlight]=true&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][objectType]=KalturaESearchEntryOperator&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[objectType]=KalturaESearchEntryParams&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+</code></pre></div></p>
+<p><strong>D. Custom Metadata Search (Specific Field)</strong>
+* <strong>Goal:</strong> Find entries where metadata profile ID 653 has the field <code>/metadata/Field1</code> exactly matching "recipe".
+* <strong>Capability:</strong> Metadata search, XPath targeting, Exact Match.
+* <strong>Curl:</strong>
+    <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/elasticsearch_esearch/action/searchEntry&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][objectType]=KalturaESearchEntryMetadataItem&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][searchTerm]=recipe&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][itemType]=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][metadataProfileId]=</span><span class="nv">$METADATA_PROFILE_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][xpath]=/*[local-name()=&#39;metadata&#39;]/*[local-name()=&#39;Field1&#39;]&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][addHighlight]=true&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][objectType]=KalturaESearchEntryOperator&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[objectType]=KalturaESearchEntryParams&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+</code></pre></div></p>
+<p><strong>E. Complex Logic (AND/NOT)</strong>
+* <strong>Goal:</strong> Find entries with "strawberry" in the name AND which do <em>NOT</em> have "adding sugar" in the cue point text.
+* <strong>Capability:</strong> Complex logic operators, Field-specific search, Cue point search.
+* <strong>Structure:</strong> The top-level AND operator (<code>operator=1</code>) combines two items: item 0 searches for "strawberry" in the name field, and item 1 is a nested NOT operator (<code>operator=3</code>) whose child item searches cue point text for "adding sugar".
+* <strong>Curl:</strong>
+    <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/elasticsearch_esearch/action/searchEntry&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][operator]=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][objectType]=KalturaESearchEntryOperator&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][objectType]=KalturaESearchEntryItem&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][itemType]=2&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][fieldName]=name&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][searchTerm]=strawberry&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][1][objectType]=KalturaESearchEntryOperator&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][1][operator]=3&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][1][searchItems][0][objectType]=KalturaESearchCuePointItem&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][1][searchItems][0][itemType]=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][1][searchItems][0][fieldName]=text&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][1][searchItems][0][searchTerm]=adding sugar&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[objectType]=KalturaESearchEntryParams&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+</code></pre></div></p>
+<p><strong>F. Date Range Search</strong>
+* <strong>Goal:</strong> Find entries created between Jan 1, 2024 (1704067200) and Feb 1, 2024 (1706745600).
+* <strong>Capability:</strong> Range searching on date fields.
+* <strong>Curl:</strong>
+    <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/elasticsearch_esearch/action/searchEntry&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][objectType]=KalturaESearchEntryItem&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][itemType]=5&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][fieldName]=created_at&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][range][objectType]=KalturaESearchRange&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][range][greaterThanOrEqual]=1704067200&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][range][lessThan]=1706745600&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][objectType]=KalturaESearchEntryOperator&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[objectType]=KalturaESearchEntryParams&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+</code></pre></div></p>
+<p><strong>G. Aggregation &amp; Sorting</strong>
+* <strong>Goal:</strong> Find "visual studio code", aggregate by <code>media_type</code>, sort by <code>last_played_at</code> (desc).
+* <strong>Capability:</strong> Aggregation, Sorting.
+* <strong>Important:</strong> The <code>orderBy</code> items must use the concrete type <code>KalturaESearchEntryOrderByItem</code> for entry search (not the abstract <code>KalturaESearchOrderByItem</code>, which returns <code>OBJECT_TYPE_ABSTRACT</code>). Similarly, the <code>aggregations</code> array is nested inside the <code>aggregations</code> container: <code>searchParams[aggregations][aggregations][0]</code>.
+* <strong>Curl:</strong>
+    <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/elasticsearch_esearch/action/searchEntry&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][objectType]=KalturaESearchUnifiedItem&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][searchTerm]=visual studio code&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][itemType]=2&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][objectType]=KalturaESearchEntryOperator&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[objectType]=KalturaESearchEntryParams&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[aggregations][aggregations][0][objectType]=KalturaESearchEntryAggregationItem&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[aggregations][aggregations][0][fieldName]=media_type&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[aggregations][aggregations][0][size]=10&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[orderBy][orderItems][0][objectType]=KalturaESearchEntryOrderByItem&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[orderBy][orderItems][0][sortField]=last_played_at&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[orderBy][orderItems][0][sortOrder]=desc&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+</code></pre></div></p>
+<p><strong>Equivalent nested JSON (for SDK / agent integration):</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="p">{</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="nt">&quot;ks&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;$KALTURA_KS&quot;</span><span class="p">,</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="nt">&quot;format&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="nt">&quot;searchParams&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">    </span><span class="nt">&quot;objectType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;KalturaESearchEntryParams&quot;</span><span class="p">,</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">    </span><span class="nt">&quot;searchOperator&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">      </span><span class="nt">&quot;objectType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;KalturaESearchEntryOperator&quot;</span><span class="p">,</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">      </span><span class="nt">&quot;operator&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">      </span><span class="nt">&quot;searchItems&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">        </span><span class="nt">&quot;objectType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;KalturaESearchUnifiedItem&quot;</span><span class="p">,</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w">        </span><span class="nt">&quot;searchTerm&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;visual studio code&quot;</span><span class="p">,</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="w">        </span><span class="nt">&quot;itemType&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="w">      </span><span class="p">}]</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="w">    </span><span class="nt">&quot;orderBy&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="w">      </span><span class="nt">&quot;orderItems&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="w">        </span><span class="nt">&quot;objectType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;KalturaESearchEntryOrderByItem&quot;</span><span class="p">,</span>
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a><span class="w">        </span><span class="nt">&quot;sortField&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;last_played_at&quot;</span><span class="p">,</span>
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a><span class="w">        </span><span class="nt">&quot;sortOrder&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;desc&quot;</span>
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a><span class="w">      </span><span class="p">}]</span>
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a><span class="w">    </span><span class="nt">&quot;aggregations&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a><span class="w">      </span><span class="nt">&quot;aggregations&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span>
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a><span class="w">        </span><span class="nt">&quot;objectType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;KalturaESearchEntryAggregationItem&quot;</span><span class="p">,</span>
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a><span class="w">        </span><span class="nt">&quot;fieldName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;media_type&quot;</span><span class="p">,</span>
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a><span class="w">        </span><span class="nt">&quot;size&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span>
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a><span class="w">      </span><span class="p">}]</span>
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a><span class="w">  </span><span class="nt">&quot;pager&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;pageSize&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">}</span>
+<a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a><span class="p">}</span>
+</code></pre></div></p>
+<h1 id="9-advanced-topics-use-cases">9. Advanced Topics &amp; Use Cases<a class="headerlink" href="#9-advanced-topics-use-cases" title="Permanent link">&para;</a></h1>
+<ul>
+<li><strong>Aggregations (<code>searchParams[aggregations]</code>):</strong><ul>
+<li><strong>Use Case:</strong> Get a summary view without retrieving all results, e.g., "Show me the count of videos vs. images matching 'tutorial'".</li>
+<li><strong>How:</strong> Specify the field (e.g., <code>KalturaESearchEntryAggregateByFieldName::MEDIA_TYPE</code>) in a <code>KalturaESearchEntryAggregationItem</code> within the <code>searchParams</code>.</li>
+<li><strong>Response:</strong> The <code>aggregations</code> array in the response will contain buckets with counts for each media type found.</li>
+</ul>
+</li>
+<li>
+<p><strong>Searching Different Object Types:</strong></p>
+<ul>
+<li><strong>Use Case:</strong> Find categories tagged "Education" or users named "John Doe".</li>
+<li><strong>How:</strong> Use the appropriate action (<code>searchCategory</code>, <code>searchUser</code>, <code>searchGroup</code>) and the corresponding <code>searchParams</code> type (<code>KalturaESearchCategoryParams</code>, <code>KalturaESearchUserParams</code>, <code>KalturaESearchGroupParams</code>). The structure of <code>searchOperator</code> and <code>searchItems</code> remains similar, but you use object-specific field names (e.g., <code>KalturaESearchCategoryFieldName::TAGS</code>, <code>KalturaESearchUserFieldName::FULL_NAME</code>).</li>
+</ul>
+<p><strong>searchCategory example:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/elasticsearch_esearch/action/searchCategory&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;searchParams[objectType]=KalturaESearchCategoryParams&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][objectType]=KalturaESearchCategoryOperator&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][operator]=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][objectType]=KalturaESearchCategoryItem&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][fieldName]=name&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][itemType]=2&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][searchTerm]=Education&quot;</span>
+</code></pre></div></p>
+<p><strong>searchUser example:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/elasticsearch_esearch/action/searchUser&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;searchParams[objectType]=KalturaESearchUserParams&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][objectType]=KalturaESearchUserOperator&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][operator]=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][objectType]=KalturaESearchUserItem&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][fieldName]=full_name&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][itemType]=2&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][searchTerm]=John&quot;</span>
+</code></pre></div></p>
+<p><strong>searchGroup example:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/elasticsearch_esearch/action/searchGroup&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;searchParams[objectType]=KalturaESearchGroupParams&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][objectType]=KalturaESearchGroupOperator&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][operator]=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][objectType]=KalturaESearchGroupItem&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][fieldName]=screen_name&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][itemType]=2&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][searchTerm]=Engineering&quot;</span>
+</code></pre></div></p>
+<p>All four actions (<code>searchEntry</code>, <code>searchCategory</code>, <code>searchUser</code>, <code>searchGroup</code>) return the same response structure: <code>{ objects: [...], totalCount, objectType }</code>. Each object is wrapped in <code>{ object, itemsData, highlight }</code>.
+* <strong>Caption Timestamps for Clip Playback:</strong>
+* <strong>Use Case:</strong> "Play the part where they discuss training programs" — find the exact timestamp range within a video.
+* <strong>How:</strong> Use <code>KalturaESearchCaptionItem</code> with <code>fieldName=content</code>, <code>addHighlight=true</code>. The response's <code>itemsData[].items[]</code> array contains <code>KalturaESearchCaptionItemData</code> objects with <code>startsAt</code> and <code>endsAt</code> fields (integers in <strong>milliseconds</strong>). Use the first match's <code>startsAt</code> as clip start and the last match's <code>endsAt</code> as clip end. Divide by 1000 to get seconds.
+* <strong>Curl:</strong>
+    <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/elasticsearch_esearch/action/searchEntry&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>-d<span class="w"> </span><span class="s2">&quot;ks=</span><span class="nv">$KALTURA_KS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][objectType]=KalturaESearchCaptionItem&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][searchTerm]=training programs&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][itemType]=2&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][fieldName]=content&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][searchItems][0][addHighlight]=true&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[searchOperator][objectType]=KalturaESearchEntryOperator&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>-d<span class="w"> </span><span class="s2">&quot;searchParams[objectType]=KalturaESearchEntryParams&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.objects[0].itemsData[] | select(.itemsType==&quot;caption&quot;) | .items[] | {startsAt, endsAt, content}&#39;</span>
+</code></pre></div>
+* <strong>Response excerpt:</strong> <code>{"startsAt": 16700, "endsAt": 20600, "content": "...training programs..."}</code> — clip from 16.7s to 20.6s.
+* <strong>Nested Queries:</strong>
+* <strong>Use Case:</strong> Combining complex AND/OR/NOT logic as shown in Scenario E.
+* <strong>How:</strong> Place a <code>KalturaESearchEntryOperator</code> (or similar) within the <code>searchItems</code> array of another operator. This allows nesting conditions (e.g., <code>A AND (B OR (NOT C))</code>).</p>
+</li>
+</ul>
+<h1 id="10-advanced-patterns-edge-cases">10. Advanced Patterns &amp; Edge Cases<a class="headerlink" href="#10-advanced-patterns-edge-cases" title="Permanent link">&para;</a></h1>
+<ul>
+<li><strong>10,000 Result Limit:</strong> Elasticsearch enforces a 10K result cap (500/page x 20 pages max). To traverse larger result sets, use <code>KalturaESearchRange</code> on <code>created_at</code> with scroll-forward pagination — move the date window after each 10K batch.</li>
+<li><strong>Large Result Sets:</strong> Always use the <code>pager</code> parameter (<code>pageIndex</code>, <code>pageSize</code>) to retrieve results in manageable chunks. Iterate through pages by incrementing <code>pageIndex</code> until the number of returned objects is less than <code>pageSize</code> or zero.</li>
+<li><strong>Highlighting Context:</strong> Remember that highlights (<code>&lt;em&gt;</code> tags) are embedded in the text. You might need to parse or display this HTML carefully. The <code>itemsData</code> array provides more context for matches in captions or metadata than the top-level <code>highlight</code> array.</li>
+<li><strong>Partial vs. Exact Match:</strong> <code>PARTIAL</code> (<code>itemType=2</code>) is powerful due to synonyms but might return less precise results than <code>EXACT_MATCH</code> (<code>itemType=1</code>). Choose based on the desired recall vs. precision. Use <code>ignoreSynonym=true</code> in <code>searchParams</code> to disable synonym expansion if needed.</li>
+<li><strong>NOT Operator Shorthand:</strong> Use the <code>!</code> prefix in <code>freeText</code> (e.g., <code>searchTerm=!excluded</code>) to exclude matches. For structured queries, use <code>KalturaESearchOperatorType</code> with <code>NOT_OP</code> (<code>3</code>).</li>
+<li><strong>Performance:</strong> Unified searches (<code>KalturaESearchUnifiedItem</code>) are convenient but can be slower than targeted searches using specific <code>fieldName</code>s (like <code>NAME</code> or <code>CAPTIONS_CONTENT</code>) because they query more fields. Optimize by specifying fields when possible.</li>
+<li><strong>Abstract vs. Concrete Types:</strong> Several Kaltura object types are abstract base classes that cannot be used directly in API calls. Using an abstract type returns <code>OBJECT_TYPE_ABSTRACT</code>. For <code>orderBy</code>, use <code>KalturaESearchEntryOrderByItem</code> (not <code>KalturaESearchOrderByItem</code>). For aggregations, use <code>KalturaESearchEntryAggregationItem</code> (not <code>KalturaESearchAggregationItem</code>). Each search action (entry, category, user, group) has its own concrete types.</li>
+<li><strong>Aggregation Path Nesting:</strong> The aggregations parameter has double nesting: <code>searchParams[aggregations][aggregations][0]</code>. The outer <code>aggregations</code> is the <code>KalturaESearchAggregation</code> container object; the inner <code>aggregations</code> is the array property holding the items. Using <code>searchParams[aggregations][0]</code> (single level) silently returns no aggregations.</li>
+<li><strong>Caption Timestamps Are Milliseconds:</strong> <code>startsAt</code> and <code>endsAt</code> in <code>KalturaESearchCaptionItemData</code> are integers in milliseconds (e.g., <code>16700</code> = 16.7 seconds). Divide by 1000 for seconds.</li>
+<li><strong>JSON Body Support:</strong> The API v3 backend accepts both <code>application/x-www-form-urlencoded</code> (bracket notation) and <code>application/json</code> (nested objects) with identical results. JSON is easier for programmatic construction and SDK integration.</li>
+<li><strong>Schema Reference:</strong> The Kaltura API schema (XML) is the definitive source for all object structures, properties, enums, and their exact names. Refer to it frequently.</li>
+</ul>
+<h1 id="11-key-objects-enums-quick-reference">11. Key Objects &amp; Enums Quick Reference<a class="headerlink" href="#11-key-objects-enums-quick-reference" title="Permanent link">&para;</a></h1>
+<ul>
+<li><strong>Params:</strong> <code>KalturaESearchEntryParams</code>, <code>KalturaESearchCategoryParams</code>, <code>KalturaESearchUserParams</code></li>
+<li><strong>Operator:</strong> <code>KalturaESearchEntryOperator</code> (and variants)</li>
+<li><strong>Items:</strong> <code>KalturaESearchUnifiedItem</code>, <code>KalturaESearchEntryItem</code>, <code>KalturaESearchCaptionItem</code>, <code>KalturaESearchEntryMetadataItem</code>, <code>KalturaESearchCuePointItem</code></li>
+<li><strong>Response:</strong> <code>KalturaESearchEntryResponse</code> (and variants), <code>KalturaESearchEntryResult</code> (and variants), <code>KalturaESearchHighlight</code>, <code>KalturaESearchItemDataResult</code>, <code>KalturaESearchAggregationResponse</code></li>
+</ul>
+<h2 id="entry-field-names-kalturaesearchentryfieldname">Entry Field Names (<code>KalturaESearchEntryFieldName</code>)<a class="headerlink" href="#entry-field-names-kalturaesearchentryfieldname" title="Permanent link">&para;</a></h2>
+<p>Use these values in the <code>fieldName</code> property of <code>KalturaESearchEntryItem</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>Entry ID</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>Entry display name</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>Entry description</td>
+</tr>
+<tr>
+<td><code>tags</code></td>
+<td>Entry tags</td>
+</tr>
+<tr>
+<td><code>admin_tags</code></td>
+<td>Admin-only tags</td>
+</tr>
+<tr>
+<td><code>reference_id</code></td>
+<td>External reference ID</td>
+</tr>
+<tr>
+<td><code>credit</code></td>
+<td>Credit/attribution text</td>
+</tr>
+<tr>
+<td><code>site_url</code></td>
+<td>Associated site URL</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>Creation timestamp (use RANGE itemType)</td>
+</tr>
+<tr>
+<td><code>updated_at</code></td>
+<td>Last update timestamp (use RANGE itemType)</td>
+</tr>
+<tr>
+<td><code>last_played_at</code></td>
+<td>Last playback timestamp (use RANGE itemType)</td>
+</tr>
+<tr>
+<td><code>start_date</code></td>
+<td>Scheduling start date</td>
+</tr>
+<tr>
+<td><code>end_date</code></td>
+<td>Scheduling end date</td>
+</tr>
+<tr>
+<td><code>media_type</code></td>
+<td>Media type (1=video, 2=image, 5=audio)</td>
+</tr>
+<tr>
+<td><code>entry_type</code></td>
+<td>Entry type (1=media, 7=live, etc.)</td>
+</tr>
+<tr>
+<td><code>moderation_status</code></td>
+<td>Moderation status value</td>
+</tr>
+<tr>
+<td><code>creator_kuser_id</code></td>
+<td>Creator user ID</td>
+</tr>
+<tr>
+<td><code>kuser_id</code></td>
+<td>Owner user ID</td>
+</tr>
+<tr>
+<td><code>plays</code></td>
+<td>Total play count (use RANGE for numeric filtering)</td>
+</tr>
+<tr>
+<td><code>votes</code></td>
+<td>Vote count</td>
+</tr>
+<tr>
+<td><code>display_in_search</code></td>
+<td>Search visibility (0=none, 1=partner, 2=network)</td>
+</tr>
+<tr>
+<td><code>parent_id</code></td>
+<td>Parent entry ID (for clips/children)</td>
+</tr>
+<tr>
+<td><code>root_id</code></td>
+<td>Root entry ID</td>
+</tr>
+<tr>
+<td><code>captions_content</code></td>
+<td>Full-text search within caption content</td>
+</tr>
+<tr>
+<td><code>conversion_profile_id</code></td>
+<td>Conversion profile ID</td>
+</tr>
+<tr>
+<td><code>access_control_id</code></td>
+<td>Access control profile ID</td>
+</tr>
+<tr>
+<td><code>redirect_entry_id</code></td>
+<td>Redirect target entry ID</td>
+</tr>
+<tr>
+<td><code>recorded_entry_id</code></td>
+<td>Associated recording entry ID</td>
+</tr>
+<tr>
+<td><code>template_entry_id</code></td>
+<td>Template entry ID</td>
+</tr>
+<tr>
+<td><code>is_live</code></td>
+<td>Whether entry is currently live</td>
+</tr>
+<tr>
+<td><code>is_quiz</code></td>
+<td>Whether entry is a quiz</td>
+</tr>
+<tr>
+<td><code>entitled_kusers_edit</code></td>
+<td>Users entitled to edit</td>
+</tr>
+<tr>
+<td><code>entitled_kusers_publish</code></td>
+<td>Users entitled to publish</td>
+</tr>
+<tr>
+<td><code>entitled_kusers_view</code></td>
+<td>Users entitled to view</td>
+</tr>
+</tbody>
+</table>
+<h2 id="caption-field-names-kalturaesearchcaptionfieldname">Caption Field Names (<code>KalturaESearchCaptionFieldName</code>)<a class="headerlink" href="#caption-field-names-kalturaesearchcaptionfieldname" title="Permanent link">&para;</a></h2>
+<p>Use these values in the <code>fieldName</code> property of <code>KalturaESearchCaptionItem</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>content</code></td>
+<td>Caption/transcript text content</td>
+</tr>
+<tr>
+<td><code>caption_asset_id</code></td>
+<td>Caption asset ID</td>
+</tr>
+<tr>
+<td><code>label</code></td>
+<td>Caption label/display name</td>
+</tr>
+<tr>
+<td><code>language</code></td>
+<td>Caption language code</td>
+</tr>
+<tr>
+<td><code>start_time</code></td>
+<td>Caption line start time (use RANGE)</td>
+</tr>
+<tr>
+<td><code>end_time</code></td>
+<td>Caption line end time (use RANGE)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="order-by-field-names-kalturaesearchentryorderbyfieldname">Order-By Field Names (<code>KalturaESearchEntryOrderByFieldName</code>)<a class="headerlink" href="#order-by-field-names-kalturaesearchentryorderbyfieldname" title="Permanent link">&para;</a></h2>
+<p>Use these values in the <code>sortField</code> property of <code>KalturaESearchOrderByItem</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>created_at</code></td>
+<td>Creation date</td>
+</tr>
+<tr>
+<td><code>updated_at</code></td>
+<td>Last update date</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>Alphabetical by name</td>
+</tr>
+<tr>
+<td><code>plays</code></td>
+<td>Total play count</td>
+</tr>
+<tr>
+<td><code>plays_last_1_day</code></td>
+<td>Plays in last 24 hours</td>
+</tr>
+<tr>
+<td><code>plays_last_7_days</code></td>
+<td>Plays in last 7 days</td>
+</tr>
+<tr>
+<td><code>plays_last_30_days</code></td>
+<td>Plays in last 30 days</td>
+</tr>
+<tr>
+<td><code>views</code></td>
+<td>Total view count</td>
+</tr>
+<tr>
+<td><code>views_last_1_day</code></td>
+<td>Views in last 24 hours</td>
+</tr>
+<tr>
+<td><code>views_last_30_days</code></td>
+<td>Views in last 30 days</td>
+</tr>
+<tr>
+<td><code>rank</code></td>
+<td>Relevance/ranking score</td>
+</tr>
+<tr>
+<td><code>start_date</code></td>
+<td>Scheduling start date</td>
+</tr>
+<tr>
+<td><code>end_date</code></td>
+<td>Scheduling end date</td>
+</tr>
+<tr>
+<td><code>last_played_at</code></td>
+<td>Last playback date</td>
+</tr>
+</tbody>
+</table>
+<h1 id="12-agent-llm-integration-notes">12. Agent / LLM Integration Notes<a class="headerlink" href="#12-agent-llm-integration-notes" title="Permanent link">&para;</a></h1>
+<p>When exposing eSearch to an LLM via agent tools:</p>
+<ul>
+<li>
+<p><strong>Accept nested JSON, flatten to bracket notation.</strong> LLMs naturally generate nested JSON objects: <code>{"searchParams": {"searchOperator": {"objectType": "...", "searchItems": [...]}}}</code>. Auto-flatten to <code>searchParams[searchOperator][searchItems][0][objectType]=...</code> at the tool layer. Alternatively, send the JSON body directly with <code>Content-Type: application/json</code> — the API accepts both formats with identical results.</p>
+</li>
+<li>
+<p><strong>Split into simple + advanced tools.</strong> Provide a simple <code>search(query, page_size, order_by)</code> tool for keyword searches (90% of requests) and an advanced <code>search(search_params)</code> tool for caption timestamps, date ranges, and complex logic. Both call the same underlying API.</p>
+</li>
+<li>
+<p><strong>Return the full API response including <code>itemsData</code>, <code>highlight</code>, and <code>aggregations</code>.</strong> Downstream consumers rely on these fields for display and faceting: caption timestamps for clip playback, match context for summarization, faceted counts for dashboard queries.</p>
+</li>
+<li>
+<p><strong>Use concrete objectTypes for orderBy.</strong> <code>KalturaESearchOrderByItem</code> is abstract and returns <code>OBJECT_TYPE_ABSTRACT</code>. Use <code>KalturaESearchEntryOrderByItem</code> for entry search, <code>KalturaESearchCategoryOrderByItem</code> for category search, <code>KalturaESearchUserOrderByItem</code> for user search, <code>KalturaESearchGroupOrderByItem</code> for group search.</p>
+</li>
+<li>
+<p><strong>Caption timestamps for clip playback.</strong> When an LLM searches captions, the <code>itemsData[].items[]</code> array contains <code>KalturaESearchCaptionItemData</code> objects with <code>startsAt</code> and <code>endsAt</code> in milliseconds. Use these to seek a player to the exact moment a topic is discussed.</p>
+</li>
+<li>
+<p><strong>Aggregation double nesting.</strong> The aggregations parameter path is <code>searchParams[aggregations][aggregations][0]</code> — easy for an LLM to get wrong. The simple tool should handle common aggregations (by media type, by category) without exposing this complexity.</p>
+</li>
+</ul>
+<h1 id="13-error-handling">13. Error Handling<a class="headerlink" href="#13-error-handling" title="Permanent link">&para;</a></h1>
+<ul>
+<li>Check the HTTP status code first.</li>
+<li>If the status is not 200, parse the JSON error response. Key fields are usually:<ul>
+<li><code>code</code>: A string identifier for the error (e.g., <code>ESEARCH_SERVICE_DOWN</code>, <code>INVALID_KS</code>).</li>
+<li><code>message</code>: A human-readable description of the error.</li>
+</ul>
+</li>
+<li><strong>Common eSearch Errors:</strong><ul>
+<li><code>ESEARCH_SERVICE_DOWN</code>: The search service is temporarily unavailable. Consider retrying.</li>
+<li><code>ELASTIC_SEARCH_QUERY_NOT_VALID</code>: Check the syntax and structure of your <code>searchParams</code>.</li>
+<li><code>PERMISSION_READ_ELASTIC_SEARCH_NOT_ALLOWED</code>: The <code>ks</code> used does not have the necessary permissions.</li>
+</ul>
+</li>
+<li>Implement logging for errors to aid debugging.</li>
+</ul>
+<p><strong>Retry strategy:</strong> For transient errors (HTTP 5xx, <code>ESEARCH_SERVICE_DOWN</code>, timeouts), retry with exponential backoff: 1s, 2s, 4s, with jitter, up to 3 retries. For client errors (<code>INVALID_KS</code>, <code>ELASTIC_SEARCH_QUERY_NOT_VALID</code>, permission errors), fix the request before retrying — these will not resolve on their own.</p>
+<h1 id="14-best-practices">14. Best Practices<a class="headerlink" href="#14-best-practices" title="Permanent link">&para;</a></h1>
+<ul>
+<li><strong>Use targeted field searches for performance.</strong> Unified searches (<code>KalturaESearchUnifiedItem</code>) query all fields and can be slower. Specify <code>fieldName</code> (e.g., <code>NAME</code>, <code>CAPTIONS_CONTENT</code>) when you know what you are searching.</li>
+<li><strong>Choose EXACT_MATCH vs PARTIAL intentionally.</strong> <code>EXACT_MATCH</code> (<code>itemType=1</code>) provides higher precision. <code>PARTIAL</code> (<code>itemType=2</code>) expands with synonyms for higher recall. Use <code>ignoreSynonym=true</code> in <code>searchParams</code> to disable synonym expansion when precision matters more.</li>
+<li><strong>Paginate with scroll-forward for large result sets.</strong> Elasticsearch caps at 10K results (500/page x 20 pages). For larger sets, use <code>KalturaESearchRange</code> on <code>created_at</code> with date windows.</li>
+<li><strong>Use aggregations for faceted counts.</strong> Aggregations return counts per value (media type, category, tag) without fetching full results — ideal for building filter UIs.</li>
+<li><strong>Use concrete objectTypes.</strong> Abstract types (<code>KalturaESearchOrderByItem</code>, <code>KalturaESearchAggregationItem</code>) return <code>OBJECT_TYPE_ABSTRACT</code>. Always use concrete types like <code>KalturaESearchEntryOrderByItem</code>.</li>
+<li><strong>Note the aggregation double nesting.</strong> The parameter path is <code>searchParams[aggregations][aggregations][0]</code> — the outer is the container, the inner is the array.</li>
+<li><strong>Caption timestamps are milliseconds.</strong> <code>startsAt</code> and <code>endsAt</code> in caption item data are integers in milliseconds. Divide by 1000 for seconds.</li>
+</ul>
+<h1 id="15-related-guides">15. Related Guides<a class="headerlink" href="#15-related-guides" title="Permanent link">&para;</a></h1>
+<ul>
+<li><strong><a href="../KALTURA_SESSION_GUIDE/">Session Guide</a></strong> — Generate the KS required for all eSearch calls</li>
+<li><strong><a href="../KALTURA_APPTOKENS_API/">AppTokens</a></strong> — Secure KS generation for production integrations</li>
+<li><strong><a href="../KALTURA_UPLOAD_AND_INGESTION_API/">Upload &amp; Ingestion</a></strong> — Upload content that becomes searchable via eSearch</li>
+<li><strong><a href="../KALTURA_PLAYER_EMBED_GUIDE/">Player Embed</a></strong> — Embed search results for playback</li>
+<li><strong><a href="../KALTURA_REACH_API/">REACH</a></strong> — Enrichment services: captions, metadata, tagging, and more (improves search quality)</li>
+<li><strong><a href="../KALTURA_AI_GENIE_API/">AI Genie</a></strong> — Conversational AI search (uses eSearch internally for RAG)</li>
+<li><strong><a href="../KALTURA_MULTI_STREAM_API/">Multi-Stream</a></strong> — Search for parent entries; use <code>parentEntryIdEqual</code> filter to find child entries</li>
+<li><strong><a href="../KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API/">Webhooks</a></strong> — Trigger notifications based on content events (search results inform webhook conditions)</li>
+<li><strong><a href="../KALTURA_CATEGORIES_AND_ENTITLEMENTS_API/">Categories &amp; Entitlements API</a></strong> — Category-based filtering and entitlements that affect search result visibility</li>
+<li><strong><a href="../KALTURA_CUSTOM_METADATA_API/">Custom Metadata API</a></strong> — Custom metadata schemas searchable via <code>KalturaESearchEntryMetadataItem</code></li>
+<li><strong><a href="../KALTURA_CAPTIONS_AND_TRANSCRIPTS_API/">Captions &amp; Transcripts API</a></strong> — Caption assets searchable via <code>KalturaESearchCaptionItem</code></li>
+<li><strong><a href="../KALTURA_API_GETTING_STARTED/">API Getting Started</a></strong> — Foundation guide covering content model and API patterns</li>
+<li><strong><a href="../KALTURA_SYNDICATION_API/">Syndication</a></strong> — Search for entries to include in syndication feeds</li>
+<li><strong><a href="../KALTURA_CUE_POINTS_API/">Cue Points &amp; Interactive Video</a></strong> — Cue point search with <code>KalturaESearchCuePointItem</code> (12 searchable fields: text, tags, question, answers, type)</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

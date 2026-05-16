@@ -1,0 +1,4107 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Kaltura — The Agentic Digital Experience Platform. Live-tested API guides for AI agents and developers. 52 guides covering authentication, content management, search, playback, AI services, virtual events, experience components, cue points & interactive video, analytics, distribution, moderation, LTI integration, and more — with 1000+ companion tests validated against the live Kaltura API.">
+      
+      
+        <meta name="author" content="Kaltura Inc.">
+      
+      
+        <link rel="canonical" href="https://kaltura.md/KALTURA_PLAYER_EMBED_GUIDE/">
+      
+      
+        <link rel="prev" href="../KALTURA_AI_GENIE_API/">
+      
+      
+        <link rel="next" href="../KALTURA_EXPERIENCE_COMPONENTS_API/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Player Embed - Kaltura API Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,700,700i%7CSource+Code+Pro:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Source Sans Pro";--md-code-font:"Source Code Pro"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  
+  
+  <link rel="alternate" type="text/markdown" title="Markdown version for AI agents" href="/raw/KALTURA_PLAYER_EMBED_GUIDE.md" />
+  
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#kaltura-playkit-player-embedding-control-guide" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Kaltura API Guides" class="md-header__button md-logo" aria-label="Kaltura API Guides" data-md-component="logo">
+      
+  <img src="../assets/images/logo-white.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Kaltura API Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Player Embed
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/kaltura/kaltura-agents-api-guides" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    kaltura/kaltura-agents-api-guides
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_GETTING_CREDENTIALS/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_SESSION_GUIDE/" class="md-tabs__link">
+          
+  
+  
+  Authentication
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_UPLOAD_AND_INGESTION_API/" class="md-tabs__link">
+          
+  
+  
+  Content Management
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_REACH_API/" class="md-tabs__link">
+          
+  
+  
+  AI Services
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  Playback & Experiences
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_EVENTS_PLATFORM_API/" class="md-tabs__link">
+          
+  
+  
+  Events & Collaboration
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_ANALYTICS_REPORTS_API/" class="md-tabs__link">
+          
+  
+  
+  Analytics
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API/" class="md-tabs__link">
+          
+  
+  
+  Integration & Automation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_MODERATION_API/" class="md-tabs__link">
+          
+  
+  
+  Content Moderation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_MULTI_ACCOUNT_MANAGEMENT_API/" class="md-tabs__link">
+          
+  
+  
+  Administration
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../CONTRIBUTING/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../PLAN/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Roadmap
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Kaltura API Guides" class="md-nav__button md-logo" aria-label="Kaltura API Guides" data-md-component="logo">
+      
+  <img src="../assets/images/logo-white.svg" alt="logo">
+
+    </a>
+    Kaltura API Guides
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/kaltura/kaltura-agents-api-guides" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    kaltura/kaltura-agents-api-guides
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_GETTING_CREDENTIALS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Credentials
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_API_GETTING_STARTED/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GUIDE_MAP/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guide Map
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Authentication
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Authentication
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_SESSION_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Session (KS) Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_APPTOKENS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AppTokens API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AUTH_BROKER_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Auth Broker (SSO/SAML)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Content Management
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Content Management
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_UPLOAD_AND_INGESTION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Upload & Ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_VIDEO_EDITING_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Video Editing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CONTENT_DELIVERY_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Content Delivery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_THUMBNAIL_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thumbnail API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ESEARCH_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    eSearch
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ACCESS_CONTROL_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Access Control
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CATEGORIES_AND_ENTITLEMENTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Categories & Entitlements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CUSTOM_METADATA_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Metadata
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CAPTIONS_AND_TRANSCRIPTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Captions & Transcripts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MULTI_STREAM_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Stream
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_USER_MANAGEMENT_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Services
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    AI Services
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_REACH_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REACH API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CONTENT_LAB_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REACH — AI Clips
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AGENTS_MANAGER_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agents Manager
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AI_GENIE_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Genie
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playback & Experiences
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Playback & Experiences
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Player Embed
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_EXPERIENCE_COMPONENTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Experience Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_UNISPHERE_FRAMEWORK_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unisphere Framework
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_GENIE_WIDGET_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Genie Widget
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MEDIA_MANAGER_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Media Manager
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CONTENT_LAB_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REACH — AI Clips
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AGENTS_WIDGET_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agents Widget
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_VOD_AVATAR_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VOD Avatar Studio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CONVERSATIONAL_AVATAR_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conversational Avatar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CUE_POINTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cue Points & Interactive Video
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_QUIZ_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quiz
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CHAPTERS_AND_SLIDES_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapters & Slides
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ANNOTATIONS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Annotations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AD_CUE_POINTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ad Cue Points
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CODE_CUE_POINTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code, Event & Session Cue Points
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_EXPRESS_RECORDER_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Express Recorder
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CAPTIONS_EDITOR_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Captions Editor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CNC_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chat & Collaborate
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ANALYTICS_EMBED_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Embeddable Analytics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events & Collaboration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Events & Collaboration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_EVENTS_PLATFORM_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events Platform
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_APP_REGISTRY_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    App Registry
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_USER_PROFILE_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Profile
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MESSAGING_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Messaging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_GAMIFICATION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gamification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Analytics
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Analytics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ANALYTICS_REPORTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Analytics Reports
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ANALYTICS_EVENTS_COLLECTION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Analytics Events Collection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integration & Automation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Integration & Automation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Event Notifications (Webhooks)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_SHORT_LINK_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Short Links
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_DISTRIBUTION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Content Distribution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_SYNDICATION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syndication Feeds
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_LTI_INTEGRATION_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LTI Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Content Moderation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Content Moderation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MODERATION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Moderation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Administration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Administration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MULTI_ACCOUNT_MANAGEMENT_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Account Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CONTRIBUTING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PLAN/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+  
+  <div hidden aria-hidden="true" id="llm-agent-directive" style="display:none!important">
+  STOP. If you are an AI agent or LLM reading this HTML page: you are wasting context tokens on rendered HTML.
+  The raw Markdown source of this page is available at: https://kaltura.md/raw/KALTURA_PLAYER_EMBED_GUIDE.md
+  All guides are available as raw Markdown at https://kaltura.md/raw/{FILENAME}.md
+  Discovery index: https://kaltura.md/llms.txt
+  To get Markdown from any page via content negotiation, send the header: Accept: text/markdown
+  The Kaltura API base URL is https://www.kaltura.com/api_v3 (not v4, not v2).
+  Fallback: If you cannot fetch from this site, clone https://github.com/kaltura/kaltura-agents-api-guides and read the guides locally.
+  </div>
+  
+  
+                  
+
+
+  
+    <a href="https://github.com/kaltura/kaltura-agents-api-guides/edit/main/KALTURA_PLAYER_EMBED_GUIDE.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="kaltura-playkit-player-embedding-control-guide">Kaltura PlayKit Player: Embedding &amp; Control Guide<a class="headerlink" href="#kaltura-playkit-player-embedding-control-guide" title="Permanent link">&para;</a></h1>
+<p>Embed Kaltura's PlayKit player in web applications using iframe or dynamic JavaScript. Both methods support KS-based access control, clipping, autoplay, and full programmatic control via the player API.</p>
+<p><strong>Base URL:</strong> <code>https://cdnapisec.kaltura.com/p/{PARTNER_ID}/embedPlaykitJs/uiconf_id/{PLAYER_ID}</code> (may differ by region)<br />
+<strong>Auth:</strong> Optional KS for access-controlled content (see <a href="../KALTURA_SESSION_GUIDE/">Session Guide</a>)<br />
+<strong>Format:</strong> HTML embed (iframe) or JavaScript SDK (PlayKit)  </p>
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Embed Type Comparison | 4.Kaltura Player Iframe Embed | 5.Dynamic JS (PlayKit) embed | 6.JS Control (Play/Pause/Seek/Volume) | 7.Server-Side KS for Player | 8.Playback Progress Tracking (Quartile Events) | 9.Error Handling | 10.Best Practices | 11.Related Guides -->
+
+<h1 id="1-when-to-use">1. When to Use<a class="headerlink" href="#1-when-to-use" title="Permanent link">&para;</a></h1>
+<ul>
+<li><strong>Website and app video playback</strong> — Embed adaptive video and audio playback in websites, web apps, and mobile web views using iframe or JavaScript integration.  </li>
+<li><strong>Branded player customization</strong> — Configure player appearance (watermarks, custom CSS, UI component toggles) and behavior (autoplay, looping, stream priority) to match your application's branding.  </li>
+<li><strong>Interactive video delivery</strong> — Enable in-player experiences such as chapter navigation, dual-screen slides, in-video quizzes, hotspots, and transcript search through the 30+ plugin ecosystem.  </li>
+<li><strong>Access-controlled content</strong> — Deliver protected video content using KS-based authentication, entry-scoped sessions, privacy contexts, and IP tokenization for CDN-protected delivery.  </li>
+<li><strong>Programmatic player control</strong> — Build custom playback workflows with play/pause/seek APIs, event listeners for progress tracking, and runtime plugin control for dynamic layout switching.</li>
+</ul>
+<h1 id="2-prerequisites">2. Prerequisites<a class="headerlink" href="#2-prerequisites" title="Permanent link">&para;</a></h1>
+<ul>
+<li><strong>KS (Kaltura Session):</strong> Optional for public content. For access-controlled entries, generate a USER KS (type=0) scoped with <code>sview:ENTRY_ID</code> on your server and pass it to the player. For IP-tokenized delivery, include <code>iprestrict:VIEWER_IP</code>.  </li>
+<li><strong>Player instance (uiConfId):</strong> A player configuration created in the KMC under Studio &gt; TV Platform or Studio &gt; Player. The <code>uiConfId</code> determines which plugins are available and the default player settings.  </li>
+<li><strong>Partner ID:</strong> Your Kaltura account ID, used to construct the player library URL and authenticate API requests.  </li>
+<li><strong>Session management:</strong> See <a href="../KALTURA_SESSION_GUIDE/">Session Guide</a> for KS generation and privilege scoping.</li>
+</ul>
+<h1 id="3-embed-type-comparison">3. Embed Type Comparison<a class="headerlink" href="#3-embed-type-comparison" title="Permanent link">&para;</a></h1>
+<ul>
+<li><strong>Iframe embed</strong> – Simplest drop-in, ideal for quick embedding where the host page manages layout only. Works well for sites that restrict JavaScript to first-party code. Control the configuration passed to the player by adding query string params.  </li>
+<li><strong>Dynamic JS (PlayKit)</strong> – recommended when you need <strong>runtime config</strong>, <strong>start time</strong>, <strong>programmatic control</strong>, or richer integrations. </li>
+</ul>
+<h1 id="4-kaltura-player-iframe-embed">4. Kaltura Player Iframe Embed<a class="headerlink" href="#4-kaltura-player-iframe-embed" title="Permanent link">&para;</a></h1>
+<p>Use the Kaltura iframe endpoint and pass parameters via <strong>query string</strong>. This form accepts <code>entry_id</code>, <code>uiconf_id</code>, optional <code>ks</code>, and most common initial config and playback flags.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="cm">&lt;!-- Responsive container --&gt;</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="p">&lt;</span><span class="nt">div</span> <span class="na">style</span><span class="o">=</span><span class="s">&quot;position:relative;max-width:100%;aspect-ratio:16/9;&quot;</span><span class="p">&gt;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  <span class="p">&lt;</span><span class="nt">iframe</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="na">id</span><span class="o">=</span><span class="s">&quot;kaltura_player&quot;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="na">title</span><span class="o">=</span><span class="s">&quot;Kaltura video&quot;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="na">src</span><span class="o">=</span><span class="s">&quot;https://cdnapisec.kaltura.com/p/{PARTNER_ID}/embedPlaykitJs/partner_id/{PARTNER_ID}/uiconf_id/{PLAYER_INSTANCE_ID}?iframeembed=true&amp;ks={KALTURA_SESSION}&amp;entry_id={ENTRY_ID}&amp;kalturaSeekFrom={CLIP_START_SECONDS}&amp;kalturaClipTo={CLIP_END_SECONDS}&amp;config[playback]={&amp;quot;autoplay&amp;quot;:true,&amp;quot;mutedAutoPlay&amp;quot;:true,&amp;quot;muted&amp;quot;:true}&quot;</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="na">allowfullscreen</span><span class="o">=</span><span class="s">&quot;&quot;</span> 
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="na">allow</span><span class="o">=</span><span class="s">&quot;autoplay *; fullscreen *; encrypted-media *&quot;</span> 
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="na">style</span><span class="o">=</span><span class="s">&quot;width: 100%; height: 100%; aspect-ratio: 16 / 9; min-width: 100%; background-color: black; border: 0px; border-radius: 0.5rem; overflow: hidden;&quot;</span> <span class="p">&gt;</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  <span class="p">&lt;/</span><span class="nt">iframe</span><span class="p">&gt;</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+</code></pre></div>
+<h3 id="iframe-params-replacement-tokens">iframe Params Replacement Tokens<a class="headerlink" href="#iframe-params-replacement-tokens" title="Permanent link">&para;</a></h3>
+<ul>
+<li>{PARTNER_ID} - is your Kaltura account ID.  </li>
+<li>{PLAYER_INSTANCE_ID} - is your Player Instance ID (<code>uiConfId</code>). Find it in the Kaltura Management Console (KMC) under Studio &gt; TV Platform or Studio &gt; Player — each player configuration has a numeric ID displayed in the list or detail view.  </li>
+<li>{KALTURA_SESSION} - is a valid Kaltura Session that can be used to access the video Kaltura Entry ID to be played in this session (if playback is anonymous and the entry id open to public, this param can be skipped).   </li>
+<li>{ENTRY_ID} - The ID of the video to be played.   </li>
+<li>{CLIP_START_SECONDS} - will clip the video from that particular start second. if skipped - video will begin from the start.  </li>
+<li>{CLIP_END_SECONDS} - will clip the video to that second. if skipped, the video will play to its full duration.  </li>
+</ul>
+<h4 id="configplayback-params"><code>config[playback]</code> params:<a class="headerlink" href="#configplayback-params" title="Permanent link">&para;</a></h4>
+<ul>
+<li><code>autoplay</code> - set to <code>true</code> to begin playback automatically or <code>false</code> to begin at paused state.  </li>
+<li><code>muted</code> - set to <code>true</code> to begin playback muted (volume=0).  </li>
+<li><code>mutedAutoPlay</code> - set to <code>true</code> to ensure autoplay always begin playback muted.  </li>
+</ul>
+<h3 id="other-iframe-embed-notes">Other iframe Embed Notes<a class="headerlink" href="#other-iframe-embed-notes" title="Permanent link">&para;</a></h3>
+<ul>
+<li>To make the iframe responsive ensure a wrapping div is set and the iframe has a defined <code>aspect-ratio</code>.</li>
+<li>Set a meaningful <code>title</code> for accessibility and SEO.</li>
+<li>Ensure to include <code>allow</code> and <code>allowfullscreen</code> attributes for autoplay/PiP/encrypted-playback/fullscreen.  </li>
+</ul>
+<blockquote>
+<p>Note: we're using cdnapisec.kaltura.com in this example, but your account region/deployment may differ. Make sure to use the correct base URL of your Kaltura account.  </p>
+</blockquote>
+<h1 id="5-dynamic-js-playkit-embed">5. Dynamic JS (PlayKit) embed<a class="headerlink" href="#5-dynamic-js-playkit-embed" title="Permanent link">&para;</a></h1>
+<p>Load the <strong>PlayKit/Kaltura Player JS</strong> for your PID/UiConfID, then call <code>KalturaPlayer.setup(...)</code> and <code>loadMedia(...)</code>.</p>
+<blockquote>
+<p>The code below assumes the same tokens as above.  </p>
+</blockquote>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="cm">&lt;!-- 1) Load player library for your PID/UiConfID --&gt;</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;https://cdnapisec.kaltura.com/p/{PARTNER_ID}/embedPlaykitJs/uiconf_id/{PLAYER_INSTANCE_ID}/kaltura-player.js&quot;</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;text/javascript&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="cm">&lt;!-- 2) Player container --&gt;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="p">&lt;</span><span class="nt">div</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;kplayer&quot;</span> <span class="na">style</span><span class="o">=</span><span class="s">&quot;max-width:100%;aspect-ratio:16/9;&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span><span class="c1">// 3) Setup with provider + playback; pass KS here when needed</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  try {
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    const player = KalturaPlayer.setup({
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>      targetId: &#39;kplayer&#39;,
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>      provider: {
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>        partnerId: {PARTNER_ID},
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>        uiConfId: {PLAYER_INSTANCE_ID},
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>        ks: &#39;{KALTURA_SESSION}&#39; // optional if content is public
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>        // env: { serviceUrl: &#39;https://www.kaltura.com&#39; } // override if needed
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>      },
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>      playback: {
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>        autoplay: true,
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>        muted: true    
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>      }
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>    });
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>    // 4) Load media and optionally start at N seconds
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>    player.loadMedia(
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>      { entryId: &#39;{ENTRY_ID}&#39; },
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>      { seekFrom: {CLIP_START_SECONDS}, clipTo: {CLIP_END_SECONDS} }  
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>    );
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>    // Wait for the player to be ready (tracks loaded, safe to query state)
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>    player.ready().then(() =&gt; {
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>      console.log(&quot;player is ready!&quot;);
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>    });
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>  } catch (e) {
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>    console.error(e.message);
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>  }
+</code></pre></div>
+<h2 id="51-full-kalturaplayersetup-config-object">5.1 Full KalturaPlayer.setup() Config Object<a class="headerlink" href="#51-full-kalturaplayersetup-config-object" title="Permanent link">&para;</a></h2>
+<p>The <code>KalturaPlayer.setup()</code> call accepts a configuration object with the following top-level sections:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">player</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">KalturaPlayer</span><span class="p">.</span><span class="nx">setup</span><span class="p">({</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nx">targetId</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;kplayer&#39;</span><span class="p">,</span><span class="w">               </span><span class="c1">// Required: DOM element ID for the player container</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nx">log</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">level</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;ERROR&#39;</span><span class="w"> </span><span class="p">},</span><span class="w">           </span><span class="c1">// Log level: &#39;DEBUG&#39;, &#39;INFO&#39;, &#39;WARN&#39;, &#39;ERROR&#39;, &#39;OFF&#39;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="nx">provider</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span><span class="nx">partnerId</span><span class="o">:</span><span class="w"> </span><span class="nx">PARTNER_ID</span><span class="p">,</span><span class="w">           </span><span class="c1">// Required: Kaltura partner ID (integer)</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span><span class="nx">uiConfId</span><span class="o">:</span><span class="w"> </span><span class="nx">UICONF_ID</span><span class="p">,</span><span class="w">            </span><span class="c1">// Required: Player instance ID from KMC</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span><span class="nx">ks</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;KS_STRING&#39;</span><span class="p">,</span><span class="w">                </span><span class="c1">// Optional: Kaltura Session for authenticated playback</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span><span class="nx">env</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">      </span><span class="nx">serviceUrl</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;https://www.kaltura.com&#39;</span><span class="p">,</span><span class="w">  </span><span class="c1">// API service URL (override for non-default regions)</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">      </span><span class="nx">cdnUrl</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;https://cdnapisec.kaltura.com&#39;</span><span class="w"> </span><span class="c1">// CDN URL (override for non-default regions)</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span><span class="nx">playback</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">    </span><span class="nx">autoplay</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">                  </span><span class="c1">// Auto-start playback (requires muted:true in most browsers)</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">    </span><span class="nx">muted</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">                    </span><span class="c1">// Start muted</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">    </span><span class="nx">mutedAutoPlay</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">             </span><span class="c1">// Fall back to muted autoplay if unmuted autoplay is blocked</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">    </span><span class="nx">loop</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">                     </span><span class="c1">// Loop playback when media ends</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">    </span><span class="nx">startTime</span><span class="o">:</span><span class="w"> </span><span class="mf">0</span><span class="p">,</span><span class="w">                    </span><span class="c1">// Start playback at this position (seconds)</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">    </span><span class="nx">volume</span><span class="o">:</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span><span class="w">                     </span><span class="c1">// Initial volume (0.0 - 1.0)</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">    </span><span class="nx">playsinline</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">               </span><span class="c1">// Inline playback on mobile (no fullscreen takeover)</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">    </span><span class="nx">preload</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;auto&#39;</span><span class="p">,</span><span class="w">                 </span><span class="c1">// Preload behavior: &#39;auto&#39;, &#39;metadata&#39;, &#39;none&#39;</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="w">    </span><span class="nx">allowMutedAutoPlay</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">        </span><span class="c1">// Allow muted autoplay as fallback</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="w">    </span><span class="nx">streamPriority</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">engine</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;html5&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">format</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;hls&#39;</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">engine</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;html5&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">format</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;dash&#39;</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">engine</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;html5&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">format</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;progressive&#39;</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a><span class="w">    </span><span class="p">]</span>
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a><span class="w">  </span><span class="nx">ui</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a><span class="w">    </span><span class="nx">disable</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">                  </span><span class="c1">// Disable the entire UI</span>
+<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a><span class="w">    </span><span class="nx">css</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="w">                         </span><span class="c1">// Custom CSS string injected into the player</span>
+<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a><span class="w">    </span><span class="nx">components</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a><span class="w">      </span><span class="nx">seekbar</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">disabled</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="w"> </span><span class="p">},</span><span class="w">  </span><span class="c1">// Toggle individual UI components</span>
+<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a><span class="w">      </span><span class="nx">watermark</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a><span class="w">        </span><span class="nx">img</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;https://example.com/logo.png&#39;</span><span class="p">,</span>
+<a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a><span class="w">        </span><span class="nx">url</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;https://example.com&#39;</span><span class="p">,</span>
+<a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a><span class="w">        </span><span class="nx">placement</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;top-left&#39;</span><span class="p">,</span><span class="w">       </span><span class="c1">// &#39;top-left&#39;, &#39;top-right&#39;, &#39;bottom-left&#39;, &#39;bottom-right&#39;</span>
+<a id="__codelineno-2-41" name="__codelineno-2-41" href="#__codelineno-2-41"></a><span class="w">        </span><span class="nx">timeout</span><span class="o">:</span><span class="w"> </span><span class="mf">0</span><span class="w">                   </span><span class="c1">// Seconds to show watermark (0 = always)</span>
+<a id="__codelineno-2-42" name="__codelineno-2-42" href="#__codelineno-2-42"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-2-43" name="__codelineno-2-43" href="#__codelineno-2-43"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-2-44" name="__codelineno-2-44" href="#__codelineno-2-44"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-2-45" name="__codelineno-2-45" href="#__codelineno-2-45"></a>
+<a id="__codelineno-2-46" name="__codelineno-2-46" href="#__codelineno-2-46"></a><span class="w">  </span><span class="nx">plugins</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-47" name="__codelineno-2-47" href="#__codelineno-2-47"></a><span class="w">    </span><span class="c1">// Plugin configs — see section 6.2 for details per plugin</span>
+<a id="__codelineno-2-48" name="__codelineno-2-48" href="#__codelineno-2-48"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-2-49" name="__codelineno-2-49" href="#__codelineno-2-49"></a><span class="p">});</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Config Section</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>targetId</code></td>
+<td>DOM element ID where the player renders. The element must exist before <code>setup()</code> is called.</td>
+</tr>
+<tr>
+<td><code>provider</code></td>
+<td>Kaltura account and authentication settings. <code>partnerId</code> and <code>uiConfId</code> are required.</td>
+</tr>
+<tr>
+<td><code>playback</code></td>
+<td>Playback behavior: autoplay, volume, looping, stream format priority.</td>
+</tr>
+<tr>
+<td><code>ui</code></td>
+<td>Player UI customization: disable controls, inject CSS, toggle components, add watermarks.</td>
+</tr>
+<tr>
+<td><code>plugins</code></td>
+<td>Plugin activation and configuration. Pass an empty object <code>{}</code> to enable with defaults, or provide config parameters.</td>
+</tr>
+<tr>
+<td><code>log</code></td>
+<td>Logging verbosity. Use <code>DEBUG</code> during development and <code>ERROR</code> in production.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="52-loadmedia-options">5.2 loadMedia() Options<a class="headerlink" href="#52-loadmedia-options" title="Permanent link">&para;</a></h2>
+<p>The <code>player.loadMedia()</code> method accepts two arguments: a media info object and an optional options object:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nx">player</span><span class="p">.</span><span class="nx">loadMedia</span><span class="p">(</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">entryId</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;ENTRY_ID&#39;</span><span class="w"> </span><span class="p">},</span><span class="w">          </span><span class="c1">// Required: entry to load</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="p">{</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="nx">seekFrom</span><span class="o">:</span><span class="w"> </span><span class="mf">30</span><span class="p">,</span><span class="w">                    </span><span class="c1">// Start playback at 30 seconds (clipping start)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="nx">clipTo</span><span class="o">:</span><span class="w"> </span><span class="mf">120</span><span class="p">,</span><span class="w">                     </span><span class="c1">// End playback at 120 seconds (clipping end)</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="nx">startTime</span><span class="o">:</span><span class="w"> </span><span class="mf">30</span><span class="w">                    </span><span class="c1">// Alternative to seekFrom for setting start position</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="p">);</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>entryId</code></td>
+<td>string</td>
+<td>Kaltura entry ID to load</td>
+</tr>
+<tr>
+<td><code>seekFrom</code></td>
+<td>number</td>
+<td>Clip start position in seconds</td>
+</tr>
+<tr>
+<td><code>clipTo</code></td>
+<td>number</td>
+<td>Clip end position in seconds</td>
+</tr>
+<tr>
+<td><code>startTime</code></td>
+<td>number</td>
+<td>Initial playback position in seconds</td>
+</tr>
+</tbody>
+</table>
+<h1 id="6-js-control-playpauseseekvolume">6. JS Control (Play/Pause/Seek/Volume)<a class="headerlink" href="#6-js-control-playpauseseekvolume" title="Permanent link">&para;</a></h1>
+<p>With <strong>dynamic JS embeds</strong>, the player instance exposes standard controls:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">// Play / Pause</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nx">player</span><span class="p">.</span><span class="nx">play</span><span class="p">();</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nx">player</span><span class="p">.</span><span class="nx">pause</span><span class="p">();</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1">// Seek (seconds)</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nx">player</span><span class="p">.</span><span class="nx">currentTime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">90</span><span class="p">;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1">// Volume (0.0 – 1.0)</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="nx">player</span><span class="p">.</span><span class="nx">volume</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.5</span><span class="p">;</span>
+</code></pre></div>
+<p>These APIs are part of the web player’s base interface. Key properties and methods:</p>
+<table>
+<thead>
+<tr>
+<th>API</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>player.play()</code></td>
+<td>method</td>
+<td>Start playback</td>
+</tr>
+<tr>
+<td><code>player.pause()</code></td>
+<td>method</td>
+<td>Pause playback</td>
+</tr>
+<tr>
+<td><code>player.currentTime</code></td>
+<td>get/set</td>
+<td>Current playback position in seconds</td>
+</tr>
+<tr>
+<td><code>player.duration</code></td>
+<td>get</td>
+<td>Total media duration in seconds</td>
+</tr>
+<tr>
+<td><code>player.volume</code></td>
+<td>get/set</td>
+<td>Volume level (0.0 – 1.0)</td>
+</tr>
+<tr>
+<td><code>player.muted</code></td>
+<td>get/set</td>
+<td>Mute state (boolean)</td>
+</tr>
+<tr>
+<td><code>player.playbackRate</code></td>
+<td>get/set</td>
+<td>Playback speed (1.0 = normal)</td>
+</tr>
+<tr>
+<td><code>player.isLive()</code></td>
+<td>method</td>
+<td>Whether the current media is a live stream</td>
+</tr>
+<tr>
+<td><code>player.ready()</code></td>
+<td>method</td>
+<td>Returns a Promise that resolves when the player is ready for interaction</td>
+</tr>
+<tr>
+<td><code>player.loadMedia({entryId})</code></td>
+<td>method</td>
+<td>Load a new media entry into the player</td>
+</tr>
+</tbody>
+</table>
+<h2 id="61-binding-to-js-player-events-drive-app-flows">6.1 Binding to JS player events (drive app flows)<a class="headerlink" href="#61-binding-to-js-player-events-drive-app-flows" title="Permanent link">&para;</a></h2>
+<p>The Kaltura player exposes a DOM-style event system and a Promise for readiness. Use it for analytics beacons, UI reactions, gated flows, etc.  </p>
+<p><strong>Player core events consist of two event types:</strong></p>
+<ul>
+<li><strong>HTML5 Video Events</strong> — Standard events from the underlying <code>&lt;video&gt;</code> element  </li>
+<li><strong>Player Custom Events</strong> — Events specific to the Kaltura player that extend beyond standard HTML5 video  </li>
+</ul>
+<p>All core events are accessible via <code>player.Event.Core</code> as shown in the example below.</p>
+<h3 id="html5-video-events">HTML5 Video Events<a class="headerlink" href="#html5-video-events" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Event</th>
+<th>Constant</th>
+<th>Callback Payload</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Play</td>
+<td><code>PLAY</code></td>
+<td>No payload. Fired when playback is requested (before media actually starts playing).</td>
+</tr>
+<tr>
+<td>Pause</td>
+<td><code>PAUSE</code></td>
+<td>No payload. Fired when playback is paused.</td>
+</tr>
+<tr>
+<td>Ended</td>
+<td><code>ENDED</code></td>
+<td>No payload. Fired when playback reaches the end of the media.</td>
+</tr>
+<tr>
+<td>Seeking</td>
+<td><code>SEEKING</code></td>
+<td>No payload. The player's <code>currentTime</code> property reflects the target seek position.</td>
+</tr>
+<tr>
+<td>Seeked</td>
+<td><code>SEEKED</code></td>
+<td>No payload. Fired when a seek operation completes.</td>
+</tr>
+<tr>
+<td>Time Update</td>
+<td><code>TIME_UPDATE</code></td>
+<td>No payload. Fired continuously during playback (typically every 250ms). Read <code>player.currentTime</code> and <code>player.duration</code> for position data.</td>
+</tr>
+<tr>
+<td>Volume Change</td>
+<td><code>VOLUME_CHANGE</code></td>
+<td>No payload. Read <code>player.volume</code> (0.0-1.0) for the new volume level.</td>
+</tr>
+<tr>
+<td>Waiting</td>
+<td><code>WAITING</code></td>
+<td>No payload. Fired when playback stalls due to buffering.</td>
+</tr>
+<tr>
+<td>Playing</td>
+<td><code>PLAYING</code></td>
+<td>No payload. Fired when playback resumes after buffering or pause.</td>
+</tr>
+<tr>
+<td>Can Play</td>
+<td><code>CANPLAY</code></td>
+<td>No payload. Fired when enough data is buffered to begin playback.</td>
+</tr>
+<tr>
+<td>Loaded Metadata</td>
+<td><code>LOADED_METADATA</code></td>
+<td>No payload. Fired when media metadata (duration, dimensions) is available. Read <code>player.duration</code> for the media length.</td>
+</tr>
+<tr>
+<td>Loaded Data</td>
+<td><code>LOADED_DATA</code></td>
+<td>No payload. Fired when the first frame of the media is loaded.</td>
+</tr>
+<tr>
+<td>Duration Change</td>
+<td><code>DURATION_CHANGE</code></td>
+<td>No payload. Fired when <code>player.duration</code> changes (e.g., live stream duration updates).</td>
+</tr>
+<tr>
+<td>Rate Change</td>
+<td><code>RATE_CHANGE</code></td>
+<td>No payload. Read <code>player.playbackRate</code> for the new rate value.</td>
+</tr>
+<tr>
+<td>Error</td>
+<td><code>ERROR</code></td>
+<td><code>event.payload</code> — object with <code>severity</code> (number: 0=CRITICAL, 1=RECOVERABLE), <code>category</code> (number: 1=NETWORK, 2=TEXT, 3=MEDIA, 4=MANIFEST, 5=ENCRYPTION), <code>code</code> (number), and <code>data</code> (error details object).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="player-custom-events">Player Custom Events<a class="headerlink" href="#player-custom-events" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Event</th>
+<th>Constant</th>
+<th>Callback Payload</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Player State Changed</td>
+<td><code>PLAYER_STATE_CHANGED</code></td>
+<td><code>event.payload.oldState</code> — object with <code>type</code> (string: <code>"idle"</code>, <code>"loading"</code>, <code>"playing"</code>, <code>"paused"</code>, <code>"buffering"</code>).  <code>event.payload.newState</code> — object with <code>type</code> (same values).</td>
+</tr>
+<tr>
+<td>Media Loaded</td>
+<td><code>MEDIA_LOADED</code></td>
+<td>No payload. Fired after <code>loadMedia()</code> resolves and media sources are set.</td>
+</tr>
+<tr>
+<td>First Play</td>
+<td><code>FIRST_PLAY</code></td>
+<td>No payload. Fired once per media load — the first time play is requested.</td>
+</tr>
+<tr>
+<td>First Playing</td>
+<td><code>FIRST_PLAYING</code></td>
+<td>No payload. Fired once per media load — the first time media actually renders a frame.</td>
+</tr>
+<tr>
+<td>Tracks Changed</td>
+<td><code>TRACKS_CHANGED</code></td>
+<td><code>event.payload.tracks</code> — array of track objects, each with <code>type</code> (string: <code>"video"</code>, <code>"audio"</code>, <code>"text"</code>), <code>label</code> (string), <code>language</code> (string), <code>active</code> (boolean), and <code>index</code> (number).</td>
+</tr>
+<tr>
+<td>Text Track Changed</td>
+<td><code>TEXT_TRACK_CHANGED</code></td>
+<td><code>event.payload.selectedTextTrack</code> — track object with <code>language</code> (string), <code>label</code> (string), <code>kind</code> (string: <code>"subtitles"</code>, <code>"captions"</code>), <code>active</code> (boolean), and <code>index</code> (number).</td>
+</tr>
+<tr>
+<td>Audio Track Changed</td>
+<td><code>AUDIO_TRACK_CHANGED</code></td>
+<td><code>event.payload.selectedAudioTrack</code> — track object with <code>language</code> (string), <code>label</code> (string), <code>active</code> (boolean), and <code>index</code> (number).</td>
+</tr>
+<tr>
+<td>Video Track Changed</td>
+<td><code>VIDEO_TRACK_CHANGED</code></td>
+<td><code>event.payload.selectedVideoTrack</code> — track object with <code>width</code> (number), <code>height</code> (number), <code>bitrate</code> (number), <code>active</code> (boolean), and <code>bandwidth</code> (number).</td>
+</tr>
+<tr>
+<td>Enter Fullscreen</td>
+<td><code>ENTER_FULLSCREEN</code></td>
+<td>No payload. Fired when the player enters fullscreen mode.</td>
+</tr>
+<tr>
+<td>Exit Fullscreen</td>
+<td><code>EXIT_FULLSCREEN</code></td>
+<td>No payload. Fired when the player exits fullscreen mode.</td>
+</tr>
+<tr>
+<td>Enter Picture-in-Picture</td>
+<td><code>ENTER_PICTURE_IN_PICTURE</code></td>
+<td>No payload. Fired when the player enters PiP mode.</td>
+</tr>
+<tr>
+<td>Exit Picture-in-Picture</td>
+<td><code>EXIT_PICTURE_IN_PICTURE</code></td>
+<td>No payload. Fired when the player exits PiP mode.</td>
+</tr>
+<tr>
+<td>Source Selected</td>
+<td><code>SOURCE_SELECTED</code></td>
+<td><code>event.payload.selectedSource</code> — array of source objects, each with <code>mimetype</code> (string), <code>url</code> (string), <code>id</code> (string), <code>bandwidth</code> (number), <code>width</code> (number), <code>height</code> (number).</td>
+</tr>
+<tr>
+<td>Change Source Started</td>
+<td><code>CHANGE_SOURCE_STARTED</code></td>
+<td>No payload. Fired when a new media source begins loading (e.g., after <code>loadMedia()</code>).</td>
+</tr>
+<tr>
+<td>Change Source Ended</td>
+<td><code>CHANGE_SOURCE_ENDED</code></td>
+<td>No payload. Fired when the new media source has been applied.</td>
+</tr>
+<tr>
+<td>Autoplay Failed</td>
+<td><code>AUTOPLAY_FAILED</code></td>
+<td><code>event.payload</code> — object with <code>error</code> (string, browser's autoplay rejection reason).</td>
+</tr>
+<tr>
+<td>Mute Change</td>
+<td><code>MUTE_CHANGE</code></td>
+<td><code>event.payload.mute</code> — boolean, the new mute state.</td>
+</tr>
+<tr>
+<td>Playback Start</td>
+<td><code>PLAYBACK_START</code></td>
+<td>No payload. Fired once per session when the first play begins (differs from <code>FIRST_PLAY</code> in that it fires after buffering completes).</td>
+</tr>
+<tr>
+<td>Playback Ended</td>
+<td><code>PLAYBACK_ENDED</code></td>
+<td>No payload. Fired when all media in the playlist or single entry finishes.</td>
+</tr>
+<tr>
+<td>Ad Started</td>
+<td><code>AD_STARTED</code></td>
+<td><code>event.payload.adType</code> — string (<code>"preroll"</code>, <code>"midroll"</code>, <code>"postroll"</code>). <code>event.payload.adPosition</code> — number (ad index).</td>
+</tr>
+<tr>
+<td>Ad Completed</td>
+<td><code>AD_COMPLETED</code></td>
+<td><code>event.payload.adType</code> — string. <code>event.payload.adPosition</code> — number.</td>
+</tr>
+<tr>
+<td>Ad Skipped</td>
+<td><code>AD_SKIPPED</code></td>
+<td><code>event.payload.adType</code> — string. <code>event.payload.adPosition</code> — number.</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nb">window</span><span class="p">.</span><span class="nx">player</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">player</span><span class="p">;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="kd">function</span><span class="w"> </span><span class="nx">onPlay</span><span class="p">()</span><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;PLAY&#39;</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span><span class="kd">function</span><span class="w"> </span><span class="nx">onPause</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;PAUSE&#39;</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span><span class="kd">function</span><span class="w"> </span><span class="nx">onEnded</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;ENDED&#39;</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span><span class="kd">function</span><span class="w"> </span><span class="nx">onError</span><span class="p">(</span><span class="nx">ev</span><span class="p">){</span><span class="w"> </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;ERROR&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">ev</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">ev</span><span class="p">.</span><span class="nx">payload</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span><span class="kd">function</span><span class="w"> </span><span class="nx">onSeeking</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;SEEKING...&#39;</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span><span class="kd">function</span><span class="w"> </span><span class="nx">onSeeked</span><span class="p">()</span><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;SEEKED&#39;</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span><span class="kd">function</span><span class="w"> </span><span class="nx">onTimeUpdate</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;currentTime: &quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">player</span><span class="p">.</span><span class="nx">currentTime</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">  </span><span class="nx">player</span><span class="p">.</span><span class="nx">ready</span><span class="p">().</span><span class="nx">then</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;player is ready!&quot;</span><span class="p">);</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">E</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">player</span><span class="p">.</span><span class="nx">Event</span><span class="p">.</span><span class="nx">Core</span><span class="p">;</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">    </span><span class="c1">// bind to events:  </span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">    </span><span class="nx">player</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="nx">E</span><span class="p">.</span><span class="nx">PLAY</span><span class="p">,</span><span class="w">        </span><span class="nx">onPlay</span><span class="p">);</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">    </span><span class="nx">player</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="nx">E</span><span class="p">.</span><span class="nx">PAUSE</span><span class="p">,</span><span class="w">       </span><span class="nx">onPause</span><span class="p">);</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">    </span><span class="nx">player</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="nx">E</span><span class="p">.</span><span class="nx">ENDED</span><span class="p">,</span><span class="w">       </span><span class="nx">onEnded</span><span class="p">);</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">    </span><span class="nx">player</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="nx">E</span><span class="p">.</span><span class="nx">ERROR</span><span class="p">,</span><span class="w">       </span><span class="nx">onError</span><span class="p">);</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">    </span><span class="nx">player</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="nx">E</span><span class="p">.</span><span class="nx">TIME_UPDATE</span><span class="p">,</span><span class="w"> </span><span class="nx">onTimeUpdate</span><span class="p">);</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">    </span><span class="nx">player</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="nx">E</span><span class="p">.</span><span class="nx">SEEKING</span><span class="p">,</span><span class="w">     </span><span class="nx">onSeeking</span><span class="p">);</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="w">    </span><span class="nx">player</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="nx">E</span><span class="p">.</span><span class="nx">SEEKED</span><span class="p">,</span><span class="w">      </span><span class="nx">onSeeked</span><span class="p">);</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="w">  </span><span class="p">});</span>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="w">  </span><span class="nb">window</span><span class="p">.</span><span class="nx">dispose</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;disposing...&#39;</span><span class="p">);</span>
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">E</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">player</span><span class="p">.</span><span class="nx">Event</span><span class="p">.</span><span class="nx">Core</span><span class="p">;</span>
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a><span class="w">    </span><span class="nb">window</span><span class="p">.</span><span class="nx">player</span><span class="p">.</span><span class="nx">removeEventListener</span><span class="p">(</span><span class="nx">E</span><span class="p">.</span><span class="nx">PLAY</span><span class="p">,</span><span class="w">        </span><span class="nx">onPlay</span><span class="p">);</span>
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a><span class="w">    </span><span class="nb">window</span><span class="p">.</span><span class="nx">player</span><span class="p">.</span><span class="nx">removeEventListener</span><span class="p">(</span><span class="nx">E</span><span class="p">.</span><span class="nx">PAUSE</span><span class="p">,</span><span class="w">       </span><span class="nx">onPause</span><span class="p">);</span>
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a><span class="w">    </span><span class="nb">window</span><span class="p">.</span><span class="nx">player</span><span class="p">.</span><span class="nx">removeEventListener</span><span class="p">(</span><span class="nx">E</span><span class="p">.</span><span class="nx">ENDED</span><span class="p">,</span><span class="w">       </span><span class="nx">onEnded</span><span class="p">);</span>
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a><span class="w">    </span><span class="nb">window</span><span class="p">.</span><span class="nx">player</span><span class="p">.</span><span class="nx">removeEventListener</span><span class="p">(</span><span class="nx">E</span><span class="p">.</span><span class="nx">ERROR</span><span class="p">,</span><span class="w">       </span><span class="nx">onError</span><span class="p">);</span>
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a><span class="w">    </span><span class="nb">window</span><span class="p">.</span><span class="nx">player</span><span class="p">.</span><span class="nx">removeEventListener</span><span class="p">(</span><span class="nx">E</span><span class="p">.</span><span class="nx">TIME_UPDATE</span><span class="p">,</span><span class="w"> </span><span class="nx">onTimeUpdate</span><span class="p">);</span>
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a><span class="w">    </span><span class="nb">window</span><span class="p">.</span><span class="nx">player</span><span class="p">.</span><span class="nx">removeEventListener</span><span class="p">(</span><span class="nx">E</span><span class="p">.</span><span class="nx">SEEKING</span><span class="p">,</span><span class="w">     </span><span class="nx">onSeeking</span><span class="p">);</span>
+<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a><span class="w">    </span><span class="nb">window</span><span class="p">.</span><span class="nx">player</span><span class="p">.</span><span class="nx">removeEventListener</span><span class="p">(</span><span class="nx">E</span><span class="p">.</span><span class="nx">SEEKED</span><span class="p">,</span><span class="w">      </span><span class="nx">onSeeked</span><span class="p">);</span>
+<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a>
+<a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a><span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+</code></pre></div>
+<h2 id="62-playkit-plugin-ecosystem">6.2 PlayKit Plugin Ecosystem<a class="headerlink" href="#62-playkit-plugin-ecosystem" title="Permanent link">&para;</a></h2>
+<p>The Kaltura Player v7 (PlayKit) supports 30+ plugins that extend playback with interactive features. Plugins are configured via the <code>plugins</code> block in <code>KalturaPlayer.setup()</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">player</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">KalturaPlayer</span><span class="p">.</span><span class="nx">setup</span><span class="p">({</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nx">targetId</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;kplayer&#39;</span><span class="p">,</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nx">provider</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">partnerId</span><span class="o">:</span><span class="w"> </span><span class="nx">PARTNER_ID</span><span class="p">,</span><span class="w"> </span><span class="nx">uiConfId</span><span class="o">:</span><span class="w"> </span><span class="nx">UICONF_ID</span><span class="p">,</span><span class="w"> </span><span class="nx">ks</span><span class="o">:</span><span class="w"> </span><span class="nx">KS</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="nx">plugins</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span><span class="nx">dualscreen</span><span class="o">:</span><span class="w"> </span><span class="p">{},</span><span class="w">       </span><span class="c1">// enable Dual Screen plugin</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span><span class="nx">transcript</span><span class="o">:</span><span class="w"> </span><span class="p">{},</span><span class="w">       </span><span class="c1">// enable Transcript plugin</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span><span class="nx">navigation</span><span class="o">:</span><span class="w"> </span><span class="p">{}</span><span class="w">        </span><span class="c1">// enable Navigation plugin</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="p">});</span>
+</code></pre></div>
+<p><strong>Key plugins and their configuration parameters:</strong></p>
+<h3 id="dual-screen-dualscreen">Dual Screen (<code>dualscreen</code>)<a class="headerlink" href="#dual-screen-dualscreen" title="Permanent link">&para;</a></h3>
+<p>Multi-stream PIP / side-by-side layout switching for entries with a secondary stream (e.g., slides + presenter).</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>layout</code></td>
+<td>string</td>
+<td><code>"pip"</code></td>
+<td>Initial layout: <code>"pip"</code> (picture-in-picture), <code>"sbs"</code> (side-by-side), <code>"single"</code> (primary only), <code>"singleSecondary"</code> (secondary only)</td>
+</tr>
+<tr>
+<td><code>mainViewEntryId</code></td>
+<td>string</td>
+<td>(auto)</td>
+<td>Entry ID for the main (primary) view</td>
+</tr>
+<tr>
+<td><code>secondaryViewEntryId</code></td>
+<td>string</td>
+<td>(auto)</td>
+<td>Entry ID for the secondary view</td>
+</tr>
+<tr>
+<td><code>pip.position</code></td>
+<td>string</td>
+<td><code>"bottom-right"</code></td>
+<td>PiP window position: <code>"top-left"</code>, <code>"top-right"</code>, <code>"bottom-left"</code>, <code>"bottom-right"</code></td>
+</tr>
+<tr>
+<td><code>inverse</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Swap primary and secondary media in the layout</td>
+</tr>
+<tr>
+<td><code>childSizeMultiplier</code></td>
+<td>number</td>
+<td><code>0.3</code></td>
+<td>PiP window size as a fraction of the player (0.0 - 1.0)</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nx">plugins</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="nx">dualscreen</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span><span class="nx">layout</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;sbs&#39;</span><span class="p">,</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span><span class="nx">inverse</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span><span class="nx">childSizeMultiplier</span><span class="o">:</span><span class="w"> </span><span class="mf">0.3</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="navigation-navigation">Navigation (<code>navigation</code>)<a class="headerlink" href="#navigation-navigation" title="Permanent link">&para;</a></h3>
+<p>Chapter-based navigation with thumbnails from cue points defined on the entry.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>position</code></td>
+<td>string</td>
+<td><code>"right"</code></td>
+<td>Panel position: <code>"right"</code>, <code>"left"</code>, <code>"top"</code>, <code>"bottom"</code></td>
+</tr>
+<tr>
+<td><code>expandOnFirstPlay</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Auto-expand the navigation panel on first play</td>
+</tr>
+<tr>
+<td><code>visible</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Show the navigation panel</td>
+</tr>
+<tr>
+<td><code>itemsOrder.bySortOrder</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Sort chapters by the cue point <code>sortOrder</code> field</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nx">plugins</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="nx">navigation</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span><span class="nx">position</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;right&#39;</span><span class="p">,</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span><span class="nx">expandOnFirstPlay</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="transcript-transcript">Transcript (<code>transcript</code>)<a class="headerlink" href="#transcript-transcript" title="Permanent link">&para;</a></h3>
+<p>Searchable transcript overlay synced to playback, using caption assets on the entry.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>position</code></td>
+<td>string</td>
+<td><code>"right"</code></td>
+<td>Panel position: <code>"right"</code>, <code>"left"</code>, <code>"top"</code>, <code>"bottom"</code></td>
+</tr>
+<tr>
+<td><code>expandOnFirstPlay</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Auto-expand the transcript panel on first play</td>
+</tr>
+<tr>
+<td><code>visible</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Show the transcript panel</td>
+</tr>
+<tr>
+<td><code>showTime</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Display timestamps next to each line</td>
+</tr>
+<tr>
+<td><code>scrollOffset</code></td>
+<td>number</td>
+<td><code>0</code></td>
+<td>Pixels to offset auto-scroll from the top</td>
+</tr>
+<tr>
+<td><code>searchDebounceTimeout</code></td>
+<td>number</td>
+<td><code>250</code></td>
+<td>Milliseconds to debounce search input</td>
+</tr>
+<tr>
+<td><code>searchNextPrevVisible</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Show next/previous navigation in search results</td>
+</tr>
+<tr>
+<td><code>downloadDisabled</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Hide the transcript download button</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nx">plugins</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="nx">transcript</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">    </span><span class="nx">position</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;right&#39;</span><span class="p">,</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">    </span><span class="nx">expandOnFirstPlay</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">    </span><span class="nx">showTime</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">    </span><span class="nx">downloadDisabled</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="qa-qna">Q&amp;A (<code>qna</code>)<a class="headerlink" href="#qa-qna" title="Permanent link">&para;</a></h3>
+<p>Live Q&amp;A panel for virtual events, enabling audience questions and moderator responses.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>position</code></td>
+<td>string</td>
+<td><code>"right"</code></td>
+<td>Panel position: <code>"right"</code>, <code>"left"</code></td>
+</tr>
+<tr>
+<td><code>expandOnFirstPlay</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Auto-expand the Q&amp;A panel on first play</td>
+</tr>
+<tr>
+<td><code>visible</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Show the Q&amp;A panel</td>
+</tr>
+<tr>
+<td><code>dateFormat</code></td>
+<td>string</td>
+<td><code>"mmmm do, yyyy"</code></td>
+<td>Date display format for Q&amp;A entries</td>
+</tr>
+<tr>
+<td><code>bannerDuration</code></td>
+<td>number</td>
+<td><code>5000</code></td>
+<td>Banner notification duration in milliseconds</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nx">plugins</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="nx">qna</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span><span class="nx">position</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;right&#39;</span><span class="p">,</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">    </span><span class="nx">expandOnFirstPlay</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="hotspots-hotspots">Hotspots (<code>hotspots</code>)<a class="headerlink" href="#hotspots-hotspots" title="Permanent link">&para;</a></h3>
+<p>Clickable overlay hotspots on video, defined via cue points with custom data.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>visible</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Show hotspot overlays</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nx">plugins</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span><span class="nx">hotspots</span><span class="o">:</span><span class="w"> </span><span class="p">{}</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="p">}</span>
+</code></pre></div>
+<p>Hotspot content, position, and timing are defined by cue points on the entry (via the <code>cuePoint</code> API service), not by plugin config. The plugin reads these cue points and renders them at the specified times.</p>
+<h3 id="in-video-quiz-ivq-ivq">In-Video Quiz (IVQ) (<code>ivq</code>)<a class="headerlink" href="#in-video-quiz-ivq-ivq" title="Permanent link">&para;</a></h3>
+<p>Interactive quizzes during playback, pausing the video to present questions at configured cue points.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>visible</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Show quiz overlays</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nx">plugins</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">  </span><span class="nx">ivq</span><span class="o">:</span><span class="w"> </span><span class="p">{}</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="p">}</span>
+</code></pre></div>
+<p>Quiz questions, answers, and timing are defined by cue points on the entry (created via the <code>quiz</code> plugin in KMC or through the API). The IVQ plugin renders them during playback.</p>
+<h3 id="seo-seo">SEO (<code>seo</code>)<a class="headerlink" href="#seo-seo" title="Permanent link">&para;</a></h3>
+<p>Auto-generates JSON-LD structured data (<code>VideoObject</code> schema) for video entries to improve search engine discoverability.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>includeDescription</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Include the entry description in the JSON-LD output</td>
+</tr>
+<tr>
+<td><code>includeThumbnail</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Include the thumbnail URL in the JSON-LD output</td>
+</tr>
+<tr>
+<td><code>includeUploadDate</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Include the upload date in the JSON-LD output</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nx">plugins</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span><span class="nx">seo</span><span class="o">:</span><span class="w"> </span><span class="p">{}</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="downloads-downloads">Downloads (<code>downloads</code>)<a class="headerlink" href="#downloads-downloads" title="Permanent link">&para;</a></h3>
+<p>Adds a download button to the player UI that lists available flavor assets (transcoded versions) for download.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>flavorParamIds</code></td>
+<td>string</td>
+<td><code>""</code></td>
+<td>Comma-separated flavor param IDs to offer for download. Empty string means all available flavors.</td>
+</tr>
+<tr>
+<td><code>presetName</code></td>
+<td>string</td>
+<td><code>""</code></td>
+<td>Name for the download preset group</td>
+</tr>
+<tr>
+<td><code>displayFlavors</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Show individual flavor selection (resolution/bitrate) in the download menu</td>
+</tr>
+<tr>
+<td><code>displayCaptions</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Show caption download options in the download menu</td>
+</tr>
+<tr>
+<td><code>displayAttachments</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Show attachment download options in the download menu</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nx">plugins</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">  </span><span class="nx">downloads</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">    </span><span class="nx">flavorParamIds</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">    </span><span class="nx">displayFlavors</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">    </span><span class="nx">displayCaptions</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="kava-kava">KAVA (<code>kava</code>)<a class="headerlink" href="#kava-kava" title="Permanent link">&para;</a></h3>
+<p>Built-in analytics event reporting that sends playback metrics to the Kaltura Analytics system.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>partnerId</code></td>
+<td>number</td>
+<td>(from provider)</td>
+<td>Override the partner ID for analytics reporting</td>
+</tr>
+<tr>
+<td><code>entryId</code></td>
+<td>string</td>
+<td>(from media)</td>
+<td>Override the entry ID for analytics reporting</td>
+</tr>
+<tr>
+<td><code>ks</code></td>
+<td>string</td>
+<td>(from provider)</td>
+<td>Override the KS for analytics reporting</td>
+</tr>
+<tr>
+<td><code>tamperAnalyticsHandler</code></td>
+<td>function</td>
+<td><code>null</code></td>
+<td>Callback to modify analytics events before sending. Receives the event object and returns modified event or <code>false</code> to cancel.</td>
+</tr>
+<tr>
+<td><code>customVar1</code></td>
+<td>string</td>
+<td><code>""</code></td>
+<td>Custom variable 1 (passed to analytics backend)</td>
+</tr>
+<tr>
+<td><code>customVar2</code></td>
+<td>string</td>
+<td><code>""</code></td>
+<td>Custom variable 2</td>
+</tr>
+<tr>
+<td><code>customVar3</code></td>
+<td>string</td>
+<td><code>""</code></td>
+<td>Custom variable 3</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="nx">plugins</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">  </span><span class="nx">kava</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">    </span><span class="nx">customVar1</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;department-engineering&#39;</span><span class="p">,</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">    </span><span class="nx">customVar2</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;campaign-q4&#39;</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="p">}</span>
+</code></pre></div>
+<p>Three shared infrastructure packages power the interactive plugins: <code>kaltura-cuepoints</code> (temporal markers), <code>ui-managers</code> (shared UI components), and <code>timeline</code> (timeline visualization). These are bundled automatically when the plugin is enabled.</p>
+<blockquote>
+<p>Plugin availability depends on your player configuration (<code>uiConfId</code>). Configure plugins in the KMC under Studio &gt; TV Platform (select a player, then edit its plugins) or via the <code>plugins</code> config block in <code>KalturaPlayer.setup()</code>.</p>
+</blockquote>
+<h2 id="63-player-runtime-api">6.3 Player Runtime API<a class="headerlink" href="#63-player-runtime-api" title="Permanent link">&para;</a></h2>
+<p>After the player is created with <code>KalturaPlayer.setup()</code>, you can control plugins and player behavior at runtime using the service and plugin APIs.</p>
+<h3 id="playergetservicename">player.getService(name)<a class="headerlink" href="#playergetservicename" title="Permanent link">&para;</a></h3>
+<p>Retrieve a plugin service by name. Returns <code>undefined</code> if the plugin is not loaded for the current player configuration.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="kd">var</span><span class="w"> </span><span class="nx">svc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">player</span><span class="p">.</span><span class="nx">getService</span><span class="p">(</span><span class="s1">&#39;dualScreen&#39;</span><span class="p">);</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">svc</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">  </span><span class="nx">svc</span><span class="p">.</span><span class="nx">ready</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Dual Screen service is ready&#39;</span><span class="p">);</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="w">  </span><span class="p">});</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Dual Screen plugin not available in this player config&#39;</span><span class="p">);</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="p">}</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Returns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>player.getService(name)</code></td>
+<td>service object or <code>undefined</code></td>
+<td>Get a plugin's service interface. The <code>name</code> is the service registration name (e.g., <code>'dualScreen'</code>, <code>'sidePanels'</code>).</td>
+</tr>
+<tr>
+<td><code>service.ready</code></td>
+<td>Promise</td>
+<td>Resolves when the service has finished initializing (e.g., secondary media is loaded for dual screen).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="playerplugins">player.plugins.*<a class="headerlink" href="#playerplugins" title="Permanent link">&para;</a></h3>
+<p>Access plugin instances directly to call runtime methods. Each plugin is accessible by its config key:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1">// Access the Dual Screen plugin instance</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="kd">var</span><span class="w"> </span><span class="nx">ds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">player</span><span class="p">.</span><span class="nx">plugins</span><span class="p">.</span><span class="nx">dualscreen</span><span class="p">;</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1">// Switch layouts at runtime (after service is ready)</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="kd">var</span><span class="w"> </span><span class="nx">svc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">player</span><span class="p">.</span><span class="nx">getService</span><span class="p">(</span><span class="s1">&#39;dualScreen&#39;</span><span class="p">);</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="nx">svc</span><span class="p">.</span><span class="nx">ready</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="w">  </span><span class="nx">ds</span><span class="p">.</span><span class="nx">_switchToPIP</span><span class="p">({</span><span class="w"> </span><span class="nx">force</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="kc">true</span><span class="p">);</span><span class="w">        </span><span class="c1">// Switch to PiP layout</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="w">  </span><span class="nx">ds</span><span class="p">.</span><span class="nx">_switchToSideBySide</span><span class="p">({</span><span class="w"> </span><span class="nx">force</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="kc">true</span><span class="p">);</span><span class="w">  </span><span class="c1">// Switch to side-by-side</span>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a><span class="w">  </span><span class="nx">ds</span><span class="p">.</span><span class="nx">_switchToSingleMedia</span><span class="p">({</span><span class="w"> </span><span class="nx">force</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="kc">true</span><span class="p">);</span><span class="w"> </span><span class="c1">// Switch to single view</span>
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="w">  </span><span class="nx">ds</span><span class="p">.</span><span class="nx">_switchToInversePIP</span><span class="p">({</span><span class="w"> </span><span class="nx">force</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="kc">true</span><span class="p">);</span><span class="w">  </span><span class="c1">// Switch to inverse PiP</span>
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a><span class="p">});</span>
+</code></pre></div>
+<blockquote>
+<p><code>player.configure()</code> only sets the initial config. It does not trigger runtime changes for plugins like Dual Screen. To control plugins at runtime, use the plugin instance methods (e.g., <code>player.plugins.dualscreen._switchTo*()</code>) after the service <code>ready</code> promise resolves.</p>
+</blockquote>
+<h3 id="playerconfigureconfig">player.configure(config)<a class="headerlink" href="#playerconfigureconfig" title="Permanent link">&para;</a></h3>
+<p>Updates player configuration at runtime. Effective for <code>playback</code> and <code>ui</code> settings, but <strong>not</strong> for plugin runtime state changes (plugins read config only at setup time):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1">// These work at runtime:</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="nx">player</span><span class="p">.</span><span class="nx">configure</span><span class="p">({</span><span class="w"> </span><span class="nx">playback</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">volume</span><span class="o">:</span><span class="w"> </span><span class="mf">0.5</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">});</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="nx">player</span><span class="p">.</span><span class="nx">configure</span><span class="p">({</span><span class="w"> </span><span class="nx">ui</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">css</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;.custom { color: red; }&#39;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">});</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="c1">// This does NOT trigger a plugin layout change at runtime:</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="nx">player</span><span class="p">.</span><span class="nx">configure</span><span class="p">({</span><span class="w"> </span><span class="nx">plugins</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">dualscreen</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">layout</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;sbs&#39;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">});</span>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1">// Instead, use: player.plugins.dualscreen._switchToSideBySide({ force: true }, true);</span>
+</code></pre></div>
+<h3 id="playerdestroy">player.destroy()<a class="headerlink" href="#playerdestroy" title="Permanent link">&para;</a></h3>
+<p>Destroys the player instance, removing all event listeners, stopping playback, and cleaning up the DOM. Call this when removing the player from the page:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="nx">player</span><span class="p">.</span><span class="nx">destroy</span><span class="p">();</span>
+</code></pre></div>
+<h1 id="7-server-side-ks-for-player">7. Server-Side KS for Player<a class="headerlink" href="#7-server-side-ks-for-player" title="Permanent link">&para;</a></h1>
+<p>Generate a scoped USER KS (type=0) for player embeds. Use specific privileges to control what the player can access:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/session/action/start&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;partnerId=</span><span class="nv">$KALTURA_PARTNER_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;secret=</span><span class="nv">$KALTURA_ADMIN_SECRET</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;type=0&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;userId=viewer@example.com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;expiry=3600&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;privileges=sview:ENTRY_ID,appid:myapp-example.com,privacycontext:MY_PORTAL&quot;</span>
+</code></pre></div>
+<p><strong>Recommended player KS privileges:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Privilege</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sview:ENTRY_ID</code></td>
+<td>Restrict playback to a specific entry (or <code>sview:*</code> for all accessible entries)</td>
+</tr>
+<tr>
+<td><code>appid:APP_NAME-APP_DOMAIN</code></td>
+<td>Analytics tracking — identifies which app/domain generated the playback</td>
+</tr>
+<tr>
+<td><code>privacycontext:CATEGORY_NAME</code></td>
+<td>Scope access to entries in a specific privacy-enabled category</td>
+</tr>
+<tr>
+<td><code>setrole:PLAYBACK_BASE_ROLE</code></td>
+<td>Restrict the KS to read-only playback operations</td>
+</tr>
+<tr>
+<td><code>enableentitlement</code></td>
+<td>Enforce category entitlement checks</td>
+</tr>
+</tbody>
+</table>
+<h2 id="71-ip-tokenization-for-cdn-protected-content">7.1 IP Tokenization for CDN-Protected Content<a class="headerlink" href="#71-ip-tokenization-for-cdn-protected-content" title="Permanent link">&para;</a></h2>
+<p>When CDN tokenization is enforced on your account, the player KS must include the viewer's IP address so the CDN can validate the request:</p>
+<ol>
+<li><strong>Server looks up the viewer's IP</strong> from the HTTP request</li>
+<li><strong>Generates a KS with <code>iprestrict:IP</code></strong> to bind the session to that IP</li>
+<li><strong>Configures the player</strong> to use HLS-only streaming (required for IP-tokenized delivery)</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">player</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">KalturaPlayer</span><span class="p">.</span><span class="nx">setup</span><span class="p">({</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="w">  </span><span class="nx">targetId</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;kplayer&#39;</span><span class="p">,</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="w">  </span><span class="nx">provider</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="w">    </span><span class="nx">partnerId</span><span class="o">:</span><span class="w"> </span><span class="nx">PARTNER_ID</span><span class="p">,</span>
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="w">    </span><span class="nx">uiConfId</span><span class="o">:</span><span class="w"> </span><span class="nx">UICONF_ID</span><span class="p">,</span>
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="w">    </span><span class="nx">ks</span><span class="o">:</span><span class="w"> </span><span class="nx">IP_RESTRICTED_KS</span><span class="w">  </span><span class="c1">// KS includes iprestrict:VIEWER_IP</span>
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="w">  </span><span class="nx">playback</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a><span class="w">    </span><span class="nx">autoplay</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a><span class="w">    </span><span class="nx">streamPriority</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">engine</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;html5&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">format</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;hls&#39;</span><span class="w"> </span><span class="p">}</span><span class="w">  </span><span class="c1">// Force HLS for CDN tokenization</span>
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a><span class="w">    </span><span class="p">]</span>
+<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a><span class="p">});</span>
+</code></pre></div>
+<blockquote>
+<p>IP tokenization requires account-level CDN configuration. Contact your Kaltura specialist for setup. See <a href="../KALTURA_SESSION_GUIDE/">Session Guide section 8.5</a> for <code>iprestrict</code> privilege details.</p>
+</blockquote>
+<h1 id="8-playback-progress-tracking-quartile-events">8. Playback Progress Tracking (Quartile Events)<a class="headerlink" href="#8-playback-progress-tracking-quartile-events" title="Permanent link">&para;</a></h1>
+<p>Track playback milestones (25%, 50%, 75%, 100%) using the <code>TIME_UPDATE</code> event:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="nx">player</span><span class="p">.</span><span class="nx">ready</span><span class="p">().</span><span class="nx">then</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">milestones</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="mf">25</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="mf">50</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="mf">75</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="mf">100</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="w"> </span><span class="p">};</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="w">  </span><span class="nx">player</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="nx">player</span><span class="p">.</span><span class="nx">Event</span><span class="p">.</span><span class="nx">Core</span><span class="p">.</span><span class="nx">TIME_UPDATE</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">duration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">player</span><span class="p">.</span><span class="nx">duration</span><span class="p">;</span>
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">duration</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">pct</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">((</span><span class="nx">player</span><span class="p">.</span><span class="nx">currentTime</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nx">duration</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">100</span><span class="p">);</span>
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>
+<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">mark</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="p">[</span><span class="mf">25</span><span class="p">,</span><span class="w"> </span><span class="mf">50</span><span class="p">,</span><span class="w"> </span><span class="mf">75</span><span class="p">,</span><span class="w"> </span><span class="mf">100</span><span class="p">])</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">pct</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="nx">mark</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="nx">milestones</span><span class="p">[</span><span class="nx">mark</span><span class="p">])</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a><span class="w">        </span><span class="nx">milestones</span><span class="p">[</span><span class="nx">mark</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+<a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a><span class="w">        </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Reached &#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">mark</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s1">&#39;% milestone&#39;</span><span class="p">);</span>
+<a id="__codelineno-22-13" name="__codelineno-22-13" href="#__codelineno-22-13"></a><span class="w">        </span><span class="c1">// Send analytics beacon: fetch(&#39;/api/track&#39;, { method: &#39;POST&#39;, body: ... })</span>
+<a id="__codelineno-22-14" name="__codelineno-22-14" href="#__codelineno-22-14"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-22-15" name="__codelineno-22-15" href="#__codelineno-22-15"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-22-16" name="__codelineno-22-16" href="#__codelineno-22-16"></a><span class="w">  </span><span class="p">});</span>
+<a id="__codelineno-22-17" name="__codelineno-22-17" href="#__codelineno-22-17"></a>
+<a id="__codelineno-22-18" name="__codelineno-22-18" href="#__codelineno-22-18"></a><span class="w">  </span><span class="nx">player</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="nx">player</span><span class="p">.</span><span class="nx">Event</span><span class="p">.</span><span class="nx">Core</span><span class="p">.</span><span class="nx">ENDED</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-22-19" name="__codelineno-22-19" href="#__codelineno-22-19"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">milestones</span><span class="p">[</span><span class="mf">100</span><span class="p">])</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-22-20" name="__codelineno-22-20" href="#__codelineno-22-20"></a><span class="w">      </span><span class="nx">milestones</span><span class="p">[</span><span class="mf">100</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+<a id="__codelineno-22-21" name="__codelineno-22-21" href="#__codelineno-22-21"></a><span class="w">      </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Reached 100% milestone (ENDED)&#39;</span><span class="p">);</span>
+<a id="__codelineno-22-22" name="__codelineno-22-22" href="#__codelineno-22-22"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-22-23" name="__codelineno-22-23" href="#__codelineno-22-23"></a><span class="w">  </span><span class="p">});</span>
+<a id="__codelineno-22-24" name="__codelineno-22-24" href="#__codelineno-22-24"></a><span class="p">});</span>
+</code></pre></div>
+<p>Use quartile tracking for custom engagement analytics, completion-gated content (e.g., unlock next module after 75%), or third-party analytics integration.</p>
+<h1 id="9-error-handling">9. Error Handling<a class="headerlink" href="#9-error-handling" title="Permanent link">&para;</a></h1>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Detection</th>
+<th>Resolution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Invalid <code>entryId</code></td>
+<td>Player shows "Media not found" error</td>
+<td>Verify entry exists and has status=2 (READY) via <code>baseEntry.get</code></td>
+</tr>
+<tr>
+<td>Expired or invalid KS</td>
+<td>Player shows access denied</td>
+<td>Generate a fresh KS; for production, use AppToken session renewal</td>
+</tr>
+<tr>
+<td>Player library not loaded</td>
+<td><code>KalturaPlayer is not defined</code></td>
+<td>Check the script <code>src</code> URL — verify <code>partnerId</code> and <code>uiConfId</code> are correct</td>
+</tr>
+<tr>
+<td>Plugin not available</td>
+<td><code>player.getService('name')</code> returns undefined</td>
+<td>The plugin may not be enabled for this player config — verify <code>uiConfId</code></td>
+</tr>
+<tr>
+<td>Autoplay blocked by browser</td>
+<td>Video loads but does not play</td>
+<td>Set <code>playback.autoplay: true</code> with <code>muted: true</code> — browsers require muted autoplay</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Retry strategy:</strong> For transient errors (expired KS, network failures), implement KS refresh logic and retry <code>loadMedia</code>. For client errors (invalid <code>entryId</code>, missing player library, wrong <code>uiConfId</code>), fix the configuration before retrying — these will not resolve on their own.</p>
+<h1 id="10-best-practices">10. Best Practices<a class="headerlink" href="#10-best-practices" title="Permanent link">&para;</a></h1>
+<ul>
+<li><strong>Use USER KS (type=0)</strong> for player embeds. Scope to specific entries with <code>sview:entryId</code> when possible.</li>
+<li><strong>Set short KS expiry</strong> (1-4 hours). For long-running pages, implement KS refresh logic.</li>
+<li><strong>Use iframe embed for simple integrations.</strong> It handles library loading and configuration automatically.</li>
+<li><strong>Use JS embed for programmatic control.</strong> When you need play/pause/seek, event listeners, or plugin interaction.</li>
+<li><strong>Load the player library once.</strong> Cache the <code>&lt;script&gt;</code> tag and reuse it across videos. Use <code>KalturaPlayer.setup()</code> for each new player instance.</li>
+<li><strong>Use Access Control profiles</strong> on entries for content protection (geo, domain, IP restrictions) rather than implementing client-side checks.</li>
+<li><strong>Debug with a generic event listener.</strong> During development, log all player events to understand the event flow:
+  <div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="nx">player</span><span class="p">.</span><span class="nx">ready</span><span class="p">().</span><span class="nx">then</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="w">  </span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">player</span><span class="p">.</span><span class="nx">Event</span><span class="p">.</span><span class="nx">Core</span><span class="p">).</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">key</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="w">    </span><span class="nx">player</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="nx">player</span><span class="p">.</span><span class="nx">Event</span><span class="p">.</span><span class="nx">Core</span><span class="p">[</span><span class="nx">key</span><span class="p">],</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="w">      </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Event:&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">key</span><span class="p">);</span>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="w">    </span><span class="p">});</span>
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="w">  </span><span class="p">});</span>
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="p">});</span>
+</code></pre></div></li>
+</ul>
+<h1 id="11-related-guides">11. Related Guides<a class="headerlink" href="#11-related-guides" title="Permanent link">&para;</a></h1>
+<ul>
+<li><strong><a href="../KALTURA_SESSION_GUIDE/">Session Guide</a></strong> — Generate KS for access-controlled player embeds</li>
+<li><strong><a href="../KALTURA_APPTOKENS_API/">AppTokens</a></strong> — Secure KS generation for production player integrations</li>
+<li><strong><a href="../KALTURA_CONTENT_DELIVERY_API/">Content Delivery</a></strong> — playManifest URLs, delivery profiles, and CDN configuration for playback</li>
+<li><strong><a href="../KALTURA_ESEARCH_API/">eSearch</a></strong> — Search for entries to embed in the player</li>
+<li><strong><a href="../KALTURA_REACH_API/">REACH</a></strong> — Add captions and translations that appear in the player</li>
+<li><strong><a href="../KALTURA_EVENTS_PLATFORM_API/">Events Platform</a></strong> — Create events with live webcast sessions (played via embedded player)</li>
+<li><strong><a href="../KALTURA_MULTI_STREAM_API/">Multi-Stream</a></strong> — Dual Screen / multi-screen entries for PiP and Side-by-Side playback</li>
+<li><strong><a href="../KALTURA_ACCESS_CONTROL_API/">Access Control API</a></strong> — Access control profiles for restricting player playback (geo, domain, IP, scheduling)</li>
+<li><strong><a href="../KALTURA_CATEGORIES_AND_ENTITLEMENTS_API/">Categories &amp; Entitlements API</a></strong> — Category entitlements affecting content visibility</li>
+<li><strong><a href="../KALTURA_API_GETTING_STARTED/">API Getting Started</a></strong> — Foundation guide covering content model and API patterns</li>
+<li><strong><a href="../KALTURA_CAPTIONS_AND_TRANSCRIPTS_API/">Captions &amp; Transcripts</a></strong> — Caption assets displayed in the player transcript plugin</li>
+<li><strong><a href="../KALTURA_ANALYTICS_REPORTS_API/">Analytics Reports</a></strong> — Player events feed analytics reports  </li>
+<li><strong><a href="../KALTURA_UNISPHERE_FRAMEWORK_API/">Unisphere Framework</a></strong> — Unisphere plugins for player integration (unisphere-service, unisphere, unisphere-genie)</li>
+<li><strong><a href="../KALTURA_CUE_POINTS_API/">Cue Points &amp; Interactive Video</a></strong> — Chapters, slides, annotations, ads, quizzes, hotspots — data behind player timeline, navigation, and IVQ plugins</li>
+<li><strong><a href="../KALTURA_QUIZ_API/">Quiz API</a></strong> — Interactive video quiz lifecycle and IVQ player plugin</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

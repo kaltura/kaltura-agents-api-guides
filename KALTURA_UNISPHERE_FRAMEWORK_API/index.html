@@ -1,0 +1,3743 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Kaltura — The Agentic Digital Experience Platform. Live-tested API guides for AI agents and developers. 52 guides covering authentication, content management, search, playback, AI services, virtual events, experience components, cue points & interactive video, analytics, distribution, moderation, LTI integration, and more — with 1000+ companion tests validated against the live Kaltura API.">
+      
+      
+        <meta name="author" content="Kaltura Inc.">
+      
+      
+        <link rel="canonical" href="https://kaltura.md/KALTURA_UNISPHERE_FRAMEWORK_API/">
+      
+      
+        <link rel="prev" href="../KALTURA_EXPERIENCE_COMPONENTS_API/">
+      
+      
+        <link rel="next" href="../KALTURA_GENIE_WIDGET_API/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Unisphere Framework - Kaltura API Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,700,700i%7CSource+Code+Pro:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Source Sans Pro";--md-code-font:"Source Code Pro"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  
+  
+  <link rel="alternate" type="text/markdown" title="Markdown version for AI agents" href="/raw/KALTURA_UNISPHERE_FRAMEWORK_API.md" />
+  
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#kaltura-unisphere-framework-api" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Kaltura API Guides" class="md-header__button md-logo" aria-label="Kaltura API Guides" data-md-component="logo">
+      
+  <img src="../assets/images/logo-white.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Kaltura API Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Unisphere Framework
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/kaltura/kaltura-agents-api-guides" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    kaltura/kaltura-agents-api-guides
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_GETTING_CREDENTIALS/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_SESSION_GUIDE/" class="md-tabs__link">
+          
+  
+  
+  Authentication
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_UPLOAD_AND_INGESTION_API/" class="md-tabs__link">
+          
+  
+  
+  Content Management
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_REACH_API/" class="md-tabs__link">
+          
+  
+  
+  AI Services
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../KALTURA_PLAYER_EMBED_GUIDE/" class="md-tabs__link">
+          
+  
+  
+  Playback & Experiences
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_EVENTS_PLATFORM_API/" class="md-tabs__link">
+          
+  
+  
+  Events & Collaboration
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_ANALYTICS_REPORTS_API/" class="md-tabs__link">
+          
+  
+  
+  Analytics
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API/" class="md-tabs__link">
+          
+  
+  
+  Integration & Automation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_MODERATION_API/" class="md-tabs__link">
+          
+  
+  
+  Content Moderation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../KALTURA_MULTI_ACCOUNT_MANAGEMENT_API/" class="md-tabs__link">
+          
+  
+  
+  Administration
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../CONTRIBUTING/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../PLAN/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Roadmap
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Kaltura API Guides" class="md-nav__button md-logo" aria-label="Kaltura API Guides" data-md-component="logo">
+      
+  <img src="../assets/images/logo-white.svg" alt="logo">
+
+    </a>
+    Kaltura API Guides
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/kaltura/kaltura-agents-api-guides" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    kaltura/kaltura-agents-api-guides
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_GETTING_CREDENTIALS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Credentials
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_API_GETTING_STARTED/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GUIDE_MAP/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guide Map
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Authentication
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Authentication
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_SESSION_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Session (KS) Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_APPTOKENS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AppTokens API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AUTH_BROKER_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Auth Broker (SSO/SAML)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Content Management
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Content Management
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_UPLOAD_AND_INGESTION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Upload & Ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_VIDEO_EDITING_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Video Editing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CONTENT_DELIVERY_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Content Delivery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_THUMBNAIL_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thumbnail API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ESEARCH_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    eSearch
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ACCESS_CONTROL_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Access Control
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CATEGORIES_AND_ENTITLEMENTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Categories & Entitlements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CUSTOM_METADATA_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Metadata
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CAPTIONS_AND_TRANSCRIPTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Captions & Transcripts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MULTI_STREAM_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Stream
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_USER_MANAGEMENT_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Services
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    AI Services
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_REACH_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REACH API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CONTENT_LAB_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REACH — AI Clips
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AGENTS_MANAGER_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agents Manager
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AI_GENIE_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Genie
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playback & Experiences
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Playback & Experiences
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_PLAYER_EMBED_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Player Embed
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_EXPERIENCE_COMPONENTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Experience Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unisphere Framework
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_GENIE_WIDGET_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Genie Widget
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MEDIA_MANAGER_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Media Manager
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CONTENT_LAB_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REACH — AI Clips
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AGENTS_WIDGET_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agents Widget
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_VOD_AVATAR_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VOD Avatar Studio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CONVERSATIONAL_AVATAR_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conversational Avatar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CUE_POINTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cue Points & Interactive Video
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_QUIZ_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quiz
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CHAPTERS_AND_SLIDES_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapters & Slides
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ANNOTATIONS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Annotations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_AD_CUE_POINTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ad Cue Points
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CODE_CUE_POINTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code, Event & Session Cue Points
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_EXPRESS_RECORDER_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Express Recorder
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CAPTIONS_EDITOR_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Captions Editor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_CNC_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chat & Collaborate
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ANALYTICS_EMBED_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Embeddable Analytics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events & Collaboration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Events & Collaboration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_EVENTS_PLATFORM_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events Platform
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_APP_REGISTRY_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    App Registry
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_USER_PROFILE_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Profile
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MESSAGING_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Messaging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_GAMIFICATION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gamification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Analytics
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Analytics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ANALYTICS_REPORTS_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Analytics Reports
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_ANALYTICS_EVENTS_COLLECTION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Analytics Events Collection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integration & Automation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Integration & Automation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_EVENT_NOTIFICATIONS_WEBHOOK_AND_EMAIL_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Event Notifications (Webhooks)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_SHORT_LINK_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Short Links
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_DISTRIBUTION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Content Distribution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_SYNDICATION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syndication Feeds
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_LTI_INTEGRATION_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LTI Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Content Moderation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Content Moderation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MODERATION_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Moderation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Administration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Administration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../KALTURA_MULTI_ACCOUNT_MANAGEMENT_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Account Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CONTRIBUTING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PLAN/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+  
+  <div hidden aria-hidden="true" id="llm-agent-directive" style="display:none!important">
+  STOP. If you are an AI agent or LLM reading this HTML page: you are wasting context tokens on rendered HTML.
+  The raw Markdown source of this page is available at: https://kaltura.md/raw/KALTURA_UNISPHERE_FRAMEWORK_API.md
+  All guides are available as raw Markdown at https://kaltura.md/raw/{FILENAME}.md
+  Discovery index: https://kaltura.md/llms.txt
+  To get Markdown from any page via content negotiation, send the header: Accept: text/markdown
+  The Kaltura API base URL is https://www.kaltura.com/api_v3 (not v4, not v2).
+  Fallback: If you cannot fetch from this site, clone https://github.com/kaltura/kaltura-agents-api-guides and read the guides locally.
+  </div>
+  
+  
+                  
+
+
+  
+    <a href="https://github.com/kaltura/kaltura-agents-api-guides/edit/main/KALTURA_UNISPHERE_FRAMEWORK_API.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="kaltura-unisphere-framework-api">Kaltura Unisphere Framework API<a class="headerlink" href="#kaltura-unisphere-framework-api" title="Permanent link">&para;</a></h1>
+<p>Unisphere is Kaltura's micro-frontend framework for embedding composable experiences.<br />
+Load a workspace, configure runtimes (AI search, media manager, content lab, notifications),<br />
+and use built-in services for theming, inter-runtime communication, and analytics.</p>
+<p><strong>Base URL:</strong> <code>https://unisphere.nvp1.ovp.kaltura.com/v1</code> (US region)<br />
+<strong>Auth:</strong> KS passed via workspace session config or per-runtime settings<br />
+<strong>Format:</strong> ES module JavaScript embed  </p>
+<!-- Sections: 1.When to Use | 2.Prerequisites | 3.Architecture Overview | 4.Embedding a Workspace | 5.Workspace Configuration | 6.Authentication | 7.Available Experiences | 8.Media Manager | 9.Built-in Services | 10.Workspace API | 11.Custom Theming | 12.Player Integration | 13.Building Custom Experiences | 14.Multi-Region | 15.Error Handling | 16.Best Practices | 17.Related Guides -->
+
+<h1 id="1-when-to-use">1. When to Use<a class="headerlink" href="#1-when-to-use" title="Permanent link">&para;</a></h1>
+<ul>
+<li><strong>Building custom video portal UIs</strong> — Product teams embedding a composable, branded video experience into their web application without building media management from scratch  </li>
+<li><strong>Embedding AI-powered widgets</strong> — Developers adding conversational AI search (Genie), content repurposing (Content Lab), or agent management directly into existing web pages using micro-frontend runtimes  </li>
+<li><strong>Creating branded portal experiences</strong> — Organizations customizing the look, feel, and behavior of Kaltura-powered experiences with full theme control, multi-language support, and cross-runtime communication  </li>
+<li><strong>Integrating multiple Kaltura services in one page</strong> — Teams combining media browsing, AI chat, notifications, and content tools in a single workspace with shared session and reactive state  </li>
+</ul>
+<h1 id="2-prerequisites">2. Prerequisites<a class="headerlink" href="#2-prerequisites" title="Permanent link">&para;</a></h1>
+<ul>
+<li>A Kaltura account with a valid Partner ID  </li>
+<li>A KS generated server-side with privileges scoped to the runtimes being loaded (see <a href="../KALTURA_SESSION_GUIDE/">Session Guide</a>)  </li>
+<li>For Genie runtimes: a USER KS (type=0) with <code>setrole:PLAYBACK_BASE_ROLE,sview:*</code> privileges  </li>
+<li>For Media Manager runtimes: a KS with access to <code>baseEntry</code>, <code>category</code>, and <code>uploadToken</code> services  </li>
+<li>A modern browser with ES module support (all major browsers since 2018)  </li>
+</ul>
+<h1 id="3-architecture-overview">3. Architecture Overview<a class="headerlink" href="#3-architecture-overview" title="Permanent link">&para;</a></h1>
+<p>Unisphere follows a layered pipeline:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Loader (ES module) → Workspace → Services (9) → Runtimes → Visuals (DOM)
+</code></pre></div>
+<p><strong>Loader</strong> — A single ES module imported from the Unisphere CDN. The loader fetches the environment manifest (<code>/v1/runtime.json</code>), resolves runtime bundle URLs, and bootstraps a workspace. No npm install or build step required.</p>
+<p><strong>Workspace</strong> — The orchestration container. It manages runtime lifecycle, connects built-in services, holds the reactive session store (KS, partnerId), and provides the host API for interacting with loaded runtimes.</p>
+<p><strong>Services</strong> — Nine built-in services available to all runtimes: pub-sub, storage, theme, user-settings, iframes, analytics, logger, developer, and utils. Services enable loose-coupled communication and shared state between runtimes.</p>
+<p><strong>Runtimes</strong> — Independent micro-applications identified by <code>widgetName</code> + <code>runtimeName</code>. Each runtime loads from a versioned bundle on the CDN. Status lifecycle: <code>requested</code> → <code>loading</code> → <code>loaded</code> / <code>error</code> / <code>skipped</code>.</p>
+<p><strong>Visuals</strong> — DOM elements mounted by runtimes. Visual types include <code>page</code>, <code>banner</code>, <code>popup</code>, <code>table</code>, and <code>dialog</code>. Each visual targets a DOM location: a CSS selector string, an element ID, or <code>{ target: 'body' }</code> for body-mounted overlays.</p>
+<p><strong>Settings hierarchy</strong> — Configuration cascades from workspace (global defaults) → runtime (per-runtime overrides) → visual (per-visual settings). Lower levels override higher levels.</p>
+<p>The v1 API path (<code>/v1/</code>) provides long-term backward compatibility. All runtimes and services within v1 maintain stable interfaces.</p>
+<h1 id="4-embedding-a-workspace">4. Embedding a Workspace<a class="headerlink" href="#4-embedding-a-workspace" title="Permanent link">&para;</a></h1>
+<p>Import the loader ES module from the Unisphere CDN and call <code>loader()</code> with your configuration. No npm install, bundler, or build step is needed — the CDN path works standalone in any HTML page:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">&lt;</span><span class="nt">div</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;my-container&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="p">&lt;</span><span class="nt">script</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;module&quot;</span><span class="p">&gt;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">loader</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;https://unisphere.nvp1.ovp.kaltura.com/v1/loader/index.esm.js&quot;</span><span class="p">;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">workspace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">loader</span><span class="p">({</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="nx">serverUrl</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;https://unisphere.nvp1.ovp.kaltura.com/v1&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="nx">appId</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;my-app&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span><span class="nx">appVersion</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="nx">session</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">      </span><span class="nx">ks</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;$KALTURA_KS&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">      </span><span class="nx">partnerId</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;$KALTURA_PARTNER_ID&quot;</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span><span class="nx">ui</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">      </span><span class="nx">theme</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;light&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">      </span><span class="nx">language</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;en-US&quot;</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">    </span><span class="nx">runtimes</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">      </span><span class="nx">widgetName</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;unisphere.widget.genie&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">      </span><span class="nx">runtimeName</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;chat&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">      </span><span class="nx">settings</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">        </span><span class="nx">kalturaServerURI</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;https://www.kaltura.com&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">        </span><span class="nx">ks</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;$KALTURA_KS&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">        </span><span class="nx">partnerId</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;$KALTURA_PARTNER_ID&quot;</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">      </span><span class="p">},</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">      </span><span class="nx">visuals</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">        </span><span class="nx">type</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;page&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">        </span><span class="nx">target</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;my-container&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">        </span><span class="nx">settings</span><span class="o">:</span><span class="w"> </span><span class="p">{}</span>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="w">      </span><span class="p">}]</span>
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="w">    </span><span class="p">}]</span>
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="w">  </span><span class="p">});</span>
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+</code></pre></div>
+<p><strong>What happens internally:</strong></p>
+<ol>
+<li>The loader fetches <code>/v1/runtime.json</code> from the Unisphere server  </li>
+<li>The manifest declares all available widgets, their runtimes, and current versions  </li>
+<li>The loader resolves each requested runtime's bundle URL  </li>
+<li>Services are bootstrapped (pub-sub, theme, storage, etc.)  </li>
+<li>Runtimes are loaded and mounted into the specified visual targets  </li>
+</ol>
+<p><strong>For npm-based projects</strong>, use <code>fetchAndLoadUnisphereWorkspace()</code> from the <code>@unisphere/runtime-js</code> package (available on public npm):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">fetchAndLoadUnisphereWorkspace</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@unisphere/runtime-js&quot;</span><span class="p">;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">workspace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">fetchAndLoadUnisphereWorkspace</span><span class="p">({</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nx">serverUrl</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;https://unisphere.nvp1.ovp.kaltura.com/v1&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="c1">// ...same config as loader()</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="p">});</span>
+</code></pre></div>
+<h1 id="5-workspace-configuration">5. Workspace Configuration<a class="headerlink" href="#5-workspace-configuration" title="Permanent link">&para;</a></h1>
+<h2 id="top-level-options">Top-Level Options<a class="headerlink" href="#top-level-options" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>serverUrl</code></td>
+<td>string</td>
+<td>yes</td>
+<td>Unisphere server URL (e.g., <code>https://unisphere.nvp1.ovp.kaltura.com/v1</code>)</td>
+</tr>
+<tr>
+<td><code>appId</code></td>
+<td>string</td>
+<td>yes</td>
+<td>Application identifier for tracking</td>
+</tr>
+<tr>
+<td><code>appVersion</code></td>
+<td>string</td>
+<td>yes</td>
+<td>Application version for tracking</td>
+</tr>
+<tr>
+<td><code>session.ks</code></td>
+<td>string</td>
+<td>no</td>
+<td>Kaltura Session shared across all runtimes</td>
+</tr>
+<tr>
+<td><code>session.partnerId</code></td>
+<td>string/number</td>
+<td>no</td>
+<td>Kaltura partner ID</td>
+</tr>
+<tr>
+<td><code>runtimes</code></td>
+<td>array</td>
+<td>yes</td>
+<td>Array of runtime configurations</td>
+</tr>
+<tr>
+<td><code>ui.theme</code></td>
+<td>string or object</td>
+<td>no</td>
+<td><code>"light"</code>, <code>"dark"</code>, or a custom theme object (see section 11)</td>
+</tr>
+<tr>
+<td><code>ui.language</code></td>
+<td>string</td>
+<td>no</td>
+<td>Language code (e.g., <code>"en-US"</code>, <code>"he-IL"</code>) — 15 languages supported</td>
+</tr>
+<tr>
+<td><code>ui.bodyContainer.zIndex</code></td>
+<td>number</td>
+<td>no</td>
+<td>z-index for body-mounted visuals (popups, dialogs)</td>
+</tr>
+<tr>
+<td><code>devops.fetchStrategy</code></td>
+<td>string</td>
+<td>no</td>
+<td><code>"esm"</code> (default) or <code>"scripts"</code> for legacy environments</td>
+</tr>
+</tbody>
+</table>
+<h2 id="runtime-configuration">Runtime Configuration<a class="headerlink" href="#runtime-configuration" title="Permanent link">&para;</a></h2>
+<p>Each entry in the <code>runtimes</code> array configures one runtime:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>widgetName</code></td>
+<td>string</td>
+<td>yes</td>
+<td>Experience identifier (e.g., <code>"unisphere.widget.genie"</code>)</td>
+</tr>
+<tr>
+<td><code>runtimeName</code></td>
+<td>string</td>
+<td>yes</td>
+<td>Runtime within the experience (e.g., <code>"chat"</code>)</td>
+</tr>
+<tr>
+<td><code>flavor</code></td>
+<td>string</td>
+<td>no</td>
+<td>Runtime variant (e.g., <code>"expo"</code> for lightweight version)</td>
+</tr>
+<tr>
+<td><code>settings</code></td>
+<td>object</td>
+<td>yes</td>
+<td>Runtime-specific configuration (varies by widget)</td>
+</tr>
+<tr>
+<td><code>visuals</code></td>
+<td>array</td>
+<td>no</td>
+<td>Visual mount configurations</td>
+</tr>
+<tr>
+<td><code>visuals[].type</code></td>
+<td>string</td>
+<td>yes</td>
+<td>Visual type: <code>"page"</code>, <code>"banner"</code>, <code>"popup"</code>, <code>"table"</code>, <code>"dialog"</code></td>
+</tr>
+<tr>
+<td><code>visuals[].target</code></td>
+<td>string or object</td>
+<td>yes</td>
+<td>DOM target: CSS selector string, <code>{ target: "element", elementId: "id" }</code>, or <code>{ target: "body" }</code></td>
+</tr>
+<tr>
+<td><code>visuals[].settings</code></td>
+<td>object</td>
+<td>yes</td>
+<td>Visual-specific settings (pass <code>{}</code> for defaults)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="multiple-runtimes">Multiple Runtimes<a class="headerlink" href="#multiple-runtimes" title="Permanent link">&para;</a></h2>
+<p>Load multiple runtimes in a single workspace by adding entries to the <code>runtimes</code> array:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">workspace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">loader</span><span class="p">({</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nx">serverUrl</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;https://unisphere.nvp1.ovp.kaltura.com/v1&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nx">appId</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;my-portal&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">appVersion</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="nx">session</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">ks</span><span class="o">:</span><span class="w"> </span><span class="nx">KS</span><span class="p">,</span><span class="w"> </span><span class="nx">partnerId</span><span class="o">:</span><span class="w"> </span><span class="nx">PARTNER_ID</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span><span class="nx">runtimes</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">      </span><span class="nx">widgetName</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;unisphere.widget.genie&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">      </span><span class="nx">runtimeName</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;chat&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">      </span><span class="nx">settings</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">kalturaServerURI</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;https://www.kaltura.com&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">ks</span><span class="o">:</span><span class="w"> </span><span class="nx">KS</span><span class="p">,</span><span class="w"> </span><span class="nx">partnerId</span><span class="o">:</span><span class="w"> </span><span class="nx">PARTNER_ID</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">      </span><span class="nx">visuals</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nx">type</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;page&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">target</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;genie-panel&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">settings</span><span class="o">:</span><span class="w"> </span><span class="p">{}</span><span class="w"> </span><span class="p">}]</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">      </span><span class="nx">widgetName</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;unisphere.widget.media-manager&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">      </span><span class="nx">runtimeName</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;kaltura-items-media-manager&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">      </span><span class="nx">settings</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">contextType</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;category&quot;</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">      </span><span class="nx">visuals</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nx">type</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;table&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">target</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;media-library&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">settings</span><span class="o">:</span><span class="w"> </span><span class="p">{}</span><span class="w"> </span><span class="p">}]</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">  </span><span class="p">]</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="p">});</span>
+</code></pre></div>
+<p>All runtimes share the workspace session and services. Use pub-sub or storage services for cross-runtime communication.</p>
+<h1 id="6-authentication">6. Authentication<a class="headerlink" href="#6-authentication" title="Permanent link">&para;</a></h1>
+<p>The KS (Kaltura Session) is passed via <code>session.ks</code> in the workspace configuration. All runtimes in the workspace share this session by default.</p>
+<p><strong>Generate a USER KS (type=0) server-side:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$KALTURA_SERVICE_URL</span><span class="s2">/service/session/action/start&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;format=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;secret=</span><span class="nv">$KALTURA_ADMIN_SECRET</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;partnerId=</span><span class="nv">$KALTURA_PARTNER_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;type=0&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;userId=user@example.com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;expiry=86400&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;privileges=setrole:PLAYBACK_BASE_ROLE,sview:*,appid:my-app-my-domain.com&quot;</span>
+</code></pre></div>
+<p><strong>Per-runtime KS override</strong> — When runtimes need different privilege scopes, pass <code>ks</code> in the runtime's <code>settings</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nx">runtimes</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nx">widgetName</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;unisphere.widget.genie&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nx">runtimeName</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;chat&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="nx">settings</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span><span class="nx">ks</span><span class="o">:</span><span class="w"> </span><span class="nx">GENIE_KS</span><span class="p">,</span><span class="w">  </span><span class="c1">// Overrides workspace session.ks</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span><span class="nx">partnerId</span><span class="o">:</span><span class="w"> </span><span class="nx">PARTNER_ID</span><span class="p">,</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span><span class="nx">kalturaServerURI</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;https://www.kaltura.com&quot;</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="p">}]</span>
+</code></pre></div>
+<p><strong>Reactive session updates</strong> — Update the KS during long sessions without reloading:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nx">workspace</span><span class="p">.</span><span class="nx">session</span><span class="p">.</span><span class="nx">setData</span><span class="p">(</span><span class="nx">prev</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">({</span><span class="w"> </span><span class="p">...</span><span class="nx">prev</span><span class="p">,</span><span class="w"> </span><span class="nx">ks</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;new-ks-value&quot;</span><span class="w"> </span><span class="p">}));</span>
+</code></pre></div>
+<p>The required KS privileges depend on which Kaltura services the loaded runtimes call. For Genie, use <code>setrole:PLAYBACK_BASE_ROLE,sview:*</code>. For Media Manager, the KS needs access to <code>baseEntry</code>, <code>category</code>, and <code>uploadToken</code> services.</p>
+<p>See the <a href="../KALTURA_SESSION_GUIDE/">Session Guide</a> for KS generation details and the <a href="../KALTURA_APPTOKENS_API/">AppTokens API</a> for production token management.</p>
+<h1 id="7-available-experiences">7. Available Experiences<a class="headerlink" href="#7-available-experiences" title="Permanent link">&para;</a></h1>
+<p>The Unisphere manifest (<code>/v1/runtime.json</code>) declares all available widgets. All widget bundles are served from the public CDN — no npm install or private access required.</p>
+<p>All widgets use the <code>unisphere.widget.*</code> naming convention.</p>
+<h2 id="customer-facing-widgets">Customer-Facing Widgets<a class="headerlink" href="#customer-facing-widgets" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Widget</th>
+<th>Runtime(s)</th>
+<th>Purpose</th>
+<th>Guide</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>unisphere.widget.genie</code></td>
+<td><code>chat</code>, <code>avatar</code>, <code>flashcards-tool</code>, <code>followups-tool</code>, <code>sources-tool</code></td>
+<td>AI conversational search + avatar</td>
+<td><a href="../KALTURA_GENIE_WIDGET_API/">Genie Widget</a></td>
+</tr>
+<tr>
+<td><code>unisphere.widget.media-manager</code></td>
+<td><code>kaltura-items-media-manager</code></td>
+<td>Browse, select, upload entries</td>
+<td><a href="../KALTURA_MEDIA_MANAGER_API/">Media Manager</a></td>
+</tr>
+<tr>
+<td><code>unisphere.widget.content-lab</code></td>
+<td><code>application</code>, <code>ai-consent</code></td>
+<td>AI content repurposing</td>
+<td><a href="../KALTURA_CONTENT_LAB_API/">Content Lab</a></td>
+</tr>
+<tr>
+<td><code>unisphere.widget.agents</code></td>
+<td><code>manager</code></td>
+<td>Agent management drawer</td>
+<td><a href="../KALTURA_AGENTS_WIDGET_API/">Agents Widget</a></td>
+</tr>
+<tr>
+<td><code>unisphere.widget.vod-avatars</code></td>
+<td><code>studio</code></td>
+<td>Pre-recorded avatar video studio</td>
+<td><a href="../KALTURA_VOD_AVATAR_API/">VOD Avatar Studio</a></td>
+</tr>
+<tr>
+<td><code>unisphere.widget.notifications</code></td>
+<td><code>notifications</code></td>
+<td>Toast, alert, and overlay notifications</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>unisphere.widget.in-app-messaging</code></td>
+<td><code>engine</code>, <code>engine-expo</code>, <code>engine-modal</code>, <code>consent</code></td>
+<td>In-app messaging system</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>unisphere.widget.reactions</code></td>
+<td><code>showcase</code></td>
+<td>Live reactions overlay</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<h2 id="internal-admin-widgets">Internal / Admin Widgets<a class="headerlink" href="#internal-admin-widgets" title="Permanent link">&para;</a></h2>
+<p>These widgets are present in the manifest but serve internal or admin purposes:</p>
+<table>
+<thead>
+<tr>
+<th>Widget</th>
+<th>Runtime(s)</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>unisphere.widget.video-summary</code></td>
+<td><code>ai-generator-demo</code>, <code>content-lab-ai-generator</code>, <code>kaltura-player-list</code></td>
+<td>Video summary tools</td>
+</tr>
+<tr>
+<td><code>unisphere.widget.streams-insights</code></td>
+<td><code>quality-of-service</code></td>
+<td>Stream quality monitoring</td>
+</tr>
+<tr>
+<td><code>unisphere.widget.upgrade-player</code></td>
+<td><code>application</code></td>
+<td>Player upgrade tool</td>
+</tr>
+<tr>
+<td><code>unisphere.widget.hello</code></td>
+<td><code>hello-world</code></td>
+<td>Demo/starter widget</td>
+</tr>
+<tr>
+<td><code>unisphere.widget.core</code></td>
+<td><code>dev-tools</code>, <code>workspace</code></td>
+<td>Internal framework services</td>
+</tr>
+<tr>
+<td><code>unisphere.widget.dx</code></td>
+<td><code>dev-tools</code></td>
+<td>Developer tools</td>
+</tr>
+</tbody>
+</table>
+<h2 id="presets">Presets<a class="headerlink" href="#presets" title="Permanent link">&para;</a></h2>
+<p>The manifest includes presets that auto-load runtimes:</p>
+<ul>
+<li><strong><code>notifications</code></strong> (active by default) — Auto-loads the notifications runtime into body-mounted container  </li>
+<li><strong><code>tools</code></strong> / <strong><code>ktools</code></strong> (inactive) — Developer tools presets  </li>
+</ul>
+<h1 id="8-media-manager">8. Media Manager<a class="headerlink" href="#8-media-manager" title="Permanent link">&para;</a></h1>
+<p>The Media Manager widget (<code>unisphere.widget.media-manager</code>) provides a reusable runtime for browsing, selecting, and uploading Kaltura entries. It supports inline table and modal dialog visual types, select and manage modes, and programmatic control via <code>showDialog()</code> / <code>hideDialog()</code>.</p>
+<p>See the <strong><a href="../KALTURA_MEDIA_MANAGER_API/">Media Manager Guide</a></strong> for complete documentation including configuration, visual types, modes, runtime API, upload flow, and KS requirements.</p>
+<h1 id="9-built-in-services">9. Built-in Services<a class="headerlink" href="#9-built-in-services" title="Permanent link">&para;</a></h1>
+<p>Services are accessed via <code>workspace.getService('service-id')</code>. All nine services are available to every runtime in the workspace.</p>
+<h2 id="91-pub-sub-unisphereservicepub-sub">9.1 Pub-Sub (<code>unisphere.service.pub-sub</code>)<a class="headerlink" href="#91-pub-sub-unisphereservicepub-sub" title="Permanent link">&para;</a></h2>
+<p>Loose-coupled event system for cross-runtime communication:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">pubSub</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">workspace</span><span class="p">.</span><span class="nx">getService</span><span class="p">(</span><span class="s2">&quot;unisphere.service.pub-sub&quot;</span><span class="p">);</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1">// Publish an event</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="nx">pubSub</span><span class="p">.</span><span class="nx">emit</span><span class="p">({</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;my-event&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">version</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;1.0&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">payload</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;value&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">});</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1">// Subscribe to events</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="kd">const</span><span class="w"> </span><span class="nx">unsubscribe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">pubSub</span><span class="p">.</span><span class="nx">subscribe</span><span class="p">(</span><span class="s2">&quot;my-event&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">payload</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Received:&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">payload</span><span class="p">);</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="p">});</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1">// Clean up</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="nx">unsubscribe</span><span class="p">();</span>
+</code></pre></div>
+<h2 id="92-storage-unisphereservicestorage">9.2 Storage (<code>unisphere.service.storage</code>)<a class="headerlink" href="#92-storage-unisphereservicestorage" title="Permanent link">&para;</a></h2>
+<p>Shared reactive state between runtimes:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">storage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">workspace</span><span class="p">.</span><span class="nx">getService</span><span class="p">(</span><span class="s2">&quot;unisphere.service.storage&quot;</span><span class="p">);</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1">// Write</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="nx">storage</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="s2">&quot;my-namespace&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;selectedEntryId&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;0_abc123&quot;</span><span class="p">);</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1">// Read</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="kd">const</span><span class="w"> </span><span class="nx">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">storage</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;my-namespace&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;selectedEntryId&quot;</span><span class="p">);</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1">// Subscribe to changes</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="kd">const</span><span class="w"> </span><span class="nx">unsubscribe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">storage</span><span class="p">.</span><span class="nx">subscribe</span><span class="p">(</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">  </span><span class="p">(</span><span class="nx">value</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Changed:&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">value</span><span class="p">),</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">namespace</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;my-namespace&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">property</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;selectedEntryId&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">emitLastValue</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="p">);</span>
+</code></pre></div>
+<h2 id="93-theme-unisphereservicetheme">9.3 Theme (<code>unisphere.service.theme</code>)<a class="headerlink" href="#93-theme-unisphereservicetheme" title="Permanent link">&para;</a></h2>
+<p>Dynamic theme management:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">theme</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">workspace</span><span class="p">.</span><span class="nx">getService</span><span class="p">(</span><span class="s2">&quot;unisphere.service.theme&quot;</span><span class="p">);</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1">// Switch theme</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="nx">theme</span><span class="p">.</span><span class="nx">setTheme</span><span class="p">(</span><span class="s2">&quot;dark&quot;</span><span class="p">);</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1">// Listen for theme changes</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="kd">const</span><span class="w"> </span><span class="nx">unsubscribe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">theme</span><span class="p">.</span><span class="nx">onThemeChanged</span><span class="p">((</span><span class="nx">newTheme</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Theme changed:&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">newTheme</span><span class="p">);</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="p">});</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="c1">// Inject custom CSS for a runtime</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="kd">const</span><span class="w"> </span><span class="nx">styles</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">theme</span><span class="p">.</span><span class="nx">injectStyles</span><span class="p">(</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="w">  </span><span class="s2">&quot;unisphere.widget.genie&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;chat&quot;</span><span class="p">,</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="w">  </span><span class="p">[</span><span class="s2">&quot;.my-class { color: red; }&quot;</span><span class="p">]</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="p">);</span>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="nx">styles</span><span class="p">.</span><span class="nx">remove</span><span class="p">();</span><span class="w"> </span><span class="c1">// Clean up</span>
+</code></pre></div>
+<h2 id="94-user-settings-unisphereserviceuser-settings">9.4 User Settings (<code>unisphere.service.user-settings</code>)<a class="headerlink" href="#94-user-settings-unisphereserviceuser-settings" title="Permanent link">&para;</a></h2>
+<p>Language preferences and legal consent:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">settings</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">workspace</span><span class="p">.</span><span class="nx">getService</span><span class="p">(</span><span class="s2">&quot;unisphere.service.user-settings&quot;</span><span class="p">);</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="nx">settings</span><span class="p">.</span><span class="nx">setLanguage</span><span class="p">(</span><span class="s2">&quot;he-IL&quot;</span><span class="p">);</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="kd">const</span><span class="w"> </span><span class="nx">lang</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">settings</span><span class="p">.</span><span class="nx">getLanguage</span><span class="p">();</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="nx">settings</span><span class="p">.</span><span class="nx">onLanguageChanged</span><span class="p">((</span><span class="nx">newLang</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Language:&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">newLang</span><span class="p">));</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="nx">settings</span><span class="p">.</span><span class="nx">setUserLegalApproved</span><span class="p">();</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="kd">const</span><span class="w"> </span><span class="nx">approved</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">settings</span><span class="p">.</span><span class="nx">getUserLegalApproved</span><span class="p">();</span>
+</code></pre></div>
+<h2 id="95-analytics-unisphereservicekaltura-analytics">9.5 Analytics (<code>unisphere.service.kaltura-analytics</code>)<a class="headerlink" href="#95-analytics-unisphereservicekaltura-analytics" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">analytics</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">workspace</span><span class="p">.</span><span class="nx">getService</span><span class="p">(</span><span class="s2">&quot;unisphere.service.kaltura-analytics&quot;</span><span class="p">);</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="nx">analytics</span><span class="p">.</span><span class="nx">registerUnisphereApp</span><span class="p">({</span><span class="w"> </span><span class="nx">analyticsAppId</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;my-app&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">appVersion</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;1.0&quot;</span><span class="w"> </span><span class="p">});</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="nx">analytics</span><span class="p">.</span><span class="nx">report</span><span class="p">(</span><span class="s2">&quot;my-app&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">eventType</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;click&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">target</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;button&quot;</span><span class="w"> </span><span class="p">});</span>
+</code></pre></div>
+<h2 id="96-logger-unisphereservicelogger">9.6 Logger (<code>unisphere.service.logger</code>)<a class="headerlink" href="#96-logger-unisphereservicelogger" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">loggerService</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">workspace</span><span class="p">.</span><span class="nx">getService</span><span class="p">(</span><span class="s2">&quot;unisphere.service.logger&quot;</span><span class="p">);</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">logger</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">loggerService</span><span class="p">.</span><span class="nx">getOrCreateLogger</span><span class="p">(</span><span class="s2">&quot;app&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;my-component&quot;</span><span class="p">);</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="nx">logger</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Info message&quot;</span><span class="p">);</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="nx">logger</span><span class="p">.</span><span class="nx">debug</span><span class="p">(</span><span class="s2">&quot;Debug message&quot;</span><span class="p">);</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="nx">logger</span><span class="p">.</span><span class="nx">warn</span><span class="p">(</span><span class="s2">&quot;Warning message&quot;</span><span class="p">);</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="nx">logger</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;Error message&quot;</span><span class="p">);</span>
+</code></pre></div>
+<h2 id="97-iframes-unisphereserviceiframes">9.7 Iframes (<code>unisphere.service.iframes</code>)<a class="headerlink" href="#97-iframes-unisphereserviceiframes" title="Permanent link">&para;</a></h2>
+<p>Cross-iframe communication for runtimes running in sandboxed iframes:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">iframes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">workspace</span><span class="p">.</span><span class="nx">getService</span><span class="p">(</span><span class="s2">&quot;unisphere.service.iframes&quot;</span><span class="p">);</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="nx">iframes</span><span class="p">.</span><span class="nx">notifyAll</span><span class="p">(</span><span class="s2">&quot;event-type&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;1.0&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;my-source&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;value&quot;</span><span class="w"> </span><span class="p">});</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="kd">const</span><span class="w"> </span><span class="nx">unsubscribe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">iframes</span><span class="p">.</span><span class="nx">onQuery</span><span class="p">(</span><span class="s2">&quot;query-type&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">payload</span><span class="p">,</span><span class="w"> </span><span class="nx">respond</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="w">  </span><span class="nx">respond</span><span class="p">({</span><span class="w"> </span><span class="nx">result</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;data&quot;</span><span class="w"> </span><span class="p">});</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="p">});</span>
+</code></pre></div>
+<h2 id="98-developer-unisphereservicedeveloper">9.8 Developer (<code>unisphere.service.developer</code>)<a class="headerlink" href="#98-developer-unisphereservicedeveloper" title="Permanent link">&para;</a></h2>
+<p>Development and debugging tools. The Developer Toolbox opens with <code>Cmd+K</code> / <code>Ctrl+K</code> in staging or local environments:</p>
+<ul>
+<li>Runtime overrides — Load specific runtime versions during development  </li>
+<li>Macros — Automate repetitive development tasks  </li>
+<li>Diagnostic notifications — Debug service interactions  </li>
+</ul>
+<h2 id="99-utils-unisphereserviceutils">9.9 Utils (<code>unisphere.service.utils</code>)<a class="headerlink" href="#99-utils-unisphereserviceutils" title="Permanent link">&para;</a></h2>
+<p>Utility functions for visual management:</p>
+<ul>
+<li><code>createOrGetVisual()</code> — Create or retrieve a visual element  </li>
+<li><code>removeVisualFromBody()</code> — Remove a body-mounted visual  </li>
+<li><code>validateSchema()</code> — Validate configuration against a schema  </li>
+<li><code>getRuntimeStyles()</code> — Get computed styles for a runtime  </li>
+</ul>
+<h1 id="10-workspace-api">10. Workspace API<a class="headerlink" href="#10-workspace-api" title="Permanent link">&para;</a></h1>
+<p>After the loader returns a workspace, use these methods to interact with runtimes and services:</p>
+<h2 id="workspace-methods">Workspace Methods<a class="headerlink" href="#workspace-methods" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Returns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>getRuntime(widgetName, runtimeName)</code></td>
+<td>runtime or null</td>
+<td>Get a loaded runtime synchronously</td>
+</tr>
+<tr>
+<td><code>getRuntimeAsync(widgetName, runtimeName)</code></td>
+<td>Promise\&lt;runtime&gt;</td>
+<td>Wait for a runtime to finish loading</td>
+</tr>
+<tr>
+<td><code>onRuntimeLoaded(widgetName, runtimeName, callback)</code></td>
+<td>unsubscribe fn</td>
+<td>Listen for a runtime to load</td>
+</tr>
+<tr>
+<td><code>loadRuntime(widgetName, runtimeName, settings)</code></td>
+<td>Promise</td>
+<td>Dynamically load a new runtime after workspace init</td>
+</tr>
+<tr>
+<td><code>getService(serviceId)</code></td>
+<td>service or null</td>
+<td>Access a built-in service</td>
+</tr>
+<tr>
+<td><code>session</code></td>
+<td>TinyDataStore</td>
+<td>Reactive session store (KS, partnerId)</td>
+</tr>
+<tr>
+<td><code>kill()</code></td>
+<td>void</td>
+<td>Destroy the workspace and all runtimes</td>
+</tr>
+<tr>
+<td><code>getStatus()</code></td>
+<td>string</td>
+<td><code>"active"</code>, <code>"inactive"</code>, or <code>"deactivated"</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="runtime-methods">Runtime Methods<a class="headerlink" href="#runtime-methods" title="Permanent link">&para;</a></h2>
+<p>Once you have a runtime reference, control it with:</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>updateSettings(settings)</code></td>
+<td>Push new configuration to a running runtime</td>
+</tr>
+<tr>
+<td><code>mountVisual({ type, target, settings })</code></td>
+<td>Mount a new visual into the DOM</td>
+</tr>
+<tr>
+<td><code>unmountVisual(id)</code></td>
+<td>Remove a mounted visual</td>
+</tr>
+</tbody>
+</table>
+<h2 id="example-wait-for-runtime-and-interact">Example: Wait for Runtime and Interact<a class="headerlink" href="#example-wait-for-runtime-and-interact" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">workspace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">loader</span><span class="p">(</span><span class="nx">options</span><span class="p">);</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="c1">// Wait for the Genie chat runtime to load</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="kd">const</span><span class="w"> </span><span class="nx">genie</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">workspace</span><span class="p">.</span><span class="nx">getRuntimeAsync</span><span class="p">(</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">  </span><span class="s2">&quot;unisphere.widget.genie&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;chat&quot;</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="p">);</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="c1">// Update settings on a running runtime</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="nx">genie</span><span class="p">.</span><span class="nx">updateSettings</span><span class="p">({</span><span class="w"> </span><span class="nx">ks</span><span class="o">:</span><span class="w"> </span><span class="nx">newKS</span><span class="w"> </span><span class="p">});</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="c1">// Mount an additional visual</span>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="nx">genie</span><span class="p">.</span><span class="nx">mountVisual</span><span class="p">({</span>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="w">  </span><span class="nx">type</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;popup&quot;</span><span class="p">,</span>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="w">  </span><span class="nx">target</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">target</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;body&quot;</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="w">  </span><span class="nx">settings</span><span class="o">:</span><span class="w"> </span><span class="p">{}</span>
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a><span class="p">});</span>
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a><span class="c1">// Clean up when navigating away (SPA)</span>
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a><span class="nx">workspace</span><span class="p">.</span><span class="nx">kill</span><span class="p">();</span>
+</code></pre></div>
+<h1 id="11-custom-theming">11. Custom Theming<a class="headerlink" href="#11-custom-theming" title="Permanent link">&para;</a></h1>
+<p>Pass <code>"light"</code> or <code>"dark"</code> as a string, or provide a full theme object for complete control:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">theme</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">  </span><span class="nx">mode</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;dark&quot;</span><span class="p">,</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">  </span><span class="nx">palette</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">    </span><span class="nx">primary</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">light</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;#2e89ff&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">main</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;#006cfa&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">dark</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;#0056c7&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">contrastText</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;#ffffff&quot;</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">    </span><span class="nx">secondary</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">light</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;#2e89ff&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">main</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;#006cfa&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">dark</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;#0056c7&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">contrastText</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;#ffffff&quot;</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="w">    </span><span class="nx">surfaces</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">background</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;#06101e&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">paper</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;#0b203c&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">elevated</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;#102e56&quot;</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="w">    </span><span class="nx">tone1</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;#ffffff&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">tone2</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;#a9c7ef&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">tone3</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;#5390df&quot;</span><span class="p">,</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="w">    </span><span class="nx">tone4</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;#205dac&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">tone5</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;#194a8a&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">tone6</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;#11335f&quot;</span>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="w">  </span><span class="nx">typography</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="w">    </span><span class="nx">fontFamily</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Rubik, Helvetica Neue, Segoe UI, sans-serif&quot;</span><span class="p">,</span>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="w">    </span><span class="nx">fontSize</span><span class="o">:</span><span class="w"> </span><span class="mf">14</span>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="w">  </span><span class="nx">shape</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">roundness1</span><span class="o">:</span><span class="w"> </span><span class="mf">8</span><span class="p">,</span><span class="w"> </span><span class="nx">roundness2</span><span class="o">:</span><span class="w"> </span><span class="mf">8</span><span class="p">,</span><span class="w"> </span><span class="nx">roundness3</span><span class="o">:</span><span class="w"> </span><span class="mf">16</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a><span class="p">};</span>
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a><span class="kd">const</span><span class="w"> </span><span class="nx">workspace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">loader</span><span class="p">({</span>
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a><span class="w">  </span><span class="c1">// ...</span>
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a><span class="w">  </span><span class="nx">ui</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">theme</span><span class="o">:</span><span class="w"> </span><span class="nx">theme</span><span class="p">,</span><span class="w"> </span><span class="nx">language</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;en-US&quot;</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a><span class="w">  </span><span class="c1">// ...</span>
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a><span class="p">});</span>
+</code></pre></div>
+<p><strong>Theme properties:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Properties</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>palette.primary/secondary</code></td>
+<td><code>light</code>, <code>main</code>, <code>dark</code>, <code>contrastText</code></td>
+</tr>
+<tr>
+<td><code>palette.surfaces</code></td>
+<td><code>background</code>, <code>paper</code>, <code>elevated</code>, <code>protection</code></td>
+</tr>
+<tr>
+<td><code>palette.tone1</code>–<code>tone8</code></td>
+<td>Tonal scale from lightest to darkest</td>
+</tr>
+<tr>
+<td><code>palette.danger/success/warning/info</code></td>
+<td>Semantic status colors</td>
+</tr>
+<tr>
+<td><code>typography</code></td>
+<td><code>fontFamily</code>, <code>webFontUrl</code>, <code>fontSize</code>, <code>fontWeightRegular/Bold</code></td>
+</tr>
+<tr>
+<td><code>typography.heading1</code>–<code>heading5</code></td>
+<td>Heading styles (<code>fontWeight</code>, <code>fontSize</code>, <code>lineHeight</code>)</td>
+</tr>
+<tr>
+<td><code>shape</code></td>
+<td><code>roundness1/2/3</code> — border radius for small/medium/large elements</td>
+</tr>
+<tr>
+<td><code>elevations</code></td>
+<td><code>low/medium/high</code> — CSS box-shadow values</td>
+</tr>
+<tr>
+<td><code>breakpoints</code></td>
+<td><code>sm/md/lg/xl</code> — responsive widths in pixels</td>
+</tr>
+</tbody>
+</table>
+<p>See the <a href="../KALTURA_GENIE_WIDGET_API/">Genie Widget Guide</a> section 6 for a complete theme object example with all properties.</p>
+<h1 id="12-player-integration">12. Player Integration<a class="headerlink" href="#12-player-integration" title="Permanent link">&para;</a></h1>
+<p>Three PlayKit plugins bridge Unisphere into the Kaltura Player v7:</p>
+<table>
+<thead>
+<tr>
+<th>Plugin</th>
+<th>Config Key</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>@playkit-js/unisphere-service</code></td>
+<td><code>unisphereService</code></td>
+<td>Required bridge — syncs player events with Unisphere services</td>
+</tr>
+<tr>
+<td><code>@playkit-js/unisphere</code></td>
+<td><code>unisphere</code></td>
+<td>Loads Unisphere runtimes inside the player UI</td>
+</tr>
+<tr>
+<td><code>@playkit-js/unisphere-genie</code></td>
+<td><code>genie</code></td>
+<td>Loads Genie AI chat as a player side panel</td>
+</tr>
+</tbody>
+</table>
+<p>All three plugins are available on public npm (v0.0.x pre-release).</p>
+<h2 id="events-bridged">Events Bridged<a class="headerlink" href="#events-bridged" title="Permanent link">&para;</a></h2>
+<p>The unisphere-service plugin synchronizes: current playback time, pause/play state, side panel open/close, chapters, seek-to-time requests, and player resize.</p>
+<h2 id="genie-plugin-configuration">Genie Plugin Configuration<a class="headerlink" href="#genie-plugin-configuration" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ks</code></td>
+<td>string</td>
+<td>—</td>
+<td>Explicit KS override for Genie</td>
+</tr>
+<tr>
+<td><code>fallbackToPlayerKS</code></td>
+<td>boolean</td>
+<td>false</td>
+<td>Use the player's provider KS if no explicit KS</td>
+</tr>
+<tr>
+<td><code>expandOnFirstPlay</code></td>
+<td>boolean</td>
+<td>false</td>
+<td>Auto-open the Genie side panel on first play</td>
+</tr>
+<tr>
+<td><code>position</code></td>
+<td>string</td>
+<td>—</td>
+<td>Side panel position</td>
+</tr>
+<tr>
+<td><code>expandMode</code></td>
+<td>string</td>
+<td>—</td>
+<td>Expansion behavior</td>
+</tr>
+</tbody>
+</table>
+<h2 id="player-setup-example">Player Setup Example<a class="headerlink" href="#player-setup-example" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">player</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">KalturaPlayer</span><span class="p">.</span><span class="nx">setup</span><span class="p">({</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">  </span><span class="nx">targetId</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;player-container&quot;</span><span class="p">,</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">  </span><span class="nx">provider</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">    </span><span class="nx">partnerId</span><span class="o">:</span><span class="w"> </span><span class="nx">PARTNER_ID</span><span class="p">,</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="w">    </span><span class="nx">uiConfId</span><span class="o">:</span><span class="w"> </span><span class="nx">PLAYER_ID</span><span class="p">,</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="w">    </span><span class="nx">ks</span><span class="o">:</span><span class="w"> </span><span class="nx">KS</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="w">  </span><span class="nx">plugins</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="w">    </span><span class="nx">unisphereService</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="w">      </span><span class="nx">serverUrl</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;https://unisphere.nvp1.ovp.kaltura.com/v1&quot;</span>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a><span class="w">    </span><span class="nx">unisphere</span><span class="o">:</span><span class="w"> </span><span class="p">{},</span>
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="w">    </span><span class="nx">genie</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a><span class="w">      </span><span class="nx">ks</span><span class="o">:</span><span class="w"> </span><span class="nx">GENIE_KS</span><span class="p">,</span>
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a><span class="w">      </span><span class="nx">fallbackToPlayerKS</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a><span class="w">      </span><span class="nx">expandOnFirstPlay</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span>
+<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a><span class="p">});</span>
+<a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a>
+<a id="__codelineno-16-21" name="__codelineno-16-21" href="#__codelineno-16-21"></a><span class="nx">player</span><span class="p">.</span><span class="nx">loadMedia</span><span class="p">({</span><span class="w"> </span><span class="nx">entryId</span><span class="o">:</span><span class="w"> </span><span class="nx">ENTRY_ID</span><span class="w"> </span><span class="p">});</span>
+</code></pre></div>
+<p>The <code>unisphereService</code> plugin must always be included when using <code>unisphere</code> or <code>genie</code> plugins.</p>
+<p>See the <a href="../KALTURA_PLAYER_EMBED_GUIDE/">Player Embed Guide</a> for player setup fundamentals.</p>
+<h1 id="13-building-custom-experiences">13. Building Custom Experiences<a class="headerlink" href="#13-building-custom-experiences" title="Permanent link">&para;</a></h1>
+<p>Developers can create custom Unisphere runtimes. All tools are on public npm — no private registry or Kaltura internal access needed.</p>
+<h2 id="scaffolding">Scaffolding<a class="headerlink" href="#scaffolding" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Create a new Unisphere project</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>npm<span class="w"> </span>create<span class="w"> </span>unisphere-project
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># Add a runtime to an existing project</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>npx<span class="w"> </span>nx<span class="w"> </span>g<span class="w"> </span>@unisphere/nx:add-runtime
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="c1"># Add a visual to a runtime</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>npx<span class="w"> </span>nx<span class="w"> </span>g<span class="w"> </span>@unisphere/nx:add-visual
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="c1"># Add an application entry point</span>
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>npx<span class="w"> </span>nx<span class="w"> </span>g<span class="w"> </span>@unisphere/nx:add-application
+</code></pre></div>
+<p><strong>Key npm packages (all public):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Package</th>
+<th>Version</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>create-unisphere-project</code></td>
+<td>2.8.0</td>
+<td>Project scaffolding</td>
+</tr>
+<tr>
+<td><code>@unisphere/runtime-js</code></td>
+<td>1.92.0</td>
+<td>Core runtime SDK and base classes</td>
+</tr>
+<tr>
+<td><code>@unisphere/nx</code></td>
+<td>3.24.0</td>
+<td>NX workspace generators</td>
+</tr>
+</tbody>
+</table>
+<h2 id="runtime-development">Runtime Development<a class="headerlink" href="#runtime-development" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Widget name format:</strong> <code>{company}.widget.{experience-name}</code>  </li>
+<li><strong>Runtime base class:</strong> Extend <code>UnisphereRuntimeBase</code> from <code>@unisphere/runtime-js</code>  </li>
+<li><strong>Factory pattern:</strong> Implement <code>UnisphereElementFactory.create()</code> for visual element creation  </li>
+<li><strong>Lifecycle hooks:</strong> <code>_onVisualMount()</code>, <code>_onVisualUnmount()</code>, <code>_onKilled()</code>, <code>_onSettingsUpdated()</code>  </li>
+<li><strong>Service access:</strong> <code>this._services.pubSub</code>, <code>this._services.storage</code>, <code>this._services.theme</code>  </li>
+<li><strong>Local development:</strong> <code>npx unisphere runtime serve {name}</code> (serves on port 8300)  </li>
+</ul>
+<h1 id="14-multi-region">14. Multi-Region<a class="headerlink" href="#14-multi-region" title="Permanent link">&para;</a></h1>
+<p>Unisphere is deployed across three regions. Use the region that matches your Kaltura account deployment:</p>
+<table>
+<thead>
+<tr>
+<th>Region</th>
+<th>Loader URL</th>
+<th>Use For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NVP1 (US)</td>
+<td><code>https://unisphere.nvp1.ovp.kaltura.com/v1</code></td>
+<td>Default / US accounts</td>
+</tr>
+<tr>
+<td>IRP2 (EU)</td>
+<td><code>https://unisphere.irp2.ovp.kaltura.com/v1</code></td>
+<td>European accounts</td>
+</tr>
+<tr>
+<td>FRP2 (DE)</td>
+<td><code>https://unisphere.frp2.ovp.kaltura.com/v1</code></td>
+<td>German accounts</td>
+</tr>
+</tbody>
+</table>
+<p>Each region serves its own loader, runtime.json manifest, and widget bundles. Pass the appropriate region URL as the <code>serverUrl</code> in your workspace configuration.</p>
+<h1 id="15-error-handling">15. Error Handling<a class="headerlink" href="#15-error-handling" title="Permanent link">&para;</a></h1>
+<ul>
+<li><strong>Loader import failure</strong> — The <code>import</code> statement requires HTTPS and a browser that supports ES modules. Verify your page uses <code>type="module"</code> on the script tag.  </li>
+<li><strong>Workspace bootstrap failure</strong> — Check that <code>serverUrl</code> points to a valid Unisphere endpoint and <code>appId</code> is set. The loader will fail if it cannot fetch <code>/v1/runtime.json</code>.  </li>
+<li><strong>Runtime load error</strong> — An invalid <code>widgetName</code> or <code>runtimeName</code> not present in the manifest causes the runtime status to become <code>error</code>. Verify widget names against the manifest.  </li>
+<li><strong>KS missing or expired</strong> — Runtimes that call Kaltura APIs will fail silently or show empty states. Update the session reactively: <code>workspace.session.setData(prev =&gt; ({ ...prev, ks: "new-ks" }))</code>.  </li>
+<li><strong>Service access before runtime ready</strong> — Use <code>getRuntimeAsync()</code> with <code>await</code> instead of <code>getRuntime()</code> to wait for the runtime to finish loading.  </li>
+<li><strong>Container not found</strong> — The visual <code>target</code> must match an existing DOM element. If the element is not found, the visual will not mount.  </li>
+</ul>
+<h1 id="16-best-practices">16. Best Practices<a class="headerlink" href="#16-best-practices" title="Permanent link">&para;</a></h1>
+<ul>
+<li><strong>Generate KS server-side.</strong> Workspace configuration is visible client-side — generate USER sessions (type=0) with scoped privileges on your backend. Use <code>setrole:PLAYBACK_BASE_ROLE</code> for read-only widgets.  </li>
+<li><strong>Use workspace session for shared KS.</strong> Only use per-runtime <code>settings.ks</code> when runtimes genuinely need different privilege scopes.  </li>
+<li><strong>Size visual containers explicitly.</strong> Runtimes fill their container — set explicit <code>width</code> and <code>height</code> via CSS.  </li>
+<li><strong>Match region to your account.</strong> Use the Unisphere regional URL that corresponds to your Kaltura account deployment (NVP1, IRP2, or FRP2).  </li>
+<li><strong>Clean up workspaces.</strong> Call <code>workspace.kill()</code> when navigating away in single-page applications to prevent memory leaks.  </li>
+<li><strong>Use pub-sub for loose coupling.</strong> Runtimes should communicate via the pub-sub service, not direct references.  </li>
+<li><strong>Use storage for shared reactive state.</strong> The storage service provides namespace-scoped, observable key-value storage.  </li>
+<li><strong>Use <code>"esm"</code> fetch strategy.</strong> The default ESM strategy is recommended. The <code>"scripts"</code> strategy exists for legacy environments without ES module support.  </li>
+<li><strong>Use HTTPS.</strong> All Unisphere CDN URLs and API endpoints require HTTPS.  </li>
+</ul>
+<h1 id="17-related-guides">17. Related Guides<a class="headerlink" href="#17-related-guides" title="Permanent link">&para;</a></h1>
+<ul>
+<li><strong><a href="../KALTURA_MEDIA_MANAGER_API/">Media Manager API</a></strong> — Browsable media library widget: select, upload, manage entries  </li>
+<li><strong><a href="../KALTURA_CONTENT_LAB_API/">Content Lab API</a></strong> — AI content repurposing widget: summaries, chapters, clips, quizzes  </li>
+<li><strong><a href="../KALTURA_AGENTS_WIDGET_API/">Agents Widget API</a></strong> — Agent management drawer: create and configure automated content-processing agents  </li>
+<li><strong><a href="../KALTURA_VOD_AVATAR_API/">VOD Avatar Studio API</a></strong> — Pre-recorded avatar video generation from scripts  </li>
+<li><strong><a href="../KALTURA_GENIE_WIDGET_API/">Genie Widget API</a></strong> — Conversational AI search widget with player integration  </li>
+<li><strong><a href="../KALTURA_AI_GENIE_API/">AI Genie API</a></strong> — Server-side Genie HTTP API for custom RAG integrations  </li>
+<li><strong><a href="../KALTURA_CONVERSATIONAL_AVATAR_API/">Conversational Avatar</a></strong> — AI-powered conversational video avatar embed  </li>
+<li><strong><a href="../KALTURA_EXPERIENCE_COMPONENTS_API/">Experience Components</a></strong> — Index of all embeddable components with shared guidelines  </li>
+<li><strong><a href="../KALTURA_PLAYER_EMBED_GUIDE/">Player Embed Guide</a></strong> — Player v7 embed with Unisphere plugin support  </li>
+<li><strong><a href="../KALTURA_SESSION_GUIDE/">Session Guide</a></strong> — KS generation and privilege management  </li>
+<li><strong><a href="../KALTURA_APPTOKENS_API/">AppTokens API</a></strong> — Production token management for secure KS generation</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
