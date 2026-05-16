@@ -182,9 +182,3 @@ See [PLAN.md](PLAN.md) for the full Kaltura API landscape and prioritized list o
 
 This project is licensed under the MIT License -- see [LICENSE](LICENSE) for details.
 
-## Links
-
-- [Kaltura Developer Portal](https://developer.kaltura.com/)
-- [Kaltura API Documentation](https://developer.kaltura.com/api-docs/)
-- [Kaltura GitHub](https://github.com/kaltura)
-- [Kaltura Events MCP Server](https://github.com/kaltura/mcp-events)
