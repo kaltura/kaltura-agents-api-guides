@@ -200,8 +200,10 @@ The account must have the Agents Manager capability enabled. Available actions d
 | NVP1 (US, default) | `https://unisphere.nvp1.ovp.kaltura.com/v1` | `https://agents-manager.nvp1.ovp.kaltura.com` |
 | IRP2 (EU) | `https://unisphere.irp2.ovp.kaltura.com/v1` | `https://agents-manager.irp2.ovp.kaltura.com` |
 | FRP2 (DE) | `https://unisphere.frp2.ovp.kaltura.com/v1` | `https://agents-manager.frp2.ovp.kaltura.com` |
+| CAP2 (Canada) | `https://unisphere.cap2.ovp.kaltura.com/v1` | `https://agents-manager.cap2.ovp.kaltura.com` |
+| SYP2 (Australia) | `https://unisphere.syp2.ovp.kaltura.com/v1` | `https://agents-manager.syp2.ovp.kaltura.com` |
 
-Set both `serverUrl` and `agentsServiceURI` to match your Kaltura account region.
+Set both `serverUrl` and `agentsServiceURI` to match your Kaltura account region — see [API Getting Started §4.5](KALTURA_API_GETTING_STARTED.md#4-endpoints--regions) for the full microservice regional availability matrix.
 
 
 # 10. Related Guides

@@ -2,7 +2,7 @@
 
 The Agents Manager lets you create **automated content-processing agents** that watch for events on your content and execute actions automatically — captioning new uploads, generating summaries, adding audio descriptions — without any manual steps. An agent is simple: **When** something happens (a trigger) **Do** something about it (actions).
 
-**Base URL:** `https://agents-manager.nvp1.ovp.kaltura.com` (may differ by region/deployment)  
+**Base URL:** `https://agents-manager.nvp1.ovp.kaltura.com` (also available in `frp2`, `irp2`, `cap2`, `syp2` — see [API Getting Started §4.5](KALTURA_API_GETTING_STARTED.md#4-endpoints--regions))  
 **Auth:** `Authorization: Bearer <YOUR_KS>` header  
 **Format:** JSON request/response bodies, all endpoints use POST  
 

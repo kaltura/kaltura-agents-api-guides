@@ -7,7 +7,7 @@ When you create a virtual event through the Events Platform, an app is automatic
 **Base URL:** `https://app-registry.nvp1.ovp.kaltura.com/api/v1` (production NVP region)  
 **Auth:** `Authorization: Bearer <KS>` header (ADMIN KS, type=2, requires `ADMIN_BASE` permission)  
 **Format:** JSON request/response bodies, all endpoints use POST  
-**Regions:** NVP (default `nvp1`), EU (`irp2`), DE (`frp2`)  
+**Regions:** NVP (default `nvp1`), DE (`frp2`), EU/Ireland (`irp2`), Canada (`cap2`), Australia (`syp2`) — see [API Getting Started §4.5](KALTURA_API_GETTING_STARTED.md#4-endpoints--regions)  
 
 <!-- Sections: 1.When to Use | 2.Prerequisites | 3.Authentication | 4.App Entity | 5.Register an App | 6.Get an App | 7.Update an App | 8.Delete an App | 9.Enable / Disable an App | 10.List Apps | 11.Find Apps by Organization Domain | 12.Versioning | 13.Error Handling | 14.Best Practices | 15.Related Guides -->
 

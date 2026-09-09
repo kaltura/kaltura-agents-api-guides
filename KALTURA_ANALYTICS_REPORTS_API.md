@@ -437,7 +437,7 @@ Parameters are semicolon-delimited: `from_date_id`, `to_date_id`, `timezone_offs
 
 A separate async service for generating CSV reports that require cross-service data aggregation (registration data, C&C engagement, enriched analytics).
 
-**Base URL:** `https://reports.{region}.ovp.kaltura.com` (e.g., `reports.nvp1.ovp.kaltura.com` for US production)  
+**Base URL:** `https://reports.{region}.ovp.kaltura.com` (e.g., `reports.nvp1.ovp.kaltura.com` for US production; also available in `frp2`, `irp2`, `cap2`, `syp2` — see [API Getting Started §4.5](KALTURA_API_GETTING_STARTED.md#4-endpoints--regions))  
 **Auth:** `Authorization: Bearer <KS>`
 
 ## 10.1 Two-Step Generate/Serve Pattern

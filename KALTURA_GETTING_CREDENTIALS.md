@@ -58,16 +58,11 @@ The Admin Secret has a dedicated Copy button — use it to copy the value direct
 
 # 4. Determine Your Service URL
 
-The base API endpoint depends on your account's region:
+The base API endpoint depends on your account's region. Most accounts use the default US endpoint: `https://www.kaltura.com/api_v3`.
 
-| Region | Service URL |
-|--------|------------|
-| US (default) | `https://www.kaltura.com/api_v3` |
-| EU | `https://www.kaltura.com/api_v3` |
+To identify your region: check the domain in your KMC URL when logged in. See [API Getting Started §4](KALTURA_API_GETTING_STARTED.md#4-endpoints--regions) for the full list of regional endpoints, the microservice URL pattern, and per-microservice regional availability.
 
-To identify your region: check the domain in your KMC URL when logged in. Most accounts use the default US endpoint.
-
-For microservice APIs (Agents Manager, AI Genie), the region code appears in the URL pattern: `https://{service}.{regionCode}.ovp.kaltura.com`
+If your account runs in a private cloud or on-premises deployment, none of the public regional endpoints apply — obtain your service URL from your system administrator or Kaltura account manager.
 
 
 # 5. Find Your Player ID

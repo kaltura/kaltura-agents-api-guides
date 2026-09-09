@@ -911,11 +911,12 @@ The API always returns HTTP 200. Check the response body for `{ "objectType": "K
 | Region | Server-Side API | Widget URL |
 |--------|----------------|------------|
 | NVP1 (US East, default) | `https://video-avatar.nvp1.ovp.kaltura.com/api/v1` | `https://unisphere.nvp1.ovp.kaltura.com/v1` |
-| IRP2 (EU West) | `https://video-avatar.irp2.ovp.kaltura.com/api/v1` | `https://unisphere.irp2.ovp.kaltura.com/v1` |
-| FRP2 (EU Central) | `https://video-avatar.frp2.ovp.kaltura.com/api/v1` | `https://unisphere.frp2.ovp.kaltura.com/v1` |
+| IRP2 (EU West / Ireland) | `https://video-avatar.irp2.ovp.kaltura.com/api/v1` | `https://unisphere.irp2.ovp.kaltura.com/v1` |
+| FRP2 (Germany) | `https://video-avatar.frp2.ovp.kaltura.com/api/v1` | `https://unisphere.frp2.ovp.kaltura.com/v1` |
 | CAP2 (Canada) | `https://video-avatar.cap2.ovp.kaltura.com/api/v1` | `https://unisphere.cap2.ovp.kaltura.com/v1` |
-| SGP2 (Singapore) | `https://video-avatar.sgp2.ovp.kaltura.com/api/v1` | `https://unisphere.sgp2.ovp.kaltura.com/v1` |
 | SYP2 (Australia) | `https://video-avatar.syp2.ovp.kaltura.com/api/v1` | `https://unisphere.syp2.ovp.kaltura.com/v1` |
+
+VOD Avatar runs in these 5 regions only (no Singapore deployment). See [API Getting Started §4.5](KALTURA_API_GETTING_STARTED.md#4-endpoints--regions) for the full microservice regional availability matrix.
 
 
 # 14. Related Guides

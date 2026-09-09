@@ -60,10 +60,12 @@ The Auth Broker is a NestJS microservice with four service endpoints:
 | Region | Base URL |
 |--------|----------|
 | NVP (default) | `https://auth.nvp1.ovp.kaltura.com/api/v1` |
-| EU | `https://auth.irp2.ovp.kaltura.com/api/v1` |
+| EU (Ireland) | `https://auth.irp2.ovp.kaltura.com/api/v1` |
 | DE | `https://auth.frp2.ovp.kaltura.com/api/v1` |
+| Canada | `https://auth.cap2.ovp.kaltura.com/api/v1` |
+| Australia | `https://auth.syp2.ovp.kaltura.com/api/v1` |
 
-Use the region that matches your Kaltura account deployment.
+Use the region that matches your Kaltura account deployment — see [API Getting Started §4.5](KALTURA_API_GETTING_STARTED.md#4-endpoints--regions) for the full microservice regional availability matrix.
 
 ### Relationship to App Registry
 

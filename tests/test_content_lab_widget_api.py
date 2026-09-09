@@ -93,8 +93,8 @@ def main():
     # ════════════════════════════════════════════
 
     def test_regional():
-        """Verify Content Lab is available in EU and DE regions."""
-        for region, label in [("irp2", "EU"), ("frp2", "DE")]:
+        """Verify Content Lab is available in EU, DE, Canada, and Australia regions."""
+        for region, label in [("irp2", "EU"), ("frp2", "DE"), ("cap2", "Canada"), ("syp2", "Australia")]:
             url = f"https://unisphere.{region}.ovp.kaltura.com/v1/runtime.json"
             resp = requests.get(url, timeout=30)
             assert resp.status_code == 200, f"Expected 200 for {label}"
@@ -104,7 +104,7 @@ def main():
             version = widgets[WIDGET_NAME]["runtimes"]["application"]["version"]
             print(f"    {label} ({region}): v{version}")
 
-    runner.run_test("regional — Content Lab in EU and DE manifests", test_regional)
+    runner.run_test("regional — Content Lab in EU, DE, Canada, Australia manifests", test_regional)
 
     # ════════════════════════════════════════════
     # Phase 3: Consent API

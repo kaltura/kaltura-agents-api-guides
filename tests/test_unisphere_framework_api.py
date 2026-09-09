@@ -14,6 +14,8 @@ UNISPHERE_REGIONS = {
     "nvp1": "https://unisphere.nvp1.ovp.kaltura.com/v1",
     "irp2": "https://unisphere.irp2.ovp.kaltura.com/v1",
     "frp2": "https://unisphere.frp2.ovp.kaltura.com/v1",
+    "cap2": "https://unisphere.cap2.ovp.kaltura.com/v1",
+    "syp2": "https://unisphere.syp2.ovp.kaltura.com/v1",
 }
 DEFAULT_REGION = "nvp1"
 BASE_URL = UNISPHERE_REGIONS[DEFAULT_REGION]
@@ -62,18 +64,18 @@ def main():
     # ════════════════════════════════════════════
 
     def test_regional_loaders():
-        """Verify loader ESM is available on EU and DE regions."""
-        for region in ["irp2", "frp2"]:
+        """Verify loader ESM is available on EU, DE, Canada, and Australia regions."""
+        for region in ["irp2", "frp2", "cap2", "syp2"]:
             url = f"{UNISPHERE_REGIONS[region]}/loader/index.esm.js"
             resp = requests.head(url, timeout=30)
             assert resp.status_code == 200, f"{region}: Expected 200, got {resp.status_code}"
             print(f"    {region} loader: {resp.status_code}")
 
-    runner.run_test("loader — regional endpoints (irp2, frp2)", test_regional_loaders)
+    runner.run_test("loader — regional endpoints (irp2, frp2, cap2, syp2)", test_regional_loaders)
 
     def test_regional_manifests():
-        """Verify runtime.json is available on EU and DE regions."""
-        for region in ["irp2", "frp2"]:
+        """Verify runtime.json is available on EU, DE, Canada, and Australia regions."""
+        for region in ["irp2", "frp2", "cap2", "syp2"]:
             url = f"{UNISPHERE_REGIONS[region]}/runtime.json"
             resp = requests.get(url, timeout=30)
             assert resp.status_code == 200, f"{region}: Expected 200, got {resp.status_code}"
@@ -82,7 +84,7 @@ def main():
             widget_count = len(data["versions"].get("widgets", {}))
             print(f"    {region} manifest: {widget_count} widgets, env={data.get('env', '?')}")
 
-    runner.run_test("manifest — regional endpoints (irp2, frp2)", test_regional_manifests)
+    runner.run_test("manifest — regional endpoints (irp2, frp2, cap2, syp2)", test_regional_manifests)
 
     # ════════════════════════════════════════════
     # Phase 3: Widget Presence in Manifest

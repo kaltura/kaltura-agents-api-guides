@@ -102,8 +102,8 @@ def main():
     # ════════════════════════════════════════════
 
     def test_regional_manifests():
-        """Verify Media Manager is available in EU and DE regions."""
-        for region, label in [("irp2", "EU"), ("frp2", "DE")]:
+        """Verify Media Manager is available in EU, DE, Canada, and Australia regions."""
+        for region, label in [("irp2", "EU"), ("frp2", "DE"), ("cap2", "Canada"), ("syp2", "Australia")]:
             url = f"https://unisphere.{region}.ovp.kaltura.com/v1/runtime.json"
             resp = requests.get(url, timeout=30)
             assert resp.status_code == 200, f"Expected 200 for {label}, got {resp.status_code}"
@@ -113,7 +113,7 @@ def main():
             version = widgets[WIDGET_NAME]["runtimes"][RUNTIME_NAME]["version"]
             print(f"    {label} ({region}): v{version}")
 
-    runner.run_test("regional — Media Manager in EU and DE manifests", test_regional_manifests)
+    runner.run_test("regional — Media Manager in EU, DE, Canada, Australia manifests", test_regional_manifests)
 
     # ════════════════════════════════════════════
     # Phase 3: Create test category for browser tests

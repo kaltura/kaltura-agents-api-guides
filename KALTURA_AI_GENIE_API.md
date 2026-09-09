@@ -2,7 +2,7 @@
 
 Kaltura AI Genie provides conversational AI search and generative answers over your video content library using RAG (Retrieval-Augmented Generation).
 
-**Base URL:** `https://genie.nvp1.ovp.kaltura.com` (may differ by region/deployment)  
+**Base URL:** `https://genie.nvp1.ovp.kaltura.com` (also available in `frp2`, `irp2`, `cap2`, `syp2` — see [API Getting Started §4.5](KALTURA_API_GETTING_STARTED.md#4-endpoints--regions))  
 **Auth:** `Authorization: KS <YOUR_KS>` header  
 **Format:** JSON request/response bodies, all endpoints use POST unless noted  
 

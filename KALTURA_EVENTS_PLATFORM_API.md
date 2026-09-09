@@ -46,10 +46,10 @@ See [Session Guide](KALTURA_SESSION_GUIDE.md) for full details on KS generation.
 | Region | Base URL |
 |--------|----------|
 | NVP (default) | `https://events-api.nvp1.ovp.kaltura.com/api/v1` |
-| EU | `https://events-api.irp2.ovp.kaltura.com/api/v1` |
+| EU (Ireland) | `https://events-api.irp2.ovp.kaltura.com/api/v1` |
 | DE | `https://events-api.frp2.ovp.kaltura.com/api/v1` |
 
-Use the region that matches your Kaltura account deployment.
+Events Platform runs in these 3 regions only (no Canada or Australia deployment). Use the region that matches your Kaltura account deployment — see [API Getting Started §4.5](KALTURA_API_GETTING_STARTED.md#4-endpoints--regions) for the full microservice regional availability matrix.
 
 
 # 5. Events API

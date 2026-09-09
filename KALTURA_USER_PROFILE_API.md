@@ -7,7 +7,7 @@ A user has one profile per app — the same `userId` can have separate profiles 
 **Base URL:** `https://user.nvp1.ovp.kaltura.com/api/v1` (production NVP region)  
 **Auth:** `Authorization: Bearer <KS>` header (ADMIN KS, type=2, requires `ADMIN_BASE` permission)  
 **Format:** JSON request/response bodies, all endpoints use POST  
-**Regions:** NVP (default `nvp1`), EU (`irp2`), DE (`frp2`)  
+**Regions:** NVP (default `nvp1`), DE (`frp2`), EU/Ireland (`irp2`), Canada (`cap2`), Australia (`syp2`) — see [API Getting Started §4.5](KALTURA_API_GETTING_STARTED.md#4-endpoints--regions)  
 
 <!-- Sections: 1.When to Use | 2.Authentication | 3.Prerequisites | 4.User Profile Entity | 5.Attendance Status Lifecycle | 6.Create a User Profile | 7.Bulk Create User Profiles | 8.Get a User Profile | 9.Update a User Profile | 10.List User Profiles | 11.Delete a User Profile | 12.Reports | 13.Error Handling | 14.Best Practices | 15.Related Guides -->
 

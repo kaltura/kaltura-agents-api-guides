@@ -310,6 +310,10 @@ The account must have the `FEATURE_CONTENT_LAB` permission enabled.
 | NVP1 (US, default) | `https://unisphere.nvp1.ovp.kaltura.com/v1` | `https://consent.nvp1.ovp.kaltura.com/api/v1` |
 | IRP2 (EU) | `https://unisphere.irp2.ovp.kaltura.com/v1` | `https://consent.irp2.ovp.kaltura.com/api/v1` |
 | FRP2 (DE) | `https://unisphere.frp2.ovp.kaltura.com/v1` | `https://consent.frp2.ovp.kaltura.com/api/v1` |
+| CAP2 (Canada) | `https://unisphere.cap2.ovp.kaltura.com/v1` | `https://consent.cap2.ovp.kaltura.com/api/v1` |
+| SYP2 (Australia) | `https://unisphere.syp2.ovp.kaltura.com/v1` | `https://consent.syp2.ovp.kaltura.com/api/v1` |
+
+Set the `serverUrl` in the workspace configuration to match your Kaltura account region — see [API Getting Started §4.5](KALTURA_API_GETTING_STARTED.md#4-endpoints--regions) for the full microservice regional availability matrix.
 
 
 # 11. Related Guides

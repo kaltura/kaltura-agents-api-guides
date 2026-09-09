@@ -57,11 +57,11 @@ Generate an ADMIN KS via `session.start` (see [Session Guide](KALTURA_SESSION_GU
 | Region | Base URL |
 |--------|----------|
 | US Production | `https://scm.nvp1.ovp.kaltura.com/api/v1/` |
-| EU (France) | `https://scm.frp2.ovp.kaltura.com/api/v1/` |
+| DE (Frankfurt) | `https://scm.frp2.ovp.kaltura.com/api/v1/` |
 | EU (Ireland) | `https://scm.irp2.ovp.kaltura.com/api/v1/` |
-| APAC (Singapore) | `https://scm.sgp2.ovp.kaltura.com/api/v1/` |
-| APAC (Sydney) | `https://scm.syp2.ovp.kaltura.com/api/v1/` |
 | Canada | `https://scm.cap2.ovp.kaltura.com/api/v1/` |
+
+Gamification runs in these 4 regions only (no Singapore or Australia deployment). See [API Getting Started §4.5](KALTURA_API_GETTING_STARTED.md#4-endpoints--regions) for the full microservice regional availability matrix.
 
 ## 3.2 Permissions
 

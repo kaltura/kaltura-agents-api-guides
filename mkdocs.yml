@@ -77,8 +77,8 @@ markdown_extensions:
 nav:
   - Home: README.md
   - Getting Started:
-      - Getting Credentials: KALTURA_GETTING_CREDENTIALS.md
       - API Getting Started: KALTURA_API_GETTING_STARTED.md
+      - Getting Credentials: KALTURA_GETTING_CREDENTIALS.md
       - Content Model & Search Guide: KALTURA_CONTENT_MODEL_AND_SEARCH_GUIDE.md
       - Guide Map: GUIDE_MAP.md
   - Authentication:

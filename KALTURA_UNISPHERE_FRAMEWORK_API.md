@@ -587,15 +587,17 @@ npx nx g @unisphere/nx:add-application
 
 # 14. Multi-Region
 
-Unisphere is deployed across three regions. Use the region that matches your Kaltura account deployment:
+Unisphere is deployed across five regions. Use the region that matches your Kaltura account deployment:
 
 | Region | Loader URL | Use For |
 |--------|-----------|---------|
 | NVP1 (US) | `https://unisphere.nvp1.ovp.kaltura.com/v1` | Default / US accounts |
 | IRP2 (EU) | `https://unisphere.irp2.ovp.kaltura.com/v1` | European accounts |
 | FRP2 (DE) | `https://unisphere.frp2.ovp.kaltura.com/v1` | German accounts |
+| CAP2 (Canada) | `https://unisphere.cap2.ovp.kaltura.com/v1` | Canadian accounts |
+| SYP2 (Australia) | `https://unisphere.syp2.ovp.kaltura.com/v1` | Australian accounts |
 
-Each region serves its own loader, runtime.json manifest, and widget bundles. Pass the appropriate region URL as the `serverUrl` in your workspace configuration.
+Each region serves its own loader, runtime.json manifest, and widget bundles. Pass the appropriate region URL as the `serverUrl` in your workspace configuration. See [API Getting Started §4.5](KALTURA_API_GETTING_STARTED.md#4-endpoints--regions) for the full microservice regional availability matrix across all services.
 
 
 # 15. Error Handling

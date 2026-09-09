@@ -85,7 +85,7 @@ The `objectType` field tells the server which object class to instantiate. Inclu
 
 # 4. Endpoints & Regions
 
-Kaltura operates across 6 regional deployments. Each region provides the full API and service stack. Your account is provisioned to a specific region — use the corresponding endpoints.
+Kaltura operates across 6 regional deployments. The Foundation API (`api_v3`) is available in every region. Individual microservices are available in a subset of regions — see §4.5. Your account is provisioned to a specific region — use the corresponding endpoints.
 
 ## 4.1 Regions
 
@@ -136,6 +136,35 @@ AI services (Agents Manager, AI Genie) follow the same microservice pattern: `ag
 - **Use domain names, not IP addresses** — cloud infrastructure IPs change frequently.  
 - **All traffic is outbound** — firewalls need egress rules to these endpoints, not inbound.  
 - **Set `$KALTURA_SERVICE_URL`** to your region's API base URL. All guides use this variable.
+
+## 4.5 Microservice Regional Availability
+
+Microservices are not deployed to every region that runs the Foundation API. This table is the canonical reference — other guides link back here instead of repeating it.
+
+| Microservice | US (`nvp1`) | Germany (`frp2`) | Ireland / EU (`irp2`) | Canada (`cap2`) | Australia (`syp2`) |
+|--------------|:-----------:|:-----------------:|:----------------------:|:-----------------:|:--------------------:|
+| Events Platform | Yes | Yes | Yes | No | No |
+| Gamification | Yes | Yes | Yes | Yes | No |
+| Auth Broker | Yes | Yes | Yes | Yes | Yes |
+| Agents Manager | Yes | Yes | Yes | Yes | Yes |
+| AI Genie | Yes | Yes | Yes | Yes | Yes |
+| Unisphere (loader, Media Manager, Content Lab, Agents Widget) | Yes | Yes | Yes | Yes | Yes |
+| VOD Avatar Studio | Yes | Yes | Yes | Yes | Yes |
+| App Registry | Yes | Yes | Yes | Yes | Yes |
+| Messaging | Yes | Yes | Yes | Yes | Yes |
+| User Profile | Yes | Yes | Yes | Yes | Yes |
+| Consent | Yes | Yes | Yes | Yes | Yes |
+| Analytics Reports | Yes | Yes | Yes | Yes | Yes |
+
+None of these microservices are deployed to Singapore (`sgp2`) — that region currently runs the Foundation API only. If your account's Foundation API is provisioned in Singapore, confirm your microservice endpoints with your Kaltura account team.
+
+Build any microservice URL as `https://{service}.{code}.ovp.kaltura.com` using the code for your account's region (e.g., `https://auth.cap2.ovp.kaltura.com/api/v1` for Auth Broker in Canada).
+
+## 4.6 Private Cloud & On-Premises Deployments
+
+The regional endpoints above apply to Kaltura's multi-tenant cloud. Private cloud and on-premises deployments use account-specific URLs that don't follow these patterns.
+
+Obtain your service URL from your system administrator or Kaltura account manager if your account runs in a private cloud or on-premises deployment.
 
 
 # 5. Content Model: Entries and Assets
