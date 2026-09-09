@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Alpha Channel Avatars — Kaltura Showcase</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root {
+    --panel-bg: rgba(15, 16, 24, 0.72);
+    --accent: #7fffd4;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+    color: #f4f6fb;
+    overflow-x: hidden;
+  }
+  body {
+    min-height: 100vh;
+    background: #05050a;
+    transition: background 0.6s ease;
+  }
+
+  /* ---- Background themes (switched by JS on <body data-bg="...">) ---- */
+  body[data-bg="nebula"] {
+    background:
+      radial-gradient(circle at 20% 20%, #ff5fce55, transparent 45%),
+      radial-gradient(circle at 80% 30%, #4f7bff66, transparent 50%),
+      radial-gradient(circle at 50% 85%, #7fffd455, transparent 55%),
+      #0a0714;
+  }
+  body[data-bg="checker"] {
+    background: repeating-conic-gradient(#ff00ff 0% 25%, #00ffff 0% 50%) 0 0/48px 48px;
+  }
+  body[data-bg="office"] {
+    background:
+      linear-gradient(180deg, #1b2a3d 0%, #101823 60%, #0a0f16 100%);
+  }
+  body[data-bg="sunset"] {
+    background: linear-gradient(180deg, #ff9a56 0%, #ff6a88 35%, #6a4c93 75%, #1a1230 100%);
+  }
+  body[data-bg="grid"] {
+    background-color: #060814;
+    background-image:
+      linear-gradient(rgba(127,255,212,0.18) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(127,255,212,0.18) 1px, transparent 1px);
+    background-size: 36px 36px;
+  }
+
+  header {
+    padding: 28px 24px 8px;
+    text-align: center;
+  }
+  header h1 {
+    margin: 0 0 6px;
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    letter-spacing: -0.01em;
+  }
+  header p {
+    margin: 0 auto;
+    max-width: 640px;
+    color: #b9bfd6;
+    font-size: 0.98rem;
+    line-height: 1.5;
+  }
+  header .badge {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: rgba(127,255,212,0.12);
+    border: 1px solid rgba(127,255,212,0.4);
+    color: var(--accent);
+    font-size: 0.78rem;
+    letter-spacing: 0.03em;
+  }
+
+  main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px 16px 60px;
+  }
+
+  .stage {
+    position: relative;
+    width: min(760px, 92vw);
+    aspect-ratio: 16 / 9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  /* ---- Depth layer: a single soft glow sitting BEHIND the video, showing through the real alpha gap ---- */
+  .stage .depth-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    overflow: hidden;
+    transition: transform 0.25s ease-out;
+  }
+  .stage .nebula-blob {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 420px; height: 420px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(127,255,212,0.18), rgba(255,143,216,0.08) 45%, transparent 72%);
+    transform: translate(-50%, -50%) scale(1);
+    animation: drift-slow 9s ease-in-out infinite;
+  }
+  @keyframes drift-slow {
+    0%, 100% { transform: translate(-50%, -50%) scale(0.92); opacity: 0.45; }
+    50%      { transform: translate(-50%, -50%) scale(1.06); opacity: 0.7; }
+  }
+  .stage .proj-beam {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 180px;
+    height: 34%;
+    transform: translateX(-50%);
+    clip-path: polygon(15% 100%, 85% 100%, 96% 0%, 4% 0%);
+    background: linear-gradient(180deg, rgba(127,255,212,0.4) 0%, rgba(127,255,212,0.15) 55%, transparent 100%);
+    -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 45%, transparent 100%);
+    mask-image: linear-gradient(180deg, #000 0%, #000 45%, transparent 100%);
+    mix-blend-mode: screen;
+    filter: blur(9px);
+    animation: beam-flicker 3.6s ease-in-out infinite;
+    transition: width 0.2s ease;
+  }
+  @keyframes beam-flicker {
+    0%, 100% { opacity: 0.8; }
+    45%      { opacity: 1; }
+    62%      { opacity: 0.65; }
+    80%      { opacity: 0.9; }
+  }
+
+  .stage video {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    transition: opacity 0.35s ease;
+  }
+
+  /* ---- Front layer: a faint glow plus the speech-synced shape bursts, both in front of the video ---- */
+  .stage .front-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+    overflow: hidden;
+    transition: transform 0.25s ease-out;
+  }
+  .stage .front-glow {
+    position: absolute;
+    top: 62%; left: 50%;
+    width: 240px; height: 240px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,226,127,0.14), transparent 70%);
+    transform: translate(-50%, -50%);
+    filter: blur(2px);
+  }
+  .stage .burst {
+    position: absolute;
+    font-size: var(--bs, 20px);
+    line-height: 1;
+    color: var(--bc, #7fffd4);
+    filter: drop-shadow(0 0 6px currentColor);
+    animation: burst-pop 0.75s ease-out forwards;
+  }
+  @keyframes burst-pop {
+    0%   { transform: scale(0.3) rotate(0deg); opacity: 0; }
+    30%  { transform: scale(1.15) rotate(12deg); opacity: 1; }
+    100% { transform: scale(0.85) rotate(-8deg) translateY(-16px); opacity: 0; }
+  }
+
+  /* ---- Projector console: sized to match the avatar's own width, so it reads as the thing they're standing on ---- */
+  .stage .proj-base {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 210px;
+    height: 16px;
+    transform: translateX(-50%);
+    z-index: 5;
+    pointer-events: none;
+    border-radius: 10px 10px 3px 3px;
+    background: linear-gradient(180deg, #3d4556, #14161d);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.16);
+    transition: width 0.2s ease;
+  }
+  .stage .proj-lens {
+    position: absolute;
+    top: 3px;
+    left: 50%;
+    width: 22%;
+    min-width: 30px;
+    height: 6px;
+    transform: translateX(-50%);
+    border-radius: 999px;
+    background: var(--accent);
+    box-shadow: 0 0 12px 3px rgba(127,255,212,0.85), 0 0 28px 9px rgba(127,255,212,0.35);
+    animation: lens-pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes lens-pulse {
+    0%, 100% { opacity: 0.75; }
+    50%      { opacity: 1; }
+  }
+
+  .stage .tag {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    z-index: 6;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: var(--panel-bg);
+    backdrop-filter: blur(6px);
+    font-size: 0.82rem;
+    font-weight: 600;
+  }
+  .stage .caption {
+    position: absolute;
+    bottom: 16px;
+    left: 18px;
+    right: 18px;
+    z-index: 6;
+    font-size: 0.85rem;
+    color: #f4f6fb;
+    line-height: 1.4;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.9), 0 0 16px rgba(0,0,0,0.75), 0 0 2px rgba(0,0,0,0.9);
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  .stage .caption.show { opacity: 1; transform: translateY(0); }
+  .stage .stage-controls {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    z-index: 10;
+    display: flex;
+    gap: 8px;
+  }
+  .stage .icon-btn {
+    appearance: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.25);
+    background: var(--panel-bg);
+    backdrop-filter: blur(6px);
+    color: #fff;
+    font-size: 1rem;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s ease;
+  }
+  .stage .icon-btn:hover { background: rgba(255,255,255,0.18); }
+
+  .controls {
+    margin-top: 22px;
+    width: min(760px, 92vw);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .row .label {
+    width: 100%;
+    text-align: center;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #8b91ab;
+    margin-bottom: -4px;
+  }
+
+  button.chip {
+    appearance: none;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.06);
+    color: #f4f6fb;
+    padding: 9px 16px;
+    border-radius: 999px;
+    font-size: 0.86rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  button.chip:hover { background: rgba(255,255,255,0.14); }
+  button.chip.active {
+    background: var(--accent);
+    color: #06231c;
+    border-color: var(--accent);
+    font-weight: 700;
+  }
+  button.chip .swatch {
+    width: 10px; height: 10px; border-radius: 50%;
+    display: inline-block;
+  }
+
+</style>
+</head>
+<body data-bg="nebula">
+
+<header>
+  <h1>&#10024; Meet the Alpha Personas</h1>
+  <p>Three AI avatars, rendered with a real per-pixel alpha channel — no green box, no matte line. Drop them on a nebula, a checkerboard, a sunset, anywhere. The background is not a trick — it's genuinely showing through the video.</p>
+  <span class="badge">Live WebM/VP9 alpha &middot; decoded natively by your browser</span>
+</header>
+
+<main>
+  <div class="stage" id="stage">
+    <div class="depth-layer" id="depthLayer" aria-hidden="true">
+      <div class="nebula-blob"></div>
+      <div class="proj-beam" id="projBeam"></div>
+    </div>
+
+    <span class="tag" id="personaTag">Alpha</span>
+    <video id="player" muted loop playsinline autoplay></video>
+
+    <div class="front-layer" id="frontLayer" aria-hidden="true">
+      <div class="front-glow"></div>
+    </div>
+
+    <div class="proj-base" id="projBase" aria-hidden="true">
+      <div class="proj-lens"></div>
+    </div>
+
+    <div class="stage-controls">
+      <button class="icon-btn" id="stagePlayPause" title="Pause">&#9208;</button>
+      <button class="icon-btn" id="stageMute" title="Unmute">&#128263;</button>
+    </div>
+    <div class="caption" id="caption"></div>
+  </div>
+
+  <div class="controls">
+    <div class="row">
+      <span class="label">Choose a persona</span>
+      <button class="chip active" data-persona="alpha">&#128171; Alpha</button>
+      <button class="chip" data-persona="nova">&#127775; Nova</button>
+      <button class="chip" data-persona="zen">&#127860; Zen</button>
+    </div>
+
+    <div class="row">
+      <span class="label">Drop them anywhere</span>
+      <button class="chip active" data-bg="nebula"><span class="swatch" style="background:#a34fff"></span>Nebula</button>
+      <button class="chip" data-bg="checker"><span class="swatch" style="background:conic-gradient(#f0f,#0ff,#f0f,#0ff)"></span>Proof Checker</button>
+      <button class="chip" data-bg="office"><span class="swatch" style="background:#1b2a3d"></span>Dashboard</button>
+      <button class="chip" data-bg="sunset"><span class="swatch" style="background:linear-gradient(#ff9a56,#6a4c93)"></span>Sunset</button>
+      <button class="chip" data-bg="grid"><span class="swatch" style="background:#0a1a2a;border:1px solid #7fffd4"></span>Terminal Grid</button>
+    </div>
+
+  </div>
+</main>
+
+<script>
+  const PERSONAS = {
+    alpha: {
+      tag: "Alpha",
+      src: "https://cfvod.kaltura.com/pd/p/6496302/sp/649630200/serveFlavor/entryId/1_dcv7dr3j/v/1/ev/6/flavorId/1_mkdmwamr/fileName/a.webm/name/a.webm",
+      caption: "“No green box. Just me, wherever you put me.”"
+    },
+    nova: {
+      tag: "Nova",
+      src: "https://cfvod.kaltura.com/pd/p/6496302/sp/649630200/serveFlavor/entryId/1_89icbin7/v/1/ev/5/flavorId/1_6ay1mjt8/fileName/a.webm/name/a.webm",
+      caption: "“I live in the space between backgrounds. Drop me over a nebula, a dashboard, or your living room.”"
+    },
+    zen: {
+      tag: "Zen",
+      src: "https://cfvod.kaltura.com/pd/p/6496302/sp/649630200/serveFlavor/entryId/1_p72n6hsz/v/1/ev/7/flavorId/1_1nzmutx9/fileName/a.webm/name/a.webm",
+      caption: "“No box, no backdrop, just presence.”"
+    }
+  };
+
+  const player = document.getElementById('player');
+  const personaTag = document.getElementById('personaTag');
+  const caption = document.getElementById('caption');
+  const stagePlayPause = document.getElementById('stagePlayPause');
+  const stageMute = document.getElementById('stageMute');
+  const body = document.body;
+  const stage = document.getElementById('stage');
+  const depthLayer = document.getElementById('depthLayer');
+  const frontLayer = document.getElementById('frontLayer');
+  const projBase = document.getElementById('projBase');
+  const projBeam = document.getElementById('projBeam');
+
+  // ---- Projector sizing: match the console/beam width to the video's own rendered body width ----
+  function updateProjectorSize() {
+    const w = player.getBoundingClientRect().width;
+    if (!w) return;
+    projBase.style.width = `${w * 0.98}px`;
+    projBeam.style.width = `${w * 0.78}px`;
+  }
+  player.addEventListener('loadedmetadata', updateProjectorSize);
+  window.addEventListener('resize', updateProjectorSize);
+
+  // ---- Parallax: depth layer drifts opposite the cursor, front layer drifts with it ----
+  stage.addEventListener('mousemove', (e) => {
+    const rect = stage.getBoundingClientRect();
+    const dx = (e.clientX - rect.left) / rect.width - 0.5;
+    const dy = (e.clientY - rect.top) / rect.height - 0.5;
+    depthLayer.style.transform = `translate(${-dx * 14}px, ${-dy * 14}px)`;
+    frontLayer.style.transform = `translate(${dx * 26}px, ${dy * 26}px)`;
+  });
+  stage.addEventListener('mouseleave', () => {
+    depthLayer.style.transform = 'translate(0, 0)';
+    frontLayer.style.transform = 'translate(0, 0)';
+  });
+
+  // ---- Fun shape bursts, loosely paced to feel like they're keeping time with the narration ----
+  const BURST_SHAPES = ['✦', '✧', '◆', '✳', '❉', '●'];
+  const BURST_COLORS = ['#7fffd4', '#ff8fd8', '#ffe27f', '#7fa8ff', '#ff9d6b'];
+
+  function spawnBurst() {
+    const el = document.createElement('span');
+    el.className = 'burst';
+    el.textContent = BURST_SHAPES[Math.floor(Math.random() * BURST_SHAPES.length)];
+    el.style.setProperty('--bc', BURST_COLORS[Math.floor(Math.random() * BURST_COLORS.length)]);
+    el.style.setProperty('--bs', `${14 + Math.random() * 14}px`);
+    el.style.left = `${15 + Math.random() * 70}%`;
+    el.style.top = `${8 + Math.random() * 55}%`;
+    el.addEventListener('animationend', () => el.remove());
+    frontLayer.appendChild(el);
+  }
+
+  function scheduleBurst() {
+    setTimeout(() => {
+      if (!player.paused) spawnBurst();
+      scheduleBurst();
+    }, 650 + Math.random() * 700);
+  }
+  scheduleBurst();
+
+  let currentPersona = 'alpha';
+  let captionTimer = null;
+
+  function setMuted(muted) {
+    player.muted = muted;
+    stageMute.innerHTML = muted ? "&#128263;" : "&#128266;";
+    stageMute.title = muted ? "Unmute" : "Mute";
+  }
+
+  function setPaused(paused) {
+    if (paused) player.pause();
+    else player.play().catch(() => {});
+    stagePlayPause.innerHTML = paused ? "&#9654;" : "&#9208;";
+    stagePlayPause.title = paused ? "Play" : "Pause";
+  }
+
+  stageMute.addEventListener('click', () => setMuted(!player.muted));
+  stagePlayPause.addEventListener('click', () => setPaused(!player.paused));
+
+  function loadPersona(key) {
+    const p = PERSONAS[key];
+    if (!p) return;
+    currentPersona = key;
+
+    document.querySelectorAll('[data-persona]').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.persona === key);
+    });
+
+    player.pause();
+    player.src = p.src;
+    player.load();
+    player.play().catch(() => {});
+    stagePlayPause.innerHTML = "&#9208;";
+    stagePlayPause.title = "Pause";
+
+    personaTag.textContent = p.tag;
+
+    caption.textContent = p.caption;
+    caption.classList.remove('show');
+    clearTimeout(captionTimer);
+    captionTimer = setTimeout(() => caption.classList.add('show'), 900);
+  }
+
+  function setBackground(key) {
+    body.dataset.bg = key;
+    document.querySelectorAll('[data-bg]').forEach(btn => {
+      if (btn.hasAttribute('data-bg') && btn.closest('.row')) {
+        btn.classList.toggle('active', btn.dataset.bg === key);
+      }
+    });
+  }
+
+  document.querySelectorAll('[data-persona]').forEach(btn => {
+    btn.addEventListener('click', () => loadPersona(btn.dataset.persona));
+  });
+
+  document.querySelectorAll('button.chip[data-bg]').forEach(btn => {
+    btn.addEventListener('click', () => setBackground(btn.dataset.bg));
+  });
+
+  loadPersona('alpha');
+  updateProjectorSize();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,200 @@
+<svg width="1280" height="640" viewBox="0 0 1280 640" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="1280" y2="640" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#1a1a1a"/>
+      <stop offset="100%" stop-color="#282828"/>
+    </linearGradient>
+    <linearGradient id="accentLine" x1="0" y1="0" x2="1280" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FF3D23"/>
+      <stop offset="20%" stop-color="#FFD357"/>
+      <stop offset="40%" stop-color="#5BC686"/>
+      <stop offset="60%" stop-color="#006EFA"/>
+      <stop offset="80%" stop-color="#FF9DFF"/>
+      <stop offset="100%" stop-color="#FF3D23"/>
+    </linearGradient>
+    <!-- Green glow (from flywheel slide left side) -->
+    <radialGradient id="greenGlow" cx="140" cy="280" r="300" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#5BC686" stop-opacity="0.12"/>
+      <stop offset="50%" stop-color="#5BC686" stop-opacity="0.04"/>
+      <stop offset="100%" stop-color="#5BC686" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Blue glow behind flywheel -->
+    <radialGradient id="blueGlow" cx="830" cy="290" r="220" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#006EFA" stop-opacity="0.08"/>
+      <stop offset="60%" stop-color="#41BEFF" stop-opacity="0.03"/>
+      <stop offset="100%" stop-color="#006EFA" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Pink glow top-right -->
+    <radialGradient id="pinkGlow" cx="1100" cy="80" r="200" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FF9DFF" stop-opacity="0.06"/>
+      <stop offset="100%" stop-color="#FF9DFF" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Sparkle (4-point star) -->
+    <symbol id="sparkle4" viewBox="0 0 24 24">
+      <path d="M12 0 L14 10 L24 12 L14 14 L12 24 L10 14 L0 12 L10 10 Z" fill="currentColor"/>
+    </symbol>
+    <!-- Small sparkle -->
+    <symbol id="sparkleSm" viewBox="0 0 12 12">
+      <path d="M6 0 L7 5 L12 6 L7 7 L6 12 L5 7 L0 6 L5 5 Z" fill="currentColor"/>
+    </symbol>
+    <!-- Arc glow filters -->
+    <filter id="arcGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+    <!-- Gradient bars (from challenges slide) -->
+    <linearGradient id="barYellow" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#FFD357" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#FFD357" stop-opacity="0.4"/>
+    </linearGradient>
+    <linearGradient id="barGreen" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#5BC686" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#5BC686" stop-opacity="0.4"/>
+    </linearGradient>
+    <linearGradient id="barBlue" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#006EFA" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.5"/>
+    </linearGradient>
+    <linearGradient id="barRed" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#FF3D23" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#FF3D23" stop-opacity="0.4"/>
+    </linearGradient>
+    <linearGradient id="barPink" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#FF9DFF" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#FF9DFF" stop-opacity="0.3"/>
+    </linearGradient>
+    <linearGradient id="barOrange" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#FFAA00" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#FFAA00" stop-opacity="0.35"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1280" height="640" fill="url(#bgGrad)"/>
+
+  <!-- Atmospheric glows -->
+  <rect width="1280" height="640" fill="url(#greenGlow)"/>
+  <rect width="1280" height="640" fill="url(#blueGlow)"/>
+  <rect width="1280" height="640" fill="url(#pinkGlow)"/>
+
+  <!-- Rainbow accent lines -->
+  <rect x="0" y="0" width="1280" height="4" fill="url(#accentLine)"/>
+  <rect x="0" y="636" width="1280" height="4" fill="url(#accentLine)"/>
+
+  <!-- ==================== SPARKLES (from USPs slide) ==================== -->
+  <!-- Large sparkles -->
+  <use href="#sparkle4" x="580" y="58" width="22" height="22" color="#FFD357" opacity="0.5"/>
+  <use href="#sparkle4" x="1180" y="160" width="18" height="18" color="#FF9DFF" opacity="0.35"/>
+  <use href="#sparkle4" x="680" y="530" width="16" height="16" color="#5BC686" opacity="0.3"/>
+  <use href="#sparkle4" x="1050" y="520" width="20" height="20" color="#41BEFF" opacity="0.25"/>
+
+  <!-- Small sparkles -->
+  <use href="#sparkleSm" x="520" y="95" width="8" height="8" color="#FFD357" opacity="0.4"/>
+  <use href="#sparkleSm" x="1220" y="130" width="10" height="10" color="#FF9DFF" opacity="0.3"/>
+  <use href="#sparkleSm" x="620" y="570" width="8" height="8" color="#5BC686" opacity="0.25"/>
+  <use href="#sparkleSm" x="1100" y="555" width="7" height="7" color="#FFD357" opacity="0.2"/>
+  <use href="#sparkleSm" x="730" y="80" width="6" height="6" color="#ffffff" opacity="0.15"/>
+  <use href="#sparkleSm" x="1150" y="440" width="9" height="9" color="#FF3D23" opacity="0.2"/>
+  <use href="#sparkleSm" x="350" y="570" width="7" height="7" color="#41BEFF" opacity="0.2"/>
+
+  <!-- ==================== LEFT SIDE ==================== -->
+
+  <!-- Kaltura Sunburst Mark -->
+  <g transform="translate(62, 92) scale(0.9)">
+    <path d="M108.46,64.35c-4.65,0-8.42-4.66-8.42-9.3V15.18c0-4.65,3.77-9.3,8.42-9.3s8.41,4.65,8.41,9.3V55.05C116.87,59.69,113.1,64.35,108.46,64.35Z" fill="#FF3D23"/>
+    <path d="M77.47,77.18c-3.28,3.29-9.24,2.66-12.52-.63L36.75,48.36c-3.28-3.29-3.91-9.24-.62-12.53s9.24-2.66,12.52.63l28.2,28.19C80.13,67.94,80.76,73.89,77.47,77.18Z" fill="#FFD357"/>
+    <path d="M64.64,108.16c0,4.65-4.65,8.42-9.3,8.42H15.47c-4.65,0-9.3-3.77-9.3-8.42s4.65-8.41,9.3-8.41H55.34C60,99.75,64.64,103.51,64.64,108.16Z" fill="#B4DC00"/>
+    <path d="M77.47,139.14c3.29,3.29,2.66,9.24-.62,12.53l-28.2,28.19c-3.28,3.29-9.24,3.92-12.52.63s-2.66-9.24.62-12.53L65,139.77C68.23,136.48,74.19,135.86,77.47,139.14Z" fill="#41BEFF"/>
+    <path d="M108.46,152c4.64,0,8.41,4.65,8.41,9.3v39.87c0,4.65-3.77,9.3-8.41,9.3s-8.42-4.65-8.42-9.3V161.28C100,156.63,103.81,152,108.46,152Z" fill="#006EFA"/>
+    <path d="M139.44,139.14c3.28-3.28,9.24-2.66,12.52.63L180.16,168c3.28,3.29,3.91,9.24.62,12.53s-9.24,2.66-12.52-.63l-28.2-28.19C136.78,148.38,136.15,142.43,139.44,139.14Z" fill="#FFAA00"/>
+    <path d="M152.27,108.16c0-4.65,4.65-8.41,9.3-8.41h39.87c4.65,0,9.3,3.76,9.3,8.41s-4.65,8.42-9.3,8.42H161.57C156.92,116.58,152.27,112.81,152.27,108.16Z" fill="#00A078"/>
+    <path d="M139.44,77.18c-3.29-3.29-2.66-9.24.62-12.53l28.2-28.19c3.28-3.29,9.24-3.91,12.52-.63s2.66,9.24-.62,12.53L152,76.55C148.68,79.84,142.72,80.47,139.44,77.18Z" fill="#5BC686"/>
+    <circle cx="108.46" cy="108.16" r="13.53" fill="#ffffff"/>
+  </g>
+
+  <!-- Title -->
+  <text x="262" y="178" font-family="'Source Sans Pro', 'Helvetica Neue', Arial, sans-serif" font-size="80" font-weight="700" fill="#ffffff" letter-spacing="-2">API Guides</text>
+
+  <!-- Subtitle -->
+  <text x="262" y="234" font-family="'Source Sans Pro', 'Helvetica Neue', Arial, sans-serif" font-size="26" font-weight="400" fill="rgba(255,255,255,0.55)">Everything AI agents need to master</text>
+  <text x="262" y="270" font-family="'Source Sans Pro', 'Helvetica Neue', Arial, sans-serif" font-size="26" font-weight="400" fill="rgba(255,255,255,0.55)">the full Kaltura platform</text>
+
+  <!-- ==================== FLYWHEEL with glow ==================== -->
+  <g transform="translate(920, 290)">
+    <!-- Glow layer behind arcs -->
+    <path d="M -108,-86 A 138,138 0 0,1 108,-86" stroke="#FF9DFF" stroke-width="36" fill="none" stroke-linecap="round" opacity="0.08"/>
+    <path d="M 128,-56 A 138,138 0 0,1 20,137" stroke="#5BC686" stroke-width="36" fill="none" stroke-linecap="round" opacity="0.08"/>
+    <path d="M -20,137 A 138,138 0 0,1 -128,-56" stroke="#41BEFF" stroke-width="36" fill="none" stroke-linecap="round" opacity="0.08"/>
+
+    <!-- Main arcs -->
+    <path d="M -108,-86 A 138,138 0 0,1 108,-86" stroke="#FF9DFF" stroke-width="20" fill="none" stroke-linecap="round" opacity="0.9"/>
+    <path d="M 128,-56 A 138,138 0 0,1 20,137" stroke="#5BC686" stroke-width="20" fill="none" stroke-linecap="round" opacity="0.9"/>
+    <path d="M -20,137 A 138,138 0 0,1 -128,-56" stroke="#41BEFF" stroke-width="20" fill="none" stroke-linecap="round" opacity="0.9"/>
+
+    <!-- Labels -->
+    <text x="0" y="-160" font-family="'Source Sans Pro', 'Helvetica Neue', Arial, sans-serif" font-size="18" font-weight="600" fill="#FF9DFF" text-anchor="middle" letter-spacing="1">EXPERIENCE</text>
+    <text x="170" y="50" font-family="'Source Sans Pro', 'Helvetica Neue', Arial, sans-serif" font-size="18" font-weight="600" fill="#5BC686" text-anchor="start" letter-spacing="1">CREATE</text>
+    <text x="-170" y="50" font-family="'Source Sans Pro', 'Helvetica Neue', Arial, sans-serif" font-size="18" font-weight="600" fill="#41BEFF" text-anchor="end" letter-spacing="1">MANAGE</text>
+
+    <!-- Sparkles on the flywheel (like USPs slide) -->
+    <use href="#sparkle4" x="112" y="-100" width="14" height="14" color="#5BC686" opacity="0.6"/>
+    <use href="#sparkleSm" x="-130" y="-80" width="8" height="8" color="#FF9DFF" opacity="0.5"/>
+    <use href="#sparkle4" x="-10" y="135" width="12" height="12" color="#41BEFF" opacity="0.5"/>
+
+    <!-- Center: audience segments -->
+    <text x="0" y="-24" font-family="'Source Sans Pro', 'Helvetica Neue', Arial, sans-serif" font-size="16" font-weight="500" fill="rgba(255,255,255,0.8)" text-anchor="middle">Customers</text>
+    <text x="0" y="2" font-family="'Source Sans Pro', 'Helvetica Neue', Arial, sans-serif" font-size="16" font-weight="500" fill="rgba(255,255,255,0.8)" text-anchor="middle">Employees</text>
+    <text x="0" y="28" font-family="'Source Sans Pro', 'Helvetica Neue', Arial, sans-serif" font-size="16" font-weight="500" fill="rgba(255,255,255,0.8)" text-anchor="middle">Learners</text>
+    <text x="0" y="54" font-family="'Source Sans Pro', 'Helvetica Neue', Arial, sans-serif" font-size="16" font-weight="500" fill="rgba(255,255,255,0.8)" text-anchor="middle">Audiences</text>
+  </g>
+
+  <!-- ==================== VALUE BARS (inspired by challenges slide gradient bars) ==================== -->
+  <g transform="translate(60, 350)">
+    <!-- Row 1 -->
+    <rect x="0" y="0" width="260" height="34" rx="6" fill="url(#barYellow)" opacity="0.2"/>
+    <rect x="0" y="0" width="260" height="34" rx="6" fill="none" stroke="#FFD357" stroke-width="0.7" stroke-opacity="0.3"/>
+    <text x="16" y="22" font-family="'Source Sans Pro', 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="600" fill="#FFD357">Rich, Personalized Experiences</text>
+
+    <rect x="274" y="0" width="260" height="34" rx="6" fill="url(#barBlue)" opacity="0.15"/>
+    <rect x="274" y="0" width="260" height="34" rx="6" fill="none" stroke="#41BEFF" stroke-width="0.7" stroke-opacity="0.3"/>
+    <text x="290" y="22" font-family="'Source Sans Pro', 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="600" fill="#b6d7ff">Compliant Agentic Workflows</text>
+
+    <!-- Row 2 -->
+    <rect x="0" y="44" width="260" height="34" rx="6" fill="url(#barGreen)" opacity="0.2"/>
+    <rect x="0" y="44" width="260" height="34" rx="6" fill="none" stroke="#5BC686" stroke-width="0.7" stroke-opacity="0.3"/>
+    <text x="16" y="66" font-family="'Source Sans Pro', 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="600" fill="#5BC686">AI-Powered Creation at Scale</text>
+
+    <rect x="274" y="44" width="260" height="34" rx="6" fill="url(#barRed)" opacity="0.15"/>
+    <rect x="274" y="44" width="260" height="34" rx="6" fill="none" stroke="#FF3D23" stroke-width="0.7" stroke-opacity="0.25"/>
+    <text x="290" y="66" font-family="'Source Sans Pro', 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="600" fill="#ff8a7a">Unified Enterprise Platform</text>
+
+    <!-- Row 3 -->
+    <rect x="0" y="88" width="260" height="34" rx="6" fill="url(#barPink)" opacity="0.15"/>
+    <rect x="0" y="88" width="260" height="34" rx="6" fill="none" stroke="#FF9DFF" stroke-width="0.7" stroke-opacity="0.3"/>
+    <text x="16" y="110" font-family="'Source Sans Pro', 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="600" fill="#FF9DFF">Intelligence &amp; Analytics</text>
+
+    <rect x="274" y="88" width="260" height="34" rx="6" fill="url(#barOrange)" opacity="0.15"/>
+    <rect x="274" y="88" width="260" height="34" rx="6" fill="none" stroke="#FFAA00" stroke-width="0.7" stroke-opacity="0.3"/>
+    <text x="290" y="110" font-family="'Source Sans Pro', 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="600" fill="#FFAA00">Conversational AI and Avatars</text>
+  </g>
+
+  <!-- ==================== DISCOVERY BADGES ==================== -->
+  <g transform="translate(60, 520)">
+    <text x="0" y="15" font-family="'Source Sans Pro', 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="rgba(255,255,255,0.25)">AI Agent Access:</text>
+
+    <rect x="115" y="0" width="96" height="26" rx="13" fill="rgba(255,157,255,0.08)" stroke="#FF9DFF" stroke-width="0.7" stroke-opacity="0.35"/>
+    <text x="163" y="17" font-family="'Source Code Pro', monospace" font-size="11" fill="#FF9DFF" text-anchor="middle">Agent Skill</text>
+
+    <rect x="222" y="0" width="76" height="26" rx="13" fill="rgba(255,211,87,0.08)" stroke="#FFD357" stroke-width="0.7" stroke-opacity="0.35"/>
+    <text x="260" y="17" font-family="'Source Code Pro', monospace" font-size="11" fill="#FFD357" text-anchor="middle">llms.txt</text>
+
+    <rect x="310" y="0" width="82" height="26" rx="13" fill="rgba(91,198,134,0.08)" stroke="#5BC686" stroke-width="0.7" stroke-opacity="0.35"/>
+    <text x="351" y="17" font-family="'Source Code Pro', monospace" font-size="11" fill="#5BC686" text-anchor="middle">Context7</text>
+
+    <rect x="404" y="0" width="54" height="26" rx="13" fill="rgba(0,110,250,0.08)" stroke="#006EFA" stroke-width="0.7" stroke-opacity="0.35"/>
+    <text x="431" y="17" font-family="'Source Code Pro', monospace" font-size="11" fill="#b6d7ff" text-anchor="middle">curl</text>
+  </g>
+
+  <!-- Tagline bottom-right -->
+  <text x="1220" y="596" font-family="'Source Sans Pro', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="400" fill="rgba(255,255,255,0.2)" text-anchor="end">The Agentic Digital Experience Platform</text>
+</svg>
